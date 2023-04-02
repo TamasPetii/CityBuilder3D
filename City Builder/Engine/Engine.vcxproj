@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{98b9a4a4-d59b-4f49-b81f-ae10fbd36200}</ProjectGuid>
+    <RootNamespace>Engine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+    <PropertyGroup>
+    <ShowAllFiles>true</ShowAllFiles>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(SolutionDir)OpenGL\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)OpenGL\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)_bin_\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)_bin_\intermediate\Engine\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(SolutionDir)OpenGL\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)OpenGL\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)_bin_\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)_bin_\intermediate\Engine\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(SolutionDir)OpenGL\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)OpenGL\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)_bin_\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)_bin_\intermediate\Engine\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(SolutionDir)OpenGL\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)OpenGL\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)_bin_\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)_bin_\intermediate\Engine\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LocalDebuggerWorkingDirectory>$(SolutionDir)</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LocalDebuggerWorkingDirectory>$(SolutionDir)</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LocalDebuggerWorkingDirectory>$(SolutionDir)</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LocalDebuggerWorkingDirectory>$(SolutionDir)</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Abstractions\BufferObject.cpp" />
+    <ClCompile Include="Abstractions\Camera.cpp" />
+    <ClCompile Include="Abstractions\External\stb_image.cpp" />
+    <ClCompile Include="Abstractions\FrameBuffer.cpp" />
+    <ClCompile Include="Abstractions\Mesh.cpp" />
+    <ClCompile Include="Abstractions\Model.cpp" />
+    <ClCompile Include="Abstractions\ProgramObject.cpp" />
+    <ClCompile Include="Abstractions\ShaderObject.cpp" />
+    <ClCompile Include="Abstractions\Texture.cpp" />
+    <ClCompile Include="Abstractions\VertexArrayObject.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\Ground\Ground.cpp" />
+    <ClCompile Include="Renderer\Renderer.cpp" />
+    <ClCompile Include="Shapes\Basic Shapes\Cone\Cone.cpp" />
+    <ClCompile Include="Shapes\Basic Shapes\Cone\ConeLayout.cpp" />
+    <ClCompile Include="Shapes\Basic Shapes\Cube\Cube.cpp" />
+    <ClCompile Include="Shapes\Basic Shapes\Cube\CubeLayout.cpp" />
+    <ClCompile Include="Shapes\Basic Shapes\Cylinder\Cylinder.cpp" />
+    <ClCompile Include="Shapes\Basic Shapes\Cylinder\CylinderLayout.cpp" />
+    <ClCompile Include="Shapes\Basic Shapes\Pyramid\Pyramid.cpp" />
+    <ClCompile Include="Shapes\Basic Shapes\Pyramid\PyramidLayout.cpp" />
+    <ClCompile Include="Shapes\Basic Shapes\Sphere\Sphere.cpp" />
+    <ClCompile Include="Shapes\Basic Shapes\Sphere\SphereLayout.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\FireStation\FireBuilding.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\Forest\Tree.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\Industry\IndustryBuilding1.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\Industry\IndustryBuilding2.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\Industry\IndustryBuilding3.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\PoliceStation\PoliceBuilding.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\PowerStation\PowerBuilding.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\PowerStation\PowerBuildingPlinth.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\PowerStation\PowerWireBuilding.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\Residence\ResidenceBuilding1.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\Residence\ResidenceBuilding2.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\Residence\ResidenceBuilding3.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\School\SchoolBuilding1.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\School\SchoolBuilding2.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\Service\ServiceBuilding1.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\Service\ServiceBuilding2.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\Service\ServiceBuilding3.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\Stadion\StadionBuilding.cpp" />
+    <ClCompile Include="Shapes\Shape.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Abstractions\BufferObject.h" />
+    <ClInclude Include="Abstractions\Camera.h" />
+    <ClInclude Include="Abstractions\External\stb_image.h" />
+    <ClInclude Include="Abstractions\FrameBuffer.h" />
+    <ClInclude Include="Abstractions\Mesh.h" />
+    <ClInclude Include="Abstractions\Model.h" />
+    <ClInclude Include="Abstractions\ProgramObject.h" />
+    <ClInclude Include="Abstractions\ShaderObject.h" />
+    <ClInclude Include="Abstractions\Texture.h" />
+    <ClInclude Include="Abstractions\Vertex.h" />
+    <ClInclude Include="Abstractions\VertexArrayObject.h" />
+    <ClInclude Include="Shapes\Complex Shapes\Ground\Ground.h" />
+    <ClInclude Include="Renderer\Renderer.h" />
+    <ClInclude Include="Shapes\Basic Shapes\BasicShapes.h" />
+    <ClInclude Include="Shapes\Basic Shapes\Cone\Cone.h" />
+    <ClInclude Include="Shapes\Basic Shapes\Cone\ConeLayout.h" />
+    <ClInclude Include="Shapes\Basic Shapes\Cube\Cube.h" />
+    <ClInclude Include="Shapes\Basic Shapes\Cube\CubeLayout.h" />
+    <ClInclude Include="Shapes\Basic Shapes\Cylinder\Cylinder.h" />
+    <ClInclude Include="Shapes\Basic Shapes\Cylinder\CylinderLayout.h" />
+    <ClInclude Include="Shapes\Basic Shapes\Pyramid\Pyramid.h" />
+    <ClInclude Include="Shapes\Basic Shapes\Pyramid\PyramidLayout.h" />
+    <ClInclude Include="Shapes\Basic Shapes\Sphere\Sphere.h" />
+    <ClInclude Include="Shapes\Basic Shapes\Sphere\SphereLayout.h" />
+    <ClInclude Include="Shapes\Complex Shapes\ComplexShape.h" />
+    <ClInclude Include="Shapes\Complex Shapes\FireStation\FireBuilding.h" />
+    <ClInclude Include="Shapes\Complex Shapes\Forest\Tree.h" />
+    <ClInclude Include="Shapes\Complex Shapes\Industry\IndustryBuilding1.h" />
+    <ClInclude Include="Shapes\Complex Shapes\Industry\IndustryBuilding2.h" />
+    <ClInclude Include="Shapes\Complex Shapes\Industry\IndustryBuilding3.h" />
+    <ClInclude Include="Shapes\Complex Shapes\PoliceStation\PoliceBuilding.h" />
+    <ClInclude Include="Shapes\Complex Shapes\PowerStation\PowerBuilding.h" />
+    <ClInclude Include="Shapes\Complex Shapes\PowerStation\PowerBuildingPlinth.h" />
+    <ClInclude Include="Shapes\Complex Shapes\PowerStation\PowerWireBuilding.h" />
+    <ClInclude Include="Shapes\Complex Shapes\Residence\ResidenceBuilding1.h" />
+    <ClInclude Include="Shapes\Complex Shapes\Residence\ResidenceBuilding2.h" />
+    <ClInclude Include="Shapes\Complex Shapes\Residence\ResidenceBuilding3.h" />
+    <ClInclude Include="Shapes\Complex Shapes\School\SchoolBuilding1.h" />
+    <ClInclude Include="Shapes\Complex Shapes\School\SchoolBuilding2.h" />
+    <ClInclude Include="Shapes\Complex Shapes\Service\ServiceBuilding1.h" />
+    <ClInclude Include="Shapes\Complex Shapes\Service\ServiceBuilding2.h" />
+    <ClInclude Include="Shapes\Complex Shapes\Service\ServiceBuilding3.h" />
+    <ClInclude Include="Shapes\Complex Shapes\Stadion\StadionBuilding.h" />
+    <ClInclude Include="Shapes\Shape.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\Base.frag" />
+    <None Include="Shaders\Base.vert" />
+    <None Include="Shaders\Instance.frag" />
+    <None Include="Shaders\Instance.vert" />
+    <None Include="Shaders\Ray.frag" />
+    <None Include="Shaders\Ray.vert" />
+    <None Include="Shaders\SkyBox.frag" />
+    <None Include="Shaders\SkyBox.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Renderer\Assets\Textures\SpriteTextures.png" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
