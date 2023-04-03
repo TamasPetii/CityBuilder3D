@@ -10,7 +10,7 @@
 #include "MyGui/MyGui.h"
 #include "Abstractions/Camera.h"
 #include "Renderer/Renderer.h"
-#include "GameTable.h"
+#include "City.h"
 
 //Std Headers
 #include <iostream>
@@ -40,7 +40,7 @@ private:
 	Camera* m_Camera = nullptr;
 	Renderer* m_Renderer = nullptr;
 	MyGui* m_MyGui = nullptr;
-	GameTable* m_GameTable = nullptr;
+	City* m_City = nullptr;
 private:
 	std::vector<glm::mat4> transforms_CUBE;
 	std::vector<glm::mat4> transforms_CONE;

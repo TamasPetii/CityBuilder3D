@@ -8,12 +8,12 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 {
 
 	m_Camera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
-	m_GameTable = new GameTable(50);
+	m_City = new City(50);
 	m_Renderer = new Renderer(m_Camera);
 	m_MyGui = new MyGui(m_Camera);
 
-	m_Camera->Set_Eye(glm::vec3(m_GameTable->Get_TableSize(), 5, m_GameTable->Get_TableSize() + 5));
-	m_Camera->Set_At(glm::vec3(m_GameTable->Get_TableSize(), 0, m_GameTable->Get_TableSize()));
+	m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
+	m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
 }
 
 Application::~Application()
@@ -21,7 +21,7 @@ Application::~Application()
 	delete m_Camera;
 	delete m_Renderer;
 	delete m_MyGui;
-	delete m_GameTable;
+	delete m_City;
 }
 
 void Application::Update()
@@ -110,39 +110,102 @@ void Application::Render()
 
 		transforms_CHARACTER.clear();
 
-		for (int i = 0; i < m_GameTable->Get_TableSize(); i++)
+		for (int i = 0; i < m_City->Get_GameTableSize(); i++)
 		{
-			for (int j = 0; j < m_GameTable->Get_TableSize(); j++)
+			for (int j = 0; j < m_City->Get_GameTableSize(); j++)
 			{
+				GameField* field = m_City->Get_GameField(i, j);
 				glm::mat4 transform = glm::translate(glm::vec3(2 * j + 1, 0, 2 * i + 1));
 
-				switch (m_GameTable->Get_TableValue(i, j))
+				if (field->IsEmpty()) 
 				{
-				case 0: transforms_EMPTY.push_back(transform);  break;
-				case 1: transforms_ROAD.push_back(transform);   break;
-				case 2: transforms_FOREST.push_back(transform); break;
-				case 3: transforms_RESIDENCE1.push_back(transform); break;
-				case 4: transforms_RESIDENCE2.push_back(transform); break;
-				case 5: transforms_RESIDENCE3.push_back(transform); break;
-				case 6: transforms_SERVICE1.push_back(transform); break;
-				case 7: transforms_SERVICE2.push_back(transform); break;
-				case 8: transforms_SERVICE3.push_back(transform); break;
-				case 9: transforms_FIRESTATION.push_back(transform); break;
-				case 10: transforms_POLICESTATION.push_back(transform); break;
-				case 11: transforms_STADION.push_back(transform); break;
-				case 12: transforms_SCHOOL1.push_back(transform); break;
-				case 13: transforms_SCHOOL2.push_back(transform); break;
-				case 14: transforms_POWERSTATION.push_back(transform); break;
-				case 15: transforms_POWERWIRE.push_back(transform); break;
-				case 16: transforms_INDUSTRY1.push_back(transform); break;
-				case 17: transforms_INDUSTRY2.push_back(transform); break;
-				case 18: transforms_INDUSTRY3.push_back(transform); break;
-				case 19: transforms_CHARACTER.push_back(transform); break;
+					transforms_EMPTY.push_back(transform);
+				}
+				else if (field->IsRoad()) 
+				{
+					transforms_ROAD.push_back(transform);
+				}
+				else if (field->IsForest())
+				{
+					transforms_FOREST.push_back(transform);
+				}
+				else if (field->IsZone())
+				{
+					Zone* zone = dynamic_cast<Zone*>(field);
+					if (zone->IsResidentalArea()) 
+					{
+						switch(zone->Get_Level())
+						{
+						case LEVEL_1: transforms_RESIDENCE1.push_back(transform); break;
+						case LEVEL_2: transforms_RESIDENCE2.push_back(transform); break;
+						case LEVEL_3: transforms_RESIDENCE3.push_back(transform); break;
+						}
+					}
+					else if (zone->IsWorkingArea()) 
+					{
+						WorkingArea* area = dynamic_cast<WorkingArea*>(zone);
+						if (area->IsIndustrialArea()) 
+						{
+							switch (area->Get_Level())
+							{
+							case LEVEL_1: transforms_INDUSTRY1.push_back(transform); break;
+							case LEVEL_2: transforms_INDUSTRY2.push_back(transform); break;
+							case LEVEL_3: transforms_INDUSTRY3.push_back(transform); break;
+							}
+						}
+						else if (area->IsServiceArea())
+						{
+							switch (area->Get_Level())
+							{
+							case LEVEL_1: transforms_SERVICE1.push_back(transform); break;
+							case LEVEL_2: transforms_SERVICE2.push_back(transform); break;
+							case LEVEL_3: transforms_SERVICE3.push_back(transform); break;
+							}
+						}
+					}
+				}
+				else if (field->IsBuilding()) 
+				{
+					Building* building = dynamic_cast<Building*>(field);
+					if (building->IsPoliceStation()) 
+					{
+						transforms_FIRESTATION.push_back(transform);
+					}
+					else if (building->IsFireStation()) 
+					{
+						transforms_POLICESTATION.push_back(transform);
+					}
+					else if (building->IsStadium())
+					{
+						transforms_STADION.push_back(transform);
+					}
+					else if (building->IsSchool()) 
+					{
+						School* school = dynamic_cast<School*>(building);
+						if (school->IsHighSchool()) 
+						{
+							transforms_SCHOOL1.push_back(transform);
+						}
+						else if (school->IsUniversity()) 
+						{
+							transforms_SCHOOL2.push_back(transform);
+						}
+					}
+					else if (building->IsPowerStation()) 
+					{
+						transforms_POWERSTATION.push_back(transform);
+					}
+					else if (building->IsPowerWire())
+					{
+						transforms_POWERWIRE.push_back(transform);
+					}
 				}
 			}
 		}
 		changed = false;
 	}
+
+	//case 19: transforms_CHARACTER.push_back(transform); break;
 
 	m_Renderer->Render_PreRender();
 	m_Renderer->RenderInstanced_Character(transforms_CHARACTER);
@@ -259,8 +322,8 @@ void Application::ConvertMouseInputTo3D(int xpos, int ypos, int width, int heigh
 	float rayx = RayHit.x;
 	float rayz = RayHit.z;
 
-	bool l_1 = rayx > 0.f && rayx < m_GameTable->Get_TableSize() * 2 && t >= 0;
-	bool l_2 = rayz > 0.f && rayz < m_GameTable->Get_TableSize() * 2 && t >= 0;
+	bool l_1 = rayx > 0.f && rayx < m_City->Get_GameTableSize() * 2 && t >= 0;
+	bool l_2 = rayz > 0.f && rayz < m_City->Get_GameTableSize() * 2 && t >= 0;
 
 	if (l_1 && l_2)
 	{
@@ -268,7 +331,7 @@ void Application::ConvertMouseInputTo3D(int xpos, int ypos, int width, int heigh
 		rayx /= 2.f;
 		rayz /= 2.f;
 
-		//m_GameTable->Set_TableValue(int(rayz), int(rayx), m_Settings->BuildingID);
+		m_City->Set_GameTableValue(int(rayz), int(rayx), EMPTY);
 		changed = true;
 	}
 }
