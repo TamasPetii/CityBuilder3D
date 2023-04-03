@@ -1,7 +1,6 @@
 #include "GameTable.h"
 
-GameTable::GameTable(int TableSize) :
-	m_TableSize(TableSize)
+GameTable::GameTable(int TableSize) : m_TableSize(TableSize)
 {
 	//Todo: check for wrong tablesize value
 	m_Table.resize(m_TableSize);
