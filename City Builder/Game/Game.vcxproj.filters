@@ -18,9 +18,27 @@
     <ClInclude Include="GameTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Citizen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="City.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameField.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Citizen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="City.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameField.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -70,7 +70,7 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-    <PropertyGroup>
+  <PropertyGroup>
     <ShowAllFiles>true</ShowAllFiles>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -146,9 +146,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Citizen.h" />
+    <ClInclude Include="City.h" />
+    <ClInclude Include="GameField.h" />
     <ClInclude Include="GameTable.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Citizen.cpp" />
+    <ClCompile Include="City.cpp" />
+    <ClCompile Include="GameField.cpp" />
     <ClCompile Include="GameTable.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
