@@ -1,7 +1,7 @@
 #ifndef EMPTY_H
 #define EMPTY_H
 
-#include "GameField.h"
+#include "../GameField.h"
 
 class Empty : public GameField
 {

@@ -1,15 +1,14 @@
 #pragma once
 
+#include <unordered_set>
+
 #include "GameTable.h"
 #include "Citizen.h"
-#include "Zone.h"
-
-#include <unordered_set>
 
 class City
 {
 public:
-	City(float initialMoney, float initialTax) : m_Money(initialMoney), m_Tax(initialTax) {}
+	City(int size);
 	~City() = default;
 
 	void JoinCity(Citizen* citizen);
@@ -19,9 +18,13 @@ public:
 	void CollectTax();
 	ZoneDetails Get_ZoneDetails(int x, int y) const;
 
+	inline GameField* Get_GameField(int x, int y) const { return m_GameTable->Get_TableValue(x, y); };
+	inline int Get_GameTableSize() const { return m_GameTable->Get_TableSize(); }
+	inline void Set_GameTableValue(int x, int y, FieldType type) { m_GameTable->Set_TableValue(x, y, type); }
 private:
+	std::unordered_set<Citizen*> m_Citizens;
 	GameTable* m_GameTable;
-	std::unordered_set<Citizen> m_Citizens;
-	float m_Money;
-	float m_Tax;
+
+	float m_Money = 0;
+	float m_Tax = 0;
 };

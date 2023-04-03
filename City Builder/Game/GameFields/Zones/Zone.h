@@ -1,12 +1,12 @@
 #ifndef ZONE_H
 #define ZONE_H
 
-#include "GameField.h"
+#include "../GameField.h"
 #include <unordered_set>
 
 class Citizen;
 
-enum class Level {
+enum Level {
 	LEVEL_1,
 	LEVEL_2,
 	LEVEL_3
@@ -22,7 +22,7 @@ public:
 class Zone : public GameField
 {
 protected: 
-	Zone(Level level) : GameField() {}
+	Zone(Level level) : GameField(), level(level) {}
 public:
 	~Zone() {}
 
@@ -34,6 +34,7 @@ public:
 	void LeaveZone(Citizen* citizen);
 	void DeleteZone();
 
+	Level Get_Level() { return this->level; }
 	float Get_Satisfaction() const;
 	float Set_Satisfaction(float value);
 	float AddToSatisfaction(float value);
@@ -41,6 +42,7 @@ public:
 	ZoneDetails inline Get_ZoneDetails() const { return m_details; }
 
 private:
+	Level level;
 	ZoneDetails m_details;
 	std::unordered_set<Citizen*> m_citizens;
 };

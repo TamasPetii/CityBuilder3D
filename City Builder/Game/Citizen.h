@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Zone.h"
+class Zone;
 
 class Citizen
 {
@@ -16,7 +16,7 @@ public:
 	float PayTax() const;
 
 private:
-	Zone* m_Residence;
-	Zone* m_Workplace;
-	int m_Age;
+	Zone* m_Residence = nullptr;
+	Zone* m_Workplace = nullptr;
+	int m_Age = 0;
 };

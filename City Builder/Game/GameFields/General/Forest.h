@@ -1,7 +1,7 @@
 #ifndef FOREST_H
 #define FOREST_H
 
-#include "GameField.h"
+#include "../GameField.h"
 
 class Forest : public GameField
 {

@@ -1,5 +1,10 @@
 #include "City.h"
 
+City::City(int size)
+{
+	m_GameTable = new GameTable(size);
+}
+
 void City::JoinCity(Citizen* citizen)
 {
 	
@@ -22,12 +27,13 @@ void City::UpgradeField(int x, int y)
 
 void City::CollectTax()
 {
-	for (const Citizen& citizen : m_Citizens) {
-		m_Money += citizen.PayTax();
+	for (const Citizen* citizen : m_Citizens) {
+		m_Money += citizen->PayTax();
 	}
 }
 
 ZoneDetails City::Get_ZoneDetails(int x, int y) const
 {
-
+	ZoneDetails z;
+	return z;
 }

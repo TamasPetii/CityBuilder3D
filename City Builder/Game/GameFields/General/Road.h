@@ -1,7 +1,7 @@
 #ifndef ROAD_H
 #define ROAD_H
 
-#include "GameField.h"
+#include "../GameField.h"
 
 class Road : public GameField
 {

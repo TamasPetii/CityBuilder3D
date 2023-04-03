@@ -11,7 +11,7 @@ GameTable::GameTable(int TableSize) : m_TableSize(TableSize)
 
 		for (int j = 0; j < m_TableSize; j++)
 		{
-			m_Table[i][j] = i % 20;
+			m_Table[i][j] = GameField::CreateField((FieldType)(i % 19));
 		}
 	}
 }

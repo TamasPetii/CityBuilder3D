@@ -1,7 +1,7 @@
 #ifndef BUILDING_H
 #define BUILDING_H
 
-#include "GameField.h"
+#include "../GameField.h"
 
 class Building : public GameField
 {
