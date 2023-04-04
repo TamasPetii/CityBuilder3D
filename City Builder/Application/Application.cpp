@@ -76,40 +76,6 @@ void Application::Render()
 {
 	if (changed)
 	{
-		transforms_CUBE.clear();
-		transforms_CONE.clear();
-		transforms_CYLINDER.clear();
-		transforms_PYRAMID.clear();
-		transforms_SPHERE.clear();
-
-		transforms_EMPTY.clear();
-		transforms_ROAD.clear();
-		transforms_FOREST.clear();
-
-		transforms_RESIDENCE1.clear();
-		transforms_RESIDENCE2.clear();
-		transforms_RESIDENCE3.clear();
-
-		transforms_INDUSTRY1.clear();
-		transforms_INDUSTRY2.clear();
-		transforms_INDUSTRY3.clear();
-
-		transforms_SERVICE1.clear();
-		transforms_SERVICE2.clear();
-		transforms_SERVICE3.clear();
-
-		transforms_FIRESTATION.clear();
-		transforms_POLICESTATION.clear();
-		transforms_STADION.clear();
-
-		transforms_POWERSTATION.clear();
-		transforms_POWERWIRE.clear();
-
-		transforms_SCHOOL1.clear();
-		transforms_SCHOOL2.clear();
-
-		transforms_CHARACTER.clear();
-
 		for (int i = 0; i < m_City->Get_GameTableSize(); i++)
 		{
 			for (int j = 0; j < m_City->Get_GameTableSize(); j++)
@@ -202,12 +168,11 @@ void Application::Render()
 				}
 			}
 		}
-		changed = false;
 	}
 
 	//case 19: transforms_CHARACTER.push_back(transform); break;
 
-	m_Renderer->Render_PreRender();
+	m_Renderer->Render_PreRender(changed);
 	m_Renderer->RenderInstanced_Character(transforms_CHARACTER);
 	m_Renderer->RenderInstanced_Empty(transforms_EMPTY);
 	m_Renderer->RenderInstanced_Road(transforms_ROAD);
@@ -231,6 +196,36 @@ void Application::Render()
 	m_Renderer->Render_Axis();
 	m_Renderer->Render_Ray(RayOrigin, RayEnd);
 	m_Renderer->Render_PostRender();
+
+	if (changed) 
+	{
+		changed = false;
+		transforms_CUBE.clear();
+		transforms_CONE.clear();
+		transforms_CYLINDER.clear();
+		transforms_PYRAMID.clear();
+		transforms_SPHERE.clear();
+		transforms_EMPTY.clear();
+		transforms_ROAD.clear();
+		transforms_FOREST.clear();
+		transforms_RESIDENCE1.clear();
+		transforms_RESIDENCE2.clear();
+		transforms_RESIDENCE3.clear();
+		transforms_INDUSTRY1.clear();
+		transforms_INDUSTRY2.clear();
+		transforms_INDUSTRY3.clear();
+		transforms_SERVICE1.clear();
+		transforms_SERVICE2.clear();
+		transforms_SERVICE3.clear();
+		transforms_FIRESTATION.clear();
+		transforms_POLICESTATION.clear();
+		transforms_STADION.clear();
+		transforms_POWERSTATION.clear();
+		transforms_POWERWIRE.clear();
+		transforms_SCHOOL1.clear();
+		transforms_SCHOOL2.clear();
+		transforms_CHARACTER.clear();
+	}
 }
 
 

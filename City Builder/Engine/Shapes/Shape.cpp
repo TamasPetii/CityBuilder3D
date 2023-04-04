@@ -31,9 +31,15 @@ void Shape::RenderInstanced() const
 	glDrawElementsInstanced(GL_TRIANGLES, m_IndicesCount, GL_UNSIGNED_INT, nullptr, m_InstanceCount);
 }
 
-void Shape::AttachMatrices(const std::vector<glm::mat4>& transforms)
+void Shape::AttachMatricesDynamic(const std::vector<glm::mat4>& transforms)
 {
-	m_MAT.AttachDynamic(transforms);
+	m_MAT.AttachDataDynamic(transforms);
+	m_InstanceCount = static_cast<GLuint>(transforms.size());
+}
+
+void Shape::AttachMatricesSubData(const std::vector<glm::mat4>& transforms)
+{
+	m_MAT.AttachSubData(transforms); //Only copying data! We don't want to reallocate in every render call!
 	m_InstanceCount = static_cast<GLuint>(transforms.size());
 }
 
@@ -43,9 +49,9 @@ void Shape::AttachToGPU(const std::vector<Vertex>& vertices, const std::vector<G
 
 	m_VAO.Bind();
 
-	m_VBO.AttachStatic(vertices);
-	m_IBO.AttachStatic(indices);
-	m_MAT.AttachDynamic({});
+	m_VBO.AttachDataStatic(vertices);
+	m_IBO.AttachDataStatic(indices);
+	m_MAT.AttachDataDynamic(std::vector<glm::mat4>(2500)); //Allocate a buffer with max size (50x50) table, and then copying data to this buffer
 
 	m_VAO.LinkAttribute(m_VBO, 0, 3, GL_FLOAT, sizeof(Vertex), nullptr);
 	m_VAO.LinkAttribute(m_VBO, 1, 3, GL_FLOAT, sizeof(Vertex), (const void*)(1 * sizeof(glm::vec3)));

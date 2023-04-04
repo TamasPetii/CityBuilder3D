@@ -128,8 +128,10 @@ void Renderer::Render_Clear()
 	glClearColor(0.2f, 0.2f, 0.2f, 1.f);
 }
 
-void Renderer::Render_PreRender()
+void Renderer::Render_PreRender(bool changed)
 {
+	this->changed = changed;
+
 	m_FrameBuffer->Bind();
 	m_Camera->Set_ProjMatrix(m_FrameBuffer->Get_FrameWidth(), m_FrameBuffer->Get_FrameHeight());
 	Render_Clear();
@@ -141,6 +143,7 @@ void Renderer::Render_PreRender()
 
 void Renderer::Render_PostRender()
 {
+	changed = false;
 	m_FrameBuffer->UnBind();
 }
 
@@ -261,7 +264,8 @@ void Renderer::Delete_BasicShapes()
 
 void Renderer::RenderInstanced_BasicShape(Shape* shape, const std::vector<glm::mat4>& transforms, const TextureCoord& texcord)
 {
-	if (transforms.size() == 0) return;
+	if (transforms.size() == 0 && shape->Get_InstanceCount() == 0) return;
+
 	m_InstanceProgram->Bind();
 	m_InstanceProgram->SetUniform("u_VP", m_Camera->Get_ViewProjMatrix());
 	m_InstanceProgram->SetUniform("u_UseTexture", 1);
@@ -276,15 +280,15 @@ void Renderer::RenderInstanced_BasicShape(Shape* shape, const std::vector<glm::m
 	//TODO: Colors
 
 	shape->Bind();
-	shape->AttachMatrices(transforms);
+	if(changed)
+		shape->AttachMatricesSubData(transforms);
 
-	for (int i = 0; i < shape->shape_transform.size(); i++)
+	for (int i = 0; i < shape->Get_Transforms().size(); i++)
 	{
-		m_InstanceProgram->SetUniform("u_M", shape->shape_transform[i]);
+		m_InstanceProgram->SetUniform("u_M", shape->Get_Transforms()[i]);
 		shape->RenderInstanced();
 	}
 
-	shape->AttachMatrices({});
 	shape->UnBind();
 
 	m_InstanceProgram->UnBind();
@@ -386,7 +390,8 @@ void Renderer::Delete_ComplexShapes()
 
 void Renderer::RenderInstanced_ComplexShape(Shape* shape, const std::vector<glm::mat4>& transforms, const TextureCoord& texcord)
 {
-	if (transforms.size() == 0) return;
+	if (transforms.size() == 0 && shape->Get_InstanceCount() == 0) return;
+
 	m_InstanceProgram->Bind();
 	m_InstanceProgram->SetUniform("u_VP", m_Camera->Get_ViewProjMatrix());
 	m_InstanceProgram->SetUniform("u_UseTexture", 1);
@@ -401,24 +406,21 @@ void Renderer::RenderInstanced_ComplexShape(Shape* shape, const std::vector<glm:
 	//TODO: Colors
 
 	shape->Bind();
-	shape->AttachMatrices(transforms);
+	if (changed)
+		shape->AttachMatricesSubData(transforms);
 
-	for (int i = 0; i < shape->shape_transform.size(); i++)
+	for (int i = 0; i < shape->Get_Transforms().size(); i++)
 	{
-		m_InstanceProgram->SetUniform("u_M", shape->shape_transform[i]);
+		m_InstanceProgram->SetUniform("u_M", shape->Get_Transforms()[i]);
 		shape->RenderInstanced();
 	}
 
-	shape->AttachMatrices({});
 	shape->UnBind();
-
 	m_InstanceProgram->UnBind();
 }
 
 void Renderer::RenderInstanced_Residence1(const std::vector<glm::mat4>& transforms)
 {
-	if (transforms.size() == 0) return;
-
 	TextureCoord texcord;
 
 	texcord.coord0 = glm::vec2(0.0f, 0.8f);
@@ -432,8 +434,6 @@ void Renderer::RenderInstanced_Residence1(const std::vector<glm::mat4>& transfor
 
 void Renderer::RenderInstanced_Residence2(const std::vector<glm::mat4>& transforms)
 {
-	if (transforms.size() == 0) return;
-
 	TextureCoord texcord;
 
 	texcord.coord0 = glm::vec2(0.0f, 0.7f);
@@ -447,8 +447,6 @@ void Renderer::RenderInstanced_Residence2(const std::vector<glm::mat4>& transfor
 
 void Renderer::RenderInstanced_Residence3(const std::vector<glm::mat4>& transforms)
 {
-	if (transforms.size() == 0) return;
-
 	TextureCoord texcord;
 
 	texcord.coord0 = glm::vec2(0.0f, 0.6f);
@@ -507,8 +505,6 @@ void  Renderer::RenderInstanced_Industry3(const std::vector<glm::mat4>& transfor
 
 void Renderer::RenderInstanced_Service1(const std::vector<glm::mat4>& transforms)
 {
-	if (transforms.size() == 0) return;
-
 	TextureCoord texcord;
 
 	texcord.coord0 = glm::vec2(0.0f, 0.8f);
@@ -522,8 +518,6 @@ void Renderer::RenderInstanced_Service1(const std::vector<glm::mat4>& transforms
 
 void Renderer::RenderInstanced_Service2(const std::vector<glm::mat4>& transforms)
 {
-	if (transforms.size() == 0) return;
-
 	TextureCoord texcord;
 
 	texcord.coord0 = glm::vec2(0.0f, 0.7f);
@@ -537,8 +531,6 @@ void Renderer::RenderInstanced_Service2(const std::vector<glm::mat4>& transforms
 
 void Renderer::RenderInstanced_Service3(const std::vector<glm::mat4>& transforms)
 {
-	if (transforms.size() == 0) return;
-
 	TextureCoord texcord;
 
 	texcord.coord0 = glm::vec2(0.0f, 0.6f);
@@ -552,8 +544,6 @@ void Renderer::RenderInstanced_Service3(const std::vector<glm::mat4>& transforms
 
 void Renderer::RenderInstanced_FireStation(const std::vector<glm::mat4>& transforms)
 {
-	if (transforms.size() == 0) return;
-
 	TextureCoord texcord;
 
 	texcord.coord0 = glm::vec2(0.0f, 0.8f);
@@ -567,8 +557,6 @@ void Renderer::RenderInstanced_FireStation(const std::vector<glm::mat4>& transfo
 
 void Renderer::RenderInstanced_PoliceStation(const std::vector<glm::mat4>& transforms)
 {
-	if (transforms.size() == 0) return;
-
 	TextureCoord texcord;
 
 	texcord.coord0 = glm::vec2(0.0f, 0.8f);
@@ -582,8 +570,6 @@ void Renderer::RenderInstanced_PoliceStation(const std::vector<glm::mat4>& trans
 
 void Renderer::RenderInstanced_PowerStation(const std::vector<glm::mat4>& transforms)
 {
-	if (transforms.size() == 0) return;
-
 	TextureCoord texcord;
 
 	texcord.coord0 = glm::vec2(0.0f, 0.7f);
@@ -609,7 +595,6 @@ void Renderer::RenderInstanced_PowerStation(const std::vector<glm::mat4>& transf
 void Renderer::RenderInstanced_PowerWire(const std::vector<glm::mat4>& transforms)
 {
 	TextureCoord texcord;
-
 	texcord.coord0 = glm::vec2(0.9f, 0.0f);
 	texcord.coord1 = glm::vec2(0.9f, 0.0f);
 	RenderInstanced_ComplexShape(r_Ground, transforms, texcord);
@@ -617,8 +602,6 @@ void Renderer::RenderInstanced_PowerWire(const std::vector<glm::mat4>& transform
 
 void Renderer::RenderInstanced_Stadion(const std::vector<glm::mat4>& transforms)
 {
-	if (transforms.size() == 0) return;
-
 	TextureCoord texcord;
 
 	texcord.coord0 = glm::vec2(0.0f, 0.8f);
@@ -633,8 +616,6 @@ void Renderer::RenderInstanced_Stadion(const std::vector<glm::mat4>& transforms)
 
 void Renderer::RenderInstanced_School1(const std::vector<glm::mat4>& transforms)
 {
-	if (transforms.size() == 0) return;
-
 	TextureCoord texcord;
 
 	texcord.coord0 = glm::vec2(0.0f, 0.8f);
@@ -648,8 +629,6 @@ void Renderer::RenderInstanced_School1(const std::vector<glm::mat4>& transforms)
 
 void Renderer::RenderInstanced_School2(const std::vector<glm::mat4>& transforms)
 {
-	if (transforms.size() == 0) return;
-
 	TextureCoord texcord;
 
 	texcord.coord0 = glm::vec2(0.0f, 0.8f);
@@ -663,8 +642,6 @@ void Renderer::RenderInstanced_School2(const std::vector<glm::mat4>& transforms)
 
 void Renderer::RenderInstanced_Forest(const std::vector<glm::mat4>& transforms)
 {
-	if (transforms.size() == 0) return;
-
 	TextureCoord texcord;
 
 	texcord.coord0 = glm::vec2(0.0f, 0.5f);
@@ -678,8 +655,6 @@ void Renderer::RenderInstanced_Forest(const std::vector<glm::mat4>& transforms)
 
 void Renderer::RenderInstanced_Empty(const std::vector<glm::mat4>& transforms)
 {
-	if (transforms.size() == 0) return;
-
 	TextureCoord texcord;
 
 	texcord.coord0 = glm::vec2(0.0f, 0.9f);
@@ -689,8 +664,6 @@ void Renderer::RenderInstanced_Empty(const std::vector<glm::mat4>& transforms)
 
 void Renderer::RenderInstanced_Road(const std::vector<glm::mat4>& transforms)
 {
-	if (transforms.size() == 0) return;
-
 	TextureCoord texcord;
 
 	texcord.coord0 = glm::vec2(0.1f, 0.9f);
