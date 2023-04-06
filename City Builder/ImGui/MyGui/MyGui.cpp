@@ -145,7 +145,9 @@ void MyGui::DockSpace_Render()
 
     if (!opt_padding)
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
     ImGui::Begin("DockSpace Demo", nullptr, window_flags);
+  
     if (!opt_padding)
         ImGui::PopStyleVar();
 
@@ -160,6 +162,16 @@ void MyGui::DockSpace_Render()
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     }
 
+    Render_DockSpaceMenuBar();
+
+    ImGui::End();
+}
+
+void MyGui::Render_DockSpaceMenuBar()
+{
+    bool newGame = false;
+    bool loadGame = false;
+    bool saveGame = false;
     if (ImGui::BeginMenuBar())
     {
 
@@ -167,40 +179,75 @@ void MyGui::DockSpace_Render()
         {
             if (ImGui::MenuItem("New Game"))
             {
-                ImGui::OpenPopup("New Game Pop Up");
-                std::cout << "Clicked on New Game menuitem" << std::endl;
+                newGame = true;
             }
             if (ImGui::MenuItem("Load Game"))
             {
-                std::cout << "Clicked on Load Game menuitem" << std::endl;
+                bool loadGame = false;
             }
             if (ImGui::MenuItem("Save Game"))
             {
-                std::cout << "Clicked on Save Game menuitem" << std::endl;
+                bool saveGame = false;
             }
             ImGui::EndMenu();
         }
 
         if (ImGui::BeginMenu("Options"))
         {
-            // Disabling fullscreen would allow the window to be moved to the front of other windows,
-            // which we can't undo at the moment without finer window depth/z control.
-            ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen);
-            ImGui::MenuItem("Padding", NULL, &opt_padding);
-            ImGui::Separator();
-
-            if (ImGui::MenuItem("Flag: NoSplit", "", (dockspace_flags & ImGuiDockNodeFlags_NoSplit) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoSplit; }
-            if (ImGui::MenuItem("Flag: NoResize", "", (dockspace_flags & ImGuiDockNodeFlags_NoResize) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoResize; }
-            if (ImGui::MenuItem("Flag: NoDockingInCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_NoDockingInCentralNode) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoDockingInCentralNode; }
-            if (ImGui::MenuItem("Flag: AutoHideTabBar", "", (dockspace_flags & ImGuiDockNodeFlags_AutoHideTabBar) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_AutoHideTabBar; }
-            if (ImGui::MenuItem("Flag: PassthruCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode) != 0, opt_fullscreen)) { dockspace_flags ^= ImGuiDockNodeFlags_PassthruCentralNode; }
-            ImGui::Separator();
             ImGui::EndMenu();
         }
         ImGui::EndMenuBar();
     }
 
-    ImGui::End();
+    if (newGame)
+    {
+        ImGui::OpenPopup("New Game");
+    }
+
+    if (ImGui::BeginPopupModal("New Game", nullptr, ImGuiWindowFlags_NoResize))
+    {
+        ImGui::SetWindowSize(ImVec2(300, 127));
+
+        //[New Game] : City Name Text Input
+        ImGui::Text("City Name: ");
+        ImGui::SameLine();
+        static char buf1[64] = ""; ImGui::InputText("##city_name", buf1, 64);
+
+        //[New Game] : City Size Slider 
+        ImGui::Text("City Size: ");
+        ImGui::SameLine();
+        int size = 0;
+        ImGui::SliderInt("##city_size", &size, 0, 50);
+
+        //[New Game] : City Time Slider 
+        ImGui::Text("City Time: ");
+        ImGui::SameLine();
+        int time = 0;
+        ImGui::SliderInt("##city_time", &time, 0, 2);
+
+        ImGui::Separator();
+
+        //[New Game] : Okay Button
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0.75, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0.7, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0.65, 0, 1));
+        if (ImGui::Button("Okay", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+        ImGui::SetItemDefaultFocus();
+        ImGui::PopStyleColor(3);
+
+        ImGui::SameLine();
+
+        //[New Game] : Cancel Button
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1, 0, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9, 0, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8, 0, 0, 1));
+        ImGui::SetCursorPosX(ImGui::GetWindowContentRegionMax().x - 120);
+        if (ImGui::Button("Cancel", ImVec2(120, 0))){ ImGui::CloseCurrentPopup(); }
+        ImGui::PopStyleColor(3);
+
+        ImGui::EndPopup();
+    }
+
 }
 
 void MyGui::ViewPort_Render(FrameBuffer* fbo)

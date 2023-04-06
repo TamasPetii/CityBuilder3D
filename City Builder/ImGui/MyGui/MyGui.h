@@ -18,6 +18,8 @@ public:
 	void Pre_Render();
 	void Post_Render();
 
+	void Render_DockSpaceMenuBar();
+
 	void Demo_Render();
 	void Window1_Render();
 	void Window2_Render();
