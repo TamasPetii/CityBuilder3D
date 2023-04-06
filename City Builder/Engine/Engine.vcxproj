@@ -70,7 +70,7 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-    <PropertyGroup>
+  <PropertyGroup>
     <ShowAllFiles>true</ShowAllFiles>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -97,7 +97,7 @@
     <OutDir>$(SolutionDir)_bin_\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)_bin_\intermediate\Engine\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LocalDebuggerWorkingDirectory>$(SolutionDir)</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
@@ -211,6 +211,8 @@
     <ClCompile Include="Shapes\Complex Shapes\Service\ServiceBuilding3.cpp" />
     <ClCompile Include="Shapes\Complex Shapes\Stadion\StadionBuilding.cpp" />
     <ClCompile Include="Shapes\Shape.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\PowerStation\WindTurbine.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\PowerStation\WindTurbinePropeller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Abstractions\BufferObject.h" />
@@ -257,6 +259,8 @@
     <ClInclude Include="Shapes\Complex Shapes\Service\ServiceBuilding3.h" />
     <ClInclude Include="Shapes\Complex Shapes\Stadion\StadionBuilding.h" />
     <ClInclude Include="Shapes\Shape.h" />
+    <ClInclude Include="Shapes\Complex Shapes\PowerStation\WindTurbine.h" />
+    <ClInclude Include="Shapes\Complex Shapes\PowerStation\WindTurbinePropeller.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Base.frag" />

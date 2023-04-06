@@ -83,6 +83,7 @@ public:
 	void RenderInstanced_Empty(const std::vector<glm::mat4>& transforms);
 	void RenderInstanced_Road(const std::vector<glm::mat4>& transforms);
 	void RenderInstanced_Forest(const std::vector<glm::mat4>& transforms);
+	void RenderIstanced_WindTubine(const std::vector<glm::mat4>& transforms, const glm::mat4& rotate);
 private: 
 	Model* m_Model = nullptr;
 	Cube* r_Cube = nullptr;
@@ -109,4 +110,6 @@ private:
 	StadionBuilding* r_Stadion = nullptr;
 	Ground* r_Ground = nullptr;
 	Tree* r_Tree = nullptr;
+	WindTurbine* r_Turbine = nullptr;
+	WindTurbinePropeller* r_TurbinePropeller = nullptr;
 };

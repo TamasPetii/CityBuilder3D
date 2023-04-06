@@ -12,8 +12,8 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 	m_Renderer = new Renderer(m_Camera);
 	m_MyGui = new MyGui(m_Camera);
 
-	//m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
-	//m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
+	m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
+	m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
 }
 
 Application::~Application()
@@ -203,14 +203,14 @@ void Application::Render()
 	m_Renderer->RenderInstanced_FireStation(transforms_FIRESTATION);
 	m_Renderer->RenderInstanced_PoliceStation(transforms_POLICESTATION);
 	m_Renderer->RenderInstanced_Stadion(transforms_STADION);
-	m_Renderer->RenderInstanced_PowerStation(transforms_POWERSTATION);
+	m_Renderer->RenderIstanced_WindTubine(transforms_POWERSTATION, glm::rotate<float>(abs(glfwGetTime() * 2 * M_PI), glm::vec3(0, 0, 1)));
 	m_Renderer->RenderInstanced_PowerWire(transforms_POWERWIRE);
 	m_Renderer->RenderInstanced_School1(transforms_SCHOOL1);
 	m_Renderer->RenderInstanced_School2(transforms_SCHOOL2);
 	m_Renderer->Render_Axis();
 	m_Renderer->Render_Ray(RayOrigin, RayHit);
 	m_Renderer->Render_PostRender();
-	
+
 	if (changed) 
 	{
 		changed = false;

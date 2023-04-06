@@ -363,6 +363,10 @@ void Renderer::Init_ComplexShapes()
 	r_Ground->CreateBuffers();
 	r_Tree = new Tree();
 	r_Tree->CreateBuffers();
+	r_Turbine = new WindTurbine();
+	r_Turbine->CreateBuffers();
+	r_TurbinePropeller = new WindTurbinePropeller();
+	r_TurbinePropeller->CreateBuffers();
 }
 
 void Renderer::Delete_ComplexShapes()
@@ -386,6 +390,7 @@ void Renderer::Delete_ComplexShapes()
 	delete r_Stadion;
 	delete r_Ground;
 	delete r_Tree;
+	delete r_Turbine;
 }
 
 void Renderer::RenderInstanced_ComplexShape(Shape* shape, const std::vector<glm::mat4>& transforms)
@@ -512,4 +517,12 @@ void Renderer::RenderInstanced_Empty(const std::vector<glm::mat4>& transforms)
 void Renderer::RenderInstanced_Road(const std::vector<glm::mat4>& transforms)
 {
 
+}
+
+void Renderer::RenderIstanced_WindTubine(const std::vector<glm::mat4>& transforms, const glm::mat4& rotate)
+{
+	RenderInstanced_ComplexShape(r_Turbine, transforms);
+
+	r_TurbinePropeller->Get_Transforms()[0] = glm::translate(glm::vec3(0, 0.9, -0.2)) * rotate * glm::scale(glm::vec3(0.5, 0.5, 0.5));
+	RenderInstanced_ComplexShape(r_TurbinePropeller, transforms);
 }

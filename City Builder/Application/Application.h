@@ -1,4 +1,6 @@
 #pragma once
+#define _USE_MATH_DEFINES
+
 //OpenGL Headers
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
@@ -16,6 +18,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cmath>
 
 class Application
 {
