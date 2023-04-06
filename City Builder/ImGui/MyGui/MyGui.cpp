@@ -169,7 +169,6 @@ void MyGui::DockSpace_Render()
 
 void MyGui::Render_DockSpaceMenuBar()
 {
-    bool newGame = false;
     bool loadGame = false;
     bool saveGame = false;
     if (ImGui::BeginMenuBar())
@@ -179,7 +178,7 @@ void MyGui::Render_DockSpaceMenuBar()
         {
             if (ImGui::MenuItem("New Game"))
             {
-                newGame = true;
+                m_NewGameLayout.show = true;
             }
             if (ImGui::MenuItem("Load Game"))
             {
@@ -199,7 +198,13 @@ void MyGui::Render_DockSpaceMenuBar()
         ImGui::EndMenuBar();
     }
 
-    if (newGame)
+    NewGame_Window();
+
+}
+
+void MyGui::NewGame_Window()
+{
+    if (m_NewGameLayout.show)
     {
         ImGui::OpenPopup("New Game");
     }
@@ -211,19 +216,17 @@ void MyGui::Render_DockSpaceMenuBar()
         //[New Game] : City Name Text Input
         ImGui::Text("City Name: ");
         ImGui::SameLine();
-        static char buf1[64] = ""; ImGui::InputText("##city_name", buf1, 64);
+        ImGui::InputText("##city_name", m_NewGameLayout.name, 64);
 
         //[New Game] : City Size Slider 
         ImGui::Text("City Size: ");
         ImGui::SameLine();
-        int size = 0;
-        ImGui::SliderInt("##city_size", &size, 0, 50);
+        ImGui::SliderInt("##city_size", &m_NewGameLayout.size, 25, 50);
 
         //[New Game] : City Time Slider 
         ImGui::Text("City Time: ");
         ImGui::SameLine();
-        int time = 0;
-        ImGui::SliderInt("##city_time", &time, 0, 2);
+        ImGui::SliderInt("##city_time", &m_NewGameLayout.time, 0, 2);
 
         ImGui::Separator();
 
@@ -231,7 +234,7 @@ void MyGui::Render_DockSpaceMenuBar()
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0.75, 0, 1));
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0.7, 0, 1));
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0.65, 0, 1));
-        if (ImGui::Button("Okay", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+        if (ImGui::Button("Okay", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); m_NewGameLayout.show = false; m_NewGameLayout.effect = true; }
         ImGui::SetItemDefaultFocus();
         ImGui::PopStyleColor(3);
 
@@ -242,12 +245,11 @@ void MyGui::Render_DockSpaceMenuBar()
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9, 0, 0, 1));
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8, 0, 0, 1));
         ImGui::SetCursorPosX(ImGui::GetWindowContentRegionMax().x - 120);
-        if (ImGui::Button("Cancel", ImVec2(120, 0))){ ImGui::CloseCurrentPopup(); }
+        if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); m_NewGameLayout.show = false; }
         ImGui::PopStyleColor(3);
 
         ImGui::EndPopup();
     }
-
 }
 
 void MyGui::ViewPort_Render(FrameBuffer* fbo)

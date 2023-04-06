@@ -45,6 +45,9 @@
     <ClInclude Include="MyGui\MyGui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MyGui\MyGuiLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ImGui\imgui.cpp">

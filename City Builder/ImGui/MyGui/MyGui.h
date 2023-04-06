@@ -8,6 +8,7 @@
 #include "../ImGui/imgui.h"
 #include "../ImGui/imgui_impl_glfw.h"
 #include "../ImGui/imgui_impl_opengl3.h"
+#include "MyGuiLayout.h"
 
 class MyGui
 {
@@ -36,6 +37,8 @@ public:
 	int mouse_x;
 	int mouse_y;
 	ImVec2 content_size;
+
+	inline NewGameLayout& Get_NewGameLayout() { return m_NewGameLayout; };
 protected:
 	//Style
 	static void Custom_Style();
@@ -47,5 +50,8 @@ private:
 	Camera* m_Camera = nullptr;
 	int m_ViewPort_Width = 0;
 	int m_ViewPort_Height = 0;
+
+	void NewGame_Window();
+	NewGameLayout m_NewGameLayout;
 };
 
