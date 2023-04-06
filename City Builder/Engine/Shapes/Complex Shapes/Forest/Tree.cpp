@@ -24,7 +24,7 @@ void Tree::CreateBuffers()
 	layout.GeometryDetails.BASE_ORIGO = glm::vec3(0, 1, 0);
 	layout.GeometryDetails.BOTTOM_APEX = glm::vec3(0, 1, 0);
 	layout.GeometryDetails.TOP_APEX = glm::vec3(0, 2, 0);
-	layout.TextureDetails.ID = 0.f;
+	layout.TextureDetails.ID = 42.f;
 
 	Shape::ConcatenateIndices(indices, Cone::GenerateIndices(layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cone::GenerateVertices(layout));
@@ -48,7 +48,7 @@ void Tree::CreateBuffers()
 	layout.GeometryDetails.BOTTOM_APEX += glm::vec3(0, -1, 0);
 	layout.GeometryDetails.TOP_APEX = glm::vec3(0, 2, 0);
 	layout.GeometryDetails.BASE_RADIUS = 0.2f;
-	layout.TextureDetails.ID = 1.f;
+	layout.TextureDetails.ID = 41.f;
 
 	Shape::ConcatenateIndices(indices, Cone::GenerateIndices(layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cone::GenerateVertices(layout));

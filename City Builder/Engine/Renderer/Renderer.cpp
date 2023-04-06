@@ -137,6 +137,8 @@ void Renderer::Render_PreRender(bool changed)
 	Render_Clear();
 
 	m_InstanceProgram->Bind();
+	m_InstanceProgram->SetUniform("u_UseTexture", 1);
+	m_InstanceProgram->SetUniform("u_VP", m_Camera->Get_ViewProjMatrix());
 	m_InstanceProgram->SetUniformTexture("u_SpriteTexture", 0, t_Texture); //Upload only once per render calls
 	m_InstanceProgram->UnBind();
 }
@@ -203,20 +205,13 @@ void Renderer::Delete_Models()
 	delete m_Model;
 }
 
-void Renderer::RenderInstanced_Model(Model* model, const std::vector<glm::mat4>& transforms, const TextureCoord& texcord)
+void Renderer::RenderInstanced_Model(Model* model, const std::vector<glm::mat4>& transforms)
 {
 	if (transforms.size() == 0) return;
 
 	m_InstanceProgram->Bind();
 	m_InstanceProgram->SetUniform("u_VP", m_Camera->Get_ViewProjMatrix());
 	m_InstanceProgram->SetUniform("u_UseTexture", 1);
-	m_InstanceProgram->SetUniform("u_TextureCoords0", texcord.coord0);
-	m_InstanceProgram->SetUniform("u_TextureCoords1", texcord.coord1);
-	m_InstanceProgram->SetUniform("u_TextureCoords2", texcord.coord2);
-	m_InstanceProgram->SetUniform("u_TextureCoords3", texcord.coord3);
-	m_InstanceProgram->SetUniform("u_TextureCoords4", texcord.coord4);
-	m_InstanceProgram->SetUniform("u_TextureCoords5", texcord.coord5);
-
 	m_InstanceProgram->SetUniform("u_M", glm::translate(glm::vec3(0, 0, 0)));
 
 	m_Model->RenderInstanced(m_InstanceProgram, transforms);
@@ -228,11 +223,7 @@ void Renderer::RenderInstanced_Character(const std::vector<glm::mat4>& transform
 {
 	if (transforms.size() == 0) return;
 
-	TextureCoord texcord;
-
-	texcord.coord0 = glm::vec2(0.0f, 0.9f);
-
-	RenderInstanced_Model(m_Model, transforms, texcord);
+	RenderInstanced_Model(m_Model, transforms);
 }
 
 //------------------------------------------------------|Basic-Shapes|------------------------------------------------------//
@@ -262,24 +253,13 @@ void Renderer::Delete_BasicShapes()
 	delete r_Cylinder;
 }
 
-void Renderer::RenderInstanced_BasicShape(Shape* shape, const std::vector<glm::mat4>& transforms, const TextureCoord& texcord)
+void Renderer::RenderInstanced_BasicShape(Shape* shape, const std::vector<glm::mat4>& transforms)
 {
 	if (transforms.size() == 0 && shape->Get_InstanceCount() == 0) return;
 
 	m_InstanceProgram->Bind();
-	m_InstanceProgram->SetUniform("u_VP", m_Camera->Get_ViewProjMatrix());
-	m_InstanceProgram->SetUniform("u_UseTexture", 1);
-
-	m_InstanceProgram->SetUniform("u_TextureCoords0", texcord.coord0);
-	m_InstanceProgram->SetUniform("u_TextureCoords1", texcord.coord1);
-	m_InstanceProgram->SetUniform("u_TextureCoords2", texcord.coord2);
-	m_InstanceProgram->SetUniform("u_TextureCoords3", texcord.coord3);
-	m_InstanceProgram->SetUniform("u_TextureCoords4", texcord.coord4);
-	m_InstanceProgram->SetUniform("u_TextureCoords5", texcord.coord5);
-
-	//TODO: Colors
-
 	shape->Bind();
+
 	if(changed)
 		shape->AttachMatricesSubData(transforms);
 
@@ -296,22 +276,10 @@ void Renderer::RenderInstanced_BasicShape(Shape* shape, const std::vector<glm::m
 
 void Renderer::RenderInstanced_Cube(const glm::mat4& transform)
 {
-	TextureCoord texcord;
-	texcord.coord0 = glm::vec2(0.0f, 0.8f);
-	texcord.coord1 = glm::vec2(0.0f, 0.8f);
-
 	m_BaseProgram->Bind();
 	m_BaseProgram->SetUniform("u_VP", m_Camera->Get_ViewProjMatrix());
 	m_BaseProgram->SetUniform("u_UseTexture", 1);
 	m_BaseProgram->SetUniform("u_M", transform);
-	m_BaseProgram->SetUniform("u_TextureCoords0", texcord.coord0);
-	m_BaseProgram->SetUniform("u_TextureCoords1", texcord.coord1);
-	m_BaseProgram->SetUniform("u_TextureCoords2", texcord.coord2);
-	m_BaseProgram->SetUniform("u_TextureCoords3", texcord.coord3);
-	m_BaseProgram->SetUniform("u_TextureCoords4", texcord.coord4);
-	m_BaseProgram->SetUniform("u_TextureCoords5", texcord.coord5);
-
-	//TODO: Colors
 
 	r_Pyramid->Bind();
 	r_Pyramid->Render();
@@ -409,24 +377,13 @@ void Renderer::Delete_ComplexShapes()
 	delete r_Tree;
 }
 
-void Renderer::RenderInstanced_ComplexShape(Shape* shape, const std::vector<glm::mat4>& transforms, const TextureCoord& texcord)
+void Renderer::RenderInstanced_ComplexShape(Shape* shape, const std::vector<glm::mat4>& transforms)
 {
 	if (transforms.size() == 0 && shape->Get_InstanceCount() == 0) return;
 
 	m_InstanceProgram->Bind();
-	m_InstanceProgram->SetUniform("u_VP", m_Camera->Get_ViewProjMatrix());
-	m_InstanceProgram->SetUniform("u_UseTexture", 1);
-
-	m_InstanceProgram->SetUniform("u_TextureCoords0", texcord.coord0);
-	m_InstanceProgram->SetUniform("u_TextureCoords1", texcord.coord1);
-	m_InstanceProgram->SetUniform("u_TextureCoords2", texcord.coord2);
-	m_InstanceProgram->SetUniform("u_TextureCoords3", texcord.coord3);
-	m_InstanceProgram->SetUniform("u_TextureCoords4", texcord.coord4);
-	m_InstanceProgram->SetUniform("u_TextureCoords5", texcord.coord5);
-
-	//TODO: Colors
-
 	shape->Bind();
+
 	if (changed)
 	{
 		shape->AttachMatricesSubData(transforms);
@@ -444,184 +401,68 @@ void Renderer::RenderInstanced_ComplexShape(Shape* shape, const std::vector<glm:
 
 void Renderer::RenderInstanced_Residence1(const std::vector<glm::mat4>& transforms)
 {
-	/*
-	texcord.coord0 = glm::vec2(0.0f, 0.8f);
-	texcord.coord1 = glm::vec2(0.0f, 0.8f);
-	RenderInstanced_ComplexShape(r_Ground, transforms, texcord);
-	*/
-
-	TextureCoord texcord;
-	texcord.coord0 = glm::vec2(0.1f, 0.8f);
-	texcord.coord1 = glm::vec2(0.2f, 0.8f);
-	RenderInstanced_ComplexShape(r_Residence1, transforms, texcord);
+	RenderInstanced_ComplexShape(r_Residence1, transforms);
 }
 
 void Renderer::RenderInstanced_Residence2(const std::vector<glm::mat4>& transforms)
 {
-	/*
-	texcord.coord0 = glm::vec2(0.0f, 0.7f);
-	texcord.coord1 = glm::vec2(0.0f, 0.7f);
-	RenderInstanced_ComplexShape(r_Ground, transforms, texcord);
-	*/
-
-	TextureCoord texcord;
-	texcord.coord0 = glm::vec2(0.1f, 0.7f);
-	texcord.coord1 = glm::vec2(0.2f, 0.7f);
-	RenderInstanced_ComplexShape(r_Residence2, transforms, texcord);
+	RenderInstanced_ComplexShape(r_Residence2, transforms);
 }
 
 void Renderer::RenderInstanced_Residence3(const std::vector<glm::mat4>& transforms)
 {
-	/*
-	texcord.coord0 = glm::vec2(0.0f, 0.6f);
-	texcord.coord1 = glm::vec2(0.0f, 0.6f);
-	RenderInstanced_ComplexShape(r_Ground, transforms, texcord);
-	*/
-
-	TextureCoord texcord;
-	texcord.coord0 = glm::vec2(0.1f, 0.6f);
-	texcord.coord1 = glm::vec2(0.2f, 0.6f);
-	RenderInstanced_ComplexShape(r_Residence3, transforms, texcord);
+	RenderInstanced_ComplexShape(r_Residence3, transforms);
 }
 
 void  Renderer::RenderInstanced_Industry1(const std::vector<glm::mat4>& transforms)
 {
-	/*
-	texcord.coord0 = glm::vec2(0.0f, 0.6f);
-	texcord.coord1 = glm::vec2(0.0f, 0.6f);
-	RenderInstanced_ComplexShape(r_Ground, transforms, texcord);
-	*/
-
-	TextureCoord texcord;
-	texcord.coord0 = glm::vec2(0.3f, 0.0f);
-	texcord.coord1 = glm::vec2(0.4f, 0.0f);
-	texcord.coord2 = glm::vec2(0.2f, 0.0f);
-	texcord.coord3 = glm::vec2(0.3f, 0.3f);
-	RenderInstanced_ComplexShape(r_Industry1, transforms, texcord);
+	RenderInstanced_ComplexShape(r_Industry1, transforms);
 }
 
 void  Renderer::RenderInstanced_Industry2(const std::vector<glm::mat4>& transforms)
 {
-	/*
-	texcord.coord0 = glm::vec2(0.0f, 0.6f);
-	texcord.coord1 = glm::vec2(0.0f, 0.6f);
-	RenderInstanced_ComplexShape(r_Ground, transforms, texcord);
-	*/
-
-	TextureCoord texcord;
-	texcord.coord0 = glm::vec2(0.5f, 0.0f);
-	texcord.coord1 = glm::vec2(0.4f, 0.0f);
-	texcord.coord2 = glm::vec2(0.6f, 0.0f);
-	texcord.coord3 = glm::vec2(0.3f, 0.3f);
-	RenderInstanced_ComplexShape(r_Industry2, transforms, texcord);
+	RenderInstanced_ComplexShape(r_Industry2, transforms);
 }
 void  Renderer::RenderInstanced_Industry3(const std::vector<glm::mat4>& transforms)
 {
-	/*
-	texcord.coord0 = glm::vec2(0.0f, 0.6f);
-	texcord.coord1 = glm::vec2(0.0f, 0.6f);
-	RenderInstanced_ComplexShape(r_Ground, transforms, texcord);
-	*/
-
-	TextureCoord texcord;
-	texcord.coord0 = glm::vec2(0.7f, 0.0f);
-	texcord.coord1 = glm::vec2(0.4f, 0.0f);
-	texcord.coord2 = glm::vec2(0.8f, 0.0f);
-	texcord.coord3 = glm::vec2(0.3f, 0.3f);
-	RenderInstanced_ComplexShape(r_Industry3, transforms, texcord);
+	RenderInstanced_ComplexShape(r_Industry3, transforms);
 }
-
 
 void Renderer::RenderInstanced_Service1(const std::vector<glm::mat4>& transforms)
 {
-	/*
-	texcord.coord0 = glm::vec2(0.0f, 0.8f);
-	texcord.coord1 = glm::vec2(0.0f, 0.8f);
-	RenderInstanced_ComplexShape(r_Ground, transforms, texcord);
-	*/
-
-	TextureCoord texcord;
-	texcord.coord0 = glm::vec2(0.3f, 0.8f);
-	texcord.coord1 = glm::vec2(0.2f, 0.8f);
-	RenderInstanced_ComplexShape(r_Service1, transforms, texcord);
+	RenderInstanced_ComplexShape(r_Service1, transforms);
 }
 
 void Renderer::RenderInstanced_Service2(const std::vector<glm::mat4>& transforms)
 {
-	/*
-	texcord.coord0 = glm::vec2(0.0f, 0.7f);
-	texcord.coord1 = glm::vec2(0.0f, 0.7f);
-	RenderInstanced_ComplexShape(r_Ground, transforms, texcord);
-	*/
-
-	TextureCoord texcord;
-	texcord.coord0 = glm::vec2(0.3f, 0.7f);
-	texcord.coord1 = glm::vec2(0.2f, 0.7f);
-	RenderInstanced_ComplexShape(r_Service2, transforms, texcord);
+	RenderInstanced_ComplexShape(r_Service2, transforms);
 }
 
 void Renderer::RenderInstanced_Service3(const std::vector<glm::mat4>& transforms)
 {
-	/*
-	texcord.coord0 = glm::vec2(0.0f, 0.6f);
-	texcord.coord1 = glm::vec2(0.0f, 0.6f);
-	RenderInstanced_ComplexShape(r_Ground, transforms, texcord);
-	*/
-
-	TextureCoord texcord;
-	texcord.coord0 = glm::vec2(0.3f, 0.6f);
-	texcord.coord1 = glm::vec2(0.4f, 0.6f);
-	RenderInstanced_ComplexShape(r_Service3, transforms, texcord);
+	RenderInstanced_ComplexShape(r_Service3, transforms);
 }
 
 void Renderer::RenderInstanced_FireStation(const std::vector<glm::mat4>& transforms)
 {
-	/*
-	texcord.coord0 = glm::vec2(0.0f, 0.8f);
-	texcord.coord1 = glm::vec2(0.0f, 0.8f);
-	RenderInstanced_ComplexShape(r_Ground, transforms, texcord);
-	*/
-
-	TextureCoord texcord;
-	texcord.coord0 = glm::vec2(0.0f, 0.3f);
-	texcord.coord1 = glm::vec2(0.1f, 0.3f);
-	RenderInstanced_ComplexShape(r_FireStation, transforms, texcord);
+	RenderInstanced_ComplexShape(r_FireStation, transforms);
 }
 
 void Renderer::RenderInstanced_PoliceStation(const std::vector<glm::mat4>& transforms)
 {
-	/*
-	texcord.coord0 = glm::vec2(0.0f, 0.8f);
-	texcord.coord1 = glm::vec2(0.0f, 0.8f);
-	RenderInstanced_ComplexShape(r_Ground, transforms, texcord);
-	*/
-
-	TextureCoord texcord;
-	texcord.coord0 = glm::vec2(0.2f, 0.3f);
-	texcord.coord1 = glm::vec2(0.3f, 0.3f);
-	RenderInstanced_ComplexShape(r_PoliceStation, transforms, texcord);
+	RenderInstanced_ComplexShape(r_PoliceStation, transforms);
 }
 
 void Renderer::RenderInstanced_PowerStation(const std::vector<glm::mat4>& transforms)
 {
-	/*
-	texcord.coord0 = glm::vec2(0.0f, 0.7f);
-	texcord.coord1 = glm::vec2(0.0f, 0.7f);
-	RenderInstanced_ComplexShape(r_Ground, transforms, texcord);
-	*/
 
-	TextureCoord texcord;
-	texcord.coord0 = glm::vec2(0.0f, 0.0f);
-	texcord.coord1 = glm::vec2(0.1f, 0.0f);
-	RenderInstanced_ComplexShape(r_PowerStation, transforms, texcord);
-	texcord.coord0 = glm::vec2(0.2f, 0.8f);
-	texcord.coord1 = glm::vec2(0.2f, 0.8f);
+	RenderInstanced_ComplexShape(r_PowerStation, transforms);
 
 	//Render only lines not triangles -> transparent affact
 	glDisable(GL_CULL_FACE);
 	glLineWidth(5.0f);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	RenderInstanced_ComplexShape(r_PowerStationPlinth, transforms, texcord);
+	RenderInstanced_ComplexShape(r_PowerStationPlinth, transforms);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glLineWidth(2.0f);
 	glEnable(GL_CULL_FACE);
@@ -629,86 +470,35 @@ void Renderer::RenderInstanced_PowerStation(const std::vector<glm::mat4>& transf
 
 void Renderer::RenderInstanced_PowerWire(const std::vector<glm::mat4>& transforms)
 {
-	/*
-	TextureCoord texcord;
-	texcord.coord0 = glm::vec2(0.9f, 0.0f);
-	texcord.coord1 = glm::vec2(0.9f, 0.0f);
-	RenderInstanced_ComplexShape(r_Ground, transforms, texcord);
-	*/
+
 }
 
 void Renderer::RenderInstanced_Stadion(const std::vector<glm::mat4>& transforms)
 {
-	/*
-	texcord.coord0 = glm::vec2(0.0f, 0.8f);
-	texcord.coord1 = glm::vec2(0.0f, 0.8f);
-	RenderInstanced_ComplexShape(r_Ground, transforms, texcord);
-	*/
-	
-	TextureCoord texcord;
-	texcord.coord0 = glm::vec2(0.0f, 0.2f);
-	texcord.coord1 = glm::vec2(0.1f, 0.2f);
-	texcord.coord2 = glm::vec2(0.2f, 0.2f);
-	RenderInstanced_ComplexShape(r_Stadion, transforms, texcord);
+	RenderInstanced_ComplexShape(r_Stadion, transforms);
 }
 
 void Renderer::RenderInstanced_School1(const std::vector<glm::mat4>& transforms)
 {
-	/*
-	texcord.coord0 = glm::vec2(0.0f, 0.8f);
-	texcord.coord1 = glm::vec2(0.0f, 0.8f);
-	RenderInstanced_ComplexShape(r_Ground, transforms, texcord);
-	*/
-
-	TextureCoord texcord;
-	texcord.coord0 = glm::vec2(0.0f, 0.1f);
-	texcord.coord1 = glm::vec2(0.1f, 0.1f);
-	RenderInstanced_ComplexShape(r_School1, transforms, texcord);
+	RenderInstanced_ComplexShape(r_School1, transforms);
 }
 
 void Renderer::RenderInstanced_School2(const std::vector<glm::mat4>& transforms)
 {
-	/*
-	texcord.coord0 = glm::vec2(0.0f, 0.8f);
-	texcord.coord1 = glm::vec2(0.0f, 0.8f);
-	RenderInstanced_ComplexShape(r_Ground, transforms, texcord);
-	*/
-	TextureCoord texcord;
-	texcord.coord0 = glm::vec2(0.2f, 0.1f);
-	texcord.coord1 = glm::vec2(0.3f, 0.1f);
-	RenderInstanced_ComplexShape(r_School2, transforms, texcord);
+	RenderInstanced_ComplexShape(r_School2, transforms);
 }
 
 void Renderer::RenderInstanced_Forest(const std::vector<glm::mat4>& transforms)
 {
-	/*
-	texcord.coord0 = glm::vec2(0.0f, 0.5f);
-	texcord.coord1 = glm::vec2(0.0f, 0.5f);
-	RenderInstanced_ComplexShape(r_Ground, transforms, texcord);
-	*/
-
-	TextureCoord texcord;
-	texcord.coord0 = glm::vec2(0.2f, 0.5f);
-	texcord.coord1 = glm::vec2(0.1f, 0.5f);
-	RenderInstanced_ComplexShape(r_Tree, transforms, texcord);
+	RenderInstanced_ComplexShape(r_Tree, transforms);
 }
 
 void Renderer::RenderInstanced_Empty(const std::vector<glm::mat4>& transforms)
 {
-	/*
-	TextureCoord texcord;
-	texcord.coord0 = glm::vec2(0.0f, 0.9f);
-	texcord.coord1 = glm::vec2(0.0f, 0.9f);
-	RenderInstanced_ComplexShape(r_Ground, transforms, texcord);
-	*/
+
 }
 
 void Renderer::RenderInstanced_Road(const std::vector<glm::mat4>& transforms)
 {
-	/*
-	TextureCoord texcord;
-	texcord.coord0 = glm::vec2(0.1f, 0.9f);
-	texcord.coord1 = glm::vec2(0.1f, 0.9f);
-	RenderInstanced_ComplexShape(r_Ground, transforms, texcord);
-	*/
+
 }

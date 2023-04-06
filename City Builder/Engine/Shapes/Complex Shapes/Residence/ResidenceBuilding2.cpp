@@ -20,8 +20,8 @@ void ResidenceBuilding2::CreateBuffers()
 	cylinder_layout.GeometryDetails.TOP_ORIGO = glm::vec3(0, 1.5, 0);
 	cylinder_layout.GeometryDetails.TOP_RADIUS = 0.6f;
 	cylinder_layout.GeometryDetails.COUNT = 10;
-	cylinder_layout.TextureDetails.WALL_ID = 0.f;
-	cylinder_layout.TextureDetails.CIRCLE_ID = 0.f;
+	cylinder_layout.TextureDetails.WALL_ID = 21.f;
+	cylinder_layout.TextureDetails.CIRCLE_ID = 21.f;
 
 
 	Shape::ConcatenateIndices(indices, Cylinder::GenerateIndices(cylinder_layout, (GLuint)vertices.size()));
@@ -34,7 +34,7 @@ void ResidenceBuilding2::CreateBuffers()
 	cone_layout.GeometryDetails.BASE_ORIGO = glm::vec3(0, 1.5, 0);
 	cone_layout.GeometryDetails.BOTTOM_APEX = glm::vec3(0, 1.5, 0);
 	cone_layout.GeometryDetails.TOP_APEX = glm::vec3(0, 2.5, 0);
-	cone_layout.TextureDetails.ID = 1.f;
+	cone_layout.TextureDetails.ID = 22.f;
 
 	Shape::ConcatenateIndices(indices, Cone::GenerateIndices(cone_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cone::GenerateVertices(cone_layout));

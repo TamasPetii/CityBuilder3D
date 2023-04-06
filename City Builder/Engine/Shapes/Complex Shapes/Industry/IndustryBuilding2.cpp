@@ -23,12 +23,12 @@ void IndustryBuilding2::CreateBuffers()
 	cube_layout.GeometryDetails.TOP_FRONT_LEFT = glm::vec3(-0.5, 0.3, 0);
 	cube_layout.GeometryDetails.TOP_FRONT_RIGHT = glm::vec3(0.5, 0.3, 0);
 
-	cube_layout.TextureDetails.BACK_ID = 0.f;
-	cube_layout.TextureDetails.FRONT_ID = 0.f;
-	cube_layout.TextureDetails.RIGHT_ID = 0.f;
-	cube_layout.TextureDetails.LEFT_ID = 0.f;
-	cube_layout.TextureDetails.TOP_ID = 1.f;
-	cube_layout.TextureDetails.BOTTOM_ID = 1.f;
+	cube_layout.TextureDetails.BACK_ID = 95;
+	cube_layout.TextureDetails.FRONT_ID = 95;
+	cube_layout.TextureDetails.RIGHT_ID = 95;
+	cube_layout.TextureDetails.LEFT_ID = 95;
+	cube_layout.TextureDetails.TOP_ID = 94;
+	cube_layout.TextureDetails.BOTTOM_ID = 94;
 
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));
@@ -52,8 +52,8 @@ void IndustryBuilding2::CreateBuffers()
 	cylinder_layout.GeometryDetails.BOTTOM_RADIUS = 0.15f;
 	cylinder_layout.GeometryDetails.TOP_ORIGO = glm::vec3(-0.3, 1, -0.7);
 	cylinder_layout.GeometryDetails.TOP_RADIUS = 0.1f;
-	cylinder_layout.TextureDetails.WALL_ID = 2.f;
-	cylinder_layout.TextureDetails.CIRCLE_ID = 3.f;
+	cylinder_layout.TextureDetails.WALL_ID = 96;
+	cylinder_layout.TextureDetails.CIRCLE_ID = 96;
 
 	Shape::ConcatenateIndices(indices, Cylinder::GenerateIndices(cylinder_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cylinder::GenerateVertices(cylinder_layout));

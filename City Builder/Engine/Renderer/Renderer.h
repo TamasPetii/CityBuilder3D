@@ -11,16 +11,6 @@
 #include "../Shapes/Basic Shapes/BasicShapes.h"
 #include "../Shapes/Complex Shapes/ComplexShape.h"
 
-struct TextureCoord
-{
-	glm::vec2 coord0;
-	glm::vec2 coord1;
-	glm::vec2 coord2;
-	glm::vec2 coord3;
-	glm::vec2 coord4;
-	glm::vec2 coord5;
-};
-
 class Renderer 
 {
 public:
@@ -64,9 +54,9 @@ public:
 	void Render_Axis();
 	void Render_Ray(const glm::vec3& start, const glm::vec3& end);
 
-	void RenderInstanced_Model(Model* model, const std::vector<glm::mat4>& transforms, const TextureCoord& texcord);
-	void RenderInstanced_BasicShape(Shape* shape, const std::vector<glm::mat4>& transforms, const TextureCoord& texcord);
-	void RenderInstanced_ComplexShape(Shape* shape, const std::vector<glm::mat4>& transforms, const TextureCoord& texcord);
+	void RenderInstanced_Model(Model* model, const std::vector<glm::mat4>& transforms);
+	void RenderInstanced_BasicShape(Shape* shape, const std::vector<glm::mat4>& transforms);
+	void RenderInstanced_ComplexShape(Shape* shape, const std::vector<glm::mat4>& transforms);
 	
 	void RenderInstanced_Character(const std::vector<glm::mat4>& transforms);
 	void RenderInstanced_Cube(const glm::mat4& transform);
