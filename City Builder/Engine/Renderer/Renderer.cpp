@@ -274,18 +274,29 @@ void Renderer::RenderInstanced_BasicShape(Shape* shape, const std::vector<glm::m
 	m_InstanceProgram->UnBind();
 }
 
-void Renderer::RenderInstanced_Cube(const glm::mat4& transform)
+void Renderer::RenderInstanced_Cube(const glm::mat4& transform, const glm::vec3& color)
 {
+	glDisable(GL_CULL_FACE);
+	glLineWidth(1.0f);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 	m_BaseProgram->Bind();
 	m_BaseProgram->SetUniform("u_VP", m_Camera->Get_ViewProjMatrix());
-	m_BaseProgram->SetUniform("u_UseTexture", 1);
-	m_BaseProgram->SetUniform("u_M", transform);
+	m_BaseProgram->SetUniform("u_color", color);
+	r_Service3->Bind();
 
-	r_Pyramid->Bind();
-	r_Pyramid->Render();
-	r_Pyramid->UnBind();
+	for (int i = 0; i < r_Service3->Get_Transforms().size(); i++)
+	{
+		m_BaseProgram->SetUniform("u_M", transform * r_Service3->Get_Transforms()[i]);
+		r_Service3->Render();
+	}
 
+	r_Service3->UnBind();
 	m_BaseProgram->UnBind();
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glLineWidth(1.0f);
+	glEnable(GL_CULL_FACE);
 }
 
 void RenderInstanced_Cone(const std::vector<glm::mat4>& transforms)

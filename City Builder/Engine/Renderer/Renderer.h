@@ -59,7 +59,7 @@ public:
 	void RenderInstanced_ComplexShape(Shape* shape, const std::vector<glm::mat4>& transforms);
 	
 	void RenderInstanced_Character(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_Cube(const glm::mat4& transform);
+	void RenderInstanced_Cube(const glm::mat4& transform, const glm::vec3& color);
 	void RenderInstanced_Cone(const std::vector<glm::mat4>& transforms);
 	void RenderInstanced_Sphere(const std::vector<glm::mat4>& transforms);
 	void RenderInstanced_Pyramid(const std::vector<glm::mat4>& transforms);

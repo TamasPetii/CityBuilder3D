@@ -169,15 +169,24 @@ void Application::Render()
 	}
 
 	//case 19: transforms_CHARACTER.push_back(transform); break;
+	m_Renderer->Render_PreRender(changed);
 	
 	if (m_MyGui->BuildHover) 
 	{
 		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, (int)m_MyGui->content_size.x, (int)m_MyGui->content_size.y);
-		std::cout << "Render CUBE" << std::endl << RayHit.x << " " << RayHit.y << " " << RayHit.z << " " << std::endl;
-		m_Renderer->RenderInstanced_Cube(glm::translate(glm::vec3(RayHit.x, 0, RayHit.z)) * glm::scale(glm::vec3(1000)));
+		int x = (int)RayHit.x / 2 * 2 + 1;
+		int z = (int)RayHit.z / 2 * 2 + 1;
+
+		bool l1 = RayHit.x > 0 && RayHit.x < m_City->Get_GameTableSize() * 2;
+		bool l2 = RayHit.z > 0 && RayHit.z < m_City->Get_GameTableSize() * 2;
+
+		if (l1 && l2)
+		{
+			bool l3 = m_City->Get_GameField(RayHit.z / 2, RayHit.x / 2)->IsEmpty();
+			m_Renderer->RenderInstanced_Cube(glm::translate(glm::vec3(x, 0, z)), (l3 ? glm::vec3(0,1,0) : glm::vec3(1, 0, 0)));
+		}
 	}
 
-	m_Renderer->Render_PreRender(changed);
 	m_Renderer->RenderInstanced_Character(transforms_CHARACTER);
 	m_Renderer->RenderInstanced_Empty(transforms_EMPTY);
 	m_Renderer->RenderInstanced_Road(transforms_ROAD);
