@@ -50,6 +50,24 @@ void Application::Update()
 		changed = true;
 	}
 
+	if (m_MyGui->Get_LoadGameLayout().effect)
+	{
+		std::cout << "Load-Game" << std::endl;
+		std::cout << m_MyGui->Get_LoadGameLayout().path << std::endl;
+		std::cout << m_MyGui->Get_LoadGameLayout().name << std::endl;
+
+		m_MyGui->Get_LoadGameLayout().effect = false;
+	}
+	
+	if (m_MyGui->Get_SaveGameLayout().effect)
+	{
+		std::cout << "Save-Game" << std::endl;
+		std::cout << m_MyGui->Get_SaveGameLayout().path << std::endl;
+		std::cout << m_MyGui->Get_SaveGameLayout().name << std::endl;
+
+		m_MyGui->Get_SaveGameLayout().effect = false;
+	}
+
 
 	//------------------------------
 

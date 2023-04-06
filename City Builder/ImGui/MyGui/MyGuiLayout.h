@@ -9,3 +9,21 @@ struct NewGameLayout
 	int size = 25;
 	int time = 0;
 };
+
+struct LoadGameLayout
+{
+	bool effect = false;
+	bool show = false;
+	std::string path;
+	std::string name;
+	std::string extension = ".txt";
+};
+
+struct SaveGameLayout
+{
+	bool effect = false;
+	bool show = false;
+	std::string path;
+	std::string name;
+	std::string extension = ".txt";
+};

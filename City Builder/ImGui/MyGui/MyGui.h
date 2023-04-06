@@ -10,6 +10,8 @@
 #include "../ImGui/imgui_impl_opengl3.h"
 #include "MyGuiLayout.h"
 
+#include "../ImGui/ImGuiFileBrowser.h"
+
 class MyGui
 {
 public:
@@ -38,7 +40,9 @@ public:
 	int mouse_y;
 	ImVec2 content_size;
 
-	inline NewGameLayout& Get_NewGameLayout() { return m_NewGameLayout; };
+	inline NewGameLayout& Get_NewGameLayout() { return m_NewGameLayout; }
+	inline LoadGameLayout& Get_LoadGameLayout() { return m_LoadGameLayout; }
+	inline SaveGameLayout& Get_SaveGameLayout() { return m_SaveGameLayout; }
 protected:
 	//Style
 	static void Custom_Style();
@@ -51,7 +55,16 @@ private:
 	int m_ViewPort_Width = 0;
 	int m_ViewPort_Height = 0;
 
+
 	void NewGame_Window();
 	NewGameLayout m_NewGameLayout;
+
+	void LoadGame_Window();
+	LoadGameLayout m_LoadGameLayout;
+
+	void SaveGame_Window();
+	SaveGameLayout m_SaveGameLayout;
+	imgui_addons::ImGuiFileBrowser file_dialog;
+
 };
 

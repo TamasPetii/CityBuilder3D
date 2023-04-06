@@ -169,8 +169,6 @@ void MyGui::DockSpace_Render()
 
 void MyGui::Render_DockSpaceMenuBar()
 {
-    bool loadGame = false;
-    bool saveGame = false;
     if (ImGui::BeginMenuBar())
     {
 
@@ -182,11 +180,11 @@ void MyGui::Render_DockSpaceMenuBar()
             }
             if (ImGui::MenuItem("Load Game"))
             {
-                bool loadGame = false;
+                m_LoadGameLayout.show = true;
             }
             if (ImGui::MenuItem("Save Game"))
             {
-                bool saveGame = false;
+                m_SaveGameLayout.show = true;
             }
             ImGui::EndMenu();
         }
@@ -199,6 +197,8 @@ void MyGui::Render_DockSpaceMenuBar()
     }
 
     NewGame_Window();
+    LoadGame_Window();
+    SaveGame_Window();
 
 }
 
@@ -249,6 +249,49 @@ void MyGui::NewGame_Window()
         ImGui::PopStyleColor(3);
 
         ImGui::EndPopup();
+    }
+}
+
+void MyGui::LoadGame_Window()
+{
+    if (m_LoadGameLayout.show)
+    {
+        ImGui::OpenPopup("Load Game");
+    }
+
+    if (file_dialog.showFileDialog("Load Game", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), m_LoadGameLayout.extension))
+    {
+        m_LoadGameLayout.name = file_dialog.selected_fn;
+        m_LoadGameLayout.path = file_dialog.selected_path;
+        m_LoadGameLayout.effect = true;
+    }
+
+    if (file_dialog.close) 
+    {
+        m_LoadGameLayout.show = false;
+        file_dialog.close = false;
+    }
+
+}
+
+void MyGui::SaveGame_Window()
+{
+    if (m_SaveGameLayout.show)
+    {
+        ImGui::OpenPopup("Save Game");
+    }
+
+    if (file_dialog.showFileDialog("Save Game", imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, ImVec2(700, 310), m_SaveGameLayout.extension))
+    {
+        m_SaveGameLayout.name = file_dialog.selected_fn;
+        m_SaveGameLayout.path = file_dialog.selected_path;
+        m_SaveGameLayout.effect = true;
+    }
+
+    if (file_dialog.close)
+    {
+        m_SaveGameLayout.show = false;
+        file_dialog.close = false;
     }
 }
 
