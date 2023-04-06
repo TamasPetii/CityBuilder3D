@@ -28,7 +28,7 @@ public:
 	// <<GETTER>> //
 	inline std::vector<glm::mat4>& Get_Transforms() { return shape_transform; }
 	inline GLuint Get_IndicesCount() const { return m_IndicesCount; }
-	inline GLuint Get_InstanceCount() const { return m_IndicesCount; }
+	inline GLuint Get_InstanceCount() const { return m_InstanceCount; }
 protected:
 	void AttachToGPU(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices);
 

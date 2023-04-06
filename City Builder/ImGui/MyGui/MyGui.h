@@ -34,6 +34,8 @@ public:
 	int mouse_x;
 	int mouse_y;
 	ImVec2 content_size;
+
+	bool BuildHover = false;
 protected:
 	//Style
 	static void Custom_Style();

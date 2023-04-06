@@ -1,4 +1,5 @@
 #include "Shape.h"
+#include <iostream>
 
 void Shape::ConcatenateVertices(std::vector<Vertex>& vertices0, std::vector<Vertex> vertices1)
 {
@@ -41,6 +42,7 @@ void Shape::AttachMatricesSubData(const std::vector<glm::mat4>& transforms)
 {
 	m_MAT.AttachSubData(transforms); //Only copying data! We don't want to reallocate in every render call!
 	m_InstanceCount = static_cast<GLuint>(transforms.size());
+	std::cout << m_InstanceCount << std::endl;
 }
 
 void Shape::AttachToGPU(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices)

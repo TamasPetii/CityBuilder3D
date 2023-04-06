@@ -12,8 +12,8 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 	m_Renderer = new Renderer(m_Camera);
 	m_MyGui = new MyGui(m_Camera);
 
-	m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
-	m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
+	//m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
+	//m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
 }
 
 Application::~Application()
@@ -32,10 +32,8 @@ void Application::Update()
 
 	if (m_MyGui->hit)
 	{
-		std::cout << "---------FROM APPLICATION--------" << std::endl;
 		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, (int)m_MyGui->content_size.x, (int)m_MyGui->content_size.y);
-		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, m_Renderer->Get_FrameBuffer()->Get_FrameWidth(), m_Renderer->Get_FrameBuffer()->Get_FrameHeight());
-		std::cout << "---------------------------------" << std::endl;
+		//ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, m_Renderer->Get_FrameBuffer()->Get_FrameWidth(), m_Renderer->Get_FrameBuffer()->Get_FrameHeight());
 		m_MyGui->hit = false;
 	}
 
@@ -171,6 +169,13 @@ void Application::Render()
 	}
 
 	//case 19: transforms_CHARACTER.push_back(transform); break;
+	
+	if (m_MyGui->BuildHover) 
+	{
+		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, (int)m_MyGui->content_size.x, (int)m_MyGui->content_size.y);
+		std::cout << "Render CUBE" << std::endl << RayHit.x << " " << RayHit.y << " " << RayHit.z << " " << std::endl;
+		m_Renderer->RenderInstanced_Cube(glm::translate(glm::vec3(RayHit.x, 0, RayHit.z)) * glm::scale(glm::vec3(1000)));
+	}
 
 	m_Renderer->Render_PreRender(changed);
 	m_Renderer->RenderInstanced_Character(transforms_CHARACTER);
@@ -194,9 +199,9 @@ void Application::Render()
 	m_Renderer->RenderInstanced_School1(transforms_SCHOOL1);
 	m_Renderer->RenderInstanced_School2(transforms_SCHOOL2);
 	m_Renderer->Render_Axis();
-	m_Renderer->Render_Ray(RayOrigin, RayEnd);
+	m_Renderer->Render_Ray(RayOrigin, RayHit);
 	m_Renderer->Render_PostRender();
-
+	
 	if (changed) 
 	{
 		changed = false;
@@ -326,7 +331,7 @@ void Application::ConvertMouseInputTo3D(int xpos, int ypos, int width, int heigh
 		rayx /= 2.f;
 		rayz /= 2.f;
 
-		m_City->Set_GameTableValue(int(rayz), int(rayx), EMPTY);
-		changed = true;
+		//m_City->Set_GameTableValue(int(rayz), int(rayx), EMPTY);
+		//changed = true;
 	}
 }
