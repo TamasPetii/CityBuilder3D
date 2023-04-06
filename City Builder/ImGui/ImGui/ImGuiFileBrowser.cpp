@@ -548,6 +548,9 @@ namespace imgui_addons
         if(dialog_mode == DialogMode::SAVE)
         {
             // If directory selected and Input Text Bar doesn't have focus, render Open Button
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0.75, 0, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0.7, 0, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0.65, 0, 1));
             if(selected_idx != -1 && is_dir && ImGui::GetFocusID() != ImGui::GetID("##FileNameInput"))
             {
                 if (ImGui::Button("Open", ImVec2(button_width, 0)))
@@ -558,9 +561,13 @@ namespace imgui_addons
                 selected_fn = std::string(input_fn);
                 validate_file = true;
             }
+            ImGui::PopStyleColor(3);
         }
         else
         {
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0.75, 0, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0.7, 0, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0.65, 0, 1));
             if (ImGui::Button("Open", ImVec2(button_width, 0)))
             {
                 //It's possible for both to be true at once (user selected directory but input bar has some text. In this case we chose to open the directory instead of opening the file.
@@ -573,6 +580,7 @@ namespace imgui_addons
                     validate_file = true;
                 }
             }
+            ImGui::PopStyleColor(3);
 
             //Render Select Button if in SELECT Mode
             if(dialog_mode == DialogMode::SELECT)
@@ -592,8 +600,12 @@ namespace imgui_addons
 
         //Render Cancel Button
         ImGui::SameLine();
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1, 0, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9, 0, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8, 0, 0, 1));
         if (ImGui::Button("Cancel", ImVec2(button_width, 0)))
             closeDialog();
+        ImGui::PopStyleColor(3);
 
         return show_error;
     }
