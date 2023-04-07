@@ -26,6 +26,8 @@ public:
 	static void ConcatenateVertices(std::vector<Vertex>& vertices0, std::vector<Vertex> vertices1);
 	static void ConcatenateIndices(std::vector<GLuint>& indices0, std::vector<GLuint> indices1);
 
+	static glm::vec3 GenerateNormal(glm::vec3 start, glm::vec3 destination1, glm::vec3 destination2);
+
 	std::vector<glm::mat4> shape_transform;
 protected:
 	void AttachToGPU(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices);

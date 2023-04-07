@@ -10,6 +10,11 @@ void Shape::ConcatenateIndices(std::vector<GLuint>& indices0, std::vector<GLuint
 	indices0.insert(indices0.end(), indices1.begin(), indices1.end());
 }
 
+glm::vec3 Shape::GenerateNormal(glm::vec3 start, glm::vec3 destination1, glm::vec3 destination2)
+{
+	return glm::normalize(glm::cross(destination1 - start, destination2 - start));
+}
+
 //-----------------------------------------------------------NON-STATIC-----------------------------------------------------------//
 
 void Shape::Bind() const
