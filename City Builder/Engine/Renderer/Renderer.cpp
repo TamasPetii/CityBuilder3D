@@ -371,10 +371,9 @@ void Renderer::RenderIstanced_WindTubine(const std::vector<glm::mat4>& transform
 }
 */
 
-void Renderer::Render(Object obj, Technique tech, const std::vector<Transform>& transforms)
+void Renderer::Render(Object obj, Technique tech, const std::vector<glm::mat4>& translates, const Transform& transform)
 {
 	Shape* shape = nullptr;
-	Shape* other = nullptr;
 
 	switch (obj) 
 	{
@@ -392,28 +391,25 @@ void Renderer::Render(Object obj, Technique tech, const std::vector<Transform>& 
 	case R_FIRESTATION: shape = r_FireStation; break;
 	case R_HIGHSCHOOL: shape = r_School1 ; break;
 	case R_UNIVERSITY: shape = r_School2; break;
-	case R_STADIUM: shape = r_Stadion; break;
-	case R_POWERSTATION: shape = r_Turbine; other = r_TurbinePropeller; break;
+	case R_STADIUM:	shape = r_Stadion; break;
+	case R_WINDTURBINE: shape = r_Turbine; break;
+	case R_WINDTURBINE_PROPELLER: shape = r_TurbinePropeller; break;
 	case R_POWERWIRE: shape = r_PowerWire; break;
 	}
 	
 	switch (tech)
 	{
 	case NORMAL:
-		Render_Normal(shape, transforms[0]);
-		Render_Normal(other, transforms[0]);
+		Render_Normal(shape, transform);
 		break;
 	case NORMAL_WIREFRAME:
-		Render_Normal_WireFrame(shape, transforms[0]);
-		Render_Normal_WireFrame(other, transforms[0]);
+		Render_Normal_WireFrame(shape, transform);
 		break;
 	case INSTANCED: 
-		Render_Instanced(shape, transforms);
-		Render_Instanced(other, transforms);
+		Render_Instanced(shape, translates, transform);
 		break;
 	case INSTANCED_WIREFRAME:
-		Render_Instanced_WireFrame(shape, transforms);
-		Render_Instanced_WireFrame(other, transforms);
+		Render_Instanced_WireFrame(shape, translates, transform);
 		break;
 	}
 }
@@ -457,31 +453,25 @@ void Renderer::Render_Normal_WireFrame(Shape* shape, const Transform& transform)
 	glEnable(GL_CULL_FACE);
 }
 
-void Renderer::Render_Instanced(Shape* shape, const std::vector<Transform>& transforms)
+void Renderer::Render_Instanced(Shape* shape, const std::vector<glm::mat4>& translates, const Transform& transform)
 {
 	if (shape == nullptr) return;
-	if (transforms.size() == 0 && shape->Get_InstanceCount() == 0) return;
+	if (translates.size() == 0 && shape->Get_InstanceCount() == 0) return;
 
 	m_InstanceProgram->Bind();
 	shape->Bind();
 
 	if (changed)
 	{
-		std::vector<glm::mat4> vec;
-		for(int i = 0; i < transforms.size(); i++)
-		{
-			vec.push_back(transforms[i].translate);
-		}
-
-		shape->AttachMatricesSubData(vec);
+		shape->AttachMatricesSubData(translates);
 	}
 
 	for (int i = 0; i < shape->Get_Transforms().size(); i++)
 	{
 		Transform tf;
-		tf.translate = shape->Get_Transforms()[i].translate;
-		tf.rotate = shape->Get_Transforms()[i].rotate;
-		tf.scale = shape->Get_Transforms()[i].scale;
+		tf.translate = transform.translate * shape->Get_Transforms()[i].translate;
+		tf.rotate = transform.rotate * shape->Get_Transforms()[i].rotate;
+		tf.scale = transform.scale * shape->Get_Transforms()[i].scale;
 
 		m_InstanceProgram->SetUniform("u_M", Shape::MultiplyTransformMatrices(tf));
 		shape->RenderInstanced();
@@ -491,7 +481,7 @@ void Renderer::Render_Instanced(Shape* shape, const std::vector<Transform>& tran
 	m_InstanceProgram->UnBind();
 }
 
-void Renderer::Render_Instanced_WireFrame(Shape* shape, const std::vector<Transform>& transforms)
+void Renderer::Render_Instanced_WireFrame(Shape* shape, const std::vector<glm::mat4>& translates, const Transform& transform)
 {
 	if (shape == nullptr) return;
 
@@ -499,7 +489,7 @@ void Renderer::Render_Instanced_WireFrame(Shape* shape, const std::vector<Transf
 	glLineWidth(1.0f);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	Render_Instanced(shape, transforms);
+	Render_Instanced(shape, translates, transform);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glLineWidth(1.0f);
