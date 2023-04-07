@@ -30,6 +30,26 @@ void VertexBufferObject::AttachSubData(const std::vector<Vertex>& vertices) cons
 	glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex), vertices.data());
 }
 
+//----------------|TransformBufferObject|----------------//
+
+void TransformBufferObject::AttachDataStatic(const std::vector<Transform>& transforms) const
+{
+	glBindBuffer(GL_ARRAY_BUFFER, m_BufferID);
+	glBufferData(GL_ARRAY_BUFFER, transforms.size() * sizeof(Transform), transforms.data(), GL_STATIC_DRAW);
+}
+
+void TransformBufferObject::AttachDataDynamic(const std::vector<Transform>& transforms) const
+{
+	glBindBuffer(GL_ARRAY_BUFFER, m_BufferID);
+	glBufferData(GL_ARRAY_BUFFER, transforms.size() * sizeof(Transform), transforms.data(), GL_DYNAMIC_DRAW);
+}
+
+void TransformBufferObject::AttachSubData(const std::vector<Transform>& transforms) const
+{
+	glBindBuffer(GL_ARRAY_BUFFER, m_BufferID);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, transforms.size() * sizeof(Transform), transforms.data());
+}
+
 //----------------|MatrixBufferObject|----------------//
 
 void MatrixBufferObject::AttachDataStatic(const std::vector<glm::mat4>& matrices) const

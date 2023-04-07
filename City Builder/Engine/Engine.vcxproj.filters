@@ -144,6 +144,12 @@
     <ClCompile Include="Shapes\Complex Shapes\PowerStation\WindTurbinePropeller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Abstractions\Transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Abstractions\Vertex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Abstractions\External\stb_image.h">
@@ -285,6 +291,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Renderer\RendererLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Abstractions\Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

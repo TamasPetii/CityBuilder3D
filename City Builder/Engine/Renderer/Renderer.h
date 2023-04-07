@@ -62,13 +62,11 @@ public:
 	
 
 
-	void Render(Object obj, Technique tech, const std::vector<glm::mat4>& translates, const Transform& transform);
+	void Render(Object obj, Technique tech, const std::vector<Transform>& transforms, const Transform& transform);
 	void Render_Normal(Shape* shape, const Transform& transform);
 	void Render_Normal_WireFrame(Shape* shape, const Transform& transform);
-	void Render_Instanced(Shape* shape, const std::vector<glm::mat4>& translates, const Transform& transform);
-	void Render_Instanced_WireFrame(Shape* shape, const std::vector<glm::mat4>& translates, const Transform& transform);
-
-	//void RenderInstanced_Character(const std::vector<glm::mat4>& transforms);
+	void Render_Instanced(Shape* shape, const std::vector<Transform>& transforms, const Transform& transform);
+	void Render_Instanced_WireFrame(Shape* shape, const std::vector<Transform>& transforms, const Transform& transform);
 private: 
 	Model* m_Model = nullptr;
 	Cube* r_Cube = nullptr;

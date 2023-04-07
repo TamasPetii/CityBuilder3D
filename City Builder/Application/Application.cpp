@@ -79,7 +79,8 @@ void Application::Render()
 		{
 			for (int j = 0; j < m_City->Get_GameTableSize(); j++)
 			{
-				glm::mat4 transform = glm::translate(glm::vec3(2 * j + 1, 0, 2 * i + 1));
+				Transform transform;
+				transform.translate = glm::translate(glm::vec3(2 * j + 1, 0, 2 * i + 1));
 
 				GameField* field = m_City->Get_GameField(i, j);
 
@@ -159,6 +160,8 @@ void Application::Render()
 					}
 					else if (building->IsPowerStation()) 
 					{
+						transform.rotate = glm::rotate<float>(glm::radians(360.f / 50.f * j), glm::vec3(0, 1, 0));
+						transform.scale = glm::scale(glm::vec3(2));
 						transforms_POWERSTATION.push_back(transform);
 					}
 					else if (building->IsPowerWire())

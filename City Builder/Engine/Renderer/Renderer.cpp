@@ -41,7 +41,10 @@ void Renderer::Init_Programs()
 			ShaderObjectLayout(0, "vert_position"),
 			ShaderObjectLayout(1, "vert_normal"),
 			ShaderObjectLayout(2, "vert_texture"),
-			ShaderObjectLayout(3, "vert_matrix")
+			ShaderObjectLayout(3, "vert_textureID"),
+			ShaderObjectLayout(4, "vert_translate"),
+			ShaderObjectLayout(8, "vert_rotate"),
+			ShaderObjectLayout(12, "vert_scale")
 		}
 	);
 
@@ -371,7 +374,7 @@ void Renderer::RenderIstanced_WindTubine(const std::vector<glm::mat4>& transform
 }
 */
 
-void Renderer::Render(Object obj, Technique tech, const std::vector<glm::mat4>& translates, const Transform& transform)
+void Renderer::Render(Object obj, Technique tech, const std::vector<Transform>& translates, const Transform& transform)
 {
 	Shape* shape = nullptr;
 
@@ -453,17 +456,17 @@ void Renderer::Render_Normal_WireFrame(Shape* shape, const Transform& transform)
 	glEnable(GL_CULL_FACE);
 }
 
-void Renderer::Render_Instanced(Shape* shape, const std::vector<glm::mat4>& translates, const Transform& transform)
+void Renderer::Render_Instanced(Shape* shape, const std::vector<Transform>& transforms, const Transform& transform)
 {
 	if (shape == nullptr) return;
-	if (translates.size() == 0 && shape->Get_InstanceCount() == 0) return;
+	if (transforms.size() == 0 && shape->Get_InstanceCount() == 0) return;
 
 	m_InstanceProgram->Bind();
 	shape->Bind();
 
 	if (changed)
 	{
-		shape->AttachMatricesSubData(translates);
+		shape->AttachTransformsSubData(transforms);
 	}
 
 	for (int i = 0; i < shape->Get_Transforms().size(); i++)
@@ -472,8 +475,10 @@ void Renderer::Render_Instanced(Shape* shape, const std::vector<glm::mat4>& tran
 		tf.translate = transform.translate * shape->Get_Transforms()[i].translate;
 		tf.rotate = transform.rotate * shape->Get_Transforms()[i].rotate;
 		tf.scale = transform.scale * shape->Get_Transforms()[i].scale;
+		m_InstanceProgram->SetUniform("u_translate", tf.translate);
+		m_InstanceProgram->SetUniform("u_rotate", tf.rotate);
+		m_InstanceProgram->SetUniform("u_scale", tf.scale);
 
-		m_InstanceProgram->SetUniform("u_M", Shape::MultiplyTransformMatrices(tf));
 		shape->RenderInstanced();
 	}
 
@@ -481,7 +486,7 @@ void Renderer::Render_Instanced(Shape* shape, const std::vector<glm::mat4>& tran
 	m_InstanceProgram->UnBind();
 }
 
-void Renderer::Render_Instanced_WireFrame(Shape* shape, const std::vector<glm::mat4>& translates, const Transform& transform)
+void Renderer::Render_Instanced_WireFrame(Shape* shape, const std::vector<Transform>& transforms, const Transform& transform)
 {
 	if (shape == nullptr) return;
 
@@ -489,7 +494,7 @@ void Renderer::Render_Instanced_WireFrame(Shape* shape, const std::vector<glm::m
 	glLineWidth(1.0f);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	Render_Instanced(shape, translates, transform);
+	Render_Instanced(shape, transforms, transform);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glLineWidth(1.0f);

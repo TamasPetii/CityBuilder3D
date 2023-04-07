@@ -6,6 +6,7 @@
 
 //Engine Headers
 #include "Vertex.h"
+#include "Transform.h"
 
 //Standard Headers
 #include <vector>
@@ -31,6 +32,16 @@ public:
 	void AttachDataStatic(const std::vector<Vertex>& vertices) const;
 	void AttachDataDynamic(const std::vector<Vertex>& vertices) const;
 	void AttachSubData(const std::vector<Vertex>& vertices) const;
+};
+
+class TransformBufferObject : public BufferObject
+{
+public:
+	TransformBufferObject() : BufferObject() {}
+
+	void AttachDataStatic(const std::vector<Transform>& transforms) const;
+	void AttachDataDynamic(const std::vector<Transform>& transforms) const;
+	void AttachSubData(const std::vector<Transform>& transforms) const;
 };
 
 class MatrixBufferObject : public BufferObject

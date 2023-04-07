@@ -9,13 +9,7 @@
 
 #include "../Abstractions/BufferObject.h"
 #include "../Abstractions/VertexArrayObject.h"
-
-struct Transform
-{
-	glm::mat4 translate = glm::mat4(1);
-	glm::mat4 rotate = glm::mat4(1);
-	glm::mat4 scale = glm::mat4(1);
-};
+#include "../Abstractions/Transform.h"
 
 class Shape
 {
@@ -30,8 +24,9 @@ public:
 	void UnBind() const;
 	void Render() const;
 	void RenderInstanced() const;
-	void AttachMatricesDynamic(const std::vector<glm::mat4>& transforms);
-	void AttachMatricesSubData(const std::vector<glm::mat4>& transforms);
+
+	void AttachTransformsDynamic(const std::vector<Transform>& transforms);
+	void AttachTransformsSubData(const std::vector<Transform>& transforms);
 
 	// <<GETTER>> //
 	inline std::vector<Transform> Get_Transforms() { return shape_transform; }
@@ -40,10 +35,10 @@ public:
 protected:
 	void AttachToGPU(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices);
 
-	VertexArrayObject  m_VAO;
-	VertexBufferObject m_VBO;
-	IndexBufferObject  m_IBO;
-	MatrixBufferObject m_MAT;
+	VertexArrayObject     m_VAO;
+	VertexBufferObject    m_VBO;
+	IndexBufferObject     m_IBO;
+	TransformBufferObject m_TBO;
 
 	GLuint m_IndicesCount = 0;
 	GLuint m_InstanceCount = 0;

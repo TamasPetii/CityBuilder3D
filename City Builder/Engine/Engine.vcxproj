@@ -179,6 +179,7 @@
     <ClCompile Include="Abstractions\ProgramObject.cpp" />
     <ClCompile Include="Abstractions\ShaderObject.cpp" />
     <ClCompile Include="Abstractions\Texture.cpp" />
+    <ClCompile Include="Abstractions\Vertex.cpp" />
     <ClCompile Include="Abstractions\VertexArrayObject.cpp" />
     <ClCompile Include="Shapes\Complex Shapes\Ground\Ground.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
@@ -213,6 +214,7 @@
     <ClCompile Include="Shapes\Shape.cpp" />
     <ClCompile Include="Shapes\Complex Shapes\PowerStation\WindTurbine.cpp" />
     <ClCompile Include="Shapes\Complex Shapes\PowerStation\WindTurbinePropeller.cpp" />
+    <ClCompile Include="Abstractions\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Abstractions\BufferObject.h" />
@@ -262,6 +264,7 @@
     <ClInclude Include="Shapes\Shape.h" />
     <ClInclude Include="Shapes\Complex Shapes\PowerStation\WindTurbine.h" />
     <ClInclude Include="Shapes\Complex Shapes\PowerStation\WindTurbinePropeller.h" />
+    <ClInclude Include="Abstractions\Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Base.frag" />
