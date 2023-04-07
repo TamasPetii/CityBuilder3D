@@ -13,6 +13,7 @@ public:
 	static void RemoveFromNetwork(GameField*, int);
 	static void MergeNetworks(int, int);
 	static bool IsConnected(GameField*, GameField*);
+	static GameField* FindEmptyWorkingArea(GameField*);
 
 private:
 	class Network {
@@ -20,6 +21,13 @@ private:
 		Network(int i) : id(i) {}
 		const int id;
 		std::unordered_set<GameField*> fieldSet;
+
+		//Network(const Network&) = delete;
+		//Network& operator=(const Network&) = delete;
+
+		Network(const Network& other) : id(other.id), fieldSet(other.fieldSet) {}
+
+		Network(Network&& other) : id(std::move(other.id)), fieldSet(std::move(other.fieldSet)) {}
 	};
 
 	static std::unordered_set<int> m_id_set; //minden networknek egy különbözõ id-ja lesz

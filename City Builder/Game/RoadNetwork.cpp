@@ -15,10 +15,11 @@ void RoadNetwork::CreateNetwork() {
 	int i = 1;
 	while (m_id_set.find(i) != end(m_id_set)) i++; //keresünk egy 0-nál nagyobb id-t, ami még nem foglalt
 	m_id_set.emplace(i);
-	Network network(i);
-	m_networks.push_back(network);
+	m_networks.emplace_back(i);
 }
 
+
+/*
 void RoadNetwork::AddToNetwork(GameField* field, int id) {
 	for (auto& network : m_networks) {
 		if (network.id != id) continue;
@@ -66,3 +67,12 @@ bool RoadNetwork::IsConnected(GameField* field1, GameField* field2) {
 
 	return false;
 }
+
+GameField* RoadNetwork::FindEmptyWorkingArea(GameField*) {
+	for (auto& network : m_networks) {
+			
+	}
+	return nullptr;
+}
+
+*/
