@@ -434,6 +434,7 @@ void Renderer::Render_Normal(Shape* shape, const Transform& transform)
 		tf.scale = transform.scale * shape->Get_Transforms()[i].scale;
 
 		m_BaseProgram->SetUniform("u_M", Shape::MultiplyTransformMatrices(tf));
+		m_BaseProgram->SetUniform("u_color", buildable ? glm::vec3(0, 1, 0) : glm::vec3(1, 0, 0));
 		shape->Render();
 	}
 

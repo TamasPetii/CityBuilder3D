@@ -21,6 +21,7 @@ class Renderer
 public:
 	Renderer(Camera* camera);
 	~Renderer();
+public:
 
 	FrameBuffer* Get_FrameBuffer() { return m_FrameBuffer; }
 
@@ -28,13 +29,30 @@ public:
 	int m_Window_Width;
 	int m_Window_Height;
 	bool changed;
-private: 
+	bool buildable;
 
+	void Render_Clear();
+	void Render_Axis();
+	void Render_Ray(const glm::vec3& start, const glm::vec3& end);
+
+	void Render_PreRender(bool changed);
+	void Render_PostRender();
+	void Render(Object obj, Technique tech, const std::vector<Transform>& transforms, const Transform& transform);
+protected:
 	void Init_Programs();
 	void Delete_Programs();
 	void Init_Textures();
 	void Delete_Textures();
+	void Init_Models();
+	void Delete_Models();
+	void Init_Shapes();
+	void Delete_Shapes();
 
+	void Render_Normal(Shape* shape, const Transform& transform);
+	void Render_Normal_WireFrame(Shape* shape, const Transform& transform);
+	void Render_Instanced(Shape* shape, const std::vector<Transform>& transforms, const Transform& transform);
+	void Render_Instanced_WireFrame(Shape* shape, const std::vector<Transform>& transforms, const Transform& transform);
+private: 
 	Camera* m_Camera;
 	ProgramObject* m_InstanceProgram = nullptr;
 	ProgramObject* m_RayProgram = nullptr;
@@ -43,31 +61,7 @@ private:
 	Texture2D* t_Texture = nullptr;
 	FrameBuffer* m_FrameBuffer = nullptr;
 	TextureMap* t_TextureSkybox = nullptr;
-public:
 
-	void Init_Models();
-	void Delete_Models();
-
-	void Init_Shapes();
-	void Delete_Shapes();
-
-
-	void Render_Clear();
-	void Render_PreRender(bool changed);
-	void Render_PostRender();
-	void Render_Axis();
-	void Render_Ray(const glm::vec3& start, const glm::vec3& end);
-
-	void RenderInstanced_Model(Model* model, const std::vector<glm::mat4>& transforms);
-	
-
-
-	void Render(Object obj, Technique tech, const std::vector<Transform>& transforms, const Transform& transform);
-	void Render_Normal(Shape* shape, const Transform& transform);
-	void Render_Normal_WireFrame(Shape* shape, const Transform& transform);
-	void Render_Instanced(Shape* shape, const std::vector<Transform>& transforms, const Transform& transform);
-	void Render_Instanced_WireFrame(Shape* shape, const std::vector<Transform>& transforms, const Transform& transform);
-private: 
 	Model* m_Model = nullptr;
 	Cube* r_Cube = nullptr;
 	Cone* r_Cone = nullptr;

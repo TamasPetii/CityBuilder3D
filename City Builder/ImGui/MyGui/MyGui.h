@@ -36,11 +36,13 @@ public:
 	ImVec2 content_size;
 
 	bool BuildHover = false;
+	int r = 0;
 protected:
 	//Style
 	static void Custom_Style();
 	//Events
 	void Build_MouseClickEvent();
+	void Build_KeyboardKeyEvent();
 	void Camera_MouseClickEvent();
 	void Camera_KeyboardKeyEvent();
 private:

@@ -172,6 +172,7 @@ void MyGui::ViewPort_Render(FrameBuffer* fbo)
         Camera_MouseClickEvent();
         Camera_KeyboardKeyEvent();
         Build_MouseClickEvent();
+        Build_KeyboardKeyEvent();
     }
 
     ImVec2 size = ImGui::GetContentRegionAvail();
@@ -260,6 +261,14 @@ void MyGui::Build_MouseClickEvent()
             content_size.y = CurrentContent_MAX.y - CurrentContent_MIN.y;
             //std::cout << "Hitting content area: " << "{x = " << RelativWindowCursor_X - ImGui::GetWindowContentRegionMin().x << "} | {y = } " << RelativWindowCursor_Y - ImGui::GetWindowContentRegionMin().y << "}" << std::endl;
         }
+    }
+}
+
+void  MyGui::Build_KeyboardKeyEvent()
+{
+    if (ImGui::IsKeyPressed(ImGuiKey_R))
+    {
+        r++;
     }
 }
 

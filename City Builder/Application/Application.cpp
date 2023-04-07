@@ -187,8 +187,11 @@ void Application::Render()
 
 		if (l1 && l2)
 		{
-			bool l3 = m_City->Get_GameField(RayHit.z / 2, RayHit.x / 2)->IsEmpty();
-			m_Renderer->Render(R_FOREST, NORMAL_WIREFRAME, {}, { glm::translate(glm::vec3(x, 0, z)) , glm::mat4(1), glm::mat4(1)});
+			m_Renderer->buildable = m_City->Get_GameField(RayHit.z / 2, RayHit.x / 2)->IsEmpty();
+			Transform tr;
+			tr.translate = glm::translate(glm::vec3(x, 0, z));
+			tr.rotate = glm::rotate<float>(glm::radians(90.f) * (m_MyGui->r % 4), glm::vec3(0, 1, 0));
+			m_Renderer->Render(R_INDUSTRIAL_LVL2, NORMAL_WIREFRAME, {}, tr);
 		}
 	}
 
@@ -346,8 +349,5 @@ void Application::ConvertMouseInputTo3D(int xpos, int ypos, int width, int heigh
 
 		rayx /= 2.f;
 		rayz /= 2.f;
-
-		//m_City->Set_GameTableValue(int(rayz), int(rayx), EMPTY);
-		//changed = true;
 	}
 }
