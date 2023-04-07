@@ -10,11 +10,19 @@
 #include "../Abstractions/BufferObject.h"
 #include "../Abstractions/VertexArrayObject.h"
 
+struct Transform
+{
+	glm::mat4 translate = glm::mat4(1);
+	glm::mat4 rotate = glm::mat4(1);
+	glm::mat4 scale = glm::mat4(1);
+};
+
 class Shape
 {
 public:
 	static void ConcatenateVertices(std::vector<Vertex>& vertices0, std::vector<Vertex> vertices1);
 	static void ConcatenateIndices(std::vector<GLuint>& indices0, std::vector<GLuint> indices1);
+	static glm::mat4 MultiplyTransformMatrices(Transform transform) { return transform.translate * transform.rotate * transform.scale; }
 
 	virtual void CreateBuffers() = 0;
 
@@ -26,7 +34,7 @@ public:
 	void AttachMatricesSubData(const std::vector<glm::mat4>& transforms);
 
 	// <<GETTER>> //
-	inline std::vector<glm::mat4>& Get_Transforms() { return shape_transform; }
+	inline std::vector<Transform> Get_Transforms() { return shape_transform; }
 	inline GLuint Get_IndicesCount() const { return m_IndicesCount; }
 	inline GLuint Get_InstanceCount() const { return m_InstanceCount; }
 protected:
@@ -40,5 +48,5 @@ protected:
 	GLuint m_IndicesCount = 0;
 	GLuint m_InstanceCount = 0;
 
-	std::vector<glm::mat4> shape_transform;
+	std::vector<Transform> shape_transform;
 };

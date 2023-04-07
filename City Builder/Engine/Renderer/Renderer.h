@@ -1,5 +1,7 @@
 #pragma once
 
+#define _USE_MATH_DEFINES
+
 //Abstractions
 #include "../Abstractions/Model.h"
 #include "../Abstractions/Camera.h"
@@ -10,6 +12,9 @@
 //Shapes
 #include "../Shapes/Basic Shapes/BasicShapes.h"
 #include "../Shapes/Complex Shapes/ComplexShape.h"
+#include "RendererLayout.h"
+
+#include <cmath>
 
 class Renderer 
 {
@@ -41,12 +46,11 @@ private:
 public:
 
 	void Init_Models();
-	void Init_BasicShapes();
-	void Init_ComplexShapes();
-
 	void Delete_Models();
-	void Delete_BasicShapes();
-	void Delete_ComplexShapes();
+
+	void Init_Shapes();
+	void Delete_Shapes();
+
 
 	void Render_Clear();
 	void Render_PreRender(bool changed);
@@ -55,35 +59,16 @@ public:
 	void Render_Ray(const glm::vec3& start, const glm::vec3& end);
 
 	void RenderInstanced_Model(Model* model, const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_BasicShape(Shape* shape, const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_ComplexShape(Shape* shape, const std::vector<glm::mat4>& transforms);
 	
-	void RenderInstanced_Character(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_Cube(const glm::mat4& transform, const glm::vec3& color);
-	void RenderInstanced_Cone(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_Sphere(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_Pyramid(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_Cylinder(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_Residence1(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_Residence2(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_Residence3(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_Industry1(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_Industry2(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_Industry3(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_Service1(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_Service2(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_Service3(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_School1(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_School2(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_PowerStation(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_PowerWire(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_FireStation(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_PoliceStation(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_Stadion(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_Empty(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_Road(const std::vector<glm::mat4>& transforms);
-	void RenderInstanced_Forest(const std::vector<glm::mat4>& transforms);
-	void RenderIstanced_WindTubine(const std::vector<glm::mat4>& transforms, const glm::mat4& rotate);
+
+
+	void Render(Object obj, Technique tech, const std::vector<Transform>& transforms);
+	void Render_Normal(Shape* shape, const Transform& transform);
+	void Render_Normal_WireFrame(Shape* shape, const Transform& transform);
+	void Render_Instanced(Shape* shape, const std::vector<Transform>& transforms);
+	void Render_Instanced_WireFrame(Shape* shape, const std::vector<Transform>& transforms);
+
+	//void RenderInstanced_Character(const std::vector<glm::mat4>& transforms);
 private: 
 	Model* m_Model = nullptr;
 	Cube* r_Cube = nullptr;

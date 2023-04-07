@@ -284,6 +284,9 @@
     <ClInclude Include="Shapes\Complex Shapes\PowerStation\WindTurbinePropeller.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer\RendererLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Base.frag" />

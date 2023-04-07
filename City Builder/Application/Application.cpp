@@ -74,12 +74,15 @@ void Application::Render()
 {
 	if (changed)
 	{
+
 		for (int i = 0; i < m_City->Get_GameTableSize(); i++)
 		{
 			for (int j = 0; j < m_City->Get_GameTableSize(); j++)
 			{
+				Transform transform;
+				transform.translate = glm::translate(glm::vec3(2 * j + 1, 0, 2 * i + 1));
+
 				GameField* field = m_City->Get_GameField(i, j);
-				glm::mat4 transform = glm::translate(glm::vec3(2 * j + 1, 0, 2 * i + 1));
 
 				if (field->IsEmpty()) 
 				{
@@ -183,30 +186,32 @@ void Application::Render()
 		if (l1 && l2)
 		{
 			bool l3 = m_City->Get_GameField(RayHit.z / 2, RayHit.x / 2)->IsEmpty();
-			m_Renderer->RenderInstanced_Cube(glm::translate(glm::vec3(x, 0, z)), (l3 ? glm::vec3(0,1,0) : glm::vec3(1, 0, 0)));
+			//m_Renderer->Render(R_FOREST, NORMAL_WIREFRAME, {glm::translate(glm::vec3(x, 0, z))});
 		}
 	}
 
-	m_Renderer->RenderInstanced_Character(transforms_CHARACTER);
-	m_Renderer->RenderInstanced_Empty(transforms_EMPTY);
-	m_Renderer->RenderInstanced_Road(transforms_ROAD);
-	m_Renderer->RenderInstanced_Forest(transforms_FOREST);
-	m_Renderer->RenderInstanced_Residence1(transforms_RESIDENCE1);
-	m_Renderer->RenderInstanced_Residence2(transforms_RESIDENCE2);
-	m_Renderer->RenderInstanced_Residence3(transforms_RESIDENCE3);
-	m_Renderer->RenderInstanced_Industry1(transforms_INDUSTRY1);
-	m_Renderer->RenderInstanced_Industry2(transforms_INDUSTRY2);
-	m_Renderer->RenderInstanced_Industry3(transforms_INDUSTRY3);
-	m_Renderer->RenderInstanced_Service1(transforms_SERVICE1);
-	m_Renderer->RenderInstanced_Service2(transforms_SERVICE2);
-	m_Renderer->RenderInstanced_Service3(transforms_SERVICE3);
-	m_Renderer->RenderInstanced_FireStation(transforms_FIRESTATION);
-	m_Renderer->RenderInstanced_PoliceStation(transforms_POLICESTATION);
-	m_Renderer->RenderInstanced_Stadion(transforms_STADION);
-	m_Renderer->RenderIstanced_WindTubine(transforms_POWERSTATION, glm::rotate<float>(abs(glfwGetTime() * 2 * M_PI), glm::vec3(0, 0, 1)));
-	m_Renderer->RenderInstanced_PowerWire(transforms_POWERWIRE);
-	m_Renderer->RenderInstanced_School1(transforms_SCHOOL1);
-	m_Renderer->RenderInstanced_School2(transforms_SCHOOL2);
+	//m_Renderer->Render(INSTANCED, INSTANCEDmtransforms_CHARACTER);
+	//m_Renderer->RenderInstanced_Empty(transforms_EMPTY);
+	//m_Renderer->RenderInstanced_Road(transforms_ROAD);
+
+	m_Renderer->Render(R_FOREST,           INSTANCED, transforms_FOREST);
+	m_Renderer->Render(R_RESIDENTIAL_LVL1, INSTANCED, transforms_RESIDENCE1);
+	m_Renderer->Render(R_RESIDENTIAL_LVL2, INSTANCED, transforms_RESIDENCE2);
+	m_Renderer->Render(R_RESIDENTIAL_LVL3, INSTANCED, transforms_RESIDENCE3);
+	m_Renderer->Render(R_INDUSTRIAL_LVL1,  INSTANCED, transforms_INDUSTRY1);
+	m_Renderer->Render(R_INDUSTRIAL_LVL2,  INSTANCED, transforms_INDUSTRY2);
+	m_Renderer->Render(R_INDUSTRIAL_LVL3,  INSTANCED, transforms_INDUSTRY3);
+	m_Renderer->Render(R_SERVICE_LVL1,     INSTANCED, transforms_SERVICE1);
+	m_Renderer->Render(R_SERVICE_LVL2,     INSTANCED, transforms_SERVICE2);
+	m_Renderer->Render(R_SERVICE_LVL3,     INSTANCED, transforms_SERVICE3);
+	m_Renderer->Render(R_FIRESTATION,      INSTANCED, transforms_FIRESTATION);
+	m_Renderer->Render(R_POLICESTATION,    INSTANCED, transforms_POLICESTATION);
+	m_Renderer->Render(R_STADIUM,          INSTANCED, transforms_STADION);
+	m_Renderer->Render(R_POWERSTATION,     INSTANCED, transforms_POWERSTATION);
+	m_Renderer->Render(R_POWERWIRE,        INSTANCED, transforms_POWERWIRE);
+	m_Renderer->Render(R_HIGHSCHOOL,       INSTANCED, transforms_SCHOOL1);
+	m_Renderer->Render(R_UNIVERSITY,       INSTANCED, transforms_SCHOOL2);
+
 	m_Renderer->Render_Axis();
 	m_Renderer->Render_Ray(RayOrigin, RayHit);
 	m_Renderer->Render_PostRender();

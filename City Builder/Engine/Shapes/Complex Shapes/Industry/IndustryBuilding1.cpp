@@ -2,7 +2,12 @@
 
 IndustryBuilding1::IndustryBuilding1()
 {
-	shape_transform.push_back(glm::translate(glm::vec3(0.f, 0.3f, -0.5f)) * glm::scale(glm::vec3(1)));
+	Transform transform;
+	transform.translate = glm::translate(glm::vec3(0.f, 0.3f, -0.5f));
+	transform.rotate = glm::mat4(1);
+	transform.scale = glm::mat4(1);
+
+	shape_transform.push_back(transform);
 }
 
 void IndustryBuilding1::CreateBuffers()

@@ -2,12 +2,18 @@
 
 Tree::Tree() 
 {
+	Transform transform;
 	GLfloat t = 0.6f;
+
 	for (int i = -1; i <= 1; i++)
 	{
 		for (int j = -1; j <= 1; j++)
 		{
-			shape_transform.push_back(glm::translate(glm::vec3(t * i, 0.2f, t * j)) * glm::scale(glm::vec3(0.15f, 0.2f, 0.15f)));
+			transform.translate = glm::translate(glm::vec3(t * i, 0.2f, t * j));
+			transform.rotate = glm::mat4(1);
+			transform.scale = glm::scale(glm::vec3(0.15f, 0.2f, 0.15f));
+
+			shape_transform.push_back(transform);
 		}
 	}
 }

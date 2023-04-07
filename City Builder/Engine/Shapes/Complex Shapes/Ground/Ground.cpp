@@ -2,7 +2,7 @@
 
 Ground::Ground()
 {
-	shape_transform.push_back(glm::scale(glm::vec3(2, 0.001, 2)));
+
 }
 
 void Ground::CreateBuffers()

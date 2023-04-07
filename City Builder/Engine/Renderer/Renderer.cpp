@@ -11,8 +11,7 @@ Renderer::Renderer(Camera* camera) :
 	Init_Textures();
 	Init_Programs();
 	Init_Models();
-	Init_BasicShapes();
-	Init_ComplexShapes();
+	Init_Shapes();
 
 	m_FrameBuffer = new FrameBuffer((int)m_Camera->Get_Width(), (int)m_Camera->Get_Height());
 	m_Window_Width = (int)m_Camera->Get_Width();
@@ -23,8 +22,7 @@ Renderer::~Renderer()
 	Delete_Programs();
 	Delete_Textures();
 	Delete_Models();
-	Delete_BasicShapes();
-	Delete_ComplexShapes();
+	Delete_Shapes();
 	delete m_FrameBuffer;
 }
 
@@ -204,7 +202,7 @@ void Renderer::Delete_Models()
 {
 	delete m_Model;
 }
-
+/*
 void Renderer::RenderInstanced_Model(Model* model, const std::vector<glm::mat4>& transforms)
 {
 	if (transforms.size() == 0) return;
@@ -225,55 +223,14 @@ void Renderer::RenderInstanced_Character(const std::vector<glm::mat4>& transform
 
 	RenderInstanced_Model(m_Model, transforms);
 }
+*/
 
 //------------------------------------------------------|Basic-Shapes|------------------------------------------------------//
 //------------------------------------------------------|Basic-Shapes|------------------------------------------------------//
 //------------------------------------------------------|Basic-Shapes|------------------------------------------------------//
 
-void Renderer::Init_BasicShapes()
-{
-	r_Cube = new Cube();
-	r_Cube->CreateBuffers();
-	r_Cone = new Cone();
-	r_Cone->CreateBuffers();
-	r_Sphere = new Sphere();
-	r_Sphere->CreateBuffers();
-	r_Pyramid = new Pyramid();
-	r_Pyramid->CreateBuffers();
-	r_Cylinder = new Cylinder();
-	r_Cylinder->CreateBuffers();
-}
 
-void Renderer::Delete_BasicShapes()
-{
-	delete r_Cube;
-	delete r_Cone;
-	delete r_Sphere;
-	delete r_Pyramid;
-	delete r_Cylinder;
-}
-
-void Renderer::RenderInstanced_BasicShape(Shape* shape, const std::vector<glm::mat4>& transforms)
-{
-	if (transforms.size() == 0 && shape->Get_InstanceCount() == 0) return;
-
-	m_InstanceProgram->Bind();
-	shape->Bind();
-
-	if(changed)
-		shape->AttachMatricesSubData(transforms);
-
-	for (int i = 0; i < shape->Get_Transforms().size(); i++)
-	{
-		m_InstanceProgram->SetUniform("u_M", shape->Get_Transforms()[i]);
-		shape->RenderInstanced();
-	}
-
-	shape->UnBind();
-
-	m_InstanceProgram->UnBind();
-}
-
+/*
 void Renderer::RenderInstanced_Cube(const glm::mat4& transform, const glm::vec3& color)
 {
 	glDisable(GL_CULL_FACE);
@@ -298,33 +255,23 @@ void Renderer::RenderInstanced_Cube(const glm::mat4& transform, const glm::vec3&
 	glLineWidth(1.0f);
 	glEnable(GL_CULL_FACE);
 }
-
-void RenderInstanced_Cone(const std::vector<glm::mat4>& transforms)
-{
-	//...
-}
-
-void RenderInstanced_Sphere(const std::vector<glm::mat4>& transforms)
-{
-	//...
-}
-
-void RenderInstanced_Pyramid(const std::vector<glm::mat4>& transforms)
-{
-	//...
-}
-
-void RenderInstanced_Cylinder(const std::vector<glm::mat4>& transforms)
-{
-	//...
-}
-
+*/
 //----------------------------------------------------------|Complex-Shapes|----------------------------------------------------------//
 //----------------------------------------------------------|Complex-Shapes|----------------------------------------------------------//
 //----------------------------------------------------------|Complex-Shapes|----------------------------------------------------------//
 
-void Renderer::Init_ComplexShapes()
+void Renderer::Init_Shapes()
 {
+	r_Cube = new Cube();
+	r_Cube->CreateBuffers();
+	r_Cone = new Cone();
+	r_Cone->CreateBuffers();
+	r_Sphere = new Sphere();
+	r_Sphere->CreateBuffers();
+	r_Pyramid = new Pyramid();
+	r_Pyramid->CreateBuffers();
+	r_Cylinder = new Cylinder();
+	r_Cylinder->CreateBuffers();
 	r_Residence1 = new ResidenceBuilding1();
 	r_Residence1->CreateBuffers();
 	r_Residence2 = new ResidenceBuilding2();
@@ -369,8 +316,13 @@ void Renderer::Init_ComplexShapes()
 	r_TurbinePropeller->CreateBuffers();
 }
 
-void Renderer::Delete_ComplexShapes()
+void Renderer::Delete_Shapes()
 {
+	delete r_Cube;
+	delete r_Cone;
+	delete r_Sphere;
+	delete r_Pyramid;
+	delete r_Cylinder;
 	delete r_Residence1;
 	delete r_Residence2;
 	delete r_Residence3;
@@ -393,82 +345,7 @@ void Renderer::Delete_ComplexShapes()
 	delete r_Turbine;
 }
 
-void Renderer::RenderInstanced_ComplexShape(Shape* shape, const std::vector<glm::mat4>& transforms)
-{
-	if (transforms.size() == 0 && shape->Get_InstanceCount() == 0) return;
-
-	m_InstanceProgram->Bind();
-	shape->Bind();
-
-	if (changed)
-	{
-		shape->AttachMatricesSubData(transforms);
-	}
-
-	for (int i = 0; i < shape->Get_Transforms().size(); i++)
-	{
-		m_InstanceProgram->SetUniform("u_M", shape->Get_Transforms()[i]);
-		shape->RenderInstanced();
-	}
-
-	shape->UnBind();
-	m_InstanceProgram->UnBind();
-}
-
-void Renderer::RenderInstanced_Residence1(const std::vector<glm::mat4>& transforms)
-{
-	RenderInstanced_ComplexShape(r_Residence1, transforms);
-}
-
-void Renderer::RenderInstanced_Residence2(const std::vector<glm::mat4>& transforms)
-{
-	RenderInstanced_ComplexShape(r_Residence2, transforms);
-}
-
-void Renderer::RenderInstanced_Residence3(const std::vector<glm::mat4>& transforms)
-{
-	RenderInstanced_ComplexShape(r_Residence3, transforms);
-}
-
-void  Renderer::RenderInstanced_Industry1(const std::vector<glm::mat4>& transforms)
-{
-	RenderInstanced_ComplexShape(r_Industry1, transforms);
-}
-
-void  Renderer::RenderInstanced_Industry2(const std::vector<glm::mat4>& transforms)
-{
-	RenderInstanced_ComplexShape(r_Industry2, transforms);
-}
-void  Renderer::RenderInstanced_Industry3(const std::vector<glm::mat4>& transforms)
-{
-	RenderInstanced_ComplexShape(r_Industry3, transforms);
-}
-
-void Renderer::RenderInstanced_Service1(const std::vector<glm::mat4>& transforms)
-{
-	RenderInstanced_ComplexShape(r_Service1, transforms);
-}
-
-void Renderer::RenderInstanced_Service2(const std::vector<glm::mat4>& transforms)
-{
-	RenderInstanced_ComplexShape(r_Service2, transforms);
-}
-
-void Renderer::RenderInstanced_Service3(const std::vector<glm::mat4>& transforms)
-{
-	RenderInstanced_ComplexShape(r_Service3, transforms);
-}
-
-void Renderer::RenderInstanced_FireStation(const std::vector<glm::mat4>& transforms)
-{
-	RenderInstanced_ComplexShape(r_FireStation, transforms);
-}
-
-void Renderer::RenderInstanced_PoliceStation(const std::vector<glm::mat4>& transforms)
-{
-	RenderInstanced_ComplexShape(r_PoliceStation, transforms);
-}
-
+/*
 void Renderer::RenderInstanced_PowerStation(const std::vector<glm::mat4>& transforms)
 {
 
@@ -483,46 +360,148 @@ void Renderer::RenderInstanced_PowerStation(const std::vector<glm::mat4>& transf
 	glLineWidth(2.0f);
 	glEnable(GL_CULL_FACE);
 }
-
-void Renderer::RenderInstanced_PowerWire(const std::vector<glm::mat4>& transforms)
-{
-
-}
-
-void Renderer::RenderInstanced_Stadion(const std::vector<glm::mat4>& transforms)
-{
-	RenderInstanced_ComplexShape(r_Stadion, transforms);
-}
-
-void Renderer::RenderInstanced_School1(const std::vector<glm::mat4>& transforms)
-{
-	RenderInstanced_ComplexShape(r_School1, transforms);
-}
-
-void Renderer::RenderInstanced_School2(const std::vector<glm::mat4>& transforms)
-{
-	RenderInstanced_ComplexShape(r_School2, transforms);
-}
-
-void Renderer::RenderInstanced_Forest(const std::vector<glm::mat4>& transforms)
-{
-	RenderInstanced_ComplexShape(r_Tree, transforms);
-}
-
-void Renderer::RenderInstanced_Empty(const std::vector<glm::mat4>& transforms)
-{
-
-}
-
-void Renderer::RenderInstanced_Road(const std::vector<glm::mat4>& transforms)
-{
-
-}
-
-void Renderer::RenderIstanced_WindTubine(const std::vector<glm::mat4>& transforms, const glm::mat4& rotate)
+*/
+/*
+void Renderer::RenderIstanced_WindTubine(const std::vector<glm::mat4>& transforms)
 {
 	RenderInstanced_ComplexShape(r_Turbine, transforms);
 
-	r_TurbinePropeller->Get_Transforms()[0] = glm::translate(glm::vec3(0, 0.9, -0.2)) * rotate * glm::scale(glm::vec3(0.5, 0.5, 0.5));
+	r_TurbinePropeller->Get_Transforms()[0] = glm::translate(glm::vec3(0, 0.9, -0.2)) * glm::rotate<float>(abs(glfwGetTime() * 2 * M_PI), glm::vec3(0, 0, 1)) * glm::scale(glm::vec3(0.5, 0.5, 0.5));
 	RenderInstanced_ComplexShape(r_TurbinePropeller, transforms);
+}
+*/
+
+void Renderer::Render(Object obj, Technique tech, const std::vector<Transform>& transforms)
+{
+	Shape* shape = nullptr;
+	Shape* other = nullptr;
+
+	switch (obj) 
+	{
+	case R_RESIDENTIAL_LVL1: shape = r_Residence1; break;
+	case R_RESIDENTIAL_LVL2: shape = r_Residence2; break;
+	case R_RESIDENTIAL_LVL3: shape = r_Residence3; break;
+	case R_INDUSTRIAL_LVL1: shape = r_Industry1; break;
+	case R_INDUSTRIAL_LVL2: shape = r_Industry2; break;
+	case R_INDUSTRIAL_LVL3: shape = r_Industry3; break;
+	case R_SERVICE_LVL1: shape = r_Service1; break;
+	case R_SERVICE_LVL2: shape = r_Service2; break;
+	case R_SERVICE_LVL3: shape = r_Service3; break;
+	case R_FOREST: shape = r_Tree; break;
+	case R_POLICESTATION: shape = r_PoliceStation; break;
+	case R_FIRESTATION: shape = r_FireStation; break;
+	case R_HIGHSCHOOL: shape = r_School1 ; break;
+	case R_UNIVERSITY: shape = r_School2; break;
+	case R_STADIUM: shape = r_Stadion; break;
+	case R_POWERSTATION: shape = r_Turbine; other = r_TurbinePropeller; break;
+	case R_POWERWIRE: shape = r_PowerWire; break;
+	}
+	
+	switch (tech)
+	{
+	case NORMAL:
+		Render_Normal(shape, transforms[0]);
+		Render_Normal(other, transforms[0]);
+		break;
+	case NORMAL_WIREFRAME:
+		Render_Normal_WireFrame(shape, transforms[0]);
+		Render_Normal_WireFrame(other, transforms[0]);
+		break;
+	case INSTANCED: 
+		Render_Instanced(shape, transforms);
+		Render_Instanced(other, transforms);
+		break;
+	case INSTANCED_WIREFRAME:
+		Render_Instanced_WireFrame(shape, transforms);
+		Render_Instanced_WireFrame(other, transforms);
+		break;
+	}
+}
+
+void Renderer::Render_Normal(Shape* shape, const Transform& transform)
+{
+	if (shape == nullptr) return;
+
+	m_BaseProgram->Bind();
+	m_BaseProgram->SetUniform("u_VP", m_Camera->Get_ViewProjMatrix());
+
+	shape->Bind();
+
+	for (int i = 0; i < shape->Get_Transforms().size(); i++)
+	{
+		Transform tf;
+		tf.translate = transform.translate * shape->Get_Transforms()[i].translate;
+		tf.rotate = transform.rotate * shape->Get_Transforms()[i].rotate;
+		tf.scale = transform.scale * shape->Get_Transforms()[i].scale;
+
+		m_BaseProgram->SetUniform("u_M", Shape::MultiplyTransformMatrices(tf));
+		shape->Render();
+	}
+
+	shape->UnBind();
+	m_BaseProgram->UnBind();
+}
+
+void Renderer::Render_Normal_WireFrame(Shape* shape, const Transform& transform)
+{
+	if (shape == nullptr) return;
+
+	glDisable(GL_CULL_FACE);
+	glLineWidth(1.0f);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	Render_Normal(shape, transform);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glLineWidth(1.0f);
+	glEnable(GL_CULL_FACE);
+}
+
+void Renderer::Render_Instanced(Shape* shape, const std::vector<Transform>& transforms)
+{
+	if (shape == nullptr) return;
+	if (transforms.size() == 0 && shape->Get_InstanceCount() == 0) return;
+
+	m_InstanceProgram->Bind();
+	shape->Bind();
+
+	if (changed)
+	{
+		std::vector<glm::mat4> vec;
+		for(int i = 0; i < transforms.size(); i++)
+		{
+			vec.push_back(transforms[i].translate);
+		}
+
+		shape->AttachMatricesSubData(vec);
+	}
+
+	for (int i = 0; i < shape->Get_Transforms().size(); i++)
+	{
+		Transform tf;
+		tf.translate = shape->Get_Transforms()[i].translate;
+		tf.rotate = shape->Get_Transforms()[i].rotate;
+		tf.scale = shape->Get_Transforms()[i].scale;
+
+		m_InstanceProgram->SetUniform("u_M", Shape::MultiplyTransformMatrices(tf));
+		shape->RenderInstanced();
+	}
+
+	shape->UnBind();
+	m_InstanceProgram->UnBind();
+}
+
+void Renderer::Render_Instanced_WireFrame(Shape* shape, const std::vector<Transform>& transforms)
+{
+	if (shape == nullptr) return;
+
+	glDisable(GL_CULL_FACE);
+	glLineWidth(1.0f);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	Render_Instanced(shape, transforms);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glLineWidth(1.0f);
+	glEnable(GL_CULL_FACE);
 }

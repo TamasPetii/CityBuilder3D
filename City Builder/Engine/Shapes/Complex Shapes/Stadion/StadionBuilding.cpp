@@ -3,7 +3,12 @@
 
 StadionBuilding::StadionBuilding()
 {
-	shape_transform.push_back(glm::translate(glm::vec3(0, 0.2, 0)) * glm::scale(glm::vec3(0.3, 0.2, 0.3)));
+	Transform transform;
+	transform.translate = glm::translate(glm::vec3(0, 0.2, 0));
+	transform.rotate = glm::mat4(1);
+	transform.scale = glm::scale(glm::vec3(0.3, 0.2, 0.3));
+
+	shape_transform.push_back(transform);
 }
 
 void StadionBuilding::CreateBuffers()

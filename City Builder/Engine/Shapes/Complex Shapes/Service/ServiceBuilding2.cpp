@@ -3,12 +3,17 @@
 
 ServiceBuilding2::ServiceBuilding2()
 {
+	Transform transform;
 	GLfloat t = 0.45f;
-	shape_transform.push_back(glm::translate(glm::vec3(t * -1, 0.3, t * -1)) * glm::scale(glm::vec3(0.4, 0.6, 0.4)));
-	shape_transform.push_back(glm::translate(glm::vec3(t * 1, 0.3, t * -1)) * glm::scale(glm::vec3(0.4, 0.6, 0.4)));
-	shape_transform.push_back(glm::translate(glm::vec3(t * -1, 0.3, t * 1)) * glm::scale(glm::vec3(0.4, 0.6, 0.4)));
-	shape_transform.push_back(glm::translate(glm::vec3(t * 1, 0.3, t * 1)) * glm::scale(glm::vec3(0.4, 0.6, 0.4)));
 
+	for (int i = 0; i < 4; i++)
+	{
+		transform.translate = glm::translate(glm::vec3(t * (i % 2 ? 1 : -1), 0.3, t * (i / 2 ? 1 : -1)));
+		transform.rotate = glm::mat4(1);
+		transform.scale = glm::scale(glm::vec3(0.4, 0.6, 0.4));
+
+		shape_transform.push_back(transform);
+	}
 }
 
 void ServiceBuilding2::CreateBuffers()
