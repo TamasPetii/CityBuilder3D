@@ -216,6 +216,8 @@ void Renderer::RenderInstanced_Model(Model* model, const std::vector<glm::mat4>&
 
 	m_InstanceProgram->SetUniform("u_M", glm::translate(glm::vec3(0, 0, 0)));
 
+	m_InstanceProgram->SetUniform("u_eye", m_Camera->Get_CameraEye());
+
 	m_Model->RenderInstanced(m_InstanceProgram, transforms);
 
 	m_InstanceProgram->UnBind();
@@ -272,6 +274,8 @@ void Renderer::RenderInstanced_BasicShape(Shape* shape, const std::vector<glm::m
 	m_InstanceProgram->SetUniform("u_TextureCoords3", texcord.coord3);
 	m_InstanceProgram->SetUniform("u_TextureCoords4", texcord.coord4);
 	m_InstanceProgram->SetUniform("u_TextureCoords5", texcord.coord5);
+
+	m_InstanceProgram->SetUniform("u_eye", m_Camera->Get_CameraEye());
 
 	//TODO: Colors
 
@@ -397,6 +401,8 @@ void Renderer::RenderInstanced_ComplexShape(Shape* shape, const std::vector<glm:
 	m_InstanceProgram->SetUniform("u_TextureCoords3", texcord.coord3);
 	m_InstanceProgram->SetUniform("u_TextureCoords4", texcord.coord4);
 	m_InstanceProgram->SetUniform("u_TextureCoords5", texcord.coord5);
+
+	m_InstanceProgram->SetUniform("u_eye", m_Camera->Get_CameraEye());
 
 	//TODO: Colors
 
