@@ -42,9 +42,8 @@ void Renderer::Init_Programs()
 			ShaderObjectLayout(1, "vert_normal"),
 			ShaderObjectLayout(2, "vert_texture"),
 			ShaderObjectLayout(3, "vert_textureID"),
-			ShaderObjectLayout(4, "vert_translate"),
-			ShaderObjectLayout(8, "vert_rotate"),
-			ShaderObjectLayout(12, "vert_scale")
+			ShaderObjectLayout(4, "vert_id"),
+			ShaderObjectLayout(5, "vert_transforms")
 		}
 	);
 
@@ -309,14 +308,14 @@ void Renderer::Init_Shapes()
 	r_PoliceStation->CreateBuffers();
 	r_Stadion = new StadionBuilding();
 	r_Stadion->CreateBuffers();
-	r_Ground = new Ground();
-	r_Ground->CreateBuffers();
 	r_Tree = new Tree();
 	r_Tree->CreateBuffers();
 	r_Turbine = new WindTurbine();
 	r_Turbine->CreateBuffers();
 	r_TurbinePropeller = new WindTurbinePropeller();
 	r_TurbinePropeller->CreateBuffers();
+	r_Ground = new Ground();
+	r_Ground->CreateBuffers();
 }
 
 void Renderer::Delete_Shapes()
@@ -374,7 +373,7 @@ void Renderer::RenderIstanced_WindTubine(const std::vector<glm::mat4>& transform
 }
 */
 
-void Renderer::Render(Object obj, Technique tech, const std::vector<Transform>& translates, const Transform& transform)
+void Renderer::Render(Object obj, Technique tech, const std::vector<glm::mat4>& matrices, const Transform& transform)
 {
 	Shape* shape = nullptr;
 
@@ -409,10 +408,10 @@ void Renderer::Render(Object obj, Technique tech, const std::vector<Transform>& 
 		Render_Normal_WireFrame(shape, transform);
 		break;
 	case INSTANCED: 
-		Render_Instanced(shape, translates, transform);
+		Render_Instanced(shape, matrices, transform);
 		break;
 	case INSTANCED_WIREFRAME:
-		Render_Instanced_WireFrame(shape, translates, transform);
+		Render_Instanced_WireFrame(shape, matrices, transform);
 		break;
 	}
 }
@@ -457,17 +456,19 @@ void Renderer::Render_Normal_WireFrame(Shape* shape, const Transform& transform)
 	glEnable(GL_CULL_FACE);
 }
 
-void Renderer::Render_Instanced(Shape* shape, const std::vector<Transform>& transforms, const Transform& transform)
+void Renderer::Render_Instanced(Shape* shape, const std::vector<glm::mat4>& matrices, const Transform& transform)
 {
 	if (shape == nullptr) return;
-	if (transforms.size() == 0 && shape->Get_InstanceCount() == 0) return;
+	if (matrices.size() == 0 && shape->Get_InstanceCount() == 0) return;
 
 	m_InstanceProgram->Bind();
+	m_InstanceProgram->SetUniform("u_UseVertexTexID", (float)(shape == r_Ground));
 	shape->Bind();
+
 
 	if (changed)
 	{
-		shape->AttachTransformsSubData(transforms);
+		shape->AttachMatricesSubData(matrices);
 	}
 
 	for (int i = 0; i < shape->Get_Transforms().size(); i++)
@@ -476,10 +477,8 @@ void Renderer::Render_Instanced(Shape* shape, const std::vector<Transform>& tran
 		tf.translate = transform.translate * shape->Get_Transforms()[i].translate;
 		tf.rotate = transform.rotate * shape->Get_Transforms()[i].rotate;
 		tf.scale = transform.scale * shape->Get_Transforms()[i].scale;
-		m_InstanceProgram->SetUniform("u_translate", tf.translate);
-		m_InstanceProgram->SetUniform("u_rotate", tf.rotate);
-		m_InstanceProgram->SetUniform("u_scale", tf.scale);
 
+		m_InstanceProgram->SetUniform("u_M", Shape::MultiplyTransformMatrices(tf));
 		shape->RenderInstanced();
 	}
 
@@ -487,7 +486,7 @@ void Renderer::Render_Instanced(Shape* shape, const std::vector<Transform>& tran
 	m_InstanceProgram->UnBind();
 }
 
-void Renderer::Render_Instanced_WireFrame(Shape* shape, const std::vector<Transform>& transforms, const Transform& transform)
+void Renderer::Render_Instanced_WireFrame(Shape* shape, const std::vector<glm::mat4>& transforms, const Transform& transform)
 {
 	if (shape == nullptr) return;
 
@@ -500,4 +499,19 @@ void Renderer::Render_Instanced_WireFrame(Shape* shape, const std::vector<Transf
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glLineWidth(1.0f);
 	glEnable(GL_CULL_FACE);
+}
+
+void Renderer::Render_Ground(const std::vector<glm::mat4>& matrices, const std::vector<GLfloat>& numbers)
+{
+	Shape* shape = r_Ground;
+
+	if (changed)
+	{
+		shape->Bind();
+		shape->AttachNumbersSubData(numbers);
+		shape->UnBind();
+	}
+
+	Transform t;
+	Render_Instanced(r_Ground, matrices, t);
 }

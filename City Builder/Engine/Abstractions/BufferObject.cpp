@@ -110,8 +110,8 @@ void VectorBufferObject::AttachDataDynamic(const std::vector<glm::vec3>& vectors
 
 void VectorBufferObject::AttachSubData(const std::vector<glm::vec3>& vectors) const
 {
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_BufferID);
-	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, vectors.size() * sizeof(glm::vec3), vectors.data());
+	glBindBuffer(GL_ARRAY_BUFFER, m_BufferID);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, vectors.size() * sizeof(glm::vec3), vectors.data());
 }
 
 void VectorBufferObject::AttachDataStatic(const std::vector<glm::vec2>& vectors) const
@@ -128,6 +128,26 @@ void VectorBufferObject::AttachDataDynamic(const std::vector<glm::vec2>& vectors
 
 void VectorBufferObject::AttachSubData(const std::vector<glm::vec2>& vectors) const
 {
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_BufferID);
-	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, vectors.size() * sizeof(glm::vec2), vectors.data());
+	glBindBuffer(GL_ARRAY_BUFFER, m_BufferID);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, vectors.size() * sizeof(glm::vec2), vectors.data());
+}
+
+//----------------|FloatBufferObject|----------------//
+
+void NumberBufferObject::AttachDataStatic(const std::vector<GLfloat>& numbers) const
+{
+	glBindBuffer(GL_ARRAY_BUFFER, m_BufferID);
+	glBufferData(GL_ARRAY_BUFFER, numbers.size() * sizeof(GLfloat), numbers.data(), GL_STATIC_DRAW);
+}
+
+void NumberBufferObject::AttachDataDynamic(const std::vector<GLfloat>& numbers) const
+{
+	glBindBuffer(GL_ARRAY_BUFFER, m_BufferID);
+	glBufferData(GL_ARRAY_BUFFER, numbers.size() * sizeof(GLfloat), numbers.data(), GL_DYNAMIC_DRAW);
+}
+
+void NumberBufferObject::AttachSubData(const std::vector<GLfloat>& numbers) const
+{
+	glBindBuffer(GL_ARRAY_BUFFER, m_BufferID);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, numbers.size() * sizeof(GLfloat), numbers.data());
 }

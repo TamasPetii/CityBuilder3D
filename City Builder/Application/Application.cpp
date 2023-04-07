@@ -74,7 +74,7 @@ void Application::Render()
 {
 	if (changed)
 	{
-
+		std::cout << "CHANGED" << std::endl;
 		for (int i = 0; i < m_City->Get_GameTableSize(); i++)
 		{
 			for (int j = 0; j < m_City->Get_GameTableSize(); j++)
@@ -82,19 +82,21 @@ void Application::Render()
 				Transform transform;
 				transform.translate = glm::translate(glm::vec3(2 * j + 1, 0, 2 * i + 1));
 
-				GameField* field = m_City->Get_GameField(i, j);
+				transforms_GROUND.push_back(Shape::MultiplyTransformMatrices(transform));
 
-				if (field->IsEmpty()) 
+				GameField* field = m_City->Get_GameField(i, j);
+				if (field->IsEmpty())
 				{
-					transforms_EMPTY.push_back(transform);
+					numbers_GROUND.push_back(0);
 				}
-				else if (field->IsRoad()) 
+				else if (field->IsRoad())
 				{
-					transforms_ROAD.push_back(transform);
+					numbers_GROUND.push_back(1);
 				}
 				else if (field->IsForest())
 				{
-					transforms_FOREST.push_back(transform);
+					transforms_FOREST.push_back(Shape::MultiplyTransformMatrices(transform));
+					numbers_GROUND.push_back(40);
 				}
 				else if (field->IsZone())
 				{
@@ -103,9 +105,9 @@ void Application::Render()
 					{
 						switch(zone->Get_Level())
 						{
-						case LEVEL_1: transforms_RESIDENCE1.push_back(transform); break;
-						case LEVEL_2: transforms_RESIDENCE2.push_back(transform); break;
-						case LEVEL_3: transforms_RESIDENCE3.push_back(transform); break;
+						case LEVEL_1: transforms_RESIDENCE1.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
+						case LEVEL_2: transforms_RESIDENCE2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(20); break;
+						case LEVEL_3: transforms_RESIDENCE3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(30); break;
 						}
 					}
 					else if (zone->IsWorkingArea()) 
@@ -115,18 +117,18 @@ void Application::Render()
 						{
 							switch (area->Get_Level())
 							{
-							case LEVEL_1: transforms_INDUSTRY1.push_back(transform); break;
-							case LEVEL_2: transforms_INDUSTRY2.push_back(transform); break;
-							case LEVEL_3: transforms_INDUSTRY3.push_back(transform); break;
+							case LEVEL_1: transforms_INDUSTRY1.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
+							case LEVEL_2: transforms_INDUSTRY2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(20); break;
+							case LEVEL_3: transforms_INDUSTRY3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(30); break;
 							}
 						}
 						else if (area->IsServiceArea())
 						{
 							switch (area->Get_Level())
 							{
-							case LEVEL_1: transforms_SERVICE1.push_back(transform); break;
-							case LEVEL_2: transforms_SERVICE2.push_back(transform); break;
-							case LEVEL_3: transforms_SERVICE3.push_back(transform); break;
+							case LEVEL_1: transforms_SERVICE1.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
+							case LEVEL_2: transforms_SERVICE2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(20); break;
+							case LEVEL_3: transforms_SERVICE3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(30); break;
 							}
 						}
 					}
@@ -136,44 +138,50 @@ void Application::Render()
 					Building* building = dynamic_cast<Building*>(field);
 					if (building->IsPoliceStation()) 
 					{
-						transforms_FIRESTATION.push_back(transform);
+						transforms_FIRESTATION.push_back(Shape::MultiplyTransformMatrices(transform));
+						numbers_GROUND.push_back(50);
 					}
 					else if (building->IsFireStation()) 
 					{
-						transforms_POLICESTATION.push_back(transform);
+						transforms_POLICESTATION.push_back(Shape::MultiplyTransformMatrices(transform));
+						numbers_GROUND.push_back(70);
 					}
 					else if (building->IsStadium())
 					{
-						transforms_STADION.push_back(transform);
+						transforms_STADION.push_back(Shape::MultiplyTransformMatrices(transform));
+						numbers_GROUND.push_back(50);
 					}
 					else if (building->IsSchool()) 
 					{
 						School* school = dynamic_cast<School*>(building);
 						if (school->IsHighSchool()) 
 						{
-							transforms_SCHOOL1.push_back(transform);
+							transforms_SCHOOL1.push_back(Shape::MultiplyTransformMatrices(transform));
+							numbers_GROUND.push_back(53);
 						}
 						else if (school->IsUniversity()) 
 						{
-							transforms_SCHOOL2.push_back(transform);
+							transforms_SCHOOL2.push_back(Shape::MultiplyTransformMatrices(transform));
+							numbers_GROUND.push_back(63);
 						}
 					}
 					else if (building->IsPowerStation()) 
 					{
 						transform.rotate = glm::rotate<float>(glm::radians(360.f / 50.f * j), glm::vec3(0, 1, 0));
 						transform.scale = glm::scale(glm::vec3(2));
-						transforms_POWERSTATION.push_back(transform);
+						transforms_POWERSTATION.push_back(Shape::MultiplyTransformMatrices(transform));
+						numbers_GROUND.push_back(81);
 					}
 					else if (building->IsPowerWire())
 					{
-						transforms_POWERWIRE.push_back(transform);
+						transforms_POWERWIRE.push_back(Shape::MultiplyTransformMatrices(transform));
+						numbers_GROUND.push_back(83);
 					}
 				}
 			}
 		}
 	}
 
-	//case 19: transforms_CHARACTER.push_back(transform); break;
 	m_Renderer->Render_PreRender(changed);
 	
 	if (m_MyGui->BuildHover) 
@@ -195,10 +203,7 @@ void Application::Render()
 		}
 	}
 
-	//m_Renderer->Render(INSTANCED, INSTANCEDmtransforms_CHARACTER);
-	//m_Renderer->RenderInstanced_Empty(transforms_EMPTY);
-	//m_Renderer->RenderInstanced_Road(transforms_ROAD);
-
+	m_Renderer->Render_Ground(transforms_GROUND, numbers_GROUND);
 	m_Renderer->Render(R_FOREST,           INSTANCED, transforms_FOREST, {});
 	m_Renderer->Render(R_RESIDENTIAL_LVL1, INSTANCED, transforms_RESIDENCE1, {});
 	m_Renderer->Render(R_RESIDENTIAL_LVL2, INSTANCED, transforms_RESIDENCE2, {});
@@ -224,13 +229,14 @@ void Application::Render()
 	if (changed) 
 	{
 		changed = false;
+		transforms_GROUND.clear();
+		numbers_GROUND.clear();
+
 		transforms_CUBE.clear();
 		transforms_CONE.clear();
 		transforms_CYLINDER.clear();
 		transforms_PYRAMID.clear();
 		transforms_SPHERE.clear();
-		transforms_EMPTY.clear();
-		transforms_ROAD.clear();
 		transforms_FOREST.clear();
 		transforms_RESIDENCE1.clear();
 		transforms_RESIDENCE2.clear();

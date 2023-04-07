@@ -45,31 +45,33 @@ private:
 	MyGui* m_MyGui = nullptr;
 	City* m_City = nullptr;
 private:
-	std::vector<Transform> transforms_CUBE;
-	std::vector<Transform> transforms_CONE;
-	std::vector<Transform> transforms_CYLINDER;
-	std::vector<Transform> transforms_PYRAMID;
-	std::vector<Transform> transforms_SPHERE;
-	std::vector<Transform> transforms_RESIDENCE1;
-	std::vector<Transform> transforms_RESIDENCE2;
-	std::vector<Transform> transforms_RESIDENCE3;
-	std::vector<Transform> transforms_INDUSTRY1;
-	std::vector<Transform> transforms_INDUSTRY2;
-	std::vector<Transform> transforms_INDUSTRY3;
-	std::vector<Transform> transforms_SERVICE1;
-	std::vector<Transform> transforms_SERVICE2;
-	std::vector<Transform> transforms_SERVICE3;
-	std::vector<Transform> transforms_FIRESTATION;
-	std::vector<Transform> transforms_POLICESTATION;
-	std::vector<Transform> transforms_POWERSTATION;
-	std::vector<Transform> transforms_POWERWIRE;
-	std::vector<Transform> transforms_STADION;
-	std::vector<Transform> transforms_SCHOOL1;
-	std::vector<Transform> transforms_SCHOOL2;
-	std::vector<Transform> transforms_CHARACTER;
-	std::vector<Transform> transforms_EMPTY;
-	std::vector<Transform> transforms_ROAD;
-	std::vector<Transform> transforms_FOREST;
+	std::vector<glm::mat4> transforms_CUBE;
+	std::vector<glm::mat4> transforms_CONE;
+	std::vector<glm::mat4> transforms_CYLINDER;
+	std::vector<glm::mat4> transforms_PYRAMID;
+	std::vector<glm::mat4> transforms_SPHERE;
+	std::vector<glm::mat4> transforms_RESIDENCE1;
+	std::vector<glm::mat4> transforms_RESIDENCE2;
+	std::vector<glm::mat4> transforms_RESIDENCE3;
+	std::vector<glm::mat4> transforms_INDUSTRY1;
+	std::vector<glm::mat4> transforms_INDUSTRY2;
+	std::vector<glm::mat4> transforms_INDUSTRY3;
+	std::vector<glm::mat4> transforms_SERVICE1;
+	std::vector<glm::mat4> transforms_SERVICE2;
+	std::vector<glm::mat4> transforms_SERVICE3;
+	std::vector<glm::mat4> transforms_FIRESTATION;
+	std::vector<glm::mat4> transforms_POLICESTATION;
+	std::vector<glm::mat4> transforms_POWERSTATION;
+	std::vector<glm::mat4> transforms_POWERWIRE;
+	std::vector<glm::mat4> transforms_STADION;
+	std::vector<glm::mat4> transforms_SCHOOL1;
+	std::vector<glm::mat4> transforms_SCHOOL2;
+	std::vector<glm::mat4> transforms_CHARACTER;
+	std::vector<glm::mat4> transforms_FOREST;
+
+	std::vector<glm::mat4> transforms_GROUND;
+	std::vector<GLfloat> numbers_GROUND;
+
 private:
 	glm::vec3 RayOrigin = glm::vec3(0);
 	glm::vec3 RayEnd = glm::vec3(0);

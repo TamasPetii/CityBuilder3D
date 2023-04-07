@@ -84,3 +84,13 @@ public:
 	void AttachDataDynamic(const std::vector<glm::vec2>& vectors) const;
 	void AttachSubData(const std::vector<glm::vec2>& vectors) const;
 };
+
+class NumberBufferObject : public BufferObject
+{
+public:
+	NumberBufferObject() : BufferObject() {}
+
+	void AttachDataStatic(const std::vector<GLfloat>& numbers) const;
+	void AttachDataDynamic(const std::vector<GLfloat>& numbers) const;
+	void AttachSubData(const std::vector<GLfloat>& numbers) const;
+};

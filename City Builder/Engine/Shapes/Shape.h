@@ -25,20 +25,23 @@ public:
 	void Render() const;
 	void RenderInstanced() const;
 
-	void AttachTransformsDynamic(const std::vector<Transform>& transforms);
-	void AttachTransformsSubData(const std::vector<Transform>& transforms);
+	void AttachMatricesDynamic(const std::vector<glm::mat4>& transforms);
+	void AttachMatricesSubData(const std::vector<glm::mat4>& transforms);
 
-	// <<GETTER>> //
-	inline std::vector<Transform> Get_Transforms() { return shape_transform; }
+	void AttachNumbersDynamic(const std::vector<GLfloat>& numbers);
+	void AttachNumbersSubData(const std::vector<GLfloat>& numbers);
+
 	inline GLuint Get_IndicesCount() const { return m_IndicesCount; }
 	inline GLuint Get_InstanceCount() const { return m_InstanceCount; }
+	inline std::vector<Transform> Get_Transforms() { return shape_transform; }
 protected:
 	void AttachToGPU(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices);
 
 	VertexArrayObject     m_VAO;
 	VertexBufferObject    m_VBO;
 	IndexBufferObject     m_IBO;
-	TransformBufferObject m_TBO;
+	MatrixBufferObject    m_MBO;
+	NumberBufferObject    m_NBO;
 
 	GLuint m_IndicesCount = 0;
 	GLuint m_InstanceCount = 0;

@@ -37,7 +37,8 @@ public:
 
 	void Render_PreRender(bool changed);
 	void Render_PostRender();
-	void Render(Object obj, Technique tech, const std::vector<Transform>& transforms, const Transform& transform);
+	void Render(Object obj, Technique tech, const std::vector<glm::mat4>& matrices, const Transform& transform);
+	void Render_Ground(const std::vector<glm::mat4>& matrices, const std::vector<GLfloat>& numbers);
 protected:
 	void Init_Programs();
 	void Delete_Programs();
@@ -50,8 +51,9 @@ protected:
 
 	void Render_Normal(Shape* shape, const Transform& transform);
 	void Render_Normal_WireFrame(Shape* shape, const Transform& transform);
-	void Render_Instanced(Shape* shape, const std::vector<Transform>& transforms, const Transform& transform);
-	void Render_Instanced_WireFrame(Shape* shape, const std::vector<Transform>& transforms, const Transform& transform);
+	void Render_Instanced(Shape* shape, const std::vector<glm::mat4>& matrices, const Transform& transform);
+	void Render_Instanced_WireFrame(Shape* shape, const std::vector<glm::mat4>& matrices, const Transform& transform);
+
 private: 
 	Camera* m_Camera;
 	ProgramObject* m_InstanceProgram = nullptr;
@@ -68,6 +70,8 @@ private:
 	Sphere* r_Sphere = nullptr;
 	Pyramid* r_Pyramid = nullptr;
 	Cylinder* r_Cylinder = nullptr;
+
+	Ground* r_Ground = nullptr;
 	ResidenceBuilding1* r_Residence1 = nullptr;
 	ResidenceBuilding2* r_Residence2 = nullptr;
 	ResidenceBuilding3* r_Residence3 = nullptr;
@@ -85,7 +89,6 @@ private:
 	FireBuilding* r_FireStation = nullptr;
 	PoliceBuilding* r_PoliceStation = nullptr;
 	StadionBuilding* r_Stadion = nullptr;
-	Ground* r_Ground = nullptr;
 	Tree* r_Tree = nullptr;
 	WindTurbine* r_Turbine = nullptr;
 	WindTurbinePropeller* r_TurbinePropeller = nullptr;
