@@ -12,6 +12,7 @@
 //Shapes
 #include "../Shapes/Basic Shapes/BasicShapes.h"
 #include "../Shapes/Complex Shapes/ComplexShape.h"
+#include "SkyBox/Skybox.h"
 #include "RendererLayout.h"
 
 #include <cmath>
@@ -37,8 +38,11 @@ public:
 
 	void Render_PreRender(bool changed);
 	void Render_PostRender();
-	void Render(Object obj, Technique tech, const std::vector<glm::mat4>& matrices, const Transform& transform);
+
+	void Render(Technique tech, Object obj, const std::vector<glm::mat4>& matrices, Transform transform = {});
 	void Render_Ground(const std::vector<glm::mat4>& matrices, const std::vector<GLfloat>& numbers);
+	void Render_SkyBox();
+
 protected:
 	void Init_Programs();
 	void Delete_Programs();
@@ -71,6 +75,7 @@ private:
 	Pyramid* r_Pyramid = nullptr;
 	Cylinder* r_Cylinder = nullptr;
 
+	Skybox* r_Skybox = nullptr;
 	Ground* r_Ground = nullptr;
 	ResidenceBuilding1* r_Residence1 = nullptr;
 	ResidenceBuilding2* r_Residence2 = nullptr;

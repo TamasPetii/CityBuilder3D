@@ -227,43 +227,15 @@ void Renderer::RenderInstanced_Character(const std::vector<glm::mat4>& transform
 }
 */
 
-//------------------------------------------------------|Basic-Shapes|------------------------------------------------------//
-//------------------------------------------------------|Basic-Shapes|------------------------------------------------------//
-//------------------------------------------------------|Basic-Shapes|------------------------------------------------------//
-
-
-/*
-void Renderer::RenderInstanced_Cube(const glm::mat4& transform, const glm::vec3& color)
-{
-	glDisable(GL_CULL_FACE);
-	glLineWidth(1.0f);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	m_BaseProgram->Bind();
-	m_BaseProgram->SetUniform("u_VP", m_Camera->Get_ViewProjMatrix());
-	m_BaseProgram->SetUniform("u_color", color);
-	r_Service3->Bind();
-
-	for (int i = 0; i < r_Service3->Get_Transforms().size(); i++)
-	{
-		m_BaseProgram->SetUniform("u_M", transform * r_Service3->Get_Transforms()[i]);
-		r_Service3->Render();
-	}
-
-	r_Service3->UnBind();
-	m_BaseProgram->UnBind();
-
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glLineWidth(1.0f);
-	glEnable(GL_CULL_FACE);
-}
-*/
-//----------------------------------------------------------|Complex-Shapes|----------------------------------------------------------//
-//----------------------------------------------------------|Complex-Shapes|----------------------------------------------------------//
-//----------------------------------------------------------|Complex-Shapes|----------------------------------------------------------//
+//----------------------------------------------------------|Shapes|----------------------------------------------------------//
+//----------------------------------------------------------|Shapes|----------------------------------------------------------//
+//----------------------------------------------------------|Shapes|----------------------------------------------------------//
 
 void Renderer::Init_Shapes()
 {
+	r_Skybox = new Skybox();
+	r_Skybox->CreateBuffers();
+
 	r_Cube = new Cube();
 	r_Cube->CreateBuffers();
 	r_Cone = new Cone();
@@ -320,6 +292,7 @@ void Renderer::Init_Shapes()
 
 void Renderer::Delete_Shapes()
 {
+	delete r_Skybox;
 	delete r_Cube;
 	delete r_Cone;
 	delete r_Sphere;
@@ -347,33 +320,7 @@ void Renderer::Delete_Shapes()
 	delete r_Turbine;
 }
 
-/*
-void Renderer::RenderInstanced_PowerStation(const std::vector<glm::mat4>& transforms)
-{
-
-	RenderInstanced_ComplexShape(r_PowerStation, transforms);
-
-	//Render only lines not triangles -> transparent affact
-	glDisable(GL_CULL_FACE);
-	glLineWidth(5.0f);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	RenderInstanced_ComplexShape(r_PowerStationPlinth, transforms);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glLineWidth(2.0f);
-	glEnable(GL_CULL_FACE);
-}
-*/
-/*
-void Renderer::RenderIstanced_WindTubine(const std::vector<glm::mat4>& transforms)
-{
-	RenderInstanced_ComplexShape(r_Turbine, transforms);
-
-	r_TurbinePropeller->Get_Transforms()[0] = glm::translate(glm::vec3(0, 0.9, -0.2)) * glm::rotate<float>(abs(glfwGetTime() * 2 * M_PI), glm::vec3(0, 0, 1)) * glm::scale(glm::vec3(0.5, 0.5, 0.5));
-	RenderInstanced_ComplexShape(r_TurbinePropeller, transforms);
-}
-*/
-
-void Renderer::Render(Object obj, Technique tech, const std::vector<glm::mat4>& matrices, const Transform& transform)
+void Renderer::Render(Technique tech, Object obj, const std::vector<glm::mat4>& matrices, Transform transform)
 {
 	Shape* shape = nullptr;
 
@@ -463,13 +410,10 @@ void Renderer::Render_Instanced(Shape* shape, const std::vector<glm::mat4>& matr
 
 	m_InstanceProgram->Bind();
 	m_InstanceProgram->SetUniform("u_UseVertexTexID", (float)(shape == r_Ground));
+
+
 	shape->Bind();
-
-
-	if (changed)
-	{
-		shape->AttachMatricesSubData(matrices);
-	}
+	if (changed) shape->AttachMatricesSubData(matrices);
 
 	for (int i = 0; i < shape->Get_Transforms().size(); i++)
 	{
@@ -514,4 +458,17 @@ void Renderer::Render_Ground(const std::vector<glm::mat4>& matrices, const std::
 
 	Transform t;
 	Render_Instanced(r_Ground, matrices, t);
+}
+
+void Renderer::Render_SkyBox()
+{
+	m_SkyBoxProgram->Bind();
+	m_SkyBoxProgram->SetUniform("u_UseTexture", 1);
+	m_SkyBoxProgram->SetUniform("u_VP", m_Camera->Get_ViewProjMatrix());
+	m_SkyBoxProgram->SetUniform("u_M", glm::translate(m_Camera->Get_CameraEye()));
+	m_SkyBoxProgram->SetUniformTexture("u_textureMap", 0, t_TextureSkybox);
+
+	r_Skybox->Render();
+
+	m_SkyBoxProgram->UnBind();
 }

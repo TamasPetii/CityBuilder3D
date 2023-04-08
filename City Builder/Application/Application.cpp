@@ -199,31 +199,32 @@ void Application::Render()
 			Transform tr;
 			tr.translate = glm::translate(glm::vec3(x, 0, z));
 			tr.rotate = glm::rotate<float>(glm::radians(90.f) * (m_MyGui->r % 4), glm::vec3(0, 1, 0));
-			m_Renderer->Render(R_INDUSTRIAL_LVL2, NORMAL_WIREFRAME, {}, tr);
+			m_Renderer->Render(NORMAL_WIREFRAME, R_INDUSTRIAL_LVL2,  {}, tr);
 		}
 	}
 
 	m_Renderer->Render_Ground(transforms_GROUND, numbers_GROUND);
-	m_Renderer->Render(R_FOREST,           INSTANCED, transforms_FOREST, {});
-	m_Renderer->Render(R_RESIDENTIAL_LVL1, INSTANCED, transforms_RESIDENCE1, {});
-	m_Renderer->Render(R_RESIDENTIAL_LVL2, INSTANCED, transforms_RESIDENCE2, {});
-	m_Renderer->Render(R_RESIDENTIAL_LVL3, INSTANCED, transforms_RESIDENCE3, {});
-	m_Renderer->Render(R_INDUSTRIAL_LVL1,  INSTANCED, transforms_INDUSTRY1, {});
-	m_Renderer->Render(R_INDUSTRIAL_LVL2,  INSTANCED, transforms_INDUSTRY2, {});
-	m_Renderer->Render(R_INDUSTRIAL_LVL3,  INSTANCED, transforms_INDUSTRY3, {});
-	m_Renderer->Render(R_SERVICE_LVL1,     INSTANCED, transforms_SERVICE1, {});
-	m_Renderer->Render(R_SERVICE_LVL2,     INSTANCED, transforms_SERVICE2, {});
-	m_Renderer->Render(R_SERVICE_LVL3,     INSTANCED, transforms_SERVICE3, {});
-	m_Renderer->Render(R_FIRESTATION,      INSTANCED, transforms_FIRESTATION, {});
-	m_Renderer->Render(R_POLICESTATION,    INSTANCED, transforms_POLICESTATION, {});
-	m_Renderer->Render(R_STADIUM,          INSTANCED, transforms_STADION, {});
-	m_Renderer->Render(R_WINDTURBINE,      INSTANCED, transforms_POWERSTATION, {});
-	m_Renderer->Render(R_WINDTURBINE_PROPELLER,INSTANCED, transforms_POWERSTATION, {glm::mat4(1), glm::rotate<float>(abs(glfwGetTime() * 2 * M_PI), glm::vec3(0, 0, 1)), glm::mat4(1)});
-	m_Renderer->Render(R_POWERWIRE,        INSTANCED, transforms_POWERWIRE, {});
-	m_Renderer->Render(R_HIGHSCHOOL,       INSTANCED, transforms_SCHOOL1, {});
-	m_Renderer->Render(R_UNIVERSITY,       INSTANCED, transforms_SCHOOL2, {});
+	m_Renderer->Render(INSTANCED, R_FOREST,                transforms_FOREST);
+	m_Renderer->Render(INSTANCED, R_RESIDENTIAL_LVL1,      transforms_RESIDENCE1);
+	m_Renderer->Render(INSTANCED, R_RESIDENTIAL_LVL2,      transforms_RESIDENCE2);
+	m_Renderer->Render(INSTANCED, R_RESIDENTIAL_LVL3,      transforms_RESIDENCE3);
+	m_Renderer->Render(INSTANCED, R_INDUSTRIAL_LVL1,       transforms_INDUSTRY1);
+	m_Renderer->Render(INSTANCED, R_INDUSTRIAL_LVL2,       transforms_INDUSTRY2);
+	m_Renderer->Render(INSTANCED, R_INDUSTRIAL_LVL3,       transforms_INDUSTRY3);
+	m_Renderer->Render(INSTANCED, R_SERVICE_LVL1,          transforms_SERVICE1);
+	m_Renderer->Render(INSTANCED, R_SERVICE_LVL2,          transforms_SERVICE2);
+	m_Renderer->Render(INSTANCED, R_SERVICE_LVL3,          transforms_SERVICE3);
+	m_Renderer->Render(INSTANCED, R_FIRESTATION,           transforms_FIRESTATION);
+	m_Renderer->Render(INSTANCED, R_POLICESTATION,         transforms_POLICESTATION);
+	m_Renderer->Render(INSTANCED, R_STADIUM,               transforms_STADION);
+	m_Renderer->Render(INSTANCED, R_WINDTURBINE,		   transforms_POWERSTATION);
+	m_Renderer->Render(INSTANCED, R_WINDTURBINE_PROPELLER, transforms_POWERSTATION, {glm::mat4(1), glm::rotate<float>(abs(glfwGetTime() * 2 * M_PI), glm::vec3(0, 0, 1)), glm::mat4(1)});
+	m_Renderer->Render(INSTANCED, R_POWERWIRE,             transforms_POWERWIRE);
+	m_Renderer->Render(INSTANCED, R_HIGHSCHOOL,            transforms_SCHOOL1);
+	m_Renderer->Render(INSTANCED, R_UNIVERSITY,            transforms_SCHOOL2);
 	m_Renderer->Render_Axis();
 	m_Renderer->Render_Ray(RayOrigin, RayHit);
+	m_Renderer->Render_SkyBox();
 	m_Renderer->Render_PostRender();
 
 	if (changed) 
