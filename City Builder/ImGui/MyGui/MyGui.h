@@ -2,7 +2,8 @@
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
-#include "Abstractions/Camera.h"
+
+#include "Utilities/Camera.h"
 #include "Abstractions/FrameBuffer.h"
 
 #include "../ImGui/imgui.h"

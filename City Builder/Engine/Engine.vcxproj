@@ -70,7 +70,7 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-    <PropertyGroup>
+  <PropertyGroup>
     <ShowAllFiles>true</ShowAllFiles>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -97,7 +97,7 @@
     <OutDir>$(SolutionDir)_bin_\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)_bin_\intermediate\Engine\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LocalDebuggerWorkingDirectory>$(SolutionDir)</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
@@ -171,7 +171,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Abstractions\BufferObject.cpp" />
-    <ClCompile Include="Abstractions\Camera.cpp" />
+    <ClCompile Include="Utilities\FrameCounter.cpp" />
+    <ClCompile Include="Utilities\Timer.cpp" />
+    <ClCompile Include="Utilities\Camera.cpp" />
     <ClCompile Include="Abstractions\External\stb_image.cpp" />
     <ClCompile Include="Abstractions\FrameBuffer.cpp" />
     <ClCompile Include="Abstractions\Mesh.cpp" />
@@ -214,7 +216,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Abstractions\BufferObject.h" />
-    <ClInclude Include="Abstractions\Camera.h" />
+    <ClInclude Include="Utilities\FrameCounter.h" />
+    <ClInclude Include="Utilities\Timer.h" />
+    <ClInclude Include="Utilities\Camera.h" />
     <ClInclude Include="Abstractions\External\stb_image.h" />
     <ClInclude Include="Abstractions\FrameBuffer.h" />
     <ClInclude Include="Abstractions\Mesh.h" />
