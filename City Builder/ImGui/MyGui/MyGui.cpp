@@ -1,4 +1,5 @@
 ﻿#include "MyGui.h"
+#include "../../Game/RoadNetwork.h";
 
 
 void MyGui::Init(GLFWwindow* window)
@@ -236,31 +237,54 @@ void MyGui::Demo_Render()
 
 void MyGui::Window1_Render()
 {
-    ImGui::Begin("Beállítás");
+    ImGui::Begin("Beallítas");
     ImGui::End();
 }
 
 void MyGui::Window2_Render()
 {
-    ImGui::Begin("Általános adatok");
+    ImGui::Begin("Altalanos adatok");
     ImGui::End();
 }
 
 void MyGui::Window3_Render()
 {
-    ImGui::Begin("Rombolás");
+    ImGui::Begin("Rombolas");
     ImGui::End();
 }
 
 void MyGui::Window4_Render()
 {
-    ImGui::Begin("Építés");
+    ImGui::Begin("Epites");
     ImGui::End();
 }
 
 void MyGui::Window5_Render()
 {
-    ImGui::Begin("Mező adatok");
+    ImGui::Begin("Mezo adatok");
+    ImGui::End();
+}
+
+void MyGui::Window6_Render() { 
+    ImGui::Begin("RoadNetwork teszt ablak");
+    int new_build_tool = build_tool;
+    if (ImGui::RadioButton("Lako zona", &new_build_tool, 1)) {
+        build_tool = 1;
+    }
+    if (ImGui::RadioButton("Dolgozo zona", &new_build_tool, 2)) {
+        build_tool = 2;
+    }
+    if (ImGui::RadioButton("Ut", &new_build_tool, 3)) {
+        build_tool = 3;
+    }
+    if (ImGui::RadioButton("Ures mezo", &new_build_tool, 0)) {
+        build_tool = 0;
+    }
+    build_tool = new_build_tool;
+
+    std::string str = RoadNetwork::NetworksToString();
+    const char* cstr = str.c_str();
+    ImGui::Text("%s", cstr);
     ImGui::End();
 }
 

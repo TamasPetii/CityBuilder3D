@@ -26,6 +26,7 @@ public:
 	void Window5_Render();
 	void ViewPort_Render(FrameBuffer* fbo);
 	void DockSpace_Render();
+	void Window6_Render();
 
 	static void Init(GLFWwindow* window);
 	static void Clean();
@@ -34,6 +35,8 @@ public:
 	int mouse_x;
 	int mouse_y;
 	ImVec2 content_size;
+	int build_tool;
+
 protected:
 	//Style
 	static void Custom_Style();

@@ -12,7 +12,7 @@ public:
 	~GameTable() = default;
 
 	//Setter
-	void Set_TableValue(int x, int y, FieldType type) { m_Table[x][y] = GameField::CreateField(type); } // TODO: Delete previous field (We are using heap to store objects -> need to delete)
+	void Set_TableValue(int x, int y, FieldType type);// TODO: Delete previous field (We are using heap to store objects -> need to delete)
 	
 	//Getter
 	inline int Get_TableSize() const { return m_TableSize; }
@@ -24,4 +24,7 @@ public:
 private:
 	std::vector<std::vector<GameField*>> m_Table;
 	int m_TableSize;
+	void SetRoadNetwork(int x, int y);
+	void SetBuildingNetwork(int x, int y);
+	void RebuildRoadNetwork();
 };

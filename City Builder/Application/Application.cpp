@@ -33,7 +33,7 @@ void Application::Update()
 	if (m_MyGui->hit)
 	{
 		std::cout << "---------FROM APPLICATION--------" << std::endl;
-		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, (int)m_MyGui->content_size.x, (int)m_MyGui->content_size.y);
+		//ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, (int)m_MyGui->content_size.x, (int)m_MyGui->content_size.y);
 		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, m_Renderer->Get_FrameBuffer()->Get_FrameWidth(), m_Renderer->Get_FrameBuffer()->Get_FrameHeight());
 		std::cout << "---------------------------------" << std::endl;
 		m_MyGui->hit = false;
@@ -68,6 +68,7 @@ void Application::RenderUI()
 	m_MyGui->Window4_Render();
 	m_MyGui->Window5_Render();
 	m_MyGui->ViewPort_Render(m_Renderer->Get_FrameBuffer());
+	m_MyGui->Window6_Render();
 
 	m_MyGui->Post_Render();
 }
@@ -331,7 +332,20 @@ void Application::ConvertMouseInputTo3D(int xpos, int ypos, int width, int heigh
 		rayx /= 2.f;
 		rayz /= 2.f;
 
-		m_City->Set_GameTableValue(int(rayz), int(rayx), EMPTY);
+		
+		if (m_MyGui->build_tool == 0) {
+			m_City->Set_GameTableValue(int(rayz), int(rayx), EMPTY);
+		}
+		if (m_MyGui->build_tool == 1) {
+			m_City->Set_GameTableValue(int(rayz), int(rayx), RESIDENTIAL_LVL1);
+		}
+		if (m_MyGui->build_tool == 2) {
+			m_City->Set_GameTableValue(int(rayz), int(rayx), INDUSTRIAL_LVL1);
+		}
+		if (m_MyGui->build_tool == 3) {
+			m_City->Set_GameTableValue(int(rayz), int(rayx), ROAD);
+		}
+
 		changed = true;
 	}
 }
