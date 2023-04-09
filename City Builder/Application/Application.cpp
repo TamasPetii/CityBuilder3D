@@ -187,6 +187,10 @@ void Application::Render()
 						numbers_GROUND.push_back(3);//kanyar jobbról-felfele
 						transform.rotate = glm::rotate<float>(M_PI, glm::vec3(0, 1, 0));
 					}
+					else
+					{
+						numbers_GROUND.push_back(2);
+					}
 
 					transforms_GROUND.push_back(Shape::MultiplyTransformMatrices(transform));
 				}
