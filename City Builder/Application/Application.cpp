@@ -44,6 +44,36 @@ void Application::Update()
 		m_FrameCounter->Reset();
 	}
 
+	if (m_MyGui->Get_NewGameLayout().effect) 
+	{
+		m_City = new City(m_MyGui->Get_NewGameLayout().size);
+
+		m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
+		m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
+
+		m_MyGui->Get_NewGameLayout().effect = false;
+		changed = true;
+	}
+
+	if (m_MyGui->Get_LoadGameLayout().effect)
+	{
+		std::cout << "Load-Game" << std::endl;
+		std::cout << m_MyGui->Get_LoadGameLayout().path << std::endl;
+		std::cout << m_MyGui->Get_LoadGameLayout().name << std::endl;
+
+		m_MyGui->Get_LoadGameLayout().effect = false;
+	}
+	
+	if (m_MyGui->Get_SaveGameLayout().effect)
+	{
+		std::cout << "Save-Game" << std::endl;
+		std::cout << m_MyGui->Get_SaveGameLayout().path << std::endl;
+		std::cout << m_MyGui->Get_SaveGameLayout().name << std::endl;
+
+		m_MyGui->Get_SaveGameLayout().effect = false;
+	}
+
+
 	//------------------------------
 
 	if (m_MyGui->hit)

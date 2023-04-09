@@ -145,7 +145,9 @@ void MyGui::DockSpace_Render()
 
     if (!opt_padding)
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
     ImGui::Begin("DockSpace Demo", nullptr, window_flags);
+  
     if (!opt_padding)
         ImGui::PopStyleVar();
 
@@ -160,7 +162,137 @@ void MyGui::DockSpace_Render()
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     }
 
+    Render_DockSpaceMenuBar();
+
     ImGui::End();
+}
+
+void MyGui::Render_DockSpaceMenuBar()
+{
+    if (ImGui::BeginMenuBar())
+    {
+
+        if (ImGui::BeginMenu("File"))
+        {
+            if (ImGui::MenuItem("New Game"))
+            {
+                m_NewGameLayout.show = true;
+            }
+            if (ImGui::MenuItem("Load Game"))
+            {
+                m_LoadGameLayout.show = true;
+            }
+            if (ImGui::MenuItem("Save Game"))
+            {
+                m_SaveGameLayout.show = true;
+            }
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Options"))
+        {
+            ImGui::EndMenu();
+        }
+        ImGui::EndMenuBar();
+    }
+
+    NewGame_Window();
+    LoadGame_Window();
+    SaveGame_Window();
+
+}
+
+void MyGui::NewGame_Window()
+{
+    if (m_NewGameLayout.show)
+    {
+        ImGui::OpenPopup("New Game");
+    }
+
+    if (ImGui::BeginPopupModal("New Game", nullptr, ImGuiWindowFlags_NoResize))
+    {
+        ImGui::SetWindowSize(ImVec2(300, 127));
+
+        //[New Game] : City Name Text Input
+        ImGui::Text("City Name: ");
+        ImGui::SameLine();
+        ImGui::InputText("##city_name", m_NewGameLayout.name, 64);
+
+        //[New Game] : City Size Slider 
+        ImGui::Text("City Size: ");
+        ImGui::SameLine();
+        ImGui::SliderInt("##city_size", &m_NewGameLayout.size, 25, 50);
+
+        //[New Game] : City Time Slider 
+        ImGui::Text("City Time: ");
+        ImGui::SameLine();
+        ImGui::SliderInt("##city_time", &m_NewGameLayout.time, 0, 2);
+
+        ImGui::Separator();
+
+        //[New Game] : Okay Button
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0.75, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0.7, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0.65, 0, 1));
+        if (ImGui::Button("Okay", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); m_NewGameLayout.show = false; m_NewGameLayout.effect = true; }
+        ImGui::SetItemDefaultFocus();
+        ImGui::PopStyleColor(3);
+
+        ImGui::SameLine();
+
+        //[New Game] : Cancel Button
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1, 0, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9, 0, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8, 0, 0, 1));
+        ImGui::SetCursorPosX(ImGui::GetWindowContentRegionMax().x - 120);
+        if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); m_NewGameLayout.show = false; }
+        ImGui::PopStyleColor(3);
+
+        ImGui::EndPopup();
+    }
+}
+
+void MyGui::LoadGame_Window()
+{
+    if (m_LoadGameLayout.show)
+    {
+        ImGui::OpenPopup("Load Game");
+    }
+
+    if (file_dialog.showFileDialog("Load Game", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), m_LoadGameLayout.extension))
+    {
+        m_LoadGameLayout.name = file_dialog.selected_fn;
+        m_LoadGameLayout.path = file_dialog.selected_path;
+        m_LoadGameLayout.effect = true;
+    }
+
+    if (file_dialog.close) 
+    {
+        m_LoadGameLayout.show = false;
+        file_dialog.close = false;
+    }
+
+}
+
+void MyGui::SaveGame_Window()
+{
+    if (m_SaveGameLayout.show)
+    {
+        ImGui::OpenPopup("Save Game");
+    }
+
+    if (file_dialog.showFileDialog("Save Game", imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, ImVec2(700, 310), m_SaveGameLayout.extension))
+    {
+        m_SaveGameLayout.name = file_dialog.selected_fn;
+        m_SaveGameLayout.path = file_dialog.selected_path;
+        m_SaveGameLayout.effect = true;
+    }
+
+    if (file_dialog.close)
+    {
+        m_SaveGameLayout.show = false;
+        file_dialog.close = false;
+    }
 }
 
 void MyGui::ViewPort_Render(FrameBuffer* fbo)
