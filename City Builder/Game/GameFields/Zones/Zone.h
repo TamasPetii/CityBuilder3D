@@ -23,6 +23,10 @@ class Zone : public GameField
 {
 protected: 
 	Zone(Level level) : GameField(), level(level) {}
+	Level level;
+	ZoneDetails m_details;
+	std::unordered_set<Citizen*> m_citizens;
+
 public:
 	~Zone() {}
 
@@ -38,13 +42,12 @@ public:
 	float Get_Satisfaction() const;
 	float Set_Satisfaction(float value);
 	float AddToSatisfaction(float value);
+	virtual float GetTaxRate() const = 0;
 
 	ZoneDetails inline Get_ZoneDetails() const { return m_details; }
 
 private:
-	Level level;
-	ZoneDetails m_details;
-	std::unordered_set<Citizen*> m_citizens;
+
 };
 
 #endif
