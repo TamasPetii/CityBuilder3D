@@ -3,11 +3,17 @@
 
 ServiceBuilding3::ServiceBuilding3()
 {
+	Transform transform;
 	GLfloat t = 0.45f;
-	shape_transform.push_back(glm::translate(glm::vec3(t * -1, 1, t * -1)));
-	shape_transform.push_back(glm::translate(glm::vec3(t * 1, 1, t * -1)));
-	shape_transform.push_back(glm::translate(glm::vec3(t * -1, 1, t * 1)));
-	shape_transform.push_back(glm::translate(glm::vec3(t * 1, 1, t * 1)));
+
+	for (int i = 0; i < 4; i++)
+	{
+		transform.translate = glm::translate(glm::vec3(t * (i % 2 ? 1 : -1), 1, t * (i / 2 ? 1 : -1)));
+		transform.rotate = glm::mat4(1);
+		transform.scale = glm::mat4(1);
+
+		shape_transform.push_back(transform);
+	}
 }
 
 void ServiceBuilding3::CreateBuffers()
@@ -21,7 +27,7 @@ void ServiceBuilding3::CreateBuffers()
 	cone_layout.GeometryDetails.BASE_ORIGO = glm::vec3(0, -1, 0);
 	cone_layout.GeometryDetails.BOTTOM_APEX = glm::vec3(0, -1, 0);
 	cone_layout.GeometryDetails.TOP_APEX = glm::vec3(0, 1, 0);
-	cone_layout.TextureDetails.ID = 0.f;
+	cone_layout.TextureDetails.ID = 33.f;
 
 	Shape::ConcatenateIndices(indices, Cone::GenerateIndices(cone_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cone::GenerateVertices(cone_layout));
@@ -30,14 +36,13 @@ void ServiceBuilding3::CreateBuffers()
 	sphere_layout.GeometryDetails.COUNT = 10;
 	sphere_layout.GeometryDetails.RADIUS = 0.15f;
 	sphere_layout.GeometryDetails.ORIGO = glm::vec3(0, 0.3, 0);
-	sphere_layout.TextureDetails.ID = 1.f;
+	sphere_layout.TextureDetails.ID = 34;
 
 	Shape::ConcatenateIndices(indices, Sphere::GenerateIndices(sphere_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Sphere::GenerateVertices(sphere_layout));
 
 	sphere_layout.GeometryDetails.RADIUS = 0.075f;
 	sphere_layout.GeometryDetails.ORIGO = glm::vec3(0, 0.75, 0);
-	sphere_layout.TextureDetails.ID = 1.f;
 
 	Shape::ConcatenateIndices(indices, Sphere::GenerateIndices(sphere_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Sphere::GenerateVertices(sphere_layout));

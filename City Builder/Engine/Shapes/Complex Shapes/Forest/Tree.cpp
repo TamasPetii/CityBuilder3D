@@ -2,12 +2,18 @@
 
 Tree::Tree() 
 {
+	Transform transform;
 	GLfloat t = 0.6f;
+
 	for (int i = -1; i <= 1; i++)
 	{
 		for (int j = -1; j <= 1; j++)
 		{
-			shape_transform.push_back(glm::translate(glm::vec3(t * i, 0.2f, t * j)) * glm::scale(glm::vec3(0.15f, 0.2f, 0.15f)));
+			transform.translate = glm::translate(glm::vec3(t * i, 0.2f, t * j));
+			transform.rotate = glm::mat4(1);
+			transform.scale = glm::scale(glm::vec3(0.15f, 0.2f, 0.15f));
+
+			shape_transform.push_back(transform);
 		}
 	}
 }
@@ -24,7 +30,7 @@ void Tree::CreateBuffers()
 	layout.GeometryDetails.BASE_ORIGO = glm::vec3(0, 1, 0);
 	layout.GeometryDetails.BOTTOM_APEX = glm::vec3(0, 1, 0);
 	layout.GeometryDetails.TOP_APEX = glm::vec3(0, 2, 0);
-	layout.TextureDetails.ID = 0.f;
+	layout.TextureDetails.ID = 42.f;
 
 	Shape::ConcatenateIndices(indices, Cone::GenerateIndices(layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cone::GenerateVertices(layout));
@@ -48,7 +54,7 @@ void Tree::CreateBuffers()
 	layout.GeometryDetails.BOTTOM_APEX += glm::vec3(0, -1, 0);
 	layout.GeometryDetails.TOP_APEX = glm::vec3(0, 2, 0);
 	layout.GeometryDetails.BASE_RADIUS = 0.2f;
-	layout.TextureDetails.ID = 1.f;
+	layout.TextureDetails.ID = 41.f;
 
 	Shape::ConcatenateIndices(indices, Cone::GenerateIndices(layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cone::GenerateVertices(layout));

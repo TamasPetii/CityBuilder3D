@@ -1,4 +1,6 @@
 #pragma once
+#define _USE_MATH_DEFINES
+
 //OpenGL Headers
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
@@ -16,6 +18,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cmath>
 
 class Application
 {
@@ -64,9 +67,11 @@ private:
 	std::vector<glm::mat4> transforms_SCHOOL1;
 	std::vector<glm::mat4> transforms_SCHOOL2;
 	std::vector<glm::mat4> transforms_CHARACTER;
-	std::vector<glm::mat4> transforms_EMPTY;
-	std::vector<glm::mat4> transforms_ROAD;
 	std::vector<glm::mat4> transforms_FOREST;
+
+	std::vector<glm::mat4> transforms_GROUND;
+	std::vector<GLfloat> numbers_GROUND;
+
 private:
 	glm::vec3 RayOrigin = glm::vec3(0);
 	glm::vec3 RayEnd = glm::vec3(0);
