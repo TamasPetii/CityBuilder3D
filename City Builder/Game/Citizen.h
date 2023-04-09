@@ -9,9 +9,11 @@ public:
 	~Citizen() {}
 
 	void JoinZone(Zone* zone);
-	void LeaveZone(Zone* zone);
+	void LeaveResidence();
+	void LeaveWorkplace();
+
 	void ChangeZone(Zone* zone);
-	void DeleteZone(Zone* zone);
+	void DeletedZone(Zone* zone);
 	float Get_SatisfactionPoints() const;
 	float PayTax() const;
 
