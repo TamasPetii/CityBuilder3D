@@ -120,7 +120,7 @@ void Application::Render()
 				}
 				else if (field->IsRoad())
 				{
-					numbers_GROUND.push_back(1);
+					numbers_GROUND.push_back(2 + j % 4);
 				}
 				else if (field->IsForest())
 				{
