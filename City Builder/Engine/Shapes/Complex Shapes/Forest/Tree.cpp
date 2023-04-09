@@ -9,9 +9,9 @@ Tree::Tree()
 	{
 		for (int j = -1; j <= 1; j++)
 		{
-			transform.translate = glm::translate(glm::vec3(t * i, 0.2f, t * j));
+			transform.translate = glm::translate(glm::vec3(t * i, 0.3f, t * j));
 			transform.rotate = glm::mat4(1);
-			transform.scale = glm::scale(glm::vec3(0.15f, 0.2f, 0.15f));
+			transform.scale = glm::scale(glm::vec3(0.15f, 0.3f, 0.15f));
 
 			shape_transform.push_back(transform);
 		}

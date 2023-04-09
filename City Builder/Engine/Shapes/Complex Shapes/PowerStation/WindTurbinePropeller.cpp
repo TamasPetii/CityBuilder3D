@@ -4,7 +4,7 @@
 WindTurbinePropeller::WindTurbinePropeller()
 {
 	Transform transform;
-	transform.translate = glm::translate(glm::vec3(0, 0.9, -0.2));
+	transform.translate = glm::translate(glm::vec3(0, 1.05, -0.15));
 	transform.rotate = glm::mat4(1);
 	transform.scale = glm::scale(glm::vec3(0.5, 0.5, 0.5));
 

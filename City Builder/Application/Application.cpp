@@ -196,8 +196,8 @@ void Application::Render()
 					}
 					else if (building->IsPowerStation()) 
 					{
-						transform.rotate = glm::rotate<float>(glm::radians(360.f / 50.f * j), glm::vec3(0, 1, 0));
-						transform.scale = glm::scale(glm::vec3(2));
+						//transform.rotate = glm::rotate<float>(glfwGetTime() * M_PI, glm::vec3(0, 1, 0));
+						transform.scale = glm::scale(glm::vec3(1.3));
 						transforms_POWERSTATION.push_back(Shape::MultiplyTransformMatrices(transform));
 						numbers_GROUND.push_back(81);
 					}
