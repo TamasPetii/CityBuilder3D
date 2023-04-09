@@ -11,6 +11,9 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 	m_City = new City(50);
 	m_Renderer = new Renderer(m_Camera);
 	m_MyGui = new MyGui(m_Camera);
+	m_FrameCounter = new FrameCounter();
+	m_Timer = new Timer(0.5);
+	m_Timer->Start();
 
 	m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
 	m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
@@ -26,31 +29,27 @@ Application::~Application()
 
 void Application::Update()
 {
+	m_Timer->Update();
+	m_FrameCounter->Update();
 	m_Camera->Update();
+
+	if (m_Timer->Tick())
+	{
+		std::cout << "TIMER TICK" << std::endl;
+	}
+
+	if (m_FrameCounter->Tick())
+	{
+		std::cout << m_FrameCounter->Get_FPS() << std::endl;
+		m_FrameCounter->Reset();
+	}
 
 	//------------------------------
 
 	if (m_MyGui->hit)
 	{
-		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, (int)m_MyGui->content_size.x, (int)m_MyGui->content_size.y);
-		//ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, m_Renderer->Get_FrameBuffer()->Get_FrameWidth(), m_Renderer->Get_FrameBuffer()->Get_FrameHeight());
+		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, m_Renderer->Get_FrameBuffer()->Get_FrameWidth(), m_Renderer->Get_FrameBuffer()->Get_FrameHeight());
 		m_MyGui->hit = false;
-	}
-
-
-	//------------------------------
-
-	static double lastTime = glfwGetTime();
-
-	double m_CurrentTime = glfwGetTime();
-	m_FrameCounter++;
-
-	if (m_CurrentTime - lastTime >= 1.0)
-	{
-		std::cout << m_FrameCounter << std::endl;
-
-		m_FrameCounter = 0;
-		lastTime += 1.0;
 	}
 }
 
@@ -275,40 +274,6 @@ void Application::Window_ResizedEvent(int width, int height)
 void Application::FrameBuffer_ResizedEvent(int width, int height)
 {
 	m_Camera->Set_ProjMatrix(width, height);
-};
-
-void Application::Keyboard_ButtonEvent(int key, int scancode, int action, int mods)
-{
-	if (ImGui::GetIO().WantCaptureKeyboard) return;
-
-	m_Camera->Keyboard_ButtonEvent(key, scancode, action, mods);
-};
-
-void Application::Mouse_MoveEvent(double xpos, double ypos)
-{
-	if (ImGui::GetIO().WantCaptureMouse) return;
-
-	m_Camera->Mouse_MoveEvent((float)xpos, (float)ypos);
-};
-
-void Application::Mouse_ClickEvent(int button, int action, int mods)
-{
-	if (ImGui::GetIO().WantCaptureMouse) return;
-
-	m_Camera->Mouse_ClickEvent(button, action, mods);
-
-	if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_RIGHT)
-	{
-		double xpos, ypos;
-		glfwGetCursorPos(m_Window, &xpos, &ypos);
-	}
-};
-
-void Application::Mouse_WeelEvent(double xoffset, double yoffset)
-{
-	if (ImGui::GetIO().WantCaptureMouse) return;
-
-	m_Camera->Mouse_WheelEvent((float)xoffset, (float)yoffset);
 };
 
 void Application::ConvertMouseInputTo3D(int xpos, int ypos, int width, int height)

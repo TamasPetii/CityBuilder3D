@@ -4,7 +4,7 @@
 
 //Abstractions
 #include "../Abstractions/Model.h"
-#include "../Abstractions/Camera.h"
+#include "../Utilities/Camera.h"
 #include "../Abstractions/FrameBuffer.h"
 #include "../Abstractions/BufferObject.h"
 #include "../Abstractions/VertexArrayObject.h"

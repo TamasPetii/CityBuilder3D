@@ -171,7 +171,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Abstractions\BufferObject.cpp" />
-    <ClCompile Include="Abstractions\Camera.cpp" />
+    <ClCompile Include="Utilities\FrameCounter.cpp" />
+    <ClCompile Include="Utilities\Timer.cpp" />
+    <ClCompile Include="Utilities\Camera.cpp" />
     <ClCompile Include="Abstractions\External\stb_image.cpp" />
     <ClCompile Include="Abstractions\FrameBuffer.cpp" />
     <ClCompile Include="Abstractions\Mesh.cpp" />
@@ -219,7 +221,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Abstractions\BufferObject.h" />
-    <ClInclude Include="Abstractions\Camera.h" />
+    <ClInclude Include="Utilities\FrameCounter.h" />
+    <ClInclude Include="Utilities\Timer.h" />
+    <ClInclude Include="Utilities\Camera.h" />
     <ClInclude Include="Abstractions\External\stb_image.h" />
     <ClInclude Include="Abstractions\FrameBuffer.h" />
     <ClInclude Include="Abstractions\Mesh.h" />
