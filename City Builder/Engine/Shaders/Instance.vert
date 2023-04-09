@@ -19,7 +19,6 @@ uniform float u_UseVertexTexID = 0;
 uniform mat4 u_VP = mat4(1);
 uniform mat4 u_M = mat4(1);
 
-
 void main()
 {
 	//vec4 position = u_VP * u_translate * vert_translate * u_rotate * vert_rotate * u_scale * vert_scale * vec4(vert_position, 1);
@@ -28,7 +27,7 @@ void main()
 
 	gl_Position = position;
 	frag_position = position.xyz;
-	frag_normal = vec3(0);
+	frag_normal = vert_normal;
 	frag_texture = vert_texture;
 	frag_textureID = (int(u_UseVertexTexID) == 0 ? int(vert_textureID) : int(vert_id));
 }

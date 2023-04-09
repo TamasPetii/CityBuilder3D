@@ -31,6 +31,8 @@ public:
 	void AttachNumbersDynamic(const std::vector<GLfloat>& numbers);
 	void AttachNumbersSubData(const std::vector<GLfloat>& numbers);
 
+	static glm::vec3 GenerateNormal(glm::vec3 start, glm::vec3 destination1, glm::vec3 destination2);
+
 	inline GLuint Get_IndicesCount() const { return m_IndicesCount; }
 	inline GLuint Get_InstanceCount() const { return m_InstanceCount; }
 	inline std::vector<Transform> Get_Transforms() { return shape_transform; }

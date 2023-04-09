@@ -59,6 +59,13 @@ std::vector<Vertex> Cylinder::GenerateVertices(const CylinderLayout& layout)
 			vert.texture  = GenerateTexturePosition(i, u);
 			vert.textureID = texID;
 
+			if (i == TOP_CIRCLE)
+				vert.normal = glm::vec3(0,1,0);
+			else if (i == BOTTOM_CIRCLE)
+				vert.normal = glm::vec3(0, -1, 0);
+			else
+				vert.normal = glm::normalize(GenerateVertexPositon(origo, radius, u) - origo);
+
 			vertices.push_back(vert);
 		}
 	}

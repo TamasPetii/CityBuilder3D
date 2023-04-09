@@ -145,6 +145,7 @@ void StadionBuilding::CreateBuffers()
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));
 
 	//Rigth Back Edge
+
 	cube_layout.GeometryDetails.BOTTOM_BACK_LEFT = glm::vec3(1, -1, -2);
 	cube_layout.GeometryDetails.BOTTOM_BACK_RIGHT = glm::vec3(2, -1, -2);
 	cube_layout.GeometryDetails.BOTTOM_FRONT_LEFT = glm::vec3(1, -1, -1);
@@ -152,7 +153,7 @@ void StadionBuilding::CreateBuffers()
 
 	cube_layout.GeometryDetails.TOP_BACK_LEFT = glm::vec3(1, 1, -2);
 	cube_layout.GeometryDetails.TOP_BACK_RIGHT = glm::vec3(2, 1, -2);
-	cube_layout.GeometryDetails.TOP_FRONT_LEFT = glm::vec3(2, 1, -1); //This vertex creates edge effect
+	cube_layout.GeometryDetails.TOP_FRONT_LEFT = glm::vec3(1.999, 1, -1); //This vertex creates edge effect
 	cube_layout.GeometryDetails.TOP_FRONT_RIGHT = glm::vec3(2, 1, -1);
 
 	cube_layout.TextureDetails.BACK_ID = 70;
@@ -192,7 +193,7 @@ void StadionBuilding::CreateBuffers()
 	cube_layout.GeometryDetails.BOTTOM_FRONT_LEFT = glm::vec3(1, -1, 2);
 	cube_layout.GeometryDetails.BOTTOM_FRONT_RIGHT = glm::vec3(2, -1, 2);
 
-	cube_layout.GeometryDetails.TOP_BACK_LEFT = glm::vec3(1, 1, 2);//This vertex creates edge effect
+	cube_layout.GeometryDetails.TOP_BACK_LEFT = glm::vec3(1, 1, 1.999);//This vertex creates edge effect
 	cube_layout.GeometryDetails.TOP_BACK_RIGHT = glm::vec3(2, 1, 1);
 	cube_layout.GeometryDetails.TOP_FRONT_LEFT = glm::vec3(1, 1, 2);
 	cube_layout.GeometryDetails.TOP_FRONT_RIGHT = glm::vec3(2, 1, 2);

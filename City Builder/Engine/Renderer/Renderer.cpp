@@ -214,6 +214,8 @@ void Renderer::RenderInstanced_Model(Model* model, const std::vector<glm::mat4>&
 	m_InstanceProgram->SetUniform("u_UseTexture", 1);
 	m_InstanceProgram->SetUniform("u_M", glm::translate(glm::vec3(0, 0, 0)));
 
+	m_InstanceProgram->SetUniform("u_eye", m_Camera->Get_CameraEye());
+
 	m_Model->RenderInstanced(m_InstanceProgram, transforms);
 
 	m_InstanceProgram->UnBind();
@@ -323,7 +325,7 @@ void Renderer::Delete_Shapes()
 void Renderer::Render(Technique tech, Object obj, const std::vector<glm::mat4>& matrices, Transform transform)
 {
 	Shape* shape = nullptr;
-
+	
 	switch (obj) 
 	{
 	case R_RESIDENTIAL_LVL1: shape = r_Residence1; break;
@@ -410,7 +412,7 @@ void Renderer::Render_Instanced(Shape* shape, const std::vector<glm::mat4>& matr
 
 	m_InstanceProgram->Bind();
 	m_InstanceProgram->SetUniform("u_UseVertexTexID", (float)(shape == r_Ground));
-
+	m_InstanceProgram->SetUniform("u_eye", m_Camera->Get_CameraEye());
 
 	shape->Bind();
 	if (changed) shape->AttachMatricesSubData(matrices);
