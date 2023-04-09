@@ -160,46 +160,6 @@ void MyGui::DockSpace_Render()
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     }
 
-    if (ImGui::BeginMenuBar())
-    {
-
-        if (ImGui::BeginMenu("File"))
-        {
-            if (ImGui::MenuItem("New Game"))
-            {
-                ImGui::OpenPopup("New Game Pop Up");
-                std::cout << "Clicked on New Game menuitem" << std::endl;
-            }
-            if (ImGui::MenuItem("Load Game"))
-            {
-                std::cout << "Clicked on Load Game menuitem" << std::endl;
-            }
-            if (ImGui::MenuItem("Save Game"))
-            {
-                std::cout << "Clicked on Save Game menuitem" << std::endl;
-            }
-            ImGui::EndMenu();
-        }
-
-        if (ImGui::BeginMenu("Options"))
-        {
-            // Disabling fullscreen would allow the window to be moved to the front of other windows,
-            // which we can't undo at the moment without finer window depth/z control.
-            ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen);
-            ImGui::MenuItem("Padding", NULL, &opt_padding);
-            ImGui::Separator();
-
-            if (ImGui::MenuItem("Flag: NoSplit", "", (dockspace_flags & ImGuiDockNodeFlags_NoSplit) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoSplit; }
-            if (ImGui::MenuItem("Flag: NoResize", "", (dockspace_flags & ImGuiDockNodeFlags_NoResize) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoResize; }
-            if (ImGui::MenuItem("Flag: NoDockingInCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_NoDockingInCentralNode) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoDockingInCentralNode; }
-            if (ImGui::MenuItem("Flag: AutoHideTabBar", "", (dockspace_flags & ImGuiDockNodeFlags_AutoHideTabBar) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_AutoHideTabBar; }
-            if (ImGui::MenuItem("Flag: PassthruCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode) != 0, opt_fullscreen)) { dockspace_flags ^= ImGuiDockNodeFlags_PassthruCentralNode; }
-            ImGui::Separator();
-            ImGui::EndMenu();
-        }
-        ImGui::EndMenuBar();
-    }
-
     ImGui::End();
 }
 
@@ -212,6 +172,7 @@ void MyGui::ViewPort_Render(FrameBuffer* fbo)
         Camera_MouseClickEvent();
         Camera_KeyboardKeyEvent();
         Build_MouseClickEvent();
+        Build_KeyboardKeyEvent();
     }
 
     ImVec2 size = ImGui::GetContentRegionAvail();
@@ -271,6 +232,18 @@ void MyGui::Build_MouseClickEvent()
 {
     if (ImGui::IsMouseClicked(ImGuiMouseButton_Right))
     {
+        BuildHover = true;
+        hit = false;
+    }
+
+    if (ImGui::IsMouseReleased(ImGuiMouseButton_Right))
+    {
+        hit = true;
+        BuildHover = false;
+    }
+
+    if (ImGui::IsWindowHovered() && BuildHover)
+    {
         int RelativWindowCursor_X = (int)(ImGui::GetMousePos().x - ImGui::GetWindowPos().x);
         int RelativWindowCursor_Y = (int)(ImGui::GetMousePos().y - ImGui::GetWindowPos().y);
 
@@ -282,13 +255,20 @@ void MyGui::Build_MouseClickEvent()
 
         if (CursorInContentAreaMin_X && CursorInContentAreaMax_Y)
         {
-            hit = true;
             mouse_x = RelativWindowCursor_X - (int)ImGui::GetWindowContentRegionMin().x;
             mouse_y = RelativWindowCursor_Y - (int)ImGui::GetWindowContentRegionMin().y;
             content_size.x = CurrentContent_MAX.x - CurrentContent_MIN.x;
             content_size.y = CurrentContent_MAX.y - CurrentContent_MIN.y;
-            std::cout << "Hitting content area: " << "{x = " << RelativWindowCursor_X - ImGui::GetWindowContentRegionMin().x << "} | {y = } " << RelativWindowCursor_Y - ImGui::GetWindowContentRegionMin().y << "}" << std::endl;
+            //std::cout << "Hitting content area: " << "{x = " << RelativWindowCursor_X - ImGui::GetWindowContentRegionMin().x << "} | {y = } " << RelativWindowCursor_Y - ImGui::GetWindowContentRegionMin().y << "}" << std::endl;
         }
+    }
+}
+
+void  MyGui::Build_KeyboardKeyEvent()
+{
+    if (ImGui::IsKeyPressed(ImGuiKey_R))
+    {
+        r++;
     }
 }
 

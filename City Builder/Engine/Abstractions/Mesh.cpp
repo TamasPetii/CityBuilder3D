@@ -13,9 +13,9 @@ void Mesh::AttachToGPU(const std::vector<Vertex>& vertices, const std::vector<GL
 
 	m_VAO.Bind();
 
-	m_VBO.AttachStatic(vertices);
-	m_IBO.AttachStatic(indices);
-	m_MBO.AttachDynamic({});
+	m_VBO.AttachDataStatic(vertices);
+	m_IBO.AttachDataStatic(indices);
+	m_MBO.AttachSubData(std::vector<glm::mat4>(2500));
 
 	m_VAO.LinkAttribute(m_VBO, 0, 3, GL_FLOAT, sizeof(Vertex), nullptr);
 	m_VAO.LinkAttribute(m_VBO, 1, 3, GL_FLOAT, sizeof(Vertex), (const void*)(1 * sizeof(glm::vec3)));
@@ -47,9 +47,9 @@ void Mesh::RenderInstanced(ProgramObject* program, const std::vector<glm::mat4>&
 
 	program->Bind();
 	m_VAO.Bind();
-	m_MBO.AttachDynamic(transforms);
+	m_MBO.AttachDataDynamic(transforms);
 	glDrawElementsInstanced(GL_TRIANGLES, m_IndicesCount, GL_UNSIGNED_INT, nullptr, m_InstanceCount);
-	m_MBO.AttachDynamic({});
+	m_MBO.AttachDataDynamic({});
 	m_VAO.UnBind();
 	program->UnBind();
 }

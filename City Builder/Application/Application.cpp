@@ -32,10 +32,8 @@ void Application::Update()
 
 	if (m_MyGui->hit)
 	{
-		std::cout << "---------FROM APPLICATION--------" << std::endl;
 		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, (int)m_MyGui->content_size.x, (int)m_MyGui->content_size.y);
-		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, m_Renderer->Get_FrameBuffer()->Get_FrameWidth(), m_Renderer->Get_FrameBuffer()->Get_FrameHeight());
-		std::cout << "---------------------------------" << std::endl;
+		//ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, m_Renderer->Get_FrameBuffer()->Get_FrameWidth(), m_Renderer->Get_FrameBuffer()->Get_FrameHeight());
 		m_MyGui->hit = false;
 	}
 
@@ -76,58 +74,29 @@ void Application::Render()
 {
 	if (changed)
 	{
-		transforms_CUBE.clear();
-		transforms_CONE.clear();
-		transforms_CYLINDER.clear();
-		transforms_PYRAMID.clear();
-		transforms_SPHERE.clear();
-
-		transforms_EMPTY.clear();
-		transforms_ROAD.clear();
-		transforms_FOREST.clear();
-
-		transforms_RESIDENCE1.clear();
-		transforms_RESIDENCE2.clear();
-		transforms_RESIDENCE3.clear();
-
-		transforms_INDUSTRY1.clear();
-		transforms_INDUSTRY2.clear();
-		transforms_INDUSTRY3.clear();
-
-		transforms_SERVICE1.clear();
-		transforms_SERVICE2.clear();
-		transforms_SERVICE3.clear();
-
-		transforms_FIRESTATION.clear();
-		transforms_POLICESTATION.clear();
-		transforms_STADION.clear();
-
-		transforms_POWERSTATION.clear();
-		transforms_POWERWIRE.clear();
-
-		transforms_SCHOOL1.clear();
-		transforms_SCHOOL2.clear();
-
-		transforms_CHARACTER.clear();
-
+		std::cout << "CHANGED" << std::endl;
 		for (int i = 0; i < m_City->Get_GameTableSize(); i++)
 		{
 			for (int j = 0; j < m_City->Get_GameTableSize(); j++)
 			{
-				GameField* field = m_City->Get_GameField(i, j);
-				glm::mat4 transform = glm::translate(glm::vec3(2 * j + 1, 0, 2 * i + 1));
+				Transform transform;
+				transform.translate = glm::translate(glm::vec3(2 * j + 1, 0, 2 * i + 1));
 
-				if (field->IsEmpty()) 
+				transforms_GROUND.push_back(Shape::MultiplyTransformMatrices(transform));
+
+				GameField* field = m_City->Get_GameField(i, j);
+				if (field->IsEmpty())
 				{
-					transforms_EMPTY.push_back(transform);
+					numbers_GROUND.push_back(0);
 				}
-				else if (field->IsRoad()) 
+				else if (field->IsRoad())
 				{
-					transforms_ROAD.push_back(transform);
+					numbers_GROUND.push_back(1);
 				}
 				else if (field->IsForest())
 				{
-					transforms_FOREST.push_back(transform);
+					transforms_FOREST.push_back(Shape::MultiplyTransformMatrices(transform));
+					numbers_GROUND.push_back(40);
 				}
 				else if (field->IsZone())
 				{
@@ -136,9 +105,9 @@ void Application::Render()
 					{
 						switch(zone->Get_Level())
 						{
-						case LEVEL_1: transforms_RESIDENCE1.push_back(transform); break;
-						case LEVEL_2: transforms_RESIDENCE2.push_back(transform); break;
-						case LEVEL_3: transforms_RESIDENCE3.push_back(transform); break;
+						case LEVEL_1: transforms_RESIDENCE1.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
+						case LEVEL_2: transforms_RESIDENCE2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(20); break;
+						case LEVEL_3: transforms_RESIDENCE3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(30); break;
 						}
 					}
 					else if (zone->IsWorkingArea()) 
@@ -148,18 +117,18 @@ void Application::Render()
 						{
 							switch (area->Get_Level())
 							{
-							case LEVEL_1: transforms_INDUSTRY1.push_back(transform); break;
-							case LEVEL_2: transforms_INDUSTRY2.push_back(transform); break;
-							case LEVEL_3: transforms_INDUSTRY3.push_back(transform); break;
+							case LEVEL_1: transforms_INDUSTRY1.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
+							case LEVEL_2: transforms_INDUSTRY2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(20); break;
+							case LEVEL_3: transforms_INDUSTRY3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(30); break;
 							}
 						}
 						else if (area->IsServiceArea())
 						{
 							switch (area->Get_Level())
 							{
-							case LEVEL_1: transforms_SERVICE1.push_back(transform); break;
-							case LEVEL_2: transforms_SERVICE2.push_back(transform); break;
-							case LEVEL_3: transforms_SERVICE3.push_back(transform); break;
+							case LEVEL_1: transforms_SERVICE1.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
+							case LEVEL_2: transforms_SERVICE2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(20); break;
+							case LEVEL_3: transforms_SERVICE3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(30); break;
 							}
 						}
 					}
@@ -169,68 +138,125 @@ void Application::Render()
 					Building* building = dynamic_cast<Building*>(field);
 					if (building->IsPoliceStation()) 
 					{
-						transforms_FIRESTATION.push_back(transform);
+						transforms_FIRESTATION.push_back(Shape::MultiplyTransformMatrices(transform));
+						numbers_GROUND.push_back(50);
 					}
 					else if (building->IsFireStation()) 
 					{
-						transforms_POLICESTATION.push_back(transform);
+						transforms_POLICESTATION.push_back(Shape::MultiplyTransformMatrices(transform));
+						numbers_GROUND.push_back(70);
 					}
 					else if (building->IsStadium())
 					{
-						transforms_STADION.push_back(transform);
+						transforms_STADION.push_back(Shape::MultiplyTransformMatrices(transform));
+						numbers_GROUND.push_back(50);
 					}
 					else if (building->IsSchool()) 
 					{
 						School* school = dynamic_cast<School*>(building);
 						if (school->IsHighSchool()) 
 						{
-							transforms_SCHOOL1.push_back(transform);
+							transforms_SCHOOL1.push_back(Shape::MultiplyTransformMatrices(transform));
+							numbers_GROUND.push_back(53);
 						}
 						else if (school->IsUniversity()) 
 						{
-							transforms_SCHOOL2.push_back(transform);
+							transforms_SCHOOL2.push_back(Shape::MultiplyTransformMatrices(transform));
+							numbers_GROUND.push_back(63);
 						}
 					}
 					else if (building->IsPowerStation()) 
 					{
-						transforms_POWERSTATION.push_back(transform);
+						transform.rotate = glm::rotate<float>(glm::radians(360.f / 50.f * j), glm::vec3(0, 1, 0));
+						transform.scale = glm::scale(glm::vec3(2));
+						transforms_POWERSTATION.push_back(Shape::MultiplyTransformMatrices(transform));
+						numbers_GROUND.push_back(81);
 					}
 					else if (building->IsPowerWire())
 					{
-						transforms_POWERWIRE.push_back(transform);
+						transforms_POWERWIRE.push_back(Shape::MultiplyTransformMatrices(transform));
+						numbers_GROUND.push_back(83);
 					}
 				}
 			}
 		}
-		changed = false;
 	}
 
-	//case 19: transforms_CHARACTER.push_back(transform); break;
+	m_Renderer->Render_PreRender(changed);
+	
+	if (m_MyGui->BuildHover) 
+	{
+		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, (int)m_MyGui->content_size.x, (int)m_MyGui->content_size.y);
+		int x = (int)RayHit.x / 2 * 2 + 1;
+		int z = (int)RayHit.z / 2 * 2 + 1;
 
-	m_Renderer->Render_PreRender();
-	m_Renderer->RenderInstanced_Character(transforms_CHARACTER);
-	m_Renderer->RenderInstanced_Empty(transforms_EMPTY);
-	m_Renderer->RenderInstanced_Road(transforms_ROAD);
-	m_Renderer->RenderInstanced_Forest(transforms_FOREST);
-	m_Renderer->RenderInstanced_Residence1(transforms_RESIDENCE1);
-	m_Renderer->RenderInstanced_Residence2(transforms_RESIDENCE2);
-	m_Renderer->RenderInstanced_Residence3(transforms_RESIDENCE3);
-	m_Renderer->RenderInstanced_Industry1(transforms_INDUSTRY1);
-	m_Renderer->RenderInstanced_Industry2(transforms_INDUSTRY2);
-	m_Renderer->RenderInstanced_Industry3(transforms_INDUSTRY3);
-	m_Renderer->RenderInstanced_Service1(transforms_SERVICE1);
-	m_Renderer->RenderInstanced_Service2(transforms_SERVICE2);
-	m_Renderer->RenderInstanced_Service3(transforms_SERVICE3);
-	m_Renderer->RenderInstanced_FireStation(transforms_FIRESTATION);
-	m_Renderer->RenderInstanced_PoliceStation(transforms_POLICESTATION);
-	m_Renderer->RenderInstanced_Stadion(transforms_STADION);
-	m_Renderer->RenderInstanced_PowerStation(transforms_POWERSTATION);
-	m_Renderer->RenderInstanced_PowerWire(transforms_POWERWIRE);
-	m_Renderer->RenderInstanced_School1(transforms_SCHOOL1);
-	m_Renderer->RenderInstanced_School2(transforms_SCHOOL2);
+		bool l1 = RayHit.x > 0 && RayHit.x < m_City->Get_GameTableSize() * 2;
+		bool l2 = RayHit.z > 0 && RayHit.z < m_City->Get_GameTableSize() * 2;
+
+		if (l1 && l2)
+		{
+			m_Renderer->buildable = m_City->Get_GameField(RayHit.z / 2, RayHit.x / 2)->IsEmpty();
+			Transform tr;
+			tr.translate = glm::translate(glm::vec3(x, 0, z));
+			tr.rotate = glm::rotate<float>(glm::radians(90.f) * (m_MyGui->r % 4), glm::vec3(0, 1, 0));
+			m_Renderer->Render(NORMAL_WIREFRAME, R_INDUSTRIAL_LVL2,  {}, tr);
+		}
+	}
+
+	m_Renderer->Render_Ground(transforms_GROUND, numbers_GROUND);
+	m_Renderer->Render(INSTANCED, R_FOREST,                transforms_FOREST);
+	m_Renderer->Render(INSTANCED, R_RESIDENTIAL_LVL1,      transforms_RESIDENCE1);
+	m_Renderer->Render(INSTANCED, R_RESIDENTIAL_LVL2,      transforms_RESIDENCE2);
+	m_Renderer->Render(INSTANCED, R_RESIDENTIAL_LVL3,      transforms_RESIDENCE3);
+	m_Renderer->Render(INSTANCED, R_INDUSTRIAL_LVL1,       transforms_INDUSTRY1);
+	m_Renderer->Render(INSTANCED, R_INDUSTRIAL_LVL2,       transforms_INDUSTRY2);
+	m_Renderer->Render(INSTANCED, R_INDUSTRIAL_LVL3,       transforms_INDUSTRY3);
+	m_Renderer->Render(INSTANCED, R_SERVICE_LVL1,          transforms_SERVICE1);
+	m_Renderer->Render(INSTANCED, R_SERVICE_LVL2,          transforms_SERVICE2);
+	m_Renderer->Render(INSTANCED, R_SERVICE_LVL3,          transforms_SERVICE3);
+	m_Renderer->Render(INSTANCED, R_FIRESTATION,           transforms_FIRESTATION);
+	m_Renderer->Render(INSTANCED, R_POLICESTATION,         transforms_POLICESTATION);
+	m_Renderer->Render(INSTANCED, R_STADIUM,               transforms_STADION);
+	m_Renderer->Render(INSTANCED, R_WINDTURBINE,		   transforms_POWERSTATION);
+	m_Renderer->Render(INSTANCED, R_WINDTURBINE_PROPELLER, transforms_POWERSTATION, {glm::mat4(1), glm::rotate<float>(abs(glfwGetTime() * 2 * M_PI), glm::vec3(0, 0, 1)), glm::mat4(1)});
+	m_Renderer->Render(INSTANCED, R_POWERWIRE,             transforms_POWERWIRE);
+	m_Renderer->Render(INSTANCED, R_HIGHSCHOOL,            transforms_SCHOOL1);
+	m_Renderer->Render(INSTANCED, R_UNIVERSITY,            transforms_SCHOOL2);
 	m_Renderer->Render_Axis();
-	m_Renderer->Render_Ray(RayOrigin, RayEnd);
+	m_Renderer->Render_Ray(RayOrigin, RayHit);
+	m_Renderer->Render_SkyBox();
 	m_Renderer->Render_PostRender();
+
+	if (changed) 
+	{
+		changed = false;
+		transforms_GROUND.clear();
+		numbers_GROUND.clear();
+
+		transforms_CUBE.clear();
+		transforms_CONE.clear();
+		transforms_CYLINDER.clear();
+		transforms_PYRAMID.clear();
+		transforms_SPHERE.clear();
+		transforms_FOREST.clear();
+		transforms_RESIDENCE1.clear();
+		transforms_RESIDENCE2.clear();
+		transforms_RESIDENCE3.clear();
+		transforms_INDUSTRY1.clear();
+		transforms_INDUSTRY2.clear();
+		transforms_INDUSTRY3.clear();
+		transforms_SERVICE1.clear();
+		transforms_SERVICE2.clear();
+		transforms_SERVICE3.clear();
+		transforms_FIRESTATION.clear();
+		transforms_POLICESTATION.clear();
+		transforms_STADION.clear();
+		transforms_POWERSTATION.clear();
+		transforms_POWERWIRE.clear();
+		transforms_SCHOOL1.clear();
+		transforms_SCHOOL2.clear();
+		transforms_CHARACTER.clear();
+	}
 }
 
 
@@ -330,8 +356,5 @@ void Application::ConvertMouseInputTo3D(int xpos, int ypos, int width, int heigh
 
 		rayx /= 2.f;
 		rayz /= 2.f;
-
-		m_City->Set_GameTableValue(int(rayz), int(rayx), EMPTY);
-		changed = true;
 	}
 }
