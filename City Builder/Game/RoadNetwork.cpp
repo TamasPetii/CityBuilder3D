@@ -5,8 +5,9 @@ std::vector<RoadNetwork::Network> RoadNetwork::m_networks;
 
 int RoadNetwork::GetNetworkId(GameField* field) {
 	for (auto& network : m_networks) {
-		if (network.fieldSet.find(field) != network.fieldSet.end())
-			return network.id;
+		if (field->IsZone() && network.zoneSet.find(field) != network.zoneSet.end()) return network.id;
+		if (field->IsRoad() && network.roadSet.find(field) != network.roadSet.end()) return network.id;
+		if (field->IsBuilding() && network.buildingSet.find(field) != network.buildingSet.end()) return network.id;
 	}
 	return -1;
 }
@@ -22,17 +23,22 @@ int RoadNetwork::CreateNetwork() {
 void RoadNetwork::AddToNetwork(GameField* field, int id) {
 	for (auto& network : m_networks) {
 		if (network.id != id) continue;
-
-		network.fieldSet.emplace(field);
+		if (field->IsZone()) network.zoneSet.emplace(field);
+		if (field->IsRoad()) network.roadSet.emplace(field);
+		if (field->IsBuilding()) network.buildingSet.emplace(field);
 	}
 }
 
 void RoadNetwork::RemoveFromNetwork(GameField* field) {
 	for (auto it = m_networks.begin(); it != m_networks.end(); ++it) {
-		if (it->fieldSet.find(field) == it->fieldSet.end()) continue;
+		if (field->IsZone() && it->zoneSet.find(field) != it->zoneSet.end())
+			it->zoneSet.erase(field);
+		if (field->IsRoad() && it->roadSet.find(field) != it->roadSet.end())
+			it->roadSet.erase(field);
+		if (field->IsBuilding() && it->buildingSet.find(field) == it->buildingSet.end())
+			it->buildingSet.erase(field);
 
-		it->fieldSet.erase(field);
-		if (it->fieldSet.size() == 0) {
+		if (it->zoneSet.size() == 0 && it->roadSet.size() == 0 && it->buildingSet.size() == 0) {
 			m_id_set.erase(it->id);
 			it = m_networks.erase(it);
 		}
@@ -48,9 +54,17 @@ void RoadNetwork::MergeNetworks(int id1, int id2) { //id: a network id-je. vec_i
 		if (id2 == m_networks[i].id) vec_ind2 = i;
 	}
 	if (vec_ind1 == -1 || vec_ind2 == -1) return;
-	RoadNetwork::m_networks[vec_ind1].fieldSet.insert( //2. network insertelése az 1.-be
-		std::make_move_iterator(m_networks[vec_ind2].fieldSet.begin()), 
-		std::make_move_iterator(m_networks[vec_ind2].fieldSet.end())
+	RoadNetwork::m_networks[vec_ind1].zoneSet.insert( //2. network insertelése az 1.-be
+		std::make_move_iterator(m_networks[vec_ind2].zoneSet.begin()), 
+		std::make_move_iterator(m_networks[vec_ind2].zoneSet.end())
+	);
+	RoadNetwork::m_networks[vec_ind1].roadSet.insert(
+		std::make_move_iterator(m_networks[vec_ind2].roadSet.begin()),
+		std::make_move_iterator(m_networks[vec_ind2].roadSet.end())
+	);
+	RoadNetwork::m_networks[vec_ind1].buildingSet.insert(
+		std::make_move_iterator(m_networks[vec_ind2].buildingSet.begin()),
+		std::make_move_iterator(m_networks[vec_ind2].buildingSet.end())
 	);
 	m_networks.erase(m_networks.begin() + vec_ind2);
 	m_id_set.erase(id2);
@@ -58,19 +72,31 @@ void RoadNetwork::MergeNetworks(int id1, int id2) { //id: a network id-je. vec_i
 
 bool RoadNetwork::IsConnected(GameField* field1, GameField* field2) {
 	for (auto& network : m_networks) {
-		if (network.fieldSet.find(field1) == network.fieldSet.end()) continue;
-		if (network.fieldSet.find(field2) == network.fieldSet.end()) continue;
+		if (field1->IsZone() && field2->IsZone()) {
+			if (network.zoneSet.find(field1) == network.zoneSet.end()) continue;
+			if (network.zoneSet.find(field2) == network.zoneSet.end()) continue;
+		}
+		else if (field1->IsZone() && field2->IsBuilding()) {
+			if (network.zoneSet.find(field1) == network.zoneSet.end()) continue;
+			if (network.buildingSet.find(field2) == network.buildingSet.end()) continue;
+		}
+		else if (field1->IsBuilding() && field2->IsZone()) {
+			if (network.buildingSet.find(field1) == network.buildingSet.end()) continue;
+			if (network.zoneSet.find(field2) == network.zoneSet.end()) continue;
+		}
+		//Többi esetre nem látom hogy miért lenne szükség(pl út-zóna), 
+		//de könnyû hozzáadni
 		return true;
 	}
 
 	return false;
 }
 
-GameField* RoadNetwork::FindEmptyWorkingArea(GameField* field) {
+GameField* RoadNetwork::FindEmptyWorkingArea(Zone* field) {
 	for (auto& network : m_networks) {
-		if (network.fieldSet.find(field) == network.fieldSet.end()) continue;
+		if (network.zoneSet.find(field) == network.zoneSet.end()) continue;
 
-		for (auto& otherField : network.fieldSet) {
+		for (auto& otherField : network.zoneSet) {
 			if (WorkingArea* workingArea = dynamic_cast<WorkingArea*>(otherField)) {
 				if (workingArea->Get_ZoneDetails().contain < workingArea->Get_ZoneDetails().capacity)
 					return workingArea;
@@ -85,7 +111,8 @@ std::string RoadNetwork::NetworksToString() {
 	std::string s = "";
 	int i = 1;
 	for (auto& network : m_networks) {
-		s += std::to_string(i) + ". network: " + std::to_string(network.fieldSet.size()) + "\n";
+		s += std::to_string(i) + ". network: " + std::to_string(
+			network.zoneSet.size() + network.roadSet.size() + network.buildingSet.size()) + "\n";
 		i++;
 	}
 	return s;
@@ -94,9 +121,25 @@ std::string RoadNetwork::NetworksToString() {
 void RoadNetwork::ResetNetworks() {
 	m_id_set.clear();
 	for (auto& network : m_networks) {
-		network.fieldSet.clear();
+		network.zoneSet.clear();
+		network.roadSet.clear();
+		network.buildingSet.clear();
 	}
 	m_networks.clear();
 }
+
+int RoadNetwork::GetSatisfaction(Zone* field) {
+	int satisfaction = 0;
+	for (auto& network : m_networks) {
+		if (network.zoneSet.find(field) == network.zoneSet.end()) continue;
+		for (auto& b : network.buildingSet) {
+			Building* building = dynamic_cast<Building*>(b);
+			//if (distance(field, building) < building->getRange())
+			//    satisfaction += building->getSatisfaction();
+		}
+	}
+	return satisfaction;
+}
+
 
 
