@@ -14,7 +14,7 @@ int RoadNetwork::GetNetworkId(GameField* field) {
 
 int RoadNetwork::CreateNetwork() {
 	int i = 1;
-	while (m_id_set.find(i) != m_id_set.end()) i++; //keresünk egy 0-nál nagyobb id-t, ami még nem foglalt
+	while (m_id_set.find(i) != m_id_set.end()) i++; //keresnk egy 0-nl nagyobb id-t, ami mg nem foglalt
 	m_id_set.emplace(i);
 	m_networks.emplace_back(i);
 	return i;
@@ -35,7 +35,7 @@ void RoadNetwork::RemoveFromNetwork(GameField* field) {
 			it->zoneSet.erase(field);
 		if (field->IsRoad() && it->roadSet.find(field) != it->roadSet.end())
 			it->roadSet.erase(field);
-		if (field->IsBuilding() && it->buildingSet.find(field) == it->buildingSet.end())
+		if (field->IsBuilding() && it->buildingSet.find(field) != it->buildingSet.end())
 			it->buildingSet.erase(field);
 
 		if (it->zoneSet.size() == 0 && it->roadSet.size() == 0 && it->buildingSet.size() == 0) {
@@ -54,7 +54,7 @@ void RoadNetwork::MergeNetworks(int id1, int id2) { //id: a network id-je. vec_i
 		if (id2 == m_networks[i].id) vec_ind2 = i;
 	}
 	if (vec_ind1 == -1 || vec_ind2 == -1) return;
-	RoadNetwork::m_networks[vec_ind1].zoneSet.insert( //2. network insertelése az 1.-be
+	RoadNetwork::m_networks[vec_ind1].zoneSet.insert( //2. network insertelse az 1.-be
 		std::make_move_iterator(m_networks[vec_ind2].zoneSet.begin()), 
 		std::make_move_iterator(m_networks[vec_ind2].zoneSet.end())
 	);
@@ -84,8 +84,8 @@ bool RoadNetwork::IsConnected(GameField* field1, GameField* field2) {
 			if (network.buildingSet.find(field1) == network.buildingSet.end()) continue;
 			if (network.zoneSet.find(field2) == network.zoneSet.end()) continue;
 		}
-		//Többi esetre nem látom hogy miért lenne szükség(pl út-zóna), 
-		//de könnyû hozzáadni
+		//Tbbi esetre nem ltom hogy mirt lenne szksg(pl t-zna), 
+		//de knny hozzadni
 		return true;
 	}
 
