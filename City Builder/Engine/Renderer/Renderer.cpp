@@ -98,7 +98,7 @@ void Renderer::Init_Textures()
 {
 
 	t_Texture = new Texture2D();
-	t_Texture->LoadTexture("Engine/Renderer/Assets/Textures/SpriteTextures.png");
+	t_Texture->LoadTexture("Engine/Renderer/Assets/Textures/Texture.png");
 
 	t_TextureSkybox = new TextureMap();
 	t_TextureSkybox->LoadTexture

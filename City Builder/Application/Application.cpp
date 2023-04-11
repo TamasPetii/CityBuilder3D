@@ -131,16 +131,88 @@ void Application::Render()
 				Transform transform;
 				transform.translate = glm::translate(glm::vec3(2 * j + 1, 0, 2 * i + 1));
 
-				transforms_GROUND.push_back(Shape::MultiplyTransformMatrices(transform));
-
 				GameField* field = m_City->Get_GameField(i, j);
+
+				if (!field->IsRoad())
+					transforms_GROUND.push_back(Shape::MultiplyTransformMatrices(transform));
+
 				if (field->IsEmpty())
 				{
 					numbers_GROUND.push_back(0);
 				}
 				else if (field->IsRoad())
 				{
-					numbers_GROUND.push_back(1);
+					bool upper_field = false;
+					bool lower_field = false;
+					bool left_field = false;
+					bool right_field = false;
+
+					if (j + 1 < m_City->Get_GameTableSize())
+						upper_field = m_City->Get_GameField(i, j + 1)->IsRoad();
+					if (j - 1 >= 0)
+						lower_field = m_City->Get_GameField(i, j - 1)->IsRoad();
+					if (i + 1 < m_City->Get_GameTableSize())
+						right_field = m_City->Get_GameField(i + 1, j)->IsRoad();
+					if (i - 1 >= 0)
+						left_field = m_City->Get_GameField(i - 1, j)->IsRoad();
+
+					if (upper_field && lower_field && right_field && left_field)
+					{
+						numbers_GROUND.push_back(5); //Keresztezõdés
+					}
+					else if ((upper_field && !lower_field && !right_field && !left_field) || (!upper_field && lower_field && !right_field && !left_field) || (upper_field && lower_field && !right_field && !left_field))
+					{
+						numbers_GROUND.push_back(2); //Átmenõ fel-le
+					}
+					else if ((!upper_field && !lower_field && right_field && !left_field) || (!upper_field && !lower_field && !right_field && left_field) || (!upper_field && !lower_field && right_field && left_field))
+					{
+						numbers_GROUND.push_back(2); //Átmenõ jobbra-balra
+						transform.rotate = glm::rotate<float>(M_PI / 2, glm::vec3(0, 1, 0));
+					}
+					else if ((upper_field && !lower_field && right_field && left_field))
+					{
+						numbers_GROUND.push_back(4); //Három ágú balra-fel-jobbra
+					}
+					else if ((!upper_field && lower_field && right_field && left_field))
+					{
+						numbers_GROUND.push_back(4);//Három ágú balra-le-jobbra
+						transform.rotate = glm::rotate<float>(M_PI, glm::vec3(0, 1, 0));
+					}
+					else if ((upper_field && lower_field && right_field && !left_field))
+					{
+						numbers_GROUND.push_back(4);//Három ágú jobbra-fel-le
+						transform.rotate = glm::rotate<float>(-M_PI/2, glm::vec3(0, 1, 0));
+					}
+					else if ((upper_field && lower_field && !right_field && left_field))
+					{
+						numbers_GROUND.push_back(4);//Három ágú balra-fel-le
+						transform.rotate = glm::rotate<float>(M_PI/2, glm::vec3(0, 1, 0));
+					}
+					else if ((!upper_field && lower_field && right_field && !left_field))
+					{
+						numbers_GROUND.push_back(3);//kanyar lentrõl-jobbra
+						transform.rotate = glm::rotate<float>(M_PI/2, glm::vec3(0, 1, 0));
+					}
+					else if ((!upper_field && lower_field && !right_field && left_field))
+					{
+						numbers_GROUND.push_back(3);//kanyar lentrõl-balra
+					}
+					else if ((upper_field && !lower_field && !right_field && left_field))
+					{
+						numbers_GROUND.push_back(3);//kanyar balról-felfele
+						transform.rotate = glm::rotate<float>(-M_PI/2, glm::vec3(0, 1, 0));
+					}
+					else if ((upper_field && !lower_field && right_field && !left_field))
+					{
+						numbers_GROUND.push_back(3);//kanyar jobbról-felfele
+						transform.rotate = glm::rotate<float>(M_PI, glm::vec3(0, 1, 0));
+					}
+					else
+					{
+						numbers_GROUND.push_back(2);
+					}
+
+					transforms_GROUND.push_back(Shape::MultiplyTransformMatrices(transform));
 				}
 				else if (field->IsForest())
 				{
