@@ -299,13 +299,10 @@ void MyGui::ViewPort_Render(FrameBuffer* fbo)
 {
     ImGui::Begin("ViewPort", nullptr, ImGuiWindowFlags_NoCollapse);
 
-    if (ImGui::IsWindowFocused())
-    {
-        Camera_MouseClickEvent();
-        Camera_KeyboardKeyEvent();
-        Build_MouseClickEvent();
-        Build_KeyboardKeyEvent();
-    }
+    Camera_MouseClickEvent();
+    Camera_KeyboardKeyEvent();
+    Build_MouseClickEvent();
+    Build_KeyboardKeyEvent();
 
     ImVec2 size = ImGui::GetContentRegionAvail();
 
@@ -329,39 +326,21 @@ void MyGui::Demo_Render()
 
 void MyGui::Window1_Render()
 {
-    ImGui::Begin("Beállítás");
+    ImGui::Begin("Render Details");
     ImGui::End();
 }
 
 void MyGui::Window2_Render()
 {
-    ImGui::Begin("Általános adatok");
+    ImGui::Begin("Game Details");
     ImGui::End();
 }
-
-void MyGui::Window3_Render()
-{
-    ImGui::Begin("Rombolás");
-    ImGui::End();
-}
-
-void MyGui::Window4_Render()
-{
-    ImGui::Begin("Építés");
-    ImGui::End();
-}
-
-void MyGui::Window5_Render()
-{
-    ImGui::Begin("Mező adatok");
-    ImGui::End();
-}
-
 //---------------------------------------------------------|EVENTS|---------------------------------------------------------//
 //---------------------------------------------------------|EVENTS|---------------------------------------------------------//
 //---------------------------------------------------------|EVENTS|---------------------------------------------------------//
 void MyGui::Build_MouseClickEvent()
 {
+
     if (ImGui::IsMouseClicked(ImGuiMouseButton_Right))
     {
         BuildHover = true;
@@ -396,7 +375,30 @@ void MyGui::Build_MouseClickEvent()
     }
 }
 
-void  MyGui::Build_KeyboardKeyEvent()
+void MyGui::Build_Window()
+{
+    ImGui::Begin("Build");
+
+    ImGui::SeparatorText("General");
+    ImGui::RadioButton("Empty", &m_BuildLayout.building, 9);
+    ImGui::RadioButton("Road", &m_BuildLayout.building, 10);
+    ImGui::RadioButton("Forest", &m_BuildLayout.building, 11);
+    ImGui::SeparatorText("Zone");
+    ImGui::RadioButton("Residence", &m_BuildLayout.building, 0);
+    ImGui::RadioButton("Industry", &m_BuildLayout.building, 3);
+    ImGui::RadioButton("Service", &m_BuildLayout.building, 6);
+    ImGui::SeparatorText("Buildings");
+    ImGui::RadioButton("FireStation", &m_BuildLayout.building, 13);
+    ImGui::RadioButton("PoliceStation", &m_BuildLayout.building, 12);
+    ImGui::RadioButton("Stadion", &m_BuildLayout.building, 16);
+    ImGui::RadioButton("HighSchool", &m_BuildLayout.building, 14);
+    ImGui::RadioButton("University", &m_BuildLayout.building, 15);
+    ImGui::RadioButton("PowerStation", &m_BuildLayout.building, 17);
+    ImGui::RadioButton("PowerWire", &m_BuildLayout.building, 18);
+    ImGui::End();
+}
+
+void MyGui::Build_KeyboardKeyEvent()
 {
     if (ImGui::IsKeyPressed(ImGuiKey_R))
     {

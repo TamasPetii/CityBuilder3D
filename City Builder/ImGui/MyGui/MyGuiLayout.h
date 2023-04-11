@@ -27,3 +27,9 @@ struct SaveGameLayout
 	std::string name;
 	std::string extension = ".txt";
 };
+
+struct BuildLayout
+{
+	bool effect = false;
+	int building = 0;
+};

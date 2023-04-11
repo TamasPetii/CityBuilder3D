@@ -27,9 +27,6 @@ public:
 	void Demo_Render();
 	void Window1_Render();
 	void Window2_Render();
-	void Window3_Render();
-	void Window4_Render();
-	void Window5_Render();
 	void ViewPort_Render(FrameBuffer* fbo);
 	void DockSpace_Render();
 
@@ -47,6 +44,9 @@ public:
 
 	bool BuildHover = false;
 	int r = 0;
+
+	void Build_Window();
+	inline BuildLayout Get_BuildLayout() { return m_BuildLayout; }
 protected:
 	//Style
 	static void Custom_Style();
@@ -70,6 +70,8 @@ private:
 	void SaveGame_Window();
 	SaveGameLayout m_SaveGameLayout;
 	imgui_addons::ImGuiFileBrowser file_dialog;
+
+	BuildLayout m_BuildLayout;
 
 };
 

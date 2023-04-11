@@ -81,5 +81,8 @@ private:
 	bool changed = true;
 	int m_WindowWidth = 0;
 	int m_WindowHeight = 0;
+
+	int HitX;
+	int HitY;
 };
 

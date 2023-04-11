@@ -4,9 +4,9 @@
 WindTurbine::WindTurbine()
 {
 	Transform transform;
-	transform.translate = glm::translate(glm::vec3(0, 0.6, 0));
+	transform.translate = glm::translate(glm::vec3(0, 0.8, 0));
 	transform.rotate = glm::mat4(1);
-	transform.scale = glm::scale(glm::vec3(1, 0.6, 1));
+	transform.scale = glm::scale(glm::vec3(1, 0.75, 1));
 
 	shape_transform.push_back(transform);
 }
