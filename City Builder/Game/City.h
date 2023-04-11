@@ -16,6 +16,7 @@ public:
 	void DeleteField(int x, int y);
 	void UpgradeField(int x, int y);
 	void CollectTax();
+	void SetTaxRate(FieldType type, float rate);
 	ZoneDetails Get_ZoneDetails(int x, int y) const;
 
 	inline GameField* Get_GameField(int x, int y) const { return m_GameTable->Get_TableValue(x, y); };

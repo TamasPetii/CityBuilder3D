@@ -73,6 +73,22 @@ void Application::Update()
 		m_MyGui->Get_SaveGameLayout().effect = false;
 	}
 
+	if (m_MyGui->Get_TaxLayout().effect)
+	{
+		m_City->SetTaxRate(RESIDENTIAL_LVL1, m_MyGui->Get_TaxLayout().ResidenceTaxLvl1);
+		m_City->SetTaxRate(RESIDENTIAL_LVL2, m_MyGui->Get_TaxLayout().ResidenceTaxLvl2);
+		m_City->SetTaxRate(RESIDENTIAL_LVL3, m_MyGui->Get_TaxLayout().ResidenceTaxLvl3);
+
+		m_City->SetTaxRate(SERVICE_LVL1, m_MyGui->Get_TaxLayout().ServiceTaxLvl1);
+		m_City->SetTaxRate(SERVICE_LVL2, m_MyGui->Get_TaxLayout().ServiceTaxLvl2);
+		m_City->SetTaxRate(SERVICE_LVL3, m_MyGui->Get_TaxLayout().ServiceTaxLvl3);
+
+		m_City->SetTaxRate(INDUSTRIAL_LVL1, m_MyGui->Get_TaxLayout().IndustrialTaxLvl1);
+		m_City->SetTaxRate(INDUSTRIAL_LVL2, m_MyGui->Get_TaxLayout().IndustrialTaxLvl2);
+		m_City->SetTaxRate(INDUSTRIAL_LVL3, m_MyGui->Get_TaxLayout().IndustrialTaxLvl3);
+
+		m_MyGui->Get_TaxLayout().effect = false;
+	}
 
 	//------------------------------
 
@@ -94,6 +110,7 @@ void Application::RenderUI()
 	m_MyGui->Window3_Render();
 	m_MyGui->Window4_Render();
 	m_MyGui->Window5_Render();
+	m_MyGui->Window6_Render();
 	m_MyGui->ViewPort_Render(m_Renderer->Get_FrameBuffer());
 
 	m_MyGui->Post_Render();
