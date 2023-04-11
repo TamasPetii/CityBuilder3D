@@ -357,7 +357,7 @@ void MyGui::Window5_Render()
     ImGui::End();
 }
 
-void MyGui::Window6_Render()
+void MyGui::GameOptions_Window()
 {
     ImGui::Begin("Game options");
 

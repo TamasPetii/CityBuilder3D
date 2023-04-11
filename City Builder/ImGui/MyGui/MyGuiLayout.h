@@ -32,15 +32,15 @@ struct TaxLayout
 {
 	bool effect = false;
 
-	float ResidenceTaxLvl1;
-	float ResidenceTaxLvl2;
-	float ResidenceTaxLvl3;
+	float ResidenceTaxLvl1 = 20;
+	float ResidenceTaxLvl2 = 20;
+	float ResidenceTaxLvl3 = 20;
 
-	float IndustrialTaxLvl1;
-	float IndustrialTaxLvl2;
-	float IndustrialTaxLvl3;
+	float IndustrialTaxLvl1 = 20;
+	float IndustrialTaxLvl2 = 20;
+	float IndustrialTaxLvl3 = 20;
 
-	float ServiceTaxLvl1;
-	float ServiceTaxLvl2;
-	float ServiceTaxLvl3;
+	float ServiceTaxLvl1 = 20;
+	float ServiceTaxLvl2 = 20;
+	float ServiceTaxLvl3 = 20;
 };

@@ -30,7 +30,7 @@ public:
 	void Window3_Render();
 	void Window4_Render();
 	void Window5_Render();
-	void Window6_Render();
+	void GameOptions_Window();
 	void ViewPort_Render(FrameBuffer* fbo);
 	void DockSpace_Render();
 

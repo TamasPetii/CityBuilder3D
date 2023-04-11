@@ -110,7 +110,7 @@ void Application::RenderUI()
 	m_MyGui->Window3_Render();
 	m_MyGui->Window4_Render();
 	m_MyGui->Window5_Render();
-	m_MyGui->Window6_Render();
+	m_MyGui->GameOptions_Window();
 	m_MyGui->ViewPort_Render(m_Renderer->Get_FrameBuffer());
 
 	m_MyGui->Post_Render();
