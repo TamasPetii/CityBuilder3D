@@ -32,6 +32,22 @@ void City::CollectTax()
 	}
 }
 
+void City::SetTaxRate(FieldType type, float rate)
+{
+	switch (type)
+	{
+		case RESIDENTIAL_LVL1: ResidentalArea::SetLvl1TaxRate(rate);
+		case RESIDENTIAL_LVL2: ResidentalArea::SetLvl2TaxRate(rate);
+		case RESIDENTIAL_LVL3: ResidentalArea::SetLvl3TaxRate(rate);
+		case INDUSTRIAL_LVL1: IndustrialArea::SetLvl1TaxRate(rate);
+		case INDUSTRIAL_LVL2: IndustrialArea::SetLvl2TaxRate(rate);
+		case INDUSTRIAL_LVL3: IndustrialArea::SetLvl3TaxRate(rate);
+		case SERVICE_LVL1: ServiceArea::SetLvl1TaxRate(rate);
+		case SERVICE_LVL2: ServiceArea::SetLvl2TaxRate(rate);
+		case SERVICE_LVL3: ServiceArea::SetLvl3TaxRate(rate);
+	}
+}
+
 ZoneDetails City::Get_ZoneDetails(int x, int y) const
 {
 	ZoneDetails z;

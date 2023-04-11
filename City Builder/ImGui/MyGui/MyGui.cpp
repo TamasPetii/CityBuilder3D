@@ -357,6 +357,145 @@ void MyGui::Window5_Render()
     ImGui::End();
 }
 
+void MyGui::GameOptions_Window()
+{
+    ImGui::Begin("Game options");
+
+    ImGui::SeparatorText("Residence Tax");
+
+    ImGui::Text("LVL1: ");
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_TaxLayout.ResidenceTaxLvl1 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ResidenceTaxLvl1 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_TaxLayout.ResidenceTaxLvl1 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ResidenceTaxLvl1 * 2.55)) / 255.0f, 0.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_TaxLayout.ResidenceTaxLvl1 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ResidenceTaxLvl1 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+
+    if (ImGui::SliderFloat("##residence_lvl1", &m_TaxLayout.ResidenceTaxLvl1, 0, 100))
+        m_TaxLayout.effect = true;
+
+    ImGui::PopStyleColor(5);
+
+    ImGui::Text("LVL2: ");
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_TaxLayout.ResidenceTaxLvl2 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ResidenceTaxLvl2 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_TaxLayout.ResidenceTaxLvl2 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ResidenceTaxLvl2 * 2.55)) / 255.0f, 0.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_TaxLayout.ResidenceTaxLvl2 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ResidenceTaxLvl2 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+
+    if (ImGui::SliderFloat("##residence_lvl2", &m_TaxLayout.ResidenceTaxLvl2, 0, 100))
+        m_TaxLayout.effect = true;
+
+    ImGui::PopStyleColor(5);
+
+    ImGui::Text("LVL3: ");
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_TaxLayout.ResidenceTaxLvl3 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ResidenceTaxLvl3 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_TaxLayout.ResidenceTaxLvl3 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ResidenceTaxLvl3 * 2.55)) / 255.0f, 0.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_TaxLayout.ResidenceTaxLvl3 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ResidenceTaxLvl3 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+
+    if (ImGui::SliderFloat("##residence_lvl3", &m_TaxLayout.ResidenceTaxLvl3, 0, 100))
+        m_TaxLayout.effect = true;
+
+    ImGui::PopStyleColor(5);
+
+    ImGui::SeparatorText("Service Tax");
+
+    ImGui::Text("LVL1: ");
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_TaxLayout.ServiceTaxLvl1 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ServiceTaxLvl1 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_TaxLayout.ServiceTaxLvl1 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ServiceTaxLvl1 * 2.55)) / 255.0f, 0.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_TaxLayout.ServiceTaxLvl1 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ServiceTaxLvl1 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+
+    if (ImGui::SliderFloat("##service_lvl1", &m_TaxLayout.ServiceTaxLvl1, 0, 100))
+        m_TaxLayout.effect = true;
+
+    ImGui::PopStyleColor(5);
+
+    ImGui::Text("LVL2: ");
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_TaxLayout.ServiceTaxLvl2 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ServiceTaxLvl2 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_TaxLayout.ServiceTaxLvl2 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ServiceTaxLvl2 * 2.55)) / 255.0f, 0.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_TaxLayout.ServiceTaxLvl2 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ServiceTaxLvl2 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+
+    if (ImGui::SliderFloat("##service_lvl2", &m_TaxLayout.ServiceTaxLvl2, 0, 100))
+        m_TaxLayout.effect = true;
+
+    ImGui::PopStyleColor(5);
+
+    ImGui::Text("LVL3: ");
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_TaxLayout.ServiceTaxLvl3 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ServiceTaxLvl3 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_TaxLayout.ServiceTaxLvl3 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ServiceTaxLvl3 * 2.55)) / 255.0f, 0.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_TaxLayout.ServiceTaxLvl3 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ServiceTaxLvl3 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+
+    if (ImGui::SliderFloat("##service_lvl3", &m_TaxLayout.ServiceTaxLvl3, 0, 100))
+        m_TaxLayout.effect = true;
+
+    ImGui::PopStyleColor(5);
+
+    ImGui::SeparatorText("Industrial Tax");
+
+    ImGui::Text("LVL1: ");
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_TaxLayout.IndustrialTaxLvl1 * 2.55)) / 255.0f, (255 - (m_TaxLayout.IndustrialTaxLvl1 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_TaxLayout.IndustrialTaxLvl1 * 2.55)) / 255.0f, (255 - (m_TaxLayout.IndustrialTaxLvl1 * 2.55)) / 255.0f, 0.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_TaxLayout.IndustrialTaxLvl1 * 2.55)) / 255.0f, (255 - (m_TaxLayout.IndustrialTaxLvl1 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+
+    if (ImGui::SliderFloat("##industrial_lvl1", &m_TaxLayout.IndustrialTaxLvl1, 0, 100))
+        m_TaxLayout.effect = true;
+
+    ImGui::PopStyleColor(5);
+
+    ImGui::Text("LVL2: ");
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_TaxLayout.IndustrialTaxLvl2 * 2.55)) / 255.0f, (255 - (m_TaxLayout.IndustrialTaxLvl2 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_TaxLayout.IndustrialTaxLvl2 * 2.55)) / 255.0f, (255 - (m_TaxLayout.IndustrialTaxLvl2 * 2.55)) / 255.0f, 0.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_TaxLayout.IndustrialTaxLvl2 * 2.55)) / 255.0f, (255 - (m_TaxLayout.IndustrialTaxLvl2 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+
+    if (ImGui::SliderFloat("##industrial_lvl2", &m_TaxLayout.IndustrialTaxLvl2, 0, 100))
+        m_TaxLayout.effect = true;
+
+    ImGui::PopStyleColor(5);
+
+    ImGui::Text("LVL3: ");
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_TaxLayout.IndustrialTaxLvl3 * 2.55)) / 255.0f, (255 - (m_TaxLayout.IndustrialTaxLvl3 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_TaxLayout.IndustrialTaxLvl3 * 2.55)) / 255.0f, (255 - (m_TaxLayout.IndustrialTaxLvl3 * 2.55)) / 255.0f, 0.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_TaxLayout.IndustrialTaxLvl3 * 2.55)) / 255.0f, (255 - (m_TaxLayout.IndustrialTaxLvl3 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+
+    if (ImGui::SliderFloat("##industrial_lvl3", &m_TaxLayout.IndustrialTaxLvl3, 0, 100))
+        m_TaxLayout.effect = true;
+
+    ImGui::PopStyleColor(5);
+
+    ImGui::End();
+}
+
 //---------------------------------------------------------|EVENTS|---------------------------------------------------------//
 //---------------------------------------------------------|EVENTS|---------------------------------------------------------//
 //---------------------------------------------------------|EVENTS|---------------------------------------------------------//
