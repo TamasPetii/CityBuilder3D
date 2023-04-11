@@ -96,6 +96,11 @@ void Application::Update()
 	{
 		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, m_Renderer->Get_FrameBuffer()->Get_FrameWidth(), m_Renderer->Get_FrameBuffer()->Get_FrameHeight());
 		m_MyGui->hit = false;
+
+		std::cout << "Build! -> " << m_MyGui->Get_BuildLayout().building << std::endl;
+		m_City->Set_GameTableValue(HitX, HitY, (FieldType)m_MyGui->Get_BuildLayout().building);
+
+		changed = true;
 	}
 }
 
@@ -107,9 +112,7 @@ void Application::RenderUI()
 	m_MyGui->Demo_Render();
 	m_MyGui->Window1_Render();
 	m_MyGui->Window2_Render();
-	m_MyGui->Window3_Render();
-	m_MyGui->Window4_Render();
-	m_MyGui->Window5_Render();
+	m_MyGui->Build_Window();
 	m_MyGui->GameOptions_Window();
 	m_MyGui->ViewPort_Render(m_Renderer->Get_FrameBuffer());
 
@@ -184,12 +187,12 @@ void Application::Render()
 					Building* building = dynamic_cast<Building*>(field);
 					if (building->IsPoliceStation()) 
 					{
-						transforms_FIRESTATION.push_back(Shape::MultiplyTransformMatrices(transform));
+						transforms_POLICESTATION.push_back(Shape::MultiplyTransformMatrices(transform));
 						numbers_GROUND.push_back(50);
 					}
 					else if (building->IsFireStation()) 
 					{
-						transforms_POLICESTATION.push_back(Shape::MultiplyTransformMatrices(transform));
+						transforms_FIRESTATION.push_back(Shape::MultiplyTransformMatrices(transform));
 						numbers_GROUND.push_back(70);
 					}
 					else if (building->IsStadium())
@@ -214,7 +217,6 @@ void Application::Render()
 					else if (building->IsPowerStation()) 
 					{
 						//transform.rotate = glm::rotate<float>(glfwGetTime() * M_PI, glm::vec3(0, 1, 0));
-						transform.scale = glm::scale(glm::vec3(1.3));
 						transforms_POWERSTATION.push_back(Shape::MultiplyTransformMatrices(transform));
 						numbers_GROUND.push_back(81);
 					}
@@ -245,7 +247,17 @@ void Application::Render()
 			Transform tr;
 			tr.translate = glm::translate(glm::vec3(x, 0, z));
 			tr.rotate = glm::rotate<float>(glm::radians(90.f) * (m_MyGui->r % 4), glm::vec3(0, 1, 0));
-			m_Renderer->Render(NORMAL_WIREFRAME, R_INDUSTRIAL_LVL2,  {}, tr);
+
+			if (m_MyGui->Get_BuildLayout().building == POWERSTATION)
+			{
+				m_Renderer->Render(NORMAL_WIREFRAME, R_WINDTURBINE, {}, tr);
+				m_Renderer->Render(NORMAL_WIREFRAME, R_WINDTURBINE_PROPELLER, {}, tr);
+			}
+			else
+			{
+				m_Renderer->Render(NORMAL_WIREFRAME, (Object)m_MyGui->Get_BuildLayout().building, {}, tr);
+			}
+
 		}
 	}
 
@@ -368,5 +380,9 @@ void Application::ConvertMouseInputTo3D(int xpos, int ypos, int width, int heigh
 
 		rayx /= 2.f;
 		rayz /= 2.f;
+
+		HitX = (int)rayz;
+		HitY = (int)rayx;
 	}
+
 }

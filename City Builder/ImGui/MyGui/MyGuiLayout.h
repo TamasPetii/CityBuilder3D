@@ -28,6 +28,12 @@ struct SaveGameLayout
 	std::string extension = ".txt";
 };
 
+struct BuildLayout
+{
+	bool effect = false;
+	int building = 0;
+};
+
 struct TaxLayout
 {
 	bool effect = false;

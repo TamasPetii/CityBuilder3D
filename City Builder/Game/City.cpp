@@ -51,5 +51,6 @@ void City::SetTaxRate(FieldType type, float rate)
 ZoneDetails City::Get_ZoneDetails(int x, int y) const
 {
 	ZoneDetails z;
+	z.capacity = 0;
 	return z;
 }
