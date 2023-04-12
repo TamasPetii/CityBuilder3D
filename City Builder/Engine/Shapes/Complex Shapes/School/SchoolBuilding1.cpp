@@ -16,12 +16,12 @@ void SchoolBuilding1::CreateBuffers()
 	std::vector<GLuint> indices;
 
 	CubeLayout cube_layout = CubeLayout::GenerateBasicCubeLayout();
-	cube_layout.TextureDetails.FRONT_ID = 80;
-	cube_layout.TextureDetails.BACK_ID = 80;
-	cube_layout.TextureDetails.LEFT_ID = 80;
-	cube_layout.TextureDetails.RIGHT_ID = 80;
-	cube_layout.TextureDetails.TOP_ID = 81;
-	cube_layout.TextureDetails.BOTTOM_ID = 81;
+	cube_layout.TextureDetails.FRONT_ID = 55;
+	cube_layout.TextureDetails.BACK_ID = 55;
+	cube_layout.TextureDetails.LEFT_ID = 55;
+	cube_layout.TextureDetails.RIGHT_ID = 55;
+	cube_layout.TextureDetails.TOP_ID = 56;
+	cube_layout.TextureDetails.BOTTOM_ID = 56;
 
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));

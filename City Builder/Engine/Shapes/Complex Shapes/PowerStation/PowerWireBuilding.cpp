@@ -24,8 +24,8 @@ void PowerWireBuilding::CreateBuffers()
 	cylinder_layout.GeometryDetails.TOP_RADIUS = 0.1f;
 	cylinder_layout.GeometryDetails.BOTTOM_ORIGO = glm::vec3(0, -1, 0);
 	cylinder_layout.GeometryDetails.BOTTOM_RADIUS = 0.1f;
-	cylinder_layout.TextureDetails.CIRCLE_ID = 99;
-	cylinder_layout.TextureDetails.WALL_ID = 99;
+	cylinder_layout.TextureDetails.CIRCLE_ID = 63;
+	cylinder_layout.TextureDetails.WALL_ID = 63;
 
 	Shape::ConcatenateIndices(indices, Cylinder::GenerateIndices(cylinder_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cylinder::GenerateVertices(cylinder_layout));

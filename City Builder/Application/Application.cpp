@@ -108,11 +108,10 @@ void Application::RenderUI()
 {
 	m_MyGui->Pre_Render();
 
-	m_MyGui->DockSpace_Render();
-	m_MyGui->Demo_Render();
-	m_MyGui->Window1_Render();
-	m_MyGui->Window2_Render();
+	m_MyGui->DockSpace();
+	m_MyGui->Demo_Window();
 	m_MyGui->Build_Window();
+	m_MyGui->GameDetails_Window();
 	m_MyGui->GameOptions_Window();
 	m_MyGui->ViewPort_Render(m_Renderer->Get_FrameBuffer());
 
@@ -158,58 +157,58 @@ void Application::Render()
 
 					if (upper_field && lower_field && right_field && left_field)
 					{
-						numbers_GROUND.push_back(5); //Keresztezõdés
+						numbers_GROUND.push_back(6); //Keresztezõdés
 					}
 					else if ((upper_field && !lower_field && !right_field && !left_field) || (!upper_field && lower_field && !right_field && !left_field) || (upper_field && lower_field && !right_field && !left_field))
 					{
-						numbers_GROUND.push_back(2); //Átmenõ fel-le
+						numbers_GROUND.push_back(7); //Átmenõ fel-le
 					}
 					else if ((!upper_field && !lower_field && right_field && !left_field) || (!upper_field && !lower_field && !right_field && left_field) || (!upper_field && !lower_field && right_field && left_field))
 					{
-						numbers_GROUND.push_back(2); //Átmenõ jobbra-balra
+						numbers_GROUND.push_back(7); //Átmenõ jobbra-balra
 						transform.rotate = glm::rotate<float>(M_PI / 2, glm::vec3(0, 1, 0));
 					}
 					else if ((upper_field && !lower_field && right_field && left_field))
 					{
-						numbers_GROUND.push_back(4); //Három ágú balra-fel-jobbra
+						numbers_GROUND.push_back(5); //Három ágú balra-fel-jobbra
 					}
 					else if ((!upper_field && lower_field && right_field && left_field))
 					{
-						numbers_GROUND.push_back(4);//Három ágú balra-le-jobbra
+						numbers_GROUND.push_back(5);//Három ágú balra-le-jobbra
 						transform.rotate = glm::rotate<float>(M_PI, glm::vec3(0, 1, 0));
 					}
 					else if ((upper_field && lower_field && right_field && !left_field))
 					{
-						numbers_GROUND.push_back(4);//Három ágú jobbra-fel-le
+						numbers_GROUND.push_back(5);//Három ágú jobbra-fel-le
 						transform.rotate = glm::rotate<float>(-M_PI/2, glm::vec3(0, 1, 0));
 					}
 					else if ((upper_field && lower_field && !right_field && left_field))
 					{
-						numbers_GROUND.push_back(4);//Három ágú balra-fel-le
+						numbers_GROUND.push_back(5);//Három ágú balra-fel-le
 						transform.rotate = glm::rotate<float>(M_PI/2, glm::vec3(0, 1, 0));
 					}
 					else if ((!upper_field && lower_field && right_field && !left_field))
 					{
-						numbers_GROUND.push_back(3);//kanyar lentrõl-jobbra
+						numbers_GROUND.push_back(4);//kanyar lentrõl-jobbra
 						transform.rotate = glm::rotate<float>(M_PI/2, glm::vec3(0, 1, 0));
 					}
 					else if ((!upper_field && lower_field && !right_field && left_field))
 					{
-						numbers_GROUND.push_back(3);//kanyar lentrõl-balra
+						numbers_GROUND.push_back(4);//kanyar lentrõl-balra
 					}
 					else if ((upper_field && !lower_field && !right_field && left_field))
 					{
-						numbers_GROUND.push_back(3);//kanyar balról-felfele
+						numbers_GROUND.push_back(4);//kanyar balról-felfele
 						transform.rotate = glm::rotate<float>(-M_PI/2, glm::vec3(0, 1, 0));
 					}
 					else if ((upper_field && !lower_field && right_field && !left_field))
 					{
-						numbers_GROUND.push_back(3);//kanyar jobbról-felfele
+						numbers_GROUND.push_back(4);//kanyar jobbról-felfele
 						transform.rotate = glm::rotate<float>(M_PI, glm::vec3(0, 1, 0));
 					}
 					else
 					{
-						numbers_GROUND.push_back(2);
+						numbers_GROUND.push_back(7);
 					}
 
 					transforms_GROUND.push_back(Shape::MultiplyTransformMatrices(transform));
@@ -217,7 +216,7 @@ void Application::Render()
 				else if (field->IsForest())
 				{
 					transforms_FOREST.push_back(Shape::MultiplyTransformMatrices(transform));
-					numbers_GROUND.push_back(40);
+					numbers_GROUND.push_back(1);
 				}
 				else if (field->IsZone())
 				{
@@ -226,9 +225,9 @@ void Application::Render()
 					{
 						switch(zone->Get_Level())
 						{
-						case LEVEL_1: transforms_RESIDENCE1.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
-						case LEVEL_2: transforms_RESIDENCE2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(20); break;
-						case LEVEL_3: transforms_RESIDENCE3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(30); break;
+						case LEVEL_1: transforms_RESIDENCE1.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
+						case LEVEL_2: transforms_RESIDENCE2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
+						case LEVEL_3: transforms_RESIDENCE3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
 						}
 					}
 					else if (zone->IsWorkingArea()) 
@@ -238,9 +237,9 @@ void Application::Render()
 						{
 							switch (area->Get_Level())
 							{
-							case LEVEL_1: transforms_INDUSTRY1.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
-							case LEVEL_2: transforms_INDUSTRY2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(20); break;
-							case LEVEL_3: transforms_INDUSTRY3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(30); break;
+							case LEVEL_1: transforms_INDUSTRY1.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
+							case LEVEL_2: transforms_INDUSTRY2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
+							case LEVEL_3: transforms_INDUSTRY3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
 							}
 						}
 						else if (area->IsServiceArea())
@@ -248,8 +247,8 @@ void Application::Render()
 							switch (area->Get_Level())
 							{
 							case LEVEL_1: transforms_SERVICE1.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
-							case LEVEL_2: transforms_SERVICE2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(20); break;
-							case LEVEL_3: transforms_SERVICE3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(30); break;
+							case LEVEL_2: transforms_SERVICE2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
+							case LEVEL_3: transforms_SERVICE3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
 							}
 						}
 					}
@@ -260,17 +259,17 @@ void Application::Render()
 					if (building->IsPoliceStation()) 
 					{
 						transforms_POLICESTATION.push_back(Shape::MultiplyTransformMatrices(transform));
-						numbers_GROUND.push_back(50);
+						numbers_GROUND.push_back(15);
 					}
 					else if (building->IsFireStation()) 
 					{
 						transforms_FIRESTATION.push_back(Shape::MultiplyTransformMatrices(transform));
-						numbers_GROUND.push_back(70);
+						numbers_GROUND.push_back(15);
 					}
 					else if (building->IsStadium())
 					{
 						transforms_STADION.push_back(Shape::MultiplyTransformMatrices(transform));
-						numbers_GROUND.push_back(50);
+						numbers_GROUND.push_back(11);
 					}
 					else if (building->IsSchool()) 
 					{
@@ -278,24 +277,24 @@ void Application::Render()
 						if (school->IsHighSchool()) 
 						{
 							transforms_SCHOOL1.push_back(Shape::MultiplyTransformMatrices(transform));
-							numbers_GROUND.push_back(53);
+							numbers_GROUND.push_back(14);
 						}
 						else if (school->IsUniversity()) 
 						{
 							transforms_SCHOOL2.push_back(Shape::MultiplyTransformMatrices(transform));
-							numbers_GROUND.push_back(63);
+							numbers_GROUND.push_back(14);
 						}
 					}
 					else if (building->IsPowerStation()) 
 					{
 						//transform.rotate = glm::rotate<float>(glfwGetTime() * M_PI, glm::vec3(0, 1, 0));
 						transforms_POWERSTATION.push_back(Shape::MultiplyTransformMatrices(transform));
-						numbers_GROUND.push_back(81);
+						numbers_GROUND.push_back(2);
 					}
 					else if (building->IsPowerWire())
 					{
 						transforms_POWERWIRE.push_back(Shape::MultiplyTransformMatrices(transform));
-						numbers_GROUND.push_back(83);
+						numbers_GROUND.push_back(63);
 					}
 				}
 			}

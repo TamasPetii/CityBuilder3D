@@ -39,7 +39,7 @@ int main()
 
     //Make the window's context current
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
 
     //Initialize GLEW
     if (glewInit() != GLEW_OK)

@@ -27,12 +27,12 @@ void WindTurbinePropeller::CreateBuffers()
 	cube_layout.GeometryDetails.TOP_FRONT_LEFT = glm::vec3(-1, 0.1, 0.1);
 	cube_layout.GeometryDetails.TOP_FRONT_RIGHT = glm::vec3(1, 0.1, 0.1);
 
-	cube_layout.TextureDetails.FRONT_ID = 70;
-	cube_layout.TextureDetails.BACK_ID = 70;
-	cube_layout.TextureDetails.LEFT_ID = 70;
-	cube_layout.TextureDetails.RIGHT_ID = 70;
-	cube_layout.TextureDetails.TOP_ID = 70;
-	cube_layout.TextureDetails.BOTTOM_ID = 70;
+	cube_layout.TextureDetails.FRONT_ID = 61;
+	cube_layout.TextureDetails.BACK_ID = 61;
+	cube_layout.TextureDetails.LEFT_ID = 61;
+	cube_layout.TextureDetails.RIGHT_ID = 61;
+	cube_layout.TextureDetails.TOP_ID = 61;
+	cube_layout.TextureDetails.BOTTOM_ID = 61;
 
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));

@@ -24,8 +24,8 @@ void WindTurbine::CreateBuffers()
 	cylinder_layout.GeometryDetails.TOP_RADIUS = 0.1f;
 	cylinder_layout.GeometryDetails.BOTTOM_ORIGO = glm::vec3(0, -1, 0);
 	cylinder_layout.GeometryDetails.BOTTOM_RADIUS = 0.15f;
-	cylinder_layout.TextureDetails.CIRCLE_ID = 50;
-	cylinder_layout.TextureDetails.WALL_ID = 50;
+	cylinder_layout.TextureDetails.CIRCLE_ID = 61;
+	cylinder_layout.TextureDetails.WALL_ID = 61;
 
 	Shape::ConcatenateIndices(indices, Cylinder::GenerateIndices(cylinder_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cylinder::GenerateVertices(cylinder_layout));

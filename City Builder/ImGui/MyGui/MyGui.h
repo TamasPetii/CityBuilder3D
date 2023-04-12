@@ -19,63 +19,57 @@ public:
 	MyGui(Camera* camera);
 	~MyGui() = default;
 
-	void Pre_Render();
-	void Post_Render();
-
-	void Render_DockSpaceMenuBar();
-
-	void Demo_Render();
-	void Window1_Render();
-	void Window2_Render();
-	void GameOptions_Window();
-	void ViewPort_Render(FrameBuffer* fbo);
-	void DockSpace_Render();
-
 	static void Init(GLFWwindow* window);
 	static void Clean();
 
-	bool hit;
-	int mouse_x;
-	int mouse_y;
-	ImVec2 content_size;
+	void Pre_Render();
+	void Post_Render();
+
+	void DockSpace();
+	void Demo_Window();
+	void Build_Window();
+	void GameDetails_Window();
+	void GameOptions_Window();
+	void ViewPort_Render(FrameBuffer* fbo);
+
+
 
 	inline NewGameLayout& Get_NewGameLayout() { return m_NewGameLayout; }
 	inline LoadGameLayout& Get_LoadGameLayout() { return m_LoadGameLayout; }
 	inline SaveGameLayout& Get_SaveGameLayout() { return m_SaveGameLayout; }
 	inline TaxLayout& Get_TaxLayout() { return m_TaxLayout; }
+	inline BuildLayout Get_BuildLayout() { return m_BuildLayout; }
 
 	bool BuildHover = false;
 	int r = 0;
-
-	void Build_Window();
-	inline BuildLayout Get_BuildLayout() { return m_BuildLayout; }
+	bool hit;
+	int mouse_x;
+	int mouse_y;
+	ImVec2 content_size;
 protected:
-	//Style
 	static void Custom_Style();
-	//Events
+
 	void Build_MouseClickEvent();
 	void Build_KeyboardKeyEvent();
 	void Camera_MouseClickEvent();
 	void Camera_KeyboardKeyEvent();
+
+	void NewGame_Window();
+	void LoadGame_Window();
+	void SaveGame_Window();
+	void DockSpace_MenuBar();
 private:
 	Camera* m_Camera = nullptr;
 	int m_ViewPort_Width = 0;
 	int m_ViewPort_Height = 0;
 
 
-	void NewGame_Window();
 	NewGameLayout m_NewGameLayout;
-
-	void LoadGame_Window();
 	LoadGameLayout m_LoadGameLayout;
-
-	void SaveGame_Window();
 	SaveGameLayout m_SaveGameLayout;
-	imgui_addons::ImGuiFileBrowser file_dialog;
-
 	BuildLayout m_BuildLayout;
-
 	TaxLayout m_TaxLayout;
 
+	imgui_addons::ImGuiFileBrowser file_dialog;
 };
 

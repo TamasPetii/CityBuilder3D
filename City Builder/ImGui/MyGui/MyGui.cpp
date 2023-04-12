@@ -117,7 +117,7 @@ void MyGui::Post_Render()
     }
 }
 
-void MyGui::DockSpace_Render()
+void MyGui::DockSpace()
 {
     static bool opt_fullscreen = true;
     static bool opt_padding = false;
@@ -162,12 +162,12 @@ void MyGui::DockSpace_Render()
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     }
 
-    Render_DockSpaceMenuBar();
+    DockSpace_MenuBar();
 
     ImGui::End();
 }
 
-void MyGui::Render_DockSpaceMenuBar()
+void MyGui::DockSpace_MenuBar()
 {
     if (ImGui::BeginMenuBar())
     {
@@ -319,22 +319,17 @@ void MyGui::ViewPort_Render(FrameBuffer* fbo)
     ImGui::End();
 }
 
-void MyGui::Demo_Render()
+void MyGui::Demo_Window()
 {
     ImGui::ShowDemoWindow();
 }
 
-void MyGui::Window1_Render()
-{
-    ImGui::Begin("Render Details");
-    ImGui::End();
-}
-
-void MyGui::Window2_Render()
+void MyGui::GameDetails_Window()
 {
     ImGui::Begin("Game Details");
     ImGui::End();
 }
+
 void MyGui::GameOptions_Window()
 {
     ImGui::Begin("Game options");
@@ -477,6 +472,7 @@ void MyGui::GameOptions_Window()
 //---------------------------------------------------------|EVENTS|---------------------------------------------------------//
 //---------------------------------------------------------|EVENTS|---------------------------------------------------------//
 //---------------------------------------------------------|EVENTS|---------------------------------------------------------//
+
 void MyGui::Build_MouseClickEvent()
 {
 
@@ -523,9 +519,15 @@ void MyGui::Build_Window()
     ImGui::RadioButton("Road", &m_BuildLayout.building, 10);
     ImGui::RadioButton("Forest", &m_BuildLayout.building, 11);
     ImGui::SeparatorText("Zone");
-    ImGui::RadioButton("Residence", &m_BuildLayout.building, 0);
-    ImGui::RadioButton("Industry", &m_BuildLayout.building, 3);
-    ImGui::RadioButton("Service", &m_BuildLayout.building, 6);
+    ImGui::RadioButton("Residence_LVL1", &m_BuildLayout.building, 0);
+    ImGui::RadioButton("Residence_LVL2", &m_BuildLayout.building, 1);
+    ImGui::RadioButton("Residence_LVL3", &m_BuildLayout.building, 2);
+    ImGui::RadioButton("Industry_LVL1", &m_BuildLayout.building, 3);
+    ImGui::RadioButton("Industry_LVL2", &m_BuildLayout.building, 4);
+    ImGui::RadioButton("Industry_LVL3", &m_BuildLayout.building, 5);
+    ImGui::RadioButton("Service_LVL1", &m_BuildLayout.building, 6);
+    ImGui::RadioButton("Service_LVL2", &m_BuildLayout.building, 7);
+    ImGui::RadioButton("Service_LVL3", &m_BuildLayout.building, 8);
     ImGui::SeparatorText("Buildings");
     ImGui::RadioButton("FireStation", &m_BuildLayout.building, 13);
     ImGui::RadioButton("PoliceStation", &m_BuildLayout.building, 12);
