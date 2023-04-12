@@ -168,6 +168,7 @@
     <ClInclude Include="GameFields\Buildings\Stadium.h" />
     <ClInclude Include="GameFields\Zones\WorkingArea.h" />
     <ClInclude Include="GameFields\Zones\Zone.h" />
+    <ClInclude Include="RoadNetwork.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameFields\Buildings\Building.cpp" />
@@ -187,6 +188,7 @@
     <ClCompile Include="GameFields\Buildings\Stadium.cpp" />
     <ClCompile Include="GameFields\Zones\WorkingArea.cpp" />
     <ClCompile Include="GameFields\Zones\Zone.cpp" />
+    <ClCompile Include="RoadNetwork.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

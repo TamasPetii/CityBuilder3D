@@ -12,7 +12,7 @@ enum Level {
 	LEVEL_3
 };
 
-class ZoneDetails {
+struct ZoneDetails {
 public:
 	int capacity;
 	int contain;

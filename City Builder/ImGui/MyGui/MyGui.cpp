@@ -1,4 +1,5 @@
 ﻿#include "MyGui.h"
+#include "../../Game/RoadNetwork.h";
 
 
 void MyGui::Init(GLFWwindow* window)
@@ -327,6 +328,9 @@ void MyGui::Demo_Window()
 void MyGui::GameDetails_Window()
 {
     ImGui::Begin("Game Details");
+    std::string str = RoadNetwork::NetworksToString();
+    const char* cstr = str.c_str();
+    ImGui::Text("%s", cstr);
     ImGui::End();
 }
 
