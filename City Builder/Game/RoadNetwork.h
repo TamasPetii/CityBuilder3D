@@ -18,7 +18,8 @@ public:
 	static bool IsConnected(GameField*, GameField*);
 	static GameField* FindEmptyWorkingArea(Zone*);
 	static void ResetNetworks();
-	int GetSatisfaction(Zone* field);
+	static double GetSatisfaction(Zone* field);
+	static GameField* FindEmptyResidentialArea();
 
 	static std::string NetworksToString();
 
@@ -35,5 +36,7 @@ private:
 	static std::unordered_set<int> m_id_set; //minden networknek egy különbözõ id-ja lesz
 
 	static std::vector<Network> m_networks;
+
+	static double distance(GameField*, GameField*);
 };
 

@@ -128,17 +128,64 @@ void RoadNetwork::ResetNetworks() {
 	m_networks.clear();
 }
 
-int RoadNetwork::GetSatisfaction(Zone* field) {
-	int satisfaction = 0;
+double RoadNetwork::GetSatisfaction(Zone* field) {
+	bool stadiumBonus = false;
+	bool policeBonus = false;
+	int closestIndustrial = 10;
+	double satisfaction = 0;
+
 	for (auto& network : m_networks) {
+		//Rendõrség, stadion vizsgálata
 		if (network.zoneSet.find(field) == network.zoneSet.end()) continue;
 		for (auto& b : network.buildingSet) {
 			Building* building = dynamic_cast<Building*>(b);
-			//if (distance(field, building) < building->getRange())
-			//    satisfaction += building->getSatisfaction();
+			if (!stadiumBonus && building->IsStadium()) {
+				if (distance(field, building) < 10) {
+					satisfaction += 0.3;
+					stadiumBonus = true;
+				}
+			}
+			else if (!policeBonus && building->IsPoliceStation()) {
+				if (distance(field, building) < 10) {
+					satisfaction += 0.7;
+					policeBonus = true;
+				}
+			}
+		}
+
+		//Közelben lévõ ipari zóna vizsgálata
+		for (auto& z : network.zoneSet) {
+			Zone* zone = dynamic_cast<Zone*>(z);
+			if (zone->IsWorkingArea()) {
+				WorkingArea* workingZone = dynamic_cast<WorkingArea*>(zone);
+				if (workingZone->IsIndustrialArea()) {
+					double d = distance(field, workingZone);
+					if (d < closestIndustrial) closestIndustrial = d;
+				}
+			}
+		}
+		
+		if (closestIndustrial < 10) {
+			satisfaction -= (10 - closestIndustrial) / 10; //0.9 - 0.1-et von le
 		}
 	}
-	return satisfaction;
+
+	return satisfaction < 0 ? 0 : satisfaction;
+}
+
+GameField* RoadNetwork::FindEmptyResidentialArea() {
+	for (auto& network : m_networks) {
+		for (auto& z : network.zoneSet) {
+			Zone* zone = dynamic_cast<Zone*>(z);
+			if (zone->IsResidentalArea() && zone->Get_ZoneDetails().contain < zone->Get_ZoneDetails().capacity)
+				return zone;
+		}
+	}
+	return nullptr;
+}
+
+double RoadNetwork::distance(GameField* g1, GameField* g2) {
+	return sqrt(pow(g1->Get_X() - g2->Get_X(), 2) + pow(g1->Get_Y() - g2->Get_Y(), 2));
 }
 
 

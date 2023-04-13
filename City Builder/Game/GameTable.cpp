@@ -37,9 +37,13 @@ void GameTable::Set_TableValue(int x, int y, FieldType type) {
 	if (type == ROAD) {
 		SetRoadNetwork(x, y);
 	}
-
-	if (!(type == EMPTY || type == FOREST || type == POWERWIRE || type == POWERSTATION)) {
+	else if (!(type == EMPTY || type == FOREST || type == POWERWIRE || type == POWERSTATION)) {
 		SetBuildingNetwork(x, y);
+		//TODO: megnézni, hogy van -e a környezetben közvetlen rálátású erdõ,
+		//illetve hogy blokkoltuk -e valakinek a rálátását.
+	}
+	else if (type == FOREST) {
+		//TODO: növelni a szomszédos mezõk elégedettségét, ha rálátnak az erdõre
 	}
 }
 
