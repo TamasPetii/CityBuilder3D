@@ -50,3 +50,18 @@ struct TaxLayout
 	float ServiceTaxLvl2 = 20;
 	float ServiceTaxLvl3 = 20;
 };
+
+struct LightsLayout
+{
+	bool effect = false;
+	bool reset = false;
+
+	glm::vec3 lightDir = glm::vec3(1, -1, 1);
+	int specularPow = 64;
+	glm::vec3 La = glm::vec3(0.5, 0.5, 0.5);
+	glm::vec3 Ld = glm::vec3(1, 1, 0.85);
+	glm::vec3 Ls = glm::vec3(1, 1, 1);
+	glm::vec3 Ka = glm::vec3(0.8, 0.8, 0.8);
+	glm::vec3 Kd = glm::vec3(1, 1, 1);
+	glm::vec3 Ks = glm::vec3(0.7, 0.6, 0.6);
+};

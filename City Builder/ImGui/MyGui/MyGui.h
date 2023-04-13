@@ -30,6 +30,7 @@ public:
 	void Build_Window();
 	void GameDetails_Window();
 	void GameOptions_Window();
+	void RenderOptions_Window();
 	void ViewPort_Render(FrameBuffer* fbo);
 
 
@@ -39,6 +40,7 @@ public:
 	inline SaveGameLayout& Get_SaveGameLayout() { return m_SaveGameLayout; }
 	inline TaxLayout& Get_TaxLayout() { return m_TaxLayout; }
 	inline BuildLayout Get_BuildLayout() { return m_BuildLayout; }
+	inline LightsLayout& Get_LightsLayout() { return m_LightsLayout; }
 
 	bool BuildHover = false;
 	int r = 0;
@@ -69,6 +71,8 @@ private:
 	SaveGameLayout m_SaveGameLayout;
 	BuildLayout m_BuildLayout;
 	TaxLayout m_TaxLayout;
+
+	LightsLayout m_LightsLayout;
 
 	imgui_addons::ImGuiFileBrowser file_dialog;
 };
