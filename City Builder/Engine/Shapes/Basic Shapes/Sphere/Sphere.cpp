@@ -23,7 +23,8 @@ std::vector<Vertex> Sphere::GenerateVertices(const SphereLayout& layout)
 		{
 			GLfloat u = i / (GLfloat)layout.GeometryDetails.COUNT;
 			GLfloat v = j / (GLfloat)layout.GeometryDetails.COUNT;
-			vertices[i + j * (layout.GeometryDetails.COUNT + 1)] = { GeneratePositions(layout, u, v), glm::vec3(0), GenerateTextures(u, v) , layout.TextureDetails.ID };
+			glm::vec3 normal = glm::normalize(GeneratePositions(layout, u, v) - layout.GeometryDetails.ORIGO);
+			vertices[i + j * (layout.GeometryDetails.COUNT + 1)] = { GeneratePositions(layout, u, v), normal, GenerateTextures(u, v) , layout.TextureDetails.ID };
 		}
 	}
 

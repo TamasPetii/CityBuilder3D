@@ -6,7 +6,7 @@
 class PowerWire : public Building
 {
 public:
-    PowerWire() : Building() {};
+    PowerWire(FieldType type, int x, int y, float cost) : Building(type, x, y, cost) {};
     ~PowerWire() {}
 
     bool inline IsPowerWire() const override { return true; }

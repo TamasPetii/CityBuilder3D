@@ -2,9 +2,9 @@
 #define ZONE_H
 
 #include "../GameField.h"
+#include "../../Citizen.h"
 #include <unordered_set>
-
-class Citizen;
+#include <sstream>
 
 enum Level {
 	LEVEL_1,
@@ -12,7 +12,7 @@ enum Level {
 	LEVEL_3
 };
 
-class ZoneDetails {
+struct ZoneDetails {
 public:
 	int capacity;
 	int contain;
@@ -22,29 +22,32 @@ public:
 class Zone : public GameField
 {
 protected: 
-	Zone(Level level) : GameField(), level(level) {}
+	Zone(Level level, FieldType type, int x, int y, float cost);
+
+	ZoneDetails m_details;
+	std::unordered_set<Citizen*> m_citizens;
+
 public:
 	~Zone() {}
 
 	bool inline IsZone() const override { return true; }
 	virtual inline bool IsResidentalArea() const { return false; }
 	virtual inline bool IsWorkingArea() const { return false; }
+	inline bool IsThereEmptySpace() const { return m_details.contain < m_details.capacity ? true : false; }
 
 	void JoinZone(Citizen* citizen);
 	void LeaveZone(Citizen* citizen);
 	void DeleteZone();
 
-	Level Get_Level() { return this->level; }
+	Level Get_Level() { return m_details.level; }
 	float Get_Satisfaction() const;
 	float Set_Satisfaction(float value);
 	float AddToSatisfaction(float value);
+	virtual float GetTaxRate() const = 0;
 
-	ZoneDetails inline Get_ZoneDetails() const { return m_details; }
+	inline ZoneDetails Get_ZoneDetails() const { return m_details; }
 
-private:
-	Level level;
-	ZoneDetails m_details;
-	std::unordered_set<Citizen*> m_citizens;
+	std::string Get_CitizenDetails();
 };
 
 #endif

@@ -8,9 +8,12 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 {
 
 	m_Camera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
-	m_City = new City(50);
+	m_City = new City(50, 10000);
 	m_Renderer = new Renderer(m_Camera);
 	m_MyGui = new MyGui(m_Camera);
+	m_FrameCounter = new FrameCounter();
+	m_Timer = new Timer(0.5);
+	m_Timer->Start();
 
 	m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
 	m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
@@ -26,33 +29,129 @@ Application::~Application()
 
 void Application::Update()
 {
+	m_Timer->Update();
+	m_FrameCounter->Update();
 	m_Camera->Update();
 
-	//------------------------------
-
-	if (m_MyGui->hit)
+	if (m_Timer->Tick())
 	{
-		std::cout << "---------FROM APPLICATION--------" << std::endl;
-		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, (int)m_MyGui->content_size.x, (int)m_MyGui->content_size.y);
-		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, m_Renderer->Get_FrameBuffer()->Get_FrameWidth(), m_Renderer->Get_FrameBuffer()->Get_FrameHeight());
-		std::cout << "---------------------------------" << std::endl;
-		m_MyGui->hit = false;
+		m_City->Simulate();
 	}
 
+	if (m_FrameCounter->Tick())
+	{
+		std::cout << m_FrameCounter->Get_FPS() << std::endl;
+		m_FrameCounter->Reset();
+	}
+
+	if (m_MyGui->Get_NewGameLayout().effect) 
+	{
+		m_City = new City(m_MyGui->Get_NewGameLayout().size, 10000);
+		RoadNetwork::ResetNetworks();
+		Citizen::Log().str("");
+		Citizen::Log().clear();
+		Citizen::Log_Changed() = true;
+
+		m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
+		m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
+
+		m_MyGui->Get_NewGameLayout().effect = false;
+		changed = true;
+	}
+
+	if (m_MyGui->Get_LoadGameLayout().effect)
+	{
+		std::cout << "Load-Game" << std::endl;
+		std::cout << m_MyGui->Get_LoadGameLayout().path << std::endl;
+		std::cout << m_MyGui->Get_LoadGameLayout().name << std::endl;
+
+		m_MyGui->Get_LoadGameLayout().effect = false;
+	}
+	
+	if (m_MyGui->Get_SaveGameLayout().effect)
+	{
+		std::cout << "Save-Game" << std::endl;
+		std::cout << m_MyGui->Get_SaveGameLayout().path << std::endl;
+		std::cout << m_MyGui->Get_SaveGameLayout().name << std::endl;
+
+		m_MyGui->Get_SaveGameLayout().effect = false;
+	}
+
+	if (m_MyGui->Get_TaxLayout().effect)
+	{
+		m_City->SetTaxRate(RESIDENTIAL_LVL1, m_MyGui->Get_TaxLayout().ResidenceTaxLvl1);
+		m_City->SetTaxRate(RESIDENTIAL_LVL2, m_MyGui->Get_TaxLayout().ResidenceTaxLvl2);
+		m_City->SetTaxRate(RESIDENTIAL_LVL3, m_MyGui->Get_TaxLayout().ResidenceTaxLvl3);
+
+		m_City->SetTaxRate(SERVICE_LVL1, m_MyGui->Get_TaxLayout().ServiceTaxLvl1);
+		m_City->SetTaxRate(SERVICE_LVL2, m_MyGui->Get_TaxLayout().ServiceTaxLvl2);
+		m_City->SetTaxRate(SERVICE_LVL3, m_MyGui->Get_TaxLayout().ServiceTaxLvl3);
+
+		m_City->SetTaxRate(INDUSTRIAL_LVL1, m_MyGui->Get_TaxLayout().IndustrialTaxLvl1);
+		m_City->SetTaxRate(INDUSTRIAL_LVL2, m_MyGui->Get_TaxLayout().IndustrialTaxLvl2);
+		m_City->SetTaxRate(INDUSTRIAL_LVL3, m_MyGui->Get_TaxLayout().IndustrialTaxLvl3);
+
+		m_MyGui->Get_TaxLayout().effect = false;
+	}
+
+	if (m_MyGui->Get_LightsLayout().effect)
+	{
+		m_Renderer->Set_Light_Properties(m_MyGui->Get_LightsLayout().lightDir, m_MyGui->Get_LightsLayout().specularPow, m_MyGui->Get_LightsLayout().La, m_MyGui->Get_LightsLayout().Ld, m_MyGui->Get_LightsLayout().Ls, m_MyGui->Get_LightsLayout().Ka, m_MyGui->Get_LightsLayout().Kd, m_MyGui->Get_LightsLayout().Ks);
+		m_MyGui->Get_LightsLayout().effect = false;
+	}
+
+	if (m_MyGui->Get_LightsLayout().reset)
+	{
+		m_Renderer->Reset_Light_Properties();
+
+		m_MyGui->Get_LightsLayout().lightDir = glm::vec3(1, -1, 1);
+		m_MyGui->Get_LightsLayout().specularPow = 64;
+		m_MyGui->Get_LightsLayout().La = glm::vec3(0.5, 0.5, 0.5);
+		m_MyGui->Get_LightsLayout().Ld = glm::vec3(1, 1, 0.85);
+		m_MyGui->Get_LightsLayout().Ls = glm::vec3(1, 1, 1);
+		m_MyGui->Get_LightsLayout().Ka = glm::vec3(0.8, 0.8, 0.8);
+		m_MyGui->Get_LightsLayout().Kd = glm::vec3(1, 1, 1);
+		m_MyGui->Get_LightsLayout().Ks = glm::vec3(0.7, 0.6, 0.6);
+
+		m_MyGui->Get_LightsLayout().reset = false;
+	}
 
 	//------------------------------
-
-	static double lastTime = glfwGetTime();
-
-	double m_CurrentTime = glfwGetTime();
-	m_FrameCounter++;
-
-	if (m_CurrentTime - lastTime >= 1.0)
+	
+	if (m_MyGui->hit)
 	{
-		std::cout << m_FrameCounter << std::endl;
+		m_MyGui->hit = false;
+		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, m_Renderer->Get_FrameBuffer()->Get_FrameWidth(), m_Renderer->Get_FrameBuffer()->Get_FrameHeight());
 
-		m_FrameCounter = 0;
-		lastTime += 1.0;
+		if (m_MyGui->Get_BuildLayout().building == -1)
+		{
+			m_MyGui->Get_FieldDetailsLayout().isZone = false;
+			m_MyGui->Get_FieldDetailsLayout().x = HitX;
+			m_MyGui->Get_FieldDetailsLayout().y = HitY;
+
+			if (m_City->Get_GameField(HitX, HitY)->IsZone())
+			{
+				Zone* zone = dynamic_cast<Zone*>(m_City->Get_GameField(HitX, HitY));
+				m_MyGui->Get_FieldDetailsLayout().isZone = true;
+				m_MyGui->Get_FieldDetailsLayout().satisfaction = RoadNetwork::GetSatisfaction(zone);
+				m_MyGui->Get_FieldDetailsLayout().citizens_details = zone->Get_CitizenDetails();
+				m_MyGui->Get_FieldDetailsLayout().level = zone->Get_ZoneDetails().level + 1;
+				m_MyGui->Get_FieldDetailsLayout().contain = zone->Get_ZoneDetails().contain;
+				m_MyGui->Get_FieldDetailsLayout().capacity = zone->Get_ZoneDetails().capacity;
+			}
+		}
+		else 
+		{
+			m_City->Set_GameTableValue(HitX, HitY, (FieldType)m_MyGui->Get_BuildLayout().building);
+			changed = true;
+		}
+
+	}
+
+	if (Citizen::Log_Changed())
+	{
+		m_MyGui->Get_LogLayout().log = Citizen::Get_Log();
+		Citizen::Log_Changed() = false;
 	}
 }
 
@@ -60,13 +159,14 @@ void Application::RenderUI()
 {
 	m_MyGui->Pre_Render();
 
-	m_MyGui->DockSpace_Render();
-	m_MyGui->Demo_Render();
-	m_MyGui->Window1_Render();
-	m_MyGui->Window2_Render();
-	m_MyGui->Window3_Render();
-	m_MyGui->Window4_Render();
-	m_MyGui->Window5_Render();
+	m_MyGui->DockSpace();
+	m_MyGui->Demo_Window();
+	m_MyGui->Build_Window();
+	m_MyGui->GameDetails_Window();
+	m_MyGui->GameOptions_Window();
+	m_MyGui->RenderOptions_Window();
+	m_MyGui->FieldDetails_Window();
+	m_MyGui->Log_Window();
 	m_MyGui->ViewPort_Render(m_Renderer->Get_FrameBuffer());
 
 	m_MyGui->Post_Render();
@@ -76,58 +176,100 @@ void Application::Render()
 {
 	if (changed)
 	{
-		transforms_CUBE.clear();
-		transforms_CONE.clear();
-		transforms_CYLINDER.clear();
-		transforms_PYRAMID.clear();
-		transforms_SPHERE.clear();
-
-		transforms_EMPTY.clear();
-		transforms_ROAD.clear();
-		transforms_FOREST.clear();
-
-		transforms_RESIDENCE1.clear();
-		transforms_RESIDENCE2.clear();
-		transforms_RESIDENCE3.clear();
-
-		transforms_INDUSTRY1.clear();
-		transforms_INDUSTRY2.clear();
-		transforms_INDUSTRY3.clear();
-
-		transforms_SERVICE1.clear();
-		transforms_SERVICE2.clear();
-		transforms_SERVICE3.clear();
-
-		transforms_FIRESTATION.clear();
-		transforms_POLICESTATION.clear();
-		transforms_STADION.clear();
-
-		transforms_POWERSTATION.clear();
-		transforms_POWERWIRE.clear();
-
-		transforms_SCHOOL1.clear();
-		transforms_SCHOOL2.clear();
-
-		transforms_CHARACTER.clear();
-
 		for (int i = 0; i < m_City->Get_GameTableSize(); i++)
 		{
 			for (int j = 0; j < m_City->Get_GameTableSize(); j++)
 			{
-				GameField* field = m_City->Get_GameField(i, j);
-				glm::mat4 transform = glm::translate(glm::vec3(2 * j + 1, 0, 2 * i + 1));
+				Transform transform;
+				transform.translate = glm::translate(glm::vec3(2 * j + 1, 0, 2 * i + 1));
 
-				if (field->IsEmpty()) 
+				GameField* field = m_City->Get_GameField(i, j);
+
+				if (!field->IsRoad())
+					transforms_GROUND.push_back(Shape::MultiplyTransformMatrices(transform));
+
+				if (field->IsEmpty())
 				{
-					transforms_EMPTY.push_back(transform);
+					numbers_GROUND.push_back(0);
 				}
-				else if (field->IsRoad()) 
+				else if (field->IsRoad())
 				{
-					transforms_ROAD.push_back(transform);
+					bool upper_field = false;
+					bool lower_field = false;
+					bool left_field = false;
+					bool right_field = false;
+
+					if (j + 1 < m_City->Get_GameTableSize())
+						upper_field = m_City->Get_GameField(i, j + 1)->IsRoad();
+					if (j - 1 >= 0)
+						lower_field = m_City->Get_GameField(i, j - 1)->IsRoad();
+					if (i + 1 < m_City->Get_GameTableSize())
+						right_field = m_City->Get_GameField(i + 1, j)->IsRoad();
+					if (i - 1 >= 0)
+						left_field = m_City->Get_GameField(i - 1, j)->IsRoad();
+
+					if (upper_field && lower_field && right_field && left_field)
+					{
+						numbers_GROUND.push_back(6); //Keresztezõdés
+					}
+					else if ((upper_field && !lower_field && !right_field && !left_field) || (!upper_field && lower_field && !right_field && !left_field) || (upper_field && lower_field && !right_field && !left_field))
+					{
+						numbers_GROUND.push_back(7); //Átmenõ fel-le
+					}
+					else if ((!upper_field && !lower_field && right_field && !left_field) || (!upper_field && !lower_field && !right_field && left_field) || (!upper_field && !lower_field && right_field && left_field))
+					{
+						numbers_GROUND.push_back(7); //Átmenõ jobbra-balra
+						transform.rotate = glm::rotate<float>(M_PI / 2, glm::vec3(0, 1, 0));
+					}
+					else if ((upper_field && !lower_field && right_field && left_field))
+					{
+						numbers_GROUND.push_back(5); //Három ágú balra-fel-jobbra
+					}
+					else if ((!upper_field && lower_field && right_field && left_field))
+					{
+						numbers_GROUND.push_back(5);//Három ágú balra-le-jobbra
+						transform.rotate = glm::rotate<float>(M_PI, glm::vec3(0, 1, 0));
+					}
+					else if ((upper_field && lower_field && right_field && !left_field))
+					{
+						numbers_GROUND.push_back(5);//Három ágú jobbra-fel-le
+						transform.rotate = glm::rotate<float>(-M_PI/2, glm::vec3(0, 1, 0));
+					}
+					else if ((upper_field && lower_field && !right_field && left_field))
+					{
+						numbers_GROUND.push_back(5);//Három ágú balra-fel-le
+						transform.rotate = glm::rotate<float>(M_PI/2, glm::vec3(0, 1, 0));
+					}
+					else if ((!upper_field && lower_field && right_field && !left_field))
+					{
+						numbers_GROUND.push_back(4);//kanyar lentrõl-jobbra
+						transform.rotate = glm::rotate<float>(M_PI/2, glm::vec3(0, 1, 0));
+					}
+					else if ((!upper_field && lower_field && !right_field && left_field))
+					{
+						numbers_GROUND.push_back(4);//kanyar lentrõl-balra
+					}
+					else if ((upper_field && !lower_field && !right_field && left_field))
+					{
+						numbers_GROUND.push_back(4);//kanyar balról-felfele
+						transform.rotate = glm::rotate<float>(-M_PI/2, glm::vec3(0, 1, 0));
+					}
+					else if ((upper_field && !lower_field && right_field && !left_field))
+					{
+						numbers_GROUND.push_back(4);//kanyar jobbról-felfele
+						transform.rotate = glm::rotate<float>(M_PI, glm::vec3(0, 1, 0));
+					}
+					else
+					{
+						numbers_GROUND.push_back(7);
+					}
+
+					transforms_GROUND.push_back(Shape::MultiplyTransformMatrices(transform));
 				}
 				else if (field->IsForest())
 				{
-					transforms_FOREST.push_back(transform);
+					transforms_FOREST.push_back(Shape::MultiplyTransformMatrices(transform));
+					numbers_GROUND.push_back(1);
 				}
 				else if (field->IsZone())
 				{
@@ -136,9 +278,9 @@ void Application::Render()
 					{
 						switch(zone->Get_Level())
 						{
-						case LEVEL_1: transforms_RESIDENCE1.push_back(transform); break;
-						case LEVEL_2: transforms_RESIDENCE2.push_back(transform); break;
-						case LEVEL_3: transforms_RESIDENCE3.push_back(transform); break;
+						case LEVEL_1: transforms_RESIDENCE1.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
+						case LEVEL_2: transforms_RESIDENCE2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
+						case LEVEL_3: transforms_RESIDENCE3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
 						}
 					}
 					else if (zone->IsWorkingArea()) 
@@ -148,18 +290,18 @@ void Application::Render()
 						{
 							switch (area->Get_Level())
 							{
-							case LEVEL_1: transforms_INDUSTRY1.push_back(transform); break;
-							case LEVEL_2: transforms_INDUSTRY2.push_back(transform); break;
-							case LEVEL_3: transforms_INDUSTRY3.push_back(transform); break;
+							case LEVEL_1: transforms_INDUSTRY1.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
+							case LEVEL_2: transforms_INDUSTRY2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
+							case LEVEL_3: transforms_INDUSTRY3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
 							}
 						}
 						else if (area->IsServiceArea())
 						{
 							switch (area->Get_Level())
 							{
-							case LEVEL_1: transforms_SERVICE1.push_back(transform); break;
-							case LEVEL_2: transforms_SERVICE2.push_back(transform); break;
-							case LEVEL_3: transforms_SERVICE3.push_back(transform); break;
+							case LEVEL_1: transforms_SERVICE1.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
+							case LEVEL_2: transforms_SERVICE2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
+							case LEVEL_3: transforms_SERVICE3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
 							}
 						}
 					}
@@ -169,68 +311,134 @@ void Application::Render()
 					Building* building = dynamic_cast<Building*>(field);
 					if (building->IsPoliceStation()) 
 					{
-						transforms_FIRESTATION.push_back(transform);
+						transforms_POLICESTATION.push_back(Shape::MultiplyTransformMatrices(transform));
+						numbers_GROUND.push_back(15);
 					}
 					else if (building->IsFireStation()) 
 					{
-						transforms_POLICESTATION.push_back(transform);
+						transforms_FIRESTATION.push_back(Shape::MultiplyTransformMatrices(transform));
+						numbers_GROUND.push_back(15);
 					}
 					else if (building->IsStadium())
 					{
-						transforms_STADION.push_back(transform);
+						transforms_STADION.push_back(Shape::MultiplyTransformMatrices(transform));
+						numbers_GROUND.push_back(11);
 					}
 					else if (building->IsSchool()) 
 					{
 						School* school = dynamic_cast<School*>(building);
 						if (school->IsHighSchool()) 
 						{
-							transforms_SCHOOL1.push_back(transform);
+							transforms_SCHOOL1.push_back(Shape::MultiplyTransformMatrices(transform));
+							numbers_GROUND.push_back(14);
 						}
 						else if (school->IsUniversity()) 
 						{
-							transforms_SCHOOL2.push_back(transform);
+							transforms_SCHOOL2.push_back(Shape::MultiplyTransformMatrices(transform));
+							numbers_GROUND.push_back(14);
 						}
 					}
 					else if (building->IsPowerStation()) 
 					{
-						transforms_POWERSTATION.push_back(transform);
+						//transform.rotate = glm::rotate<float>(glfwGetTime() * M_PI, glm::vec3(0, 1, 0));
+						transforms_POWERSTATION.push_back(Shape::MultiplyTransformMatrices(transform));
+						numbers_GROUND.push_back(2);
 					}
 					else if (building->IsPowerWire())
 					{
-						transforms_POWERWIRE.push_back(transform);
+						transforms_POWERWIRE.push_back(Shape::MultiplyTransformMatrices(transform));
+						numbers_GROUND.push_back(63);
 					}
 				}
 			}
 		}
-		changed = false;
 	}
 
-	//case 19: transforms_CHARACTER.push_back(transform); break;
+	m_Renderer->Render_PreRender(changed);
+	
+	if (m_MyGui->BuildHover) 
+	{
+		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, (int)m_MyGui->content_size.x, (int)m_MyGui->content_size.y);
+		int x = (int)RayHit.x / 2 * 2 + 1;
+		int z = (int)RayHit.z / 2 * 2 + 1;
 
-	m_Renderer->Render_PreRender();
-	m_Renderer->RenderInstanced_Character(transforms_CHARACTER);
-	m_Renderer->RenderInstanced_Empty(transforms_EMPTY);
-	m_Renderer->RenderInstanced_Road(transforms_ROAD);
-	m_Renderer->RenderInstanced_Forest(transforms_FOREST);
-	m_Renderer->RenderInstanced_Residence1(transforms_RESIDENCE1);
-	m_Renderer->RenderInstanced_Residence2(transforms_RESIDENCE2);
-	m_Renderer->RenderInstanced_Residence3(transforms_RESIDENCE3);
-	m_Renderer->RenderInstanced_Industry1(transforms_INDUSTRY1);
-	m_Renderer->RenderInstanced_Industry2(transforms_INDUSTRY2);
-	m_Renderer->RenderInstanced_Industry3(transforms_INDUSTRY3);
-	m_Renderer->RenderInstanced_Service1(transforms_SERVICE1);
-	m_Renderer->RenderInstanced_Service2(transforms_SERVICE2);
-	m_Renderer->RenderInstanced_Service3(transforms_SERVICE3);
-	m_Renderer->RenderInstanced_FireStation(transforms_FIRESTATION);
-	m_Renderer->RenderInstanced_PoliceStation(transforms_POLICESTATION);
-	m_Renderer->RenderInstanced_Stadion(transforms_STADION);
-	m_Renderer->RenderInstanced_PowerStation(transforms_POWERSTATION);
-	m_Renderer->RenderInstanced_PowerWire(transforms_POWERWIRE);
-	m_Renderer->RenderInstanced_School1(transforms_SCHOOL1);
-	m_Renderer->RenderInstanced_School2(transforms_SCHOOL2);
+		bool l1 = RayHit.x > 0 && RayHit.x < m_City->Get_GameTableSize() * 2;
+		bool l2 = RayHit.z > 0 && RayHit.z < m_City->Get_GameTableSize() * 2;
+
+		if (l1 && l2)
+		{
+			m_Renderer->buildable = m_City->Get_GameField(RayHit.z / 2, RayHit.x / 2)->IsEmpty();
+			Transform tr;
+			tr.translate = glm::translate(glm::vec3(x, 0, z));
+			tr.rotate = glm::rotate<float>(glm::radians(90.f) * (m_MyGui->r % 4), glm::vec3(0, 1, 0));
+
+			if (m_MyGui->Get_BuildLayout().building == POWERSTATION)
+			{
+				m_Renderer->Render(NORMAL_WIREFRAME, R_WINDTURBINE, {}, tr);
+				m_Renderer->Render(NORMAL_WIREFRAME, R_WINDTURBINE_PROPELLER, {}, tr);
+			}
+			else
+			{
+				m_Renderer->Render(NORMAL_WIREFRAME, (Object)m_MyGui->Get_BuildLayout().building, {}, tr);
+			}
+
+		}
+	}
+
+	m_Renderer->Render_Ground(transforms_GROUND, numbers_GROUND);
+	m_Renderer->Render(INSTANCED, R_FOREST,                transforms_FOREST);
+	m_Renderer->Render(INSTANCED, R_RESIDENTIAL_LVL1,      transforms_RESIDENCE1);
+	m_Renderer->Render(INSTANCED, R_RESIDENTIAL_LVL2,      transforms_RESIDENCE2);
+	m_Renderer->Render(INSTANCED, R_RESIDENTIAL_LVL3,      transforms_RESIDENCE3);
+	m_Renderer->Render(INSTANCED, R_INDUSTRIAL_LVL1,       transforms_INDUSTRY1);
+	m_Renderer->Render(INSTANCED, R_INDUSTRIAL_LVL2,       transforms_INDUSTRY2);
+	m_Renderer->Render(INSTANCED, R_INDUSTRIAL_LVL3,       transforms_INDUSTRY3);
+	m_Renderer->Render(INSTANCED, R_SERVICE_LVL1,          transforms_SERVICE1);
+	m_Renderer->Render(INSTANCED, R_SERVICE_LVL2,          transforms_SERVICE2);
+	m_Renderer->Render(INSTANCED, R_SERVICE_LVL3,          transforms_SERVICE3);
+	m_Renderer->Render(INSTANCED, R_FIRESTATION,           transforms_FIRESTATION);
+	m_Renderer->Render(INSTANCED, R_POLICESTATION,         transforms_POLICESTATION);
+	m_Renderer->Render(INSTANCED, R_STADIUM,               transforms_STADION);
+	m_Renderer->Render(INSTANCED, R_WINDTURBINE,		   transforms_POWERSTATION);
+	m_Renderer->Render(INSTANCED, R_WINDTURBINE_PROPELLER, transforms_POWERSTATION, {glm::mat4(1), glm::rotate<float>(abs(glfwGetTime() * 2 * M_PI), glm::vec3(0, 0, 1)), glm::mat4(1)});
+	m_Renderer->Render(INSTANCED, R_POWERWIRE,             transforms_POWERWIRE);
+	m_Renderer->Render(INSTANCED, R_HIGHSCHOOL,            transforms_SCHOOL1);
+	m_Renderer->Render(INSTANCED, R_UNIVERSITY,            transforms_SCHOOL2);
 	m_Renderer->Render_Axis();
-	m_Renderer->Render_Ray(RayOrigin, RayEnd);
+	m_Renderer->Render_Ray(RayOrigin, RayHit);
+	m_Renderer->Render_SkyBox();
 	m_Renderer->Render_PostRender();
+
+	if (changed) 
+	{
+		changed = false;
+		transforms_GROUND.clear();
+		numbers_GROUND.clear();
+
+		transforms_CUBE.clear();
+		transforms_CONE.clear();
+		transforms_CYLINDER.clear();
+		transforms_PYRAMID.clear();
+		transforms_SPHERE.clear();
+		transforms_FOREST.clear();
+		transforms_RESIDENCE1.clear();
+		transforms_RESIDENCE2.clear();
+		transforms_RESIDENCE3.clear();
+		transforms_INDUSTRY1.clear();
+		transforms_INDUSTRY2.clear();
+		transforms_INDUSTRY3.clear();
+		transforms_SERVICE1.clear();
+		transforms_SERVICE2.clear();
+		transforms_SERVICE3.clear();
+		transforms_FIRESTATION.clear();
+		transforms_POLICESTATION.clear();
+		transforms_STADION.clear();
+		transforms_POWERSTATION.clear();
+		transforms_POWERWIRE.clear();
+		transforms_SCHOOL1.clear();
+		transforms_SCHOOL2.clear();
+		transforms_CHARACTER.clear();
+	}
 }
 
 
@@ -249,40 +457,6 @@ void Application::Window_ResizedEvent(int width, int height)
 void Application::FrameBuffer_ResizedEvent(int width, int height)
 {
 	m_Camera->Set_ProjMatrix(width, height);
-};
-
-void Application::Keyboard_ButtonEvent(int key, int scancode, int action, int mods)
-{
-	if (ImGui::GetIO().WantCaptureKeyboard) return;
-
-	m_Camera->Keyboard_ButtonEvent(key, scancode, action, mods);
-};
-
-void Application::Mouse_MoveEvent(double xpos, double ypos)
-{
-	if (ImGui::GetIO().WantCaptureMouse) return;
-
-	m_Camera->Mouse_MoveEvent((float)xpos, (float)ypos);
-};
-
-void Application::Mouse_ClickEvent(int button, int action, int mods)
-{
-	if (ImGui::GetIO().WantCaptureMouse) return;
-
-	m_Camera->Mouse_ClickEvent(button, action, mods);
-
-	if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_RIGHT)
-	{
-		double xpos, ypos;
-		glfwGetCursorPos(m_Window, &xpos, &ypos);
-	}
-};
-
-void Application::Mouse_WeelEvent(double xoffset, double yoffset)
-{
-	if (ImGui::GetIO().WantCaptureMouse) return;
-
-	m_Camera->Mouse_WheelEvent((float)xoffset, (float)yoffset);
 };
 
 void Application::ConvertMouseInputTo3D(int xpos, int ypos, int width, int height)
@@ -331,7 +505,8 @@ void Application::ConvertMouseInputTo3D(int xpos, int ypos, int width, int heigh
 		rayx /= 2.f;
 		rayz /= 2.f;
 
-		m_City->Set_GameTableValue(int(rayz), int(rayx), EMPTY);
-		changed = true;
+		HitX = (int)rayz;
+		HitY = (int)rayx;
 	}
+
 }

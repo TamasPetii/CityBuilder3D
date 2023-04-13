@@ -36,7 +36,7 @@
     <ClCompile Include="Abstractions\VertexArrayObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Abstractions\Camera.cpp">
+    <ClCompile Include="Utilities\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Abstractions\Mesh.cpp">
@@ -138,6 +138,27 @@
     <ClCompile Include="Shapes\Complex Shapes\Ground\Ground.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Utilities\Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\FrameCounter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shapes\Complex Shapes\PowerStation\WindTurbine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shapes\Complex Shapes\PowerStation\WindTurbinePropeller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Abstractions\Transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Abstractions\Vertex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Skybox\Skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Abstractions\External\stb_image.h">
@@ -164,7 +185,7 @@
     <ClInclude Include="Abstractions\VertexArrayObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Abstractions\Camera.h">
+    <ClInclude Include="Utilities\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Abstractions\Mesh.h">
@@ -270,6 +291,27 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Shapes\Complex Shapes\Ground\Ground.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shapes\Complex Shapes\PowerStation\WindTurbine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shapes\Complex Shapes\PowerStation\WindTurbinePropeller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\RendererLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Abstractions\Transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Skybox\Skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\FrameCounter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

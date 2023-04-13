@@ -45,6 +45,15 @@
     <ClInclude Include="MyGui\MyGui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MyGui\MyGuiLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Dirent\dirent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\ImGuiFileBrowser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ImGui\imgui.cpp">
@@ -69,6 +78,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MyGui\MyGui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\ImGuiFileBrowser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,4 +1,5 @@
 ﻿#include "MyGui.h"
+#include "../../Game/RoadNetwork.h";
 
 
 void MyGui::Init(GLFWwindow* window)
@@ -117,7 +118,7 @@ void MyGui::Post_Render()
     }
 }
 
-void MyGui::DockSpace_Render()
+void MyGui::DockSpace()
 {
     static bool opt_fullscreen = true;
     static bool opt_padding = false;
@@ -145,7 +146,9 @@ void MyGui::DockSpace_Render()
 
     if (!opt_padding)
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
     ImGui::Begin("DockSpace Demo", nullptr, window_flags);
+  
     if (!opt_padding)
         ImGui::PopStyleVar();
 
@@ -160,6 +163,13 @@ void MyGui::DockSpace_Render()
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     }
 
+    DockSpace_MenuBar();
+
+    ImGui::End();
+}
+
+void MyGui::DockSpace_MenuBar()
+{
     if (ImGui::BeginMenuBar())
     {
 
@@ -167,52 +177,133 @@ void MyGui::DockSpace_Render()
         {
             if (ImGui::MenuItem("New Game"))
             {
-                ImGui::OpenPopup("New Game Pop Up");
-                std::cout << "Clicked on New Game menuitem" << std::endl;
+                m_NewGameLayout.show = true;
             }
             if (ImGui::MenuItem("Load Game"))
             {
-                std::cout << "Clicked on Load Game menuitem" << std::endl;
+                m_LoadGameLayout.show = true;
             }
             if (ImGui::MenuItem("Save Game"))
             {
-                std::cout << "Clicked on Save Game menuitem" << std::endl;
+                m_SaveGameLayout.show = true;
             }
             ImGui::EndMenu();
         }
 
         if (ImGui::BeginMenu("Options"))
         {
-            // Disabling fullscreen would allow the window to be moved to the front of other windows,
-            // which we can't undo at the moment without finer window depth/z control.
-            ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen);
-            ImGui::MenuItem("Padding", NULL, &opt_padding);
-            ImGui::Separator();
-
-            if (ImGui::MenuItem("Flag: NoSplit", "", (dockspace_flags & ImGuiDockNodeFlags_NoSplit) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoSplit; }
-            if (ImGui::MenuItem("Flag: NoResize", "", (dockspace_flags & ImGuiDockNodeFlags_NoResize) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoResize; }
-            if (ImGui::MenuItem("Flag: NoDockingInCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_NoDockingInCentralNode) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoDockingInCentralNode; }
-            if (ImGui::MenuItem("Flag: AutoHideTabBar", "", (dockspace_flags & ImGuiDockNodeFlags_AutoHideTabBar) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_AutoHideTabBar; }
-            if (ImGui::MenuItem("Flag: PassthruCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode) != 0, opt_fullscreen)) { dockspace_flags ^= ImGuiDockNodeFlags_PassthruCentralNode; }
-            ImGui::Separator();
             ImGui::EndMenu();
         }
         ImGui::EndMenuBar();
     }
 
-    ImGui::End();
+    NewGame_Window();
+    LoadGame_Window();
+    SaveGame_Window();
+
+}
+
+void MyGui::NewGame_Window()
+{
+    if (m_NewGameLayout.show)
+    {
+        ImGui::OpenPopup("New Game");
+    }
+
+    if (ImGui::BeginPopupModal("New Game", nullptr, ImGuiWindowFlags_NoResize))
+    {
+        ImGui::SetWindowSize(ImVec2(300, 127));
+
+        //[New Game] : City Name Text Input
+        ImGui::Text("City Name: ");
+        ImGui::SameLine();
+        ImGui::InputText("##city_name", m_NewGameLayout.name, 64);
+
+        //[New Game] : City Size Slider 
+        ImGui::Text("City Size: ");
+        ImGui::SameLine();
+        ImGui::SliderInt("##city_size", &m_NewGameLayout.size, 25, 50);
+
+        //[New Game] : City Time Slider 
+        ImGui::Text("City Time: ");
+        ImGui::SameLine();
+        ImGui::SliderInt("##city_time", &m_NewGameLayout.time, 0, 2);
+
+        ImGui::Separator();
+
+        //[New Game] : Okay Button
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0.75, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0.7, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0.65, 0, 1));
+        if (ImGui::Button("Okay", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); m_NewGameLayout.show = false; m_NewGameLayout.effect = true; }
+        ImGui::SetItemDefaultFocus();
+        ImGui::PopStyleColor(3);
+
+        ImGui::SameLine();
+
+        //[New Game] : Cancel Button
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1, 0, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9, 0, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8, 0, 0, 1));
+        ImGui::SetCursorPosX(ImGui::GetWindowContentRegionMax().x - 120);
+        if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); m_NewGameLayout.show = false; }
+        ImGui::PopStyleColor(3);
+
+        ImGui::EndPopup();
+    }
+}
+
+void MyGui::LoadGame_Window()
+{
+    if (m_LoadGameLayout.show)
+    {
+        ImGui::OpenPopup("Load Game");
+    }
+
+    if (file_dialog.showFileDialog("Load Game", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), m_LoadGameLayout.extension))
+    {
+        m_LoadGameLayout.name = file_dialog.selected_fn;
+        m_LoadGameLayout.path = file_dialog.selected_path;
+        m_LoadGameLayout.effect = true;
+    }
+
+    if (file_dialog.close) 
+    {
+        m_LoadGameLayout.show = false;
+        file_dialog.close = false;
+    }
+
+}
+
+void MyGui::SaveGame_Window()
+{
+    if (m_SaveGameLayout.show)
+    {
+        ImGui::OpenPopup("Save Game");
+    }
+
+    if (file_dialog.showFileDialog("Save Game", imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, ImVec2(700, 310), m_SaveGameLayout.extension))
+    {
+        m_SaveGameLayout.name = file_dialog.selected_fn;
+        m_SaveGameLayout.path = file_dialog.selected_path;
+        m_SaveGameLayout.effect = true;
+    }
+
+    if (file_dialog.close)
+    {
+        m_SaveGameLayout.show = false;
+        file_dialog.close = false;
+    }
 }
 
 void MyGui::ViewPort_Render(FrameBuffer* fbo)
 {
     ImGui::Begin("ViewPort", nullptr, ImGuiWindowFlags_NoCollapse);
 
-    if (ImGui::IsWindowFocused())
-    {
-        Camera_MouseClickEvent();
-        Camera_KeyboardKeyEvent();
-        Build_MouseClickEvent();
-    }
+    Camera_MouseClickEvent();
+    Camera_KeyboardKeyEvent();
+    Build_MouseClickEvent();
+    Build_KeyboardKeyEvent();
 
     ImVec2 size = ImGui::GetContentRegionAvail();
 
@@ -229,47 +320,245 @@ void MyGui::ViewPort_Render(FrameBuffer* fbo)
     ImGui::End();
 }
 
-void MyGui::Demo_Render()
+void MyGui::Demo_Window()
 {
     ImGui::ShowDemoWindow();
 }
 
-void MyGui::Window1_Render()
+void MyGui::GameDetails_Window()
 {
-    ImGui::Begin("Beállítás");
+    ImGui::Begin("Game Details");
+    std::string str = RoadNetwork::NetworksToString();
+    const char* cstr = str.c_str();
+    ImGui::Text("%s", cstr);
     ImGui::End();
 }
 
-void MyGui::Window2_Render()
+void MyGui::GameOptions_Window()
 {
-    ImGui::Begin("Általános adatok");
+    ImGui::Begin("Game options");
+
+    ImGui::SeparatorText("Residence Tax");
+
+    ImGui::Text("LVL1: ");
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_TaxLayout.ResidenceTaxLvl1 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ResidenceTaxLvl1 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_TaxLayout.ResidenceTaxLvl1 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ResidenceTaxLvl1 * 2.55)) / 255.0f, 0.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_TaxLayout.ResidenceTaxLvl1 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ResidenceTaxLvl1 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+
+    if (ImGui::SliderFloat("##residence_lvl1", &m_TaxLayout.ResidenceTaxLvl1, 0, 100))
+        m_TaxLayout.effect = true;
+
+    ImGui::PopStyleColor(5);
+
+    ImGui::Text("LVL2: ");
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_TaxLayout.ResidenceTaxLvl2 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ResidenceTaxLvl2 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_TaxLayout.ResidenceTaxLvl2 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ResidenceTaxLvl2 * 2.55)) / 255.0f, 0.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_TaxLayout.ResidenceTaxLvl2 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ResidenceTaxLvl2 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+
+    if (ImGui::SliderFloat("##residence_lvl2", &m_TaxLayout.ResidenceTaxLvl2, 0, 100))
+        m_TaxLayout.effect = true;
+
+    ImGui::PopStyleColor(5);
+
+    ImGui::Text("LVL3: ");
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_TaxLayout.ResidenceTaxLvl3 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ResidenceTaxLvl3 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_TaxLayout.ResidenceTaxLvl3 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ResidenceTaxLvl3 * 2.55)) / 255.0f, 0.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_TaxLayout.ResidenceTaxLvl3 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ResidenceTaxLvl3 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+
+    if (ImGui::SliderFloat("##residence_lvl3", &m_TaxLayout.ResidenceTaxLvl3, 0, 100))
+        m_TaxLayout.effect = true;
+
+    ImGui::PopStyleColor(5);
+
+    ImGui::SeparatorText("Service Tax");
+
+    ImGui::Text("LVL1: ");
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_TaxLayout.ServiceTaxLvl1 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ServiceTaxLvl1 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_TaxLayout.ServiceTaxLvl1 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ServiceTaxLvl1 * 2.55)) / 255.0f, 0.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_TaxLayout.ServiceTaxLvl1 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ServiceTaxLvl1 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+
+    if (ImGui::SliderFloat("##service_lvl1", &m_TaxLayout.ServiceTaxLvl1, 0, 100))
+        m_TaxLayout.effect = true;
+
+    ImGui::PopStyleColor(5);
+
+    ImGui::Text("LVL2: ");
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_TaxLayout.ServiceTaxLvl2 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ServiceTaxLvl2 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_TaxLayout.ServiceTaxLvl2 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ServiceTaxLvl2 * 2.55)) / 255.0f, 0.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_TaxLayout.ServiceTaxLvl2 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ServiceTaxLvl2 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+
+    if (ImGui::SliderFloat("##service_lvl2", &m_TaxLayout.ServiceTaxLvl2, 0, 100))
+        m_TaxLayout.effect = true;
+
+    ImGui::PopStyleColor(5);
+
+    ImGui::Text("LVL3: ");
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_TaxLayout.ServiceTaxLvl3 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ServiceTaxLvl3 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_TaxLayout.ServiceTaxLvl3 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ServiceTaxLvl3 * 2.55)) / 255.0f, 0.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_TaxLayout.ServiceTaxLvl3 * 2.55)) / 255.0f, (255 - (m_TaxLayout.ServiceTaxLvl3 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+
+    if (ImGui::SliderFloat("##service_lvl3", &m_TaxLayout.ServiceTaxLvl3, 0, 100))
+        m_TaxLayout.effect = true;
+
+    ImGui::PopStyleColor(5);
+
+    ImGui::SeparatorText("Industrial Tax");
+
+    ImGui::Text("LVL1: ");
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_TaxLayout.IndustrialTaxLvl1 * 2.55)) / 255.0f, (255 - (m_TaxLayout.IndustrialTaxLvl1 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_TaxLayout.IndustrialTaxLvl1 * 2.55)) / 255.0f, (255 - (m_TaxLayout.IndustrialTaxLvl1 * 2.55)) / 255.0f, 0.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_TaxLayout.IndustrialTaxLvl1 * 2.55)) / 255.0f, (255 - (m_TaxLayout.IndustrialTaxLvl1 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+
+    if (ImGui::SliderFloat("##industrial_lvl1", &m_TaxLayout.IndustrialTaxLvl1, 0, 100))
+        m_TaxLayout.effect = true;
+
+    ImGui::PopStyleColor(5);
+
+    ImGui::Text("LVL2: ");
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_TaxLayout.IndustrialTaxLvl2 * 2.55)) / 255.0f, (255 - (m_TaxLayout.IndustrialTaxLvl2 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_TaxLayout.IndustrialTaxLvl2 * 2.55)) / 255.0f, (255 - (m_TaxLayout.IndustrialTaxLvl2 * 2.55)) / 255.0f, 0.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_TaxLayout.IndustrialTaxLvl2 * 2.55)) / 255.0f, (255 - (m_TaxLayout.IndustrialTaxLvl2 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+
+    if (ImGui::SliderFloat("##industrial_lvl2", &m_TaxLayout.IndustrialTaxLvl2, 0, 100))
+        m_TaxLayout.effect = true;
+
+    ImGui::PopStyleColor(5);
+
+    ImGui::Text("LVL3: ");
+    ImGui::SameLine();
+
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_TaxLayout.IndustrialTaxLvl3 * 2.55)) / 255.0f, (255 - (m_TaxLayout.IndustrialTaxLvl3 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_TaxLayout.IndustrialTaxLvl3 * 2.55)) / 255.0f, (255 - (m_TaxLayout.IndustrialTaxLvl3 * 2.55)) / 255.0f, 0.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_TaxLayout.IndustrialTaxLvl3 * 2.55)) / 255.0f, (255 - (m_TaxLayout.IndustrialTaxLvl3 * 2.55)) / 255.0f, 0.0f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+
+    if (ImGui::SliderFloat("##industrial_lvl3", &m_TaxLayout.IndustrialTaxLvl3, 0, 100))
+        m_TaxLayout.effect = true;
+
+    ImGui::PopStyleColor(5);
+
     ImGui::End();
 }
 
-void MyGui::Window3_Render()
+void MyGui::RenderOptions_Window()
 {
-    ImGui::Begin("Rombolás");
-    ImGui::End();
-}
+    ImGui::Begin("Render options");
 
-void MyGui::Window4_Render()
-{
-    ImGui::Begin("Építés");
-    ImGui::End();
-}
+    ImGui::SeparatorText("Light properties");
 
-void MyGui::Window5_Render()
-{
-    ImGui::Begin("Mező adatok");
+    ImGui::Text("Dir: ");
+    ImGui::SameLine();
+
+    if (ImGui::SliderFloat3("##light_direction", &m_LightsLayout.lightDir.x, -1, 1, "%.3f", 0))
+        m_LightsLayout.effect = true;
+
+    ImGui::Text("Shi: ");
+    ImGui::SameLine();
+
+    //if (ImGui::SliderInt("##shininess", &m_LightsLayout.specularPow, 0, 100, "%d", 0))
+    //    m_LightsLayout.effect = true;
+
+    if (ImGui::InputInt("##shininess", &m_LightsLayout.specularPow, 1, 100, 0))
+        m_LightsLayout.effect = true;
+
+    ImGui::Text("La:  ");
+    ImGui::SameLine();
+
+    if (ImGui::SliderFloat3("##la", &m_LightsLayout.La.x, 0, 1, "%.3f", 0))
+        m_LightsLayout.effect = true;
+
+    ImGui::Text("Ld:  ");
+    ImGui::SameLine();
+
+    if (ImGui::SliderFloat3("##ld", &m_LightsLayout.Ld.x, 0, 1, "%.3f", 0))
+        m_LightsLayout.effect = true;
+
+    ImGui::Text("Ls:  ");
+    ImGui::SameLine();
+
+    if (ImGui::SliderFloat3("##ls", &m_LightsLayout.Ls.x, 0, 1, "%.3f", 0))
+        m_LightsLayout.effect = true;
+
+    ImGui::Text("Ka:  ");
+    ImGui::SameLine();
+
+    if (ImGui::SliderFloat3("##ka", &m_LightsLayout.Ka.x, 0, 1, "%.3f", 0))
+        m_LightsLayout.effect = true;
+
+    ImGui::Text("Kd:  ");
+    ImGui::SameLine();
+
+    if (ImGui::SliderFloat3("##kd", &m_LightsLayout.Kd.x, 0, 1, "%.3f", 0))
+        m_LightsLayout.effect = true;
+
+    ImGui::Text("Ks:  ");
+    ImGui::SameLine();
+
+    if (ImGui::SliderFloat3("##ks", &m_LightsLayout.Ks.x, 0, 1, "%.3f", 0))
+        m_LightsLayout.effect = true;
+
+    if (ImGui::Button("Reset"))
+    {
+        m_LightsLayout.reset = true;
+    }
+
+
     ImGui::End();
 }
 
 //---------------------------------------------------------|EVENTS|---------------------------------------------------------//
 //---------------------------------------------------------|EVENTS|---------------------------------------------------------//
 //---------------------------------------------------------|EVENTS|---------------------------------------------------------//
+
 void MyGui::Build_MouseClickEvent()
 {
+
     if (ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+    {
+        BuildHover = true;
+        hit = false;
+    }
+
+    if (ImGui::IsMouseReleased(ImGuiMouseButton_Right))
+    {
+        hit = true;
+        BuildHover = false;
+    }
+
+    if (ImGui::IsWindowHovered() && BuildHover)
     {
         int RelativWindowCursor_X = (int)(ImGui::GetMousePos().x - ImGui::GetWindowPos().x);
         int RelativWindowCursor_Y = (int)(ImGui::GetMousePos().y - ImGui::GetWindowPos().y);
@@ -282,13 +571,95 @@ void MyGui::Build_MouseClickEvent()
 
         if (CursorInContentAreaMin_X && CursorInContentAreaMax_Y)
         {
-            hit = true;
             mouse_x = RelativWindowCursor_X - (int)ImGui::GetWindowContentRegionMin().x;
             mouse_y = RelativWindowCursor_Y - (int)ImGui::GetWindowContentRegionMin().y;
             content_size.x = CurrentContent_MAX.x - CurrentContent_MIN.x;
             content_size.y = CurrentContent_MAX.y - CurrentContent_MIN.y;
-            std::cout << "Hitting content area: " << "{x = " << RelativWindowCursor_X - ImGui::GetWindowContentRegionMin().x << "} | {y = } " << RelativWindowCursor_Y - ImGui::GetWindowContentRegionMin().y << "}" << std::endl;
+            //std::cout << "Hitting content area: " << "{x = " << RelativWindowCursor_X - ImGui::GetWindowContentRegionMin().x << "} | {y = } " << RelativWindowCursor_Y - ImGui::GetWindowContentRegionMin().y << "}" << std::endl;
         }
+    }
+}
+
+void MyGui::Log_Window()
+{
+    ImGui::Begin("Log");
+
+    ImGui::Text(m_LogLayout.log.c_str());
+
+    ImGui::End();
+}
+
+void MyGui::FieldDetails_Window()
+{
+    ImGui::Begin("Field Details");
+
+    std::string position = "Position: (" + std::to_string(m_FieldDetailsLayout.x) + " , " + std::to_string(m_FieldDetailsLayout.y) + ")";
+    ImGui::Text(position.c_str());
+
+    if (m_FieldDetailsLayout.isZone)
+    {
+        ImGui::SeparatorText("Citizens");
+
+        std::string satisfaction = "Satisfaction: " + std::to_string(m_FieldDetailsLayout.satisfaction);
+        ImGui::Text(satisfaction.c_str());
+
+        std::string level = "Level: " + std::to_string(m_FieldDetailsLayout.level);
+        ImGui::Text(level.c_str());
+
+        std::string contain = "Contain: " + std::to_string(m_FieldDetailsLayout.contain);
+        ImGui::Text(contain.c_str());
+
+        std::string capacity = "Contain: " + std::to_string(m_FieldDetailsLayout.capacity);
+        ImGui::Text(capacity.c_str());
+
+        ImGui::Text(m_FieldDetailsLayout.citizens_details.c_str());
+    }
+
+
+
+
+    ImGui::End();
+}
+
+void MyGui::Build_Window()
+{
+    ImGui::Begin("Build");
+
+    ImGui::SeparatorText("Statistics");
+    ImGui::RadioButton("Check field details", &m_BuildLayout.building, -1);
+
+    ImGui::SeparatorText("General");
+    ImGui::RadioButton("Empty", &m_BuildLayout.building, 9);
+    ImGui::RadioButton("Road", &m_BuildLayout.building, 10);
+    ImGui::RadioButton("Forest", &m_BuildLayout.building, 11);
+
+    ImGui::SeparatorText("Zone");
+    ImGui::RadioButton("Residence_LVL1", &m_BuildLayout.building, 0);
+    ImGui::RadioButton("Residence_LVL2", &m_BuildLayout.building, 1);
+    ImGui::RadioButton("Residence_LVL3", &m_BuildLayout.building, 2);
+    ImGui::RadioButton("Industry_LVL1", &m_BuildLayout.building, 3);
+    ImGui::RadioButton("Industry_LVL2", &m_BuildLayout.building, 4);
+    ImGui::RadioButton("Industry_LVL3", &m_BuildLayout.building, 5);
+    ImGui::RadioButton("Service_LVL1", &m_BuildLayout.building, 6);
+    ImGui::RadioButton("Service_LVL2", &m_BuildLayout.building, 7);
+    ImGui::RadioButton("Service_LVL3", &m_BuildLayout.building, 8);
+
+    ImGui::SeparatorText("Buildings");
+    ImGui::RadioButton("FireStation", &m_BuildLayout.building, 13);
+    ImGui::RadioButton("PoliceStation", &m_BuildLayout.building, 12);
+    ImGui::RadioButton("Stadion", &m_BuildLayout.building, 16);
+    ImGui::RadioButton("HighSchool", &m_BuildLayout.building, 14);
+    ImGui::RadioButton("University", &m_BuildLayout.building, 15);
+    ImGui::RadioButton("PowerStation", &m_BuildLayout.building, 17);
+    ImGui::RadioButton("PowerWire", &m_BuildLayout.building, 18);
+    ImGui::End();
+}
+
+void MyGui::Build_KeyboardKeyEvent()
+{
+    if (ImGui::IsKeyPressed(ImGuiKey_R))
+    {
+        r++;
     }
 }
 

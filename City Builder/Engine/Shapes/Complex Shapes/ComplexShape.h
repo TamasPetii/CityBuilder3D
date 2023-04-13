@@ -25,3 +25,6 @@
 #include "PowerStation/PowerBuilding.h"
 #include "PowerStation/PowerBuildingPlinth.h"
 #include "PowerStation/PowerWireBuilding.h"
+
+#include "PowerStation/WindTurbine.h"
+#include "PowerStation/WindTurbinePropeller.h"

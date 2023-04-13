@@ -1,6 +1,8 @@
 //Commit from laptop: Everything works well
 
 #include "Application.h"
+#include <stdlib.h> 
+#include <time.h>
 
 static int WINDOW_WIDTH = 1600;
 static int WINDOW_HEIGHT = 800;
@@ -9,13 +11,11 @@ static Application* application = nullptr;
 
 void window_size_callback(GLFWwindow* window, int width, int height);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 int main()
 {
+    srand(time(NULL));
+
     // Initialize the library
     if (!glfwInit())
         return -1;
@@ -40,10 +40,6 @@ int main()
     /* Binding event functions to window */
     glfwSetWindowSizeCallback(window, window_size_callback);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwSetKeyCallback(window, key_callback);
-    glfwSetCursorPosCallback(window, mouse_callback);
-    glfwSetMouseButtonCallback(window, mouse_button_callback);
-    glfwSetScrollCallback(window, scroll_callback);
 
     //Make the window's context current
     glfwMakeContextCurrent(window);
@@ -97,24 +93,4 @@ void window_size_callback(GLFWwindow* window, int width, int height)
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     application->FrameBuffer_ResizedEvent(width, height);
-}
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    application->Keyboard_ButtonEvent(key, scancode, action, mods);
-}
-
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-    application->Mouse_MoveEvent(xpos, ypos);
-}
-
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
-{
-    application->Mouse_ClickEvent(button, action, mods);
-}
-
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-    application->Mouse_WeelEvent(xoffset, yoffset);
 }

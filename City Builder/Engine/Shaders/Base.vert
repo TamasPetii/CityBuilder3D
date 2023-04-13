@@ -20,7 +20,7 @@ void main(){
 	gl_Position = u_VP * u_M * vec4(vert_position, 1);
 
 	frag_position = (u_M * vec4(vert_position, 1)).xyz;
-	frag_normal = vec3(0);
+	frag_normal = vert_normal;
 	frag_texture = vert_texture;
 	frag_textureID = int(vert_textureID);
 }

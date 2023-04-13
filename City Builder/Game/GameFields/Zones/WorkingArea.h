@@ -6,7 +6,7 @@
 class WorkingArea : public Zone
 {
 protected:
-	WorkingArea(Level level) : Zone(level) {}
+	WorkingArea(Level level, FieldType type, int x, int y, float cost) : Zone(level, type, x, y, cost) {}
 public:
 	~WorkingArea() {}
 
@@ -18,19 +18,45 @@ public:
 class IndustrialArea : public WorkingArea 
 {
 public:
-	IndustrialArea(Level level) : WorkingArea(level) {}
+	IndustrialArea(Level level, FieldType type, int x, int y, float cost) : WorkingArea(level, type, x, y, cost) {}
 	~IndustrialArea() {}
 
 	bool inline IsIndustrialArea() const override{ return true; }
+
+	//Setter
+	static void inline SetLvl1TaxRate(float taxRate) { m_Lvl1TaxRate = taxRate; }
+	static void inline SetLvl2TaxRate(float taxRate) { m_Lvl2TaxRate = taxRate; }
+	static void inline SetLvl3TaxRate(float taxRate) { m_Lvl3TaxRate = taxRate; }
+
+	//Getter
+	float GetTaxRate() const override;
+
+private:
+	static float m_Lvl1TaxRate;
+	static float m_Lvl2TaxRate;
+	static float m_Lvl3TaxRate;
 };
 
 class ServiceArea : public WorkingArea
 {
 public:
-	ServiceArea(Level level) : WorkingArea(level) {}
+	ServiceArea(Level level, FieldType type, int x, int y, float cost) : WorkingArea(level, type, x, y, cost) {}
 	~ServiceArea() {}
 
 	bool inline IsServiceArea() const override { return true; }
+
+	//Setter
+	static void inline SetLvl1TaxRate(float taxRate) { m_Lvl1TaxRate = taxRate; }
+	static void inline SetLvl2TaxRate(float taxRate) { m_Lvl2TaxRate = taxRate; }
+	static void inline SetLvl3TaxRate(float taxRate) { m_Lvl3TaxRate = taxRate; }
+
+	//Getter
+	float GetTaxRate() const override;
+
+private:
+	static float m_Lvl1TaxRate;
+	static float m_Lvl2TaxRate;
+	static float m_Lvl3TaxRate;
 };
 
 #endif

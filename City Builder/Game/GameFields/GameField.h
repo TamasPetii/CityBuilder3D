@@ -5,10 +5,10 @@
 class GameField
 {
 public:
-	GameField() {}
+	GameField(FieldType type, int x, int y, float cost): m_Type(type), m_X(x), m_Y(y), m_Cost(cost) {}
 	~GameField() {}
 
-	static GameField* CreateField(FieldType type);
+	static GameField* CreateField(FieldType type, int x, int y);
 
 	virtual bool IsZone() const { return false; };
 	virtual bool IsEmpty() const { return false; };
@@ -16,13 +16,19 @@ public:
 	virtual bool IsForest() const { return false; };
 	virtual bool IsBuilding() const { return false; };
 
-	float Get_SatisfactionPoints() const;
-	float Get_Fee() const;
-	float Get_Cost() const;
+	inline int Get_X() const { return m_X; }
+	inline int Get_Y() const { return m_Y; }
+	inline float Get_SatisfactionPoints() const { return m_SatisfactionPoints; };
+	inline float Get_Fee() const { return m_Fee; };
+	inline float Get_Cost() const { return m_Cost; };
+	inline FieldType Get_Type() const { return m_Type; };
 
 private:
-	int m_Cost;
-	int m_Fee;
+	int m_X;
+	int m_Y;
+	float m_Fee;
+	float m_Cost;
 	float m_SatisfactionPoints;
 	float m_Power;
+	FieldType m_Type;
 };

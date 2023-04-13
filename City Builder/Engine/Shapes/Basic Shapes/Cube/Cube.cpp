@@ -16,42 +16,49 @@ void Cube::CreateBuffers()
 std::vector<Vertex> Cube::GenerateVertices(const CubeLayout& layout)
 {
 	std::vector<Vertex> vertices;
+	glm::vec3 normal;
 
 	//FRONT
-	vertices.push_back({ layout.GeometryDetails.BOTTOM_FRONT_LEFT, glm::vec3(0),  glm::vec2(0, 0), layout.TextureDetails.FRONT_ID });
-	vertices.push_back({ layout.GeometryDetails.BOTTOM_FRONT_RIGHT,glm::vec3(0),  glm::vec2(1, 0), layout.TextureDetails.FRONT_ID });
-	vertices.push_back({ layout.GeometryDetails.TOP_FRONT_LEFT,glm::vec3(0),  glm::vec2(0, 1), layout.TextureDetails.FRONT_ID });
-	vertices.push_back({ layout.GeometryDetails.TOP_FRONT_RIGHT,glm::vec3(0),  glm::vec2(1, 1), layout.TextureDetails.FRONT_ID });
+	normal = Shape::GenerateNormal(layout.GeometryDetails.BOTTOM_FRONT_LEFT, layout.GeometryDetails.BOTTOM_FRONT_RIGHT, layout.GeometryDetails.TOP_FRONT_LEFT);
+	vertices.push_back({ layout.GeometryDetails.BOTTOM_FRONT_LEFT, normal,  glm::vec2(0, 0), layout.TextureDetails.FRONT_ID });
+	vertices.push_back({ layout.GeometryDetails.BOTTOM_FRONT_RIGHT, normal,  glm::vec2(1, 0), layout.TextureDetails.FRONT_ID });
+	vertices.push_back({ layout.GeometryDetails.TOP_FRONT_LEFT, normal,  glm::vec2(0, 1), layout.TextureDetails.FRONT_ID });
+	vertices.push_back({ layout.GeometryDetails.TOP_FRONT_RIGHT, normal,  glm::vec2(1, 1), layout.TextureDetails.FRONT_ID });
 
 	//BACK
-	vertices.push_back({ layout.GeometryDetails.BOTTOM_BACK_RIGHT,glm::vec3(0),  glm::vec2(0, 0), layout.TextureDetails.BACK_ID });
-	vertices.push_back({ layout.GeometryDetails.BOTTOM_BACK_LEFT,glm::vec3(0),  glm::vec2(1, 0),layout.TextureDetails.BACK_ID });
-	vertices.push_back({ layout.GeometryDetails.TOP_BACK_RIGHT,glm::vec3(0),  glm::vec2(0, 1), layout.TextureDetails.BACK_ID });
-	vertices.push_back({ layout.GeometryDetails.TOP_BACK_LEFT,glm::vec3(0),  glm::vec2(1, 1), layout.TextureDetails.BACK_ID });
+	normal = Shape::GenerateNormal(layout.GeometryDetails.BOTTOM_BACK_LEFT, layout.GeometryDetails.TOP_BACK_LEFT, layout.GeometryDetails.BOTTOM_BACK_RIGHT);
+	vertices.push_back({ layout.GeometryDetails.BOTTOM_BACK_RIGHT,normal,  glm::vec2(0, 0), layout.TextureDetails.BACK_ID });
+	vertices.push_back({ layout.GeometryDetails.BOTTOM_BACK_LEFT,normal,  glm::vec2(1, 0),layout.TextureDetails.BACK_ID });
+	vertices.push_back({ layout.GeometryDetails.TOP_BACK_RIGHT,normal,  glm::vec2(0, 1), layout.TextureDetails.BACK_ID });
+	vertices.push_back({ layout.GeometryDetails.TOP_BACK_LEFT,normal,  glm::vec2(1, 1), layout.TextureDetails.BACK_ID });
 
 	//RIGHT
-	vertices.push_back({ layout.GeometryDetails.BOTTOM_FRONT_RIGHT,glm::vec3(0),  glm::vec2(0, 0), layout.TextureDetails.RIGHT_ID });
-	vertices.push_back({ layout.GeometryDetails.BOTTOM_BACK_RIGHT,glm::vec3(0),  glm::vec2(1, 0), layout.TextureDetails.RIGHT_ID });
-	vertices.push_back({ layout.GeometryDetails.TOP_FRONT_RIGHT,glm::vec3(0),  glm::vec2(0, 1), layout.TextureDetails.RIGHT_ID });
-	vertices.push_back({ layout.GeometryDetails.TOP_BACK_RIGHT,glm::vec3(0),  glm::vec2(1, 1), layout.TextureDetails.RIGHT_ID });
+	normal = Shape::GenerateNormal(layout.GeometryDetails.BOTTOM_FRONT_RIGHT, layout.GeometryDetails.BOTTOM_BACK_RIGHT, layout.GeometryDetails.TOP_FRONT_RIGHT);
+	vertices.push_back({ layout.GeometryDetails.BOTTOM_FRONT_RIGHT, normal,  glm::vec2(0, 0), layout.TextureDetails.RIGHT_ID });
+	vertices.push_back({ layout.GeometryDetails.BOTTOM_BACK_RIGHT, normal,  glm::vec2(1, 0), layout.TextureDetails.RIGHT_ID });
+	vertices.push_back({ layout.GeometryDetails.TOP_FRONT_RIGHT, normal,  glm::vec2(0, 1), layout.TextureDetails.RIGHT_ID });
+	vertices.push_back({ layout.GeometryDetails.TOP_BACK_RIGHT, normal,  glm::vec2(1, 1), layout.TextureDetails.RIGHT_ID });
 
 	//LEFT
-	vertices.push_back({ layout.GeometryDetails.BOTTOM_BACK_LEFT,glm::vec3(0),  glm::vec2(0, 0), layout.TextureDetails.LEFT_ID });
-	vertices.push_back({ layout.GeometryDetails.BOTTOM_FRONT_LEFT,glm::vec3(0),  glm::vec2(1, 0), layout.TextureDetails.LEFT_ID });
-	vertices.push_back({ layout.GeometryDetails.TOP_BACK_LEFT,glm::vec3(0),  glm::vec2(0, 1), layout.TextureDetails.LEFT_ID });
-	vertices.push_back({ layout.GeometryDetails.TOP_FRONT_LEFT,glm::vec3(0),  glm::vec2(1, 1), layout.TextureDetails.LEFT_ID });
+	normal = Shape::GenerateNormal(layout.GeometryDetails.BOTTOM_FRONT_LEFT, layout.GeometryDetails.TOP_FRONT_LEFT, layout.GeometryDetails.BOTTOM_BACK_LEFT);
+	vertices.push_back({ layout.GeometryDetails.BOTTOM_BACK_LEFT, normal,  glm::vec2(0, 0), layout.TextureDetails.LEFT_ID });
+	vertices.push_back({ layout.GeometryDetails.BOTTOM_FRONT_LEFT, normal,  glm::vec2(1, 0), layout.TextureDetails.LEFT_ID });
+	vertices.push_back({ layout.GeometryDetails.TOP_BACK_LEFT, normal,  glm::vec2(0, 1), layout.TextureDetails.LEFT_ID });
+	vertices.push_back({ layout.GeometryDetails.TOP_FRONT_LEFT, normal,  glm::vec2(1, 1), layout.TextureDetails.LEFT_ID });
 
 	//TOP
-	vertices.push_back({ layout.GeometryDetails.TOP_FRONT_LEFT,glm::vec3(0),  glm::vec2(0, 0), layout.TextureDetails.TOP_ID });
-	vertices.push_back({ layout.GeometryDetails.TOP_FRONT_RIGHT,glm::vec3(0),  glm::vec2(1, 0), layout.TextureDetails.TOP_ID });
-	vertices.push_back({ layout.GeometryDetails.TOP_BACK_LEFT,glm::vec3(0),  glm::vec2(0, 1), layout.TextureDetails.TOP_ID });
-	vertices.push_back({ layout.GeometryDetails.TOP_BACK_RIGHT,glm::vec3(0),  glm::vec2(1, 1), layout.TextureDetails.TOP_ID });
+	normal = Shape::GenerateNormal(layout.GeometryDetails.TOP_FRONT_LEFT, layout.GeometryDetails.TOP_FRONT_RIGHT, layout.GeometryDetails.TOP_BACK_LEFT);
+	vertices.push_back({ layout.GeometryDetails.TOP_FRONT_LEFT, normal,  glm::vec2(0, 0), layout.TextureDetails.TOP_ID });
+	vertices.push_back({ layout.GeometryDetails.TOP_FRONT_RIGHT, normal,  glm::vec2(1, 0), layout.TextureDetails.TOP_ID });
+	vertices.push_back({ layout.GeometryDetails.TOP_BACK_LEFT, normal,  glm::vec2(0, 1), layout.TextureDetails.TOP_ID });
+	vertices.push_back({ layout.GeometryDetails.TOP_BACK_RIGHT, normal,  glm::vec2(1, 1), layout.TextureDetails.TOP_ID });
 	
 	//BOTTOM
-	vertices.push_back({ layout.GeometryDetails.BOTTOM_BACK_LEFT,glm::vec3(0),  glm::vec2(0, 0), layout.TextureDetails.BOTTOM_ID });
-	vertices.push_back({ layout.GeometryDetails.BOTTOM_BACK_RIGHT,glm::vec3(0),  glm::vec2(1, 0), layout.TextureDetails.BOTTOM_ID });
-	vertices.push_back({ layout.GeometryDetails.BOTTOM_FRONT_LEFT,glm::vec3(0),  glm::vec2(0, 1), layout.TextureDetails.BOTTOM_ID });
-	vertices.push_back({ layout.GeometryDetails.BOTTOM_FRONT_RIGHT,glm::vec3(0),  glm::vec2(1, 1), layout.TextureDetails.BOTTOM_ID });
+	normal = Shape::GenerateNormal(layout.GeometryDetails.BOTTOM_FRONT_LEFT, layout.GeometryDetails.BOTTOM_BACK_LEFT, layout.GeometryDetails.BOTTOM_FRONT_RIGHT);
+	vertices.push_back({ layout.GeometryDetails.BOTTOM_BACK_LEFT , normal,  glm::vec2(0, 0), layout.TextureDetails.BOTTOM_ID });
+	vertices.push_back({ layout.GeometryDetails.BOTTOM_BACK_RIGHT, normal,  glm::vec2(1, 0), layout.TextureDetails.BOTTOM_ID });
+	vertices.push_back({ layout.GeometryDetails.BOTTOM_FRONT_LEFT, normal,  glm::vec2(0, 1), layout.TextureDetails.BOTTOM_ID });
+	vertices.push_back({ layout.GeometryDetails.BOTTOM_FRONT_RIGHT, normal,  glm::vec2(1, 1), layout.TextureDetails.BOTTOM_ID });
 
 	return vertices;
 }
