@@ -125,16 +125,19 @@ void Application::Update()
 
 		if (m_MyGui->Get_BuildLayout().building == -1)
 		{
+			m_MyGui->Get_FieldDetailsLayout().isZone = false;
 			m_MyGui->Get_FieldDetailsLayout().x = HitX;
 			m_MyGui->Get_FieldDetailsLayout().y = HitY;
-			m_MyGui->Get_FieldDetailsLayout().satisfaction = 0;
-			m_MyGui->Get_FieldDetailsLayout().citizens_details = "-";
 
 			if (m_City->Get_GameField(HitX, HitY)->IsZone())
 			{
 				Zone* zone = dynamic_cast<Zone*>(m_City->Get_GameField(HitX, HitY));
+				m_MyGui->Get_FieldDetailsLayout().isZone = true;
 				m_MyGui->Get_FieldDetailsLayout().satisfaction = RoadNetwork::GetSatisfaction(zone);
 				m_MyGui->Get_FieldDetailsLayout().citizens_details = zone->Get_CitizenDetails();
+				m_MyGui->Get_FieldDetailsLayout().level = zone->Get_ZoneDetails().level + 1;
+				m_MyGui->Get_FieldDetailsLayout().contain = zone->Get_ZoneDetails().contain;
+				m_MyGui->Get_FieldDetailsLayout().capacity = zone->Get_ZoneDetails().capacity;
 			}
 		}
 		else 

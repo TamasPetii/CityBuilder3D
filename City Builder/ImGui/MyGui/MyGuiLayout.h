@@ -68,8 +68,12 @@ struct LightsLayout
 
 struct FieldDetailsLayout
 {
+	bool isZone;
 	int x;
 	int y;
+	int level;
+	int contain;
+	int capacity;
 	float satisfaction;
 	std::string citizens_details;
 };

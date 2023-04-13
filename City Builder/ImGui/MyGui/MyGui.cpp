@@ -596,11 +596,26 @@ void MyGui::FieldDetails_Window()
     std::string position = "Position: (" + std::to_string(m_FieldDetailsLayout.x) + " , " + std::to_string(m_FieldDetailsLayout.y) + ")";
     ImGui::Text(position.c_str());
 
-    std::string satisfaction = "Satisfaction: " + std::to_string(m_FieldDetailsLayout.satisfaction);
-    ImGui::Text(satisfaction.c_str());
+    if (m_FieldDetailsLayout.isZone)
+    {
+        ImGui::SeparatorText("Citizens");
 
-    ImGui::SeparatorText("Citizens");
-    ImGui::Text(m_FieldDetailsLayout.citizens_details.c_str());
+        std::string satisfaction = "Satisfaction: " + std::to_string(m_FieldDetailsLayout.satisfaction);
+        ImGui::Text(satisfaction.c_str());
+
+        std::string level = "Level: " + std::to_string(m_FieldDetailsLayout.level);
+        ImGui::Text(level.c_str());
+
+        std::string contain = "Contain: " + std::to_string(m_FieldDetailsLayout.contain);
+        ImGui::Text(contain.c_str());
+
+        std::string capacity = "Contain: " + std::to_string(m_FieldDetailsLayout.capacity);
+        ImGui::Text(capacity.c_str());
+
+        ImGui::Text(m_FieldDetailsLayout.citizens_details.c_str());
+    }
+
+
 
 
     ImGui::End();
