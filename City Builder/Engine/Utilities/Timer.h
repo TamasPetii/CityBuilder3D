@@ -14,15 +14,15 @@ public:
 	void Update();
 	bool Tick();
 
-	inline void SetTickTime(int sec) { m_Tick = sec; }
+	inline void SetTickTime(GLfloat sec) { m_Tick = sec; }
 private:
-	GLfloat m_LastTime = 0;
-	GLfloat m_DeltaTime = 0;
-	GLfloat m_OverallTime = 0;
-	GLfloat m_CurrentTime = 0;
+	GLfloat m_LastTime = 0.f;
+	GLfloat m_DeltaTime = 0.f;
+	GLfloat m_OverallTime = 0.f;
+	GLfloat m_CurrentTime = 0.f;
 
-	GLfloat m_Tick = 0;
-	GLfloat m_TickTime = 0;
+	GLfloat m_Tick = 0.f;
+	GLfloat m_TickTime = 0.f;
 
 	bool pause = true;
 };

@@ -91,7 +91,7 @@ float Citizen::Get_SatisfactionPoints() const
 
 float Citizen::PayTax() const
 {
-	float educationRate = m_Education == BASIC ? 1.2 : (m_Education == INTERMEDIATE ? 1.5 : 2.0);
+	float educationRate = m_Education == BASIC ? 1.2f : (m_Education == INTERMEDIATE ? 1.5f : 2.0f);
 
 	if (IsPensioner())
 		return -100; //TODO: Calculate pension

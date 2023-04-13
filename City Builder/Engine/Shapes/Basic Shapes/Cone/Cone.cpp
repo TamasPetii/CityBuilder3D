@@ -38,7 +38,7 @@ std::vector<Vertex> Cone::GenerateVertices(const ConeLayout& layout)
 		float u = i / float(layout.GeometryDetails.BASE_COUNT);
 
 		//Cross production of the vector from the base circle's current point to the apex with a vector on the xy plane in the current angle gives us the normal vector
-		float angle = -(u * 2 * M_PI);
+		float angle = (float)(u * -2 * M_PI);
 		glm::vec3 pos_on_circle = glm::vec3(layout.GeometryDetails.BASE_RADIUS * sin(u * 2 * M_PI), layout.GeometryDetails.BASE_ORIGO.y, layout.GeometryDetails.BASE_RADIUS * cos(u * 2 * M_PI));
 		glm::vec3 vector_in_angle = glm::normalize(glm::vec3(cos(angle),0,sin(angle)));
 		glm::vec3 pos_to_apex = glm::normalize(layout.GeometryDetails.TOP_APEX - pos_on_circle);

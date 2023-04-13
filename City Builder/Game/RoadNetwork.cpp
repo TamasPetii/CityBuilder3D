@@ -162,7 +162,7 @@ double RoadNetwork::GetSatisfaction(Zone* field) {
 				WorkingArea* workingZone = dynamic_cast<WorkingArea*>(zone);
 				if (workingZone->IsIndustrialArea()) {
 					double d = distance(field, workingZone);
-					if (d < closestIndustrial) closestIndustrial = d;
+					if (d < closestIndustrial) closestIndustrial = (int)d;
 				}
 			}
 		}

@@ -32,6 +32,7 @@ public:
 	inline Zone* Get_Workplace() const { return m_Workplace; }
 
 	static std::string Get_Log() { return log.str(); }
+	static std::stringstream& Log() { return log; }
 	static bool& Log_Changed() { return log_changed; }
 private:
 	Zone* m_Residence = nullptr;
