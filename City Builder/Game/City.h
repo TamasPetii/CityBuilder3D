@@ -12,8 +12,8 @@ public:
 	~City() = default;
 
 	void JoinCity(Citizen* citizen);
-	GameField* CheckForHome();
 	void LeaveCity(Citizen* citizen);
+
 	void DeleteField(int x, int y);
 	void UpgradeField(int x, int y);
 	void CollectTax();

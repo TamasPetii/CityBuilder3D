@@ -3,18 +3,18 @@
 
 void Citizen::JoinZone(Zone* zone)
 {
-	if (zone->IsThereEmptySpace())
+	//Feltesszük itt már biztosan találtunk lakóhelyet, de nézzük meg, hogy nem ugyan oda osztjuk-e be
+	if (zone == m_Residence || zone == m_Workplace) return;
+
+	zone->JoinZone(this);
+
+	if (zone->IsResidentalArea())
 	{
-		zone->IsResidentalArea() ? m_Residence = zone : m_Workplace = zone;
-		zone->JoinZone(this);
+		m_Residence = zone;
 	}
-	if (m_Workplace == nullptr)
+	if (zone->IsWorkingArea())
 	{
-		//TODO: check for workplace
-	}
-	if (m_Residence == nullptr)
-	{
-		//TODO: check for home
+		m_Workplace = zone;
 	}
 }
 
@@ -32,26 +32,32 @@ void Citizen::LeaveWorkplace()
 
 void Citizen::ChangeZone(Zone* zone)
 {
-	zone->IsResidentalArea() ? LeaveResidence() : LeaveWorkplace();
+	if (zone->IsResidentalArea())
+	{
+		LeaveResidence();
+	}
+	if (zone->IsWorkingArea()) 
+	{
+		LeaveWorkplace();
+	}
+
 	JoinZone(zone);
 }
 
 void Citizen::DeletedZone(Zone* zone)
 {
-	zone->IsResidentalArea() ? m_Residence = nullptr : m_Workplace = nullptr;
+	if (zone->IsResidentalArea())
+	{
+		m_Residence = nullptr;
+	}
 
-	if (m_Workplace == nullptr)
+	if (zone->IsWorkingArea())
 	{
-		//TODO: check for workplace
+		m_Workplace = nullptr;
 	}
-	if (m_Residence == nullptr)
-	{
-		//TODO: check for home
-	}
-	if (m_Workplace == nullptr) //Ha nem talált új otthont, akkor ehagyja a várost
-	{
-		//TODO: leave the city
-	}
+
+	//TODO: Új lakózóna / dolgozózózóna keresése, de ezt már a City kezelje le szerintem.
+	//TODO: Ha nem talált lakózónát, akkor elhagyja a várost
 }
 
 float Citizen::Get_SatisfactionPoints() const
