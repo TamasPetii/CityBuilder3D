@@ -16,10 +16,10 @@ public:
 	static void RemoveFromNetwork(GameField*);
 	static void MergeNetworks(int, int);
 	static bool IsConnected(GameField*, GameField*);
-	static GameField* FindEmptyWorkingArea(Zone*);
+	static Zone* FindEmptyWorkingArea(Zone*);
 	static void ResetNetworks();
 	static double GetSatisfaction(Zone* field);
-	static GameField* FindEmptyResidentialArea();
+	static Zone* FindEmptyResidentialArea();
 
 	static std::string NetworksToString();
 
@@ -29,7 +29,7 @@ private:
 		Network(int i) : id(i) {}
 		int id;
 		std::unordered_set<GameField*> zoneSet;
-			std::unordered_set<GameField*> roadSet;
+		std::unordered_set<GameField*> roadSet;
 		std::unordered_set<GameField*> buildingSet;
 	};
 

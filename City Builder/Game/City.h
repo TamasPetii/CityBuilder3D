@@ -4,6 +4,7 @@
 
 #include "GameTable.h"
 #include "Citizen.h"
+#include "RoadNetwork.h"
 
 class City
 {
@@ -11,8 +12,14 @@ public:
 	City(int size, float money);
 	~City() = default;
 
-	void JoinCity(Citizen* citizen);
+	void Simulate();
+	void GenerateCitizens(unsigned int x);
+	void HandleLooingZone();
+
+	bool JoinCity(Citizen* citizen);
 	void LeaveCity(Citizen* citizen);
+
+
 
 	void DeleteField(int x, int y);
 	void UpgradeField(int x, int y);

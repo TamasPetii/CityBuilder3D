@@ -92,7 +92,9 @@ bool RoadNetwork::IsConnected(GameField* field1, GameField* field2) {
 	return false;
 }
 
-GameField* RoadNetwork::FindEmptyWorkingArea(Zone* field) {
+Zone* RoadNetwork::FindEmptyWorkingArea(Zone* field) {
+	if (field == nullptr) return nullptr;
+
 	for (auto& network : m_networks) {
 		if (network.zoneSet.find(field) == network.zoneSet.end()) continue;
 
@@ -173,7 +175,7 @@ double RoadNetwork::GetSatisfaction(Zone* field) {
 	return satisfaction < 0 ? 0 : satisfaction;
 }
 
-GameField* RoadNetwork::FindEmptyResidentialArea() {
+Zone* RoadNetwork::FindEmptyResidentialArea() {
 	for (auto& network : m_networks) {
 		for (auto& z : network.zoneSet) {
 			Zone* zone = dynamic_cast<Zone*>(z);

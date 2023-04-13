@@ -1,34 +1,101 @@
 ﻿#include "City.h"
+#include <stdlib.h> 
+#include <time.h>
 
 City::City(int size, float money): m_Money(money)
 {
 	m_GameTable = new GameTable(size);
 }
 
-void City::JoinCity(Citizen* citizen)
+void City::Simulate()
 {
-	if (citizen == nullptr) return;
+	GenerateCitizens(rand() % 2 == 0 ? rand() % 2 : 0);
+	HandleLooingZone();
+}
 
-	//Itt hátározzuk meg, hogy melyik zónába kerüljün. NetWork keres neki egyet.
-	//Ha nincs zóna vagy nincs olyan ahol lenne férőhely, akkor legyen nullptr így jelezve azt hogy nem tudjuk beosztani sehová
-	Zone* residence = nullptr;
+void City::GenerateCitizens(unsigned int x)
+{
+	if (RoadNetwork::FindEmptyResidentialArea() == nullptr) return;
+
+	for (int i = 0; i < x; i++)
+	{
+		Citizen* citizen = new Citizen();
+
+		if (!JoinCity(citizen))
+		{
+			delete citizen;
+		}
+	}
+}
+
+void City::HandleLooingZone()
+{
+	std::vector<Citizen*> to_remove;
+
+	for (auto citizen : m_Citizens)
+	{
+		if (citizen->Get_Residence() == nullptr)
+		{
+			citizen->LeaveWorkplace();
+
+			Zone* residence = RoadNetwork::FindEmptyResidentialArea();
+			Zone* workplace = RoadNetwork::FindEmptyWorkingArea(residence);
+
+			if (residence != nullptr)
+			{
+				citizen->JoinZone(residence);
+				citizen->JoinZone(workplace);
+			}
+			else
+			{
+				//DO NOT CALL LEAVECITY HERE!!! It will delete citizen from unodered_set. And you will get error bc we are looping on it
+				to_remove.push_back(citizen);
+			}
+		}
+		else if (citizen->Get_Workplace() == nullptr)
+		{
+			Zone* workplace = RoadNetwork::FindEmptyWorkingArea(citizen->Get_Residence());
+
+			if (workplace != nullptr)
+			{
+				citizen->JoinZone(workplace);
+			}
+		}
+	}
+
+	for (auto citizen : to_remove)
+	{
+		LeaveCity(citizen);
+	}
+}
+
+bool City::JoinCity(Citizen* citizen)
+{
+	if (citizen == nullptr) return false;
+
+	Zone* residence = RoadNetwork::FindEmptyResidentialArea();
+	Zone* workplace = RoadNetwork::FindEmptyWorkingArea(residence);
 
 	if (residence != nullptr)
 	{
 		m_Citizens.insert(citizen);
-		citizen->JoinZone(dynamic_cast<Zone*>(residence));
+		citizen->JoinZone(residence);
+		citizen->JoinZone(workplace);
+		return true;
 	}
+
+	return false;
 }
 
 void City::LeaveCity(Citizen* citizen)
 {
-	if (citizen == nullptr) return; // Nem létezõ polgárt adunk meg
-	if (m_Citizens.find(citizen) == m_Citizens.end()) return; //Nem található meg a polgárok között
+	if (citizen == nullptr) return;
+	if (m_Citizens.find(citizen) == m_Citizens.end()) return;
 
 	citizen->LeaveResidence();
 	citizen->LeaveWorkplace();
-	m_Citizens.erase(citizen);
 
+	m_Citizens.erase(citizen);
 	delete citizen;
 }
 
