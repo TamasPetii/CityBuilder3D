@@ -18,6 +18,7 @@ public:
 	inline int Get_TableSize() const { return m_TableSize; }
 	inline GameField* Get_TableValue(int x, int y) const { return m_Table[x][y]; }; //Todo: check for wrong x,y value
 	ZoneDetails Get_ZoneDetails(int x, int y) const { ZoneDetails s;  return s; };
+	float Get_TotalCost() const;
 
 	void UpgradeField(int x, int y) {};
 

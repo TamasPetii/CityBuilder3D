@@ -8,7 +8,7 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 {
 
 	m_Camera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
-	m_City = new City(50);
+	m_City = new City(50, 10000);
 	m_Renderer = new Renderer(m_Camera);
 	m_MyGui = new MyGui(m_Camera);
 	m_FrameCounter = new FrameCounter();
@@ -46,7 +46,7 @@ void Application::Update()
 
 	if (m_MyGui->Get_NewGameLayout().effect) 
 	{
-		m_City = new City(m_MyGui->Get_NewGameLayout().size);
+		m_City = new City(m_MyGui->Get_NewGameLayout().size, 10000);
 
 		m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
 		m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));

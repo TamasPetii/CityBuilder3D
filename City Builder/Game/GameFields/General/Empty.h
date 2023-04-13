@@ -6,7 +6,7 @@
 class Empty : public GameField
 {
 public:
-    Empty() : GameField() {};
+    Empty(float cost) : GameField(cost) {};
     ~Empty() {}
 
     bool inline IsEmpty() const override { return true; }

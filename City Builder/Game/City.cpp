@@ -1,6 +1,6 @@
 #include "City.h"
 
-City::City(int size)
+City::City(int size, float money): m_Money(money)
 {
 	m_GameTable = new GameTable(size);
 }
@@ -30,6 +30,17 @@ void City::CollectTax()
 	for (const Citizen* citizen : m_Citizens) {
 		m_Money += citizen->PayTax();
 	}
+}
+
+void City::CollectAnnualCosts()
+{
+	float totalCost = m_GameTable->Get_TotalCost();
+	UpdateMoney(-totalCost);
+}
+
+void City::UpdateMoney(float amount)
+{
+	m_Money += amount;
 }
 
 void City::SetTaxRate(FieldType type, float rate)

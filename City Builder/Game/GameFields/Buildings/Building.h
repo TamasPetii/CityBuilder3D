@@ -6,7 +6,7 @@
 class Building : public GameField
 {
 protected:
-    Building() : GameField() {};
+    Building(float cost) : GameField(cost) {};
 
 public:
     ~Building() {}

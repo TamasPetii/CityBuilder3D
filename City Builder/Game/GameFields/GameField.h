@@ -5,7 +5,7 @@
 class GameField
 {
 public:
-	GameField() {}
+	GameField(float cost): m_Cost(cost) {}
 	~GameField() {}
 
 	static GameField* CreateField(FieldType type);
@@ -21,8 +21,8 @@ public:
 	float Get_Cost() const;
 
 private:
-	int m_Cost;
 	int m_Fee;
+	float m_Cost;
 	float m_SatisfactionPoints;
 	float m_Power;
 };

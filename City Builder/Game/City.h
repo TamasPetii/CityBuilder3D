@@ -8,7 +8,7 @@
 class City
 {
 public:
-	City(int size);
+	City(int size, float money);
 	~City() = default;
 
 	void JoinCity(Citizen* citizen);
@@ -16,6 +16,8 @@ public:
 	void DeleteField(int x, int y);
 	void UpgradeField(int x, int y);
 	void CollectTax();
+	void CollectAnnualCosts();
+	void UpdateMoney(float amount);
 	void SetTaxRate(FieldType type, float rate);
 	ZoneDetails Get_ZoneDetails(int x, int y) const;
 
@@ -26,6 +28,6 @@ private:
 	std::unordered_set<Citizen*> m_Citizens;
 	GameTable* m_GameTable;
 
-	float m_Money = 0;
+	float m_Money;
 	float m_Tax = 0;
 };
