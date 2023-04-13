@@ -1,8 +1,12 @@
 ﻿#include "City.h"
 
+#include <random>
+
 City::City(int size, float money): m_Money(money)
 {
 	m_GameTable = new GameTable(size);
+
+	GenerateForests(5, 0.4);
 }
 
 void City::JoinCity(Citizen* citizen)
@@ -58,6 +62,61 @@ void City::CollectAnnualCosts()
 void City::UpdateMoney(float amount)
 {
 	m_Money += amount;
+}
+
+void City::GenerateForests(int iterations, double initialRatio)
+{
+	// simple cellular automata algorithm
+
+	int tableSize = m_GameTable->Get_TableSize();
+	std::vector<std::vector<bool>> forestMatrix(tableSize, std::vector<bool>(tableSize, false));
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<> dis(0.0, 1.0);
+
+	for (int x = 0; x < tableSize; ++x) {
+		for (int y = 0; y < tableSize; ++y) {
+			if (dis(gen) < initialRatio) {
+				forestMatrix[x][y] = true;
+			}
+		}
+	}
+
+	for (int i = 0; i < iterations; ++i) {
+		std::vector<std::vector<bool>> newMatrix = forestMatrix;
+		for (int x = 0; x < tableSize; ++x) {
+			for (int y = 0; y < tableSize; ++y) {
+				int neighbors = 0;
+				for (int dx = -1; dx <= 1; ++dx) {
+					for (int dy = -1; dy <= 1; ++dy) {
+						int nx = x + dx;
+						int ny = y + dy;
+						if (nx >= 0 && nx < tableSize && ny >= 0 && ny < tableSize && !(dx == 0 && dy == 0)) {
+							if (forestMatrix[nx][ny]) {
+								neighbors++;
+							}
+						}
+					}
+				}
+				if (forestMatrix[x][y]) {
+					newMatrix[x][y] = neighbors >= 4;
+				}
+				else {
+					newMatrix[x][y] = neighbors >= 5;
+				}
+			}
+		}
+		forestMatrix = newMatrix;
+	}
+
+	for (int x = 0; x < tableSize; ++x) {
+		for (int y = 0; y < tableSize; ++y) {
+			if (forestMatrix[x][y]) {
+				m_GameTable->Set_TableValue(x, y, FieldType::FOREST);
+			}
+		}
+	}
 }
 
 void City::SetTaxRate(FieldType type, float rate)
