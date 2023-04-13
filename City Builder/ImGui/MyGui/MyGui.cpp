@@ -580,14 +580,41 @@ void MyGui::Build_MouseClickEvent()
     }
 }
 
+void MyGui::Log_Window()
+{
+    ImGui::Begin("Log");
+
+    ImGui::Text(m_LogLayout.log.c_str());
+
+    ImGui::End();
+}
+
+void MyGui::FieldDetails_Window()
+{
+    ImGui::Begin("Field Details");
+
+    std::string position = "Position: (" + std::to_string(m_FieldDetailsLayout.x) + " , " + std::to_string(m_FieldDetailsLayout.y) + ")";
+    ImGui::Text(position.c_str());
+
+    ImGui::SeparatorText("Citizens");
+    ImGui::Text(m_FieldDetailsLayout.citizens_details.c_str());
+
+
+    ImGui::End();
+}
+
 void MyGui::Build_Window()
 {
     ImGui::Begin("Build");
+
+    ImGui::SeparatorText("Statistics");
+    ImGui::RadioButton("Check field details", &m_BuildLayout.building, -1);
 
     ImGui::SeparatorText("General");
     ImGui::RadioButton("Empty", &m_BuildLayout.building, 9);
     ImGui::RadioButton("Road", &m_BuildLayout.building, 10);
     ImGui::RadioButton("Forest", &m_BuildLayout.building, 11);
+
     ImGui::SeparatorText("Zone");
     ImGui::RadioButton("Residence_LVL1", &m_BuildLayout.building, 0);
     ImGui::RadioButton("Residence_LVL2", &m_BuildLayout.building, 1);
@@ -598,6 +625,7 @@ void MyGui::Build_Window()
     ImGui::RadioButton("Service_LVL1", &m_BuildLayout.building, 6);
     ImGui::RadioButton("Service_LVL2", &m_BuildLayout.building, 7);
     ImGui::RadioButton("Service_LVL3", &m_BuildLayout.building, 8);
+
     ImGui::SeparatorText("Buildings");
     ImGui::RadioButton("FireStation", &m_BuildLayout.building, 13);
     ImGui::RadioButton("PoliceStation", &m_BuildLayout.building, 12);

@@ -2,6 +2,9 @@
 #include "GameFields/Zones/_ZoneHeaders.h"
 #include <iostream>
 
+std::stringstream Citizen::log;
+bool Citizen::log_changed = false;
+
 Citizen::Citizen()
 {
 	m_Education = BASIC;
@@ -16,12 +19,14 @@ void Citizen::JoinZone(Zone* zone)
 
 	if (zone->IsResidentalArea())
 	{
-		std::cout << this << " joined residential zone: " << zone << std::endl;
+		log << this << " joined residential zone: " << zone << std::endl;
+		log_changed = true;
 		m_Residence = zone;
 	}
 	if (zone->IsWorkingArea())
 	{
-		std::cout << this << " joined working zone: " << zone << std::endl;
+		log << this << " joined working zone: " << zone << std::endl;
+		log_changed = true;
 		m_Workplace = zone;
 	}
 }
@@ -30,7 +35,8 @@ void Citizen::LeaveResidence()
 {
 	if (m_Residence == nullptr) return;
 
-	std::cout << this << " left residential zone: " << m_Residence << std::endl;
+	log << this << " left residential zone: " << m_Residence << std::endl;
+	log_changed = true;
 
 	m_Residence->LeaveZone(this);
 	m_Residence = nullptr;
@@ -40,7 +46,8 @@ void Citizen::LeaveWorkplace()
 {
 	if (m_Workplace == nullptr) return;
 
-	std::cout << this << " left workplace zone: " << m_Workplace << std::endl;
+	log << this << " left workplace zone: " << m_Workplace << std::endl;
+	log_changed = true;
 
 	m_Workplace->LeaveZone(this);
 	m_Workplace = nullptr;
@@ -64,13 +71,15 @@ void Citizen::DeletedZone(Zone* zone)
 {
 	if (zone->IsResidentalArea())
 	{
-		std::cout << this << " left deleted zone: " << m_Residence << std::endl;
+		log << this << " left deleted zone: " << m_Residence << std::endl;
+		log_changed = true;
 		m_Residence = nullptr;
 	}
 
 	if (zone->IsWorkingArea())
 	{
-		std::cout << this << " left deleted zone: " << m_Workplace << std::endl;
+		log << this << " left deleted zone: " << m_Workplace << std::endl;
+		log_changed = true;
 		m_Workplace = nullptr;
 	}
 }

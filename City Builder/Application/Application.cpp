@@ -47,6 +47,7 @@ void Application::Update()
 	if (m_MyGui->Get_NewGameLayout().effect) 
 	{
 		m_City = new City(m_MyGui->Get_NewGameLayout().size, 10000);
+		RoadNetwork::ResetNetworks();
 
 		m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
 		m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
@@ -116,12 +117,33 @@ void Application::Update()
 	
 	if (m_MyGui->hit)
 	{
-		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, m_Renderer->Get_FrameBuffer()->Get_FrameWidth(), m_Renderer->Get_FrameBuffer()->Get_FrameHeight());
 		m_MyGui->hit = false;
+		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, m_Renderer->Get_FrameBuffer()->Get_FrameWidth(), m_Renderer->Get_FrameBuffer()->Get_FrameHeight());
 
-		m_City->Set_GameTableValue(HitX, HitY, (FieldType)m_MyGui->Get_BuildLayout().building);
+		if (m_MyGui->Get_BuildLayout().building == -1)
+		{
+			m_MyGui->Get_FieldDetailsLayout().x = HitX;
+			m_MyGui->Get_FieldDetailsLayout().x = HitY;
+			m_MyGui->Get_FieldDetailsLayout().satisfaction = 0;
+			m_MyGui->Get_FieldDetailsLayout().citizens_details = "-";
 
-		changed = true;
+			if (m_City->Get_GameField(HitX, HitY)->IsZone())
+			{
+				Zone* zone = dynamic_cast<Zone*>(m_City->Get_GameField(HitX, HitY));
+				m_MyGui->Get_FieldDetailsLayout().citizens_details = zone->Get_CitizenDetails();
+			}
+		}
+		else 
+		{
+			m_City->Set_GameTableValue(HitX, HitY, (FieldType)m_MyGui->Get_BuildLayout().building);
+			changed = true;
+		}
+
+	}
+
+	if (Citizen::Log_Changed)
+	{
+		m_MyGui->Get_LogLayout().log = Citizen::Get_Log();
 	}
 }
 
@@ -135,6 +157,8 @@ void Application::RenderUI()
 	m_MyGui->GameDetails_Window();
 	m_MyGui->GameOptions_Window();
 	m_MyGui->RenderOptions_Window();
+	m_MyGui->FieldDetails_Window();
+	m_MyGui->Log_Window();
 	m_MyGui->ViewPort_Render(m_Renderer->Get_FrameBuffer());
 
 	m_MyGui->Post_Render();

@@ -65,3 +65,17 @@ struct LightsLayout
 	glm::vec3 Kd = glm::vec3(1, 1, 1);
 	glm::vec3 Ks = glm::vec3(0.7, 0.6, 0.6);
 };
+};
+
+struct FieldDetailsLayout
+{
+	int x;
+	int y;
+	int satisfaction;
+	std::string citizens_details;
+};
+
+struct LogLayout 
+{
+	std::string log;
+};

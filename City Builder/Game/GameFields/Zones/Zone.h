@@ -4,6 +4,7 @@
 #include "../GameField.h"
 #include "../../Citizen.h"
 #include <unordered_set>
+#include <sstream>
 
 enum Level {
 	LEVEL_1,
@@ -45,6 +46,8 @@ public:
 	virtual float GetTaxRate() const = 0;
 
 	inline ZoneDetails Get_ZoneDetails() const { return m_details; }
+
+	std::string Get_CitizenDetails();
 };
 
 #endif

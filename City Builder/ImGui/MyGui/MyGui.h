@@ -30,6 +30,8 @@ public:
 	void Build_Window();
 	void GameDetails_Window();
 	void GameOptions_Window();
+	void FieldDetails_Window();
+	void Log_Window();
 	void RenderOptions_Window();
 	void ViewPort_Render(FrameBuffer* fbo);
 
@@ -41,6 +43,8 @@ public:
 	inline TaxLayout& Get_TaxLayout() { return m_TaxLayout; }
 	inline BuildLayout Get_BuildLayout() { return m_BuildLayout; }
 	inline LightsLayout& Get_LightsLayout() { return m_LightsLayout; }
+	inline FieldDetailsLayout& Get_FieldDetailsLayout() { return m_FieldDetailsLayout; }
+	inline LogLayout& Get_LogLayout() { return m_LogLayout; }
 
 	bool BuildHover = false;
 	int r = 0;
@@ -71,6 +75,8 @@ private:
 	SaveGameLayout m_SaveGameLayout;
 	BuildLayout m_BuildLayout;
 	TaxLayout m_TaxLayout;
+	FieldDetailsLayout m_FieldDetailsLayout;
+	LogLayout m_LogLayout;
 
 	LightsLayout m_LightsLayout;
 

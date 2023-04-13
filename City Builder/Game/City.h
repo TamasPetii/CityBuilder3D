@@ -6,6 +6,7 @@
 #include "Citizen.h"
 #include "RoadNetwork.h"
 
+
 class City
 {
 public:
@@ -18,7 +19,6 @@ public:
 
 	bool JoinCity(Citizen* citizen);
 	void LeaveCity(Citizen* citizen);
-
 
 
 	void DeleteField(int x, int y);
