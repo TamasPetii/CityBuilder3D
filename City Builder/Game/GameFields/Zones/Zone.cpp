@@ -1,6 +1,6 @@
 #include "Zone.h"
 
-Zone::Zone(Level level) : GameField()
+Zone::Zone(Level level, FieldType type, int x, int y, float cost) : GameField(type, x, y, cost), level(level)
 {
 	m_details.level = level;
 	m_details.contain = 0;
