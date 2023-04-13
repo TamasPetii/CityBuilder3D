@@ -7,25 +7,25 @@ GameField* GameField::CreateField(FieldType type)
 {
 	switch (type)
 	{
-	case RESIDENTIAL_LVL1: return new ResidentalArea(LEVEL_1);
-	case RESIDENTIAL_LVL2: return new ResidentalArea(LEVEL_2);
-	case RESIDENTIAL_LVL3: return new ResidentalArea(LEVEL_3);
-	case INDUSTRIAL_LVL1: return new IndustrialArea(LEVEL_1);
-	case INDUSTRIAL_LVL2: return new IndustrialArea(LEVEL_2);
-	case INDUSTRIAL_LVL3: return new IndustrialArea(LEVEL_3);
-	case SERVICE_LVL1: return new ServiceArea(LEVEL_1);
-	case SERVICE_LVL2: return new ServiceArea(LEVEL_2);
-	case SERVICE_LVL3: return new ServiceArea(LEVEL_3);
-	case EMPTY: return new Empty();
-	case ROAD: return new Road();
-	case FOREST: return new Forest();
-	case POLICESTATION: return new PoliceStation();
-	case FIRESTATION: return new FireStation();
-	case HIGHSCHOOL: return new HighSchool();
-	case UNIVERSITY: return new University();
-	case STADIUM: return new Stadium();
-	case POWERSTATION: return new PowerStation();
-	case POWERWIRE: return new PowerWire();
+	case RESIDENTIAL_LVL1: return new ResidentalArea(LEVEL_1, 0.0);
+	case RESIDENTIAL_LVL2: return new ResidentalArea(LEVEL_2, 0.0);
+	case RESIDENTIAL_LVL3: return new ResidentalArea(LEVEL_3, 0.0);
+	case INDUSTRIAL_LVL1: return new IndustrialArea(LEVEL_1, 0.0);
+	case INDUSTRIAL_LVL2: return new IndustrialArea(LEVEL_2, 0.0);
+	case INDUSTRIAL_LVL3: return new IndustrialArea(LEVEL_3, 0.0);
+	case SERVICE_LVL1: return new ServiceArea(LEVEL_1, 0.0);
+	case SERVICE_LVL2: return new ServiceArea(LEVEL_2, 0.0);
+	case SERVICE_LVL3: return new ServiceArea(LEVEL_3, 0.0);
+	case EMPTY: return new Empty(0.0);
+	case ROAD: return new Road(0.0);
+	case FOREST: return new Forest(0.0);
+	case POLICESTATION: return new PoliceStation(0.0);
+	case FIRESTATION: return new FireStation(0.0);
+	case HIGHSCHOOL: return new HighSchool(0.0);
+	case UNIVERSITY: return new University(0.0);
+	case STADIUM: return new Stadium(0.0);
+	case POWERSTATION: return new PowerStation(0.0);
+	case POWERWIRE: return new PowerWire(0.0);
 	}
 }
 

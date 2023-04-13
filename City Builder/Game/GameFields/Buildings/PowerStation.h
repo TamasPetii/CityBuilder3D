@@ -6,7 +6,7 @@
 class PowerStation : public Building
 {
 public:
-    PowerStation() : Building() {};
+    PowerStation(float cost) : Building(cost) {};
     ~PowerStation() {}
 
     bool inline IsPowerStation() const override { return true; }

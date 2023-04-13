@@ -6,7 +6,7 @@
 class School : public Building
 {
 protected:
-    School() : Building() {};
+    School(float cost) : Building(cost) {};
 
 public:
     ~School() {}
@@ -20,7 +20,7 @@ public:
 class HighSchool : public School
 {
 public:
-    HighSchool() : School() {};
+    HighSchool(float cost) : School(cost) {};
     ~HighSchool() {}
 
     bool inline IsHighSchool() const override { return true; };
@@ -29,7 +29,7 @@ public:
 class University : public School
 {
 public:
-    University() : School() {};
+    University(float cost) : School(cost) {};
     ~University() {}
 
     bool inline IsUniversity() const override { return true; };

@@ -22,7 +22,7 @@ public:
 class Zone : public GameField
 {
 protected: 
-	Zone(Level level) : GameField(), level(level) {}
+	Zone(Level level, float cost) : GameField(cost), level(level) {}
 	Level level;
 	ZoneDetails m_details;
 	std::unordered_set<Citizen*> m_citizens;

@@ -43,6 +43,19 @@ void GameTable::Set_TableValue(int x, int y, FieldType type) {
 	}
 }
 
+float GameTable::Get_TotalCost() const
+{
+	float totalCost = 0.0f;
+
+	for (int i = 0; i < m_TableSize; ++i) {
+		for (int j = 0; j < m_TableSize; ++j) {
+			totalCost += m_Table[i][j]->Get_Cost();
+		}
+	}
+
+	return totalCost;
+}
+
 void GameTable::SetRoadNetwork(int x, int y) {
 	GameField* newRoad = m_Table[x][y];
 	for (int i = -1; i < 2; i += 1) {

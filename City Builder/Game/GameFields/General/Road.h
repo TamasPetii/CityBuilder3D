@@ -6,7 +6,7 @@
 class Road : public GameField
 {
 public:
-    Road() : GameField() {};
+    Road(float cost) : GameField(cost) {};
     ~Road() {}
 
     bool inline IsRoad() const override { return true; }

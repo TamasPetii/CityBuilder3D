@@ -6,7 +6,7 @@
 class Forest : public GameField
 {
 public:
-    Forest() : GameField() {};
+    Forest(float cost) : GameField(cost) {};
     ~Forest() {}
 
     bool inline IsForest() const override { return true; }
