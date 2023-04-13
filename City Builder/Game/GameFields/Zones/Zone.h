@@ -2,9 +2,8 @@
 #define ZONE_H
 
 #include "../GameField.h"
+#include "../../Citizen.h"
 #include <unordered_set>
-
-class Citizen;
 
 enum Level {
 	LEVEL_1,
@@ -33,21 +32,21 @@ public:
 	bool inline IsZone() const override { return true; }
 	virtual inline bool IsResidentalArea() const { return false; }
 	virtual inline bool IsWorkingArea() const { return false; }
+	inline bool IsThereEmptySpace() const { return m_details.contain < m_details.capacity ? true : false; }
 
 	void JoinZone(Citizen* citizen);
 	void LeaveZone(Citizen* citizen);
 	void DeleteZone();
 
-	Level Get_Level() { return this->level; }
+	Level Get_Level() { return m_details.level; }
 	float Get_Satisfaction() const;
 	float Set_Satisfaction(float value);
 	float AddToSatisfaction(float value);
 	virtual float GetTaxRate() const = 0;
 
-	ZoneDetails inline Get_ZoneDetails() const { return m_details; }
+	inline ZoneDetails Get_ZoneDetails() const { return m_details; }
 
 private:
-
 };
 
 #endif
