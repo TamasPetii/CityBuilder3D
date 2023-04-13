@@ -1,5 +1,7 @@
 #pragma once
 
+#include <sstream>
+
 class Zone;
 
 enum Education
@@ -28,10 +30,16 @@ public:
 	inline int Get_Age() const	{ return m_Age;	}
 	inline Zone* Get_Residence() const { return m_Residence; }
 	inline Zone* Get_Workplace() const { return m_Workplace; }
+
+	static std::string Get_Log() { return log.str(); }
+	static bool& Log_Changed() { return log_changed; }
 private:
 	Zone* m_Residence = nullptr;
 	Zone* m_Workplace = nullptr;
 
 	int m_Age = 0;
 	Education m_Education;
+	
+	static bool log_changed;
+	static std::stringstream log;
 };

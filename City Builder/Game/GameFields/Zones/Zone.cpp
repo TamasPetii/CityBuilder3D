@@ -41,3 +41,17 @@ void Zone::DeleteZone()
 		(*it)->DeletedZone(this);
 	}
 }
+
+std::string Zone::Get_CitizenDetails()
+{
+	int i = 1;
+	std::stringstream ss;
+
+	for (auto citizen : m_citizens)
+	{
+		ss << i << ". " << citizen << "\n";
+		i++;
+	}
+
+	return ss.str();
+}

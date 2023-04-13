@@ -50,3 +50,16 @@ struct TaxLayout
 	float ServiceTaxLvl2 = 20;
 	float ServiceTaxLvl3 = 20;
 };
+
+struct FieldDetailsLayout
+{
+	int x;
+	int y;
+	int satisfaction;
+	std::string citizens_details;
+};
+
+struct LogLayout 
+{
+	std::string log;
+};

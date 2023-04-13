@@ -20,7 +20,6 @@ public:
 	static void ResetNetworks();
 	static double GetSatisfaction(Zone* field);
 	static Zone* FindEmptyResidentialArea();
-
 	static std::string NetworksToString();
 
 private:
