@@ -21,8 +21,8 @@ public:
 class Zone : public GameField
 {
 protected: 
-	Zone(Level level, FieldType type, int x, int y, float cost) : GameField(type, x, y, cost), level(level) {}
-	Level level;
+	Zone(Level level, FieldType type, int x, int y, float cost);
+
 	ZoneDetails m_details;
 	std::unordered_set<Citizen*> m_citizens;
 
@@ -45,8 +45,6 @@ public:
 	virtual float GetTaxRate() const = 0;
 
 	inline ZoneDetails Get_ZoneDetails() const { return m_details; }
-
-private:
 };
 
 #endif

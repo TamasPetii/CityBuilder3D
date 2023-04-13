@@ -16,8 +16,6 @@ GameTable::GameTable(int TableSize) : m_TableSize(TableSize)
 			m_Table[i][j] = GameField::CreateField(EMPTY, i, j);
 		}
 	}
-
-	m_Table[0][0] = GameField::CreateField(RESIDENTIAL_LVL3, 0, 0);
 }
 
 void GameTable::Set_TableValue(int x, int y, FieldType type) {

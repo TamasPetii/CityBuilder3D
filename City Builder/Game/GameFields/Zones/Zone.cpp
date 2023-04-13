@@ -1,24 +1,26 @@
 #include "Zone.h"
 
-Zone::Zone(Level level) : GameField()
+Zone::Zone(Level level, FieldType type, int x, int y, float cost) 
+	: GameField(type, x, y, cost)
 {
 	m_details.level = level;
 	m_details.contain = 0;
-	
+
 	//TODO: Adjust the zone capacities
 	if (level == LEVEL_1)
 	{
-		m_details.capacity = 20;
+		m_details.capacity = 4;
 	}
 	if (level == LEVEL_2)
 	{
-		m_details.capacity = 50;
+		m_details.capacity = 8;
 	}
-	if (level == LEVEL_2)
+	if (level == LEVEL_3)
 	{
-		m_details.capacity = 100;
+		m_details.capacity = 16;
 	}
 }
+
 
 void Zone::JoinZone(Citizen* citizen)
 {
