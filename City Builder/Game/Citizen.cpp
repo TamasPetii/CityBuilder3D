@@ -1,5 +1,6 @@
 #include "Citizen.h"
 #include "GameFields/Zones/_ZoneHeaders.h"
+#include <iostream>
 
 Citizen::Citizen()
 {
@@ -9,29 +10,38 @@ Citizen::Citizen()
 
 void Citizen::JoinZone(Zone* zone)
 {
-	//Feltesszük itt már biztosan találtunk lakóhelyet, de nézzük meg, hogy nem ugyan oda osztjuk-e be
 	if (zone == m_Residence || zone == m_Workplace) return;
 
 	zone->JoinZone(this);
 
 	if (zone->IsResidentalArea())
 	{
+		std::cout << this << " joined residential zone: " << zone << std::endl;
 		m_Residence = zone;
 	}
 	if (zone->IsWorkingArea())
 	{
+		std::cout << this << " joined working zone: " << zone << std::endl;
 		m_Workplace = zone;
 	}
 }
 
 void Citizen::LeaveResidence()
 {
+	if (m_Residence == nullptr) return;
+
+	std::cout << this << " left residential zone: " << m_Residence << std::endl;
+
 	m_Residence->LeaveZone(this);
 	m_Residence = nullptr;
 }
 
 void Citizen::LeaveWorkplace()
 {
+	if (m_Workplace == nullptr) return;
+
+	std::cout << this << " left workplace zone: " << m_Workplace << std::endl;
+
 	m_Workplace->LeaveZone(this);
 	m_Workplace = nullptr;
 }
@@ -54,16 +64,15 @@ void Citizen::DeletedZone(Zone* zone)
 {
 	if (zone->IsResidentalArea())
 	{
+		std::cout << this << " left deleted zone: " << m_Residence << std::endl;
 		m_Residence = nullptr;
 	}
 
 	if (zone->IsWorkingArea())
 	{
+		std::cout << this << " left deleted zone: " << m_Workplace << std::endl;
 		m_Workplace = nullptr;
 	}
-
-	//TODO: Új lakózóna / dolgozózózóna keresése, de ezt már a City kezelje le szerintem.
-	//TODO: Ha nem talált lakózónát, akkor elhagyja a várost
 }
 
 float Citizen::Get_SatisfactionPoints() const

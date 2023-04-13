@@ -35,7 +35,7 @@ void Application::Update()
 
 	if (m_Timer->Tick())
 	{
-		std::cout << "TIMER TICK" << std::endl;
+		m_City->Simulate();
 	}
 
 	if (m_FrameCounter->Tick())
@@ -119,7 +119,6 @@ void Application::Update()
 		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, m_Renderer->Get_FrameBuffer()->Get_FrameWidth(), m_Renderer->Get_FrameBuffer()->Get_FrameHeight());
 		m_MyGui->hit = false;
 
-		std::cout << "Build! -> " << m_MyGui->Get_BuildLayout().building << std::endl;
 		m_City->Set_GameTableValue(HitX, HitY, (FieldType)m_MyGui->Get_BuildLayout().building);
 
 		changed = true;
@@ -145,7 +144,6 @@ void Application::Render()
 {
 	if (changed)
 	{
-		std::cout << "CHANGED" << std::endl;
 		for (int i = 0; i < m_City->Get_GameTableSize(); i++)
 		{
 			for (int j = 0; j < m_City->Get_GameTableSize(); j++)

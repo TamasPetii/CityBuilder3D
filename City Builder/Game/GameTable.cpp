@@ -23,7 +23,16 @@ void GameTable::Set_TableValue(int x, int y, FieldType type) {
 	bool isDelete = false;
 	if (!m_Table[x][y]->IsEmpty()) {
 		if (type != EMPTY) return;
-		if (!isRoad) RoadNetwork::RemoveFromNetwork(m_Table[x][y]);
+		if (!isRoad)
+		{
+			if (m_Table[x][y]->IsZone())
+			{
+				Zone* zone = dynamic_cast<Zone*>(m_Table[x][y]);
+				zone->DeleteZone();
+			}
+
+			RoadNetwork::RemoveFromNetwork(m_Table[x][y]);
+		}
 		delete(m_Table[x][y]);
 		isDelete = true;
 	}

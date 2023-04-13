@@ -1,6 +1,8 @@
 //Commit from laptop: Everything works well
 
 #include "Application.h"
+#include <stdlib.h> 
+#include <time.h>
 
 static int WINDOW_WIDTH = 1600;
 static int WINDOW_HEIGHT = 800;
@@ -12,6 +14,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 int main()
 {
+    srand(time(NULL));
+
     // Initialize the library
     if (!glfwInit())
         return -1;
