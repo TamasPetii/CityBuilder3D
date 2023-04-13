@@ -48,6 +48,9 @@ void Application::Update()
 	{
 		m_City = new City(m_MyGui->Get_NewGameLayout().size, 10000);
 		RoadNetwork::ResetNetworks();
+		Citizen::Log().str("");
+		Citizen::Log().clear();
+		Citizen::Log_Changed() = true;
 
 		m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
 		m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
@@ -123,13 +126,14 @@ void Application::Update()
 		if (m_MyGui->Get_BuildLayout().building == -1)
 		{
 			m_MyGui->Get_FieldDetailsLayout().x = HitX;
-			m_MyGui->Get_FieldDetailsLayout().x = HitY;
+			m_MyGui->Get_FieldDetailsLayout().y = HitY;
 			m_MyGui->Get_FieldDetailsLayout().satisfaction = 0;
 			m_MyGui->Get_FieldDetailsLayout().citizens_details = "-";
 
 			if (m_City->Get_GameField(HitX, HitY)->IsZone())
 			{
 				Zone* zone = dynamic_cast<Zone*>(m_City->Get_GameField(HitX, HitY));
+				m_MyGui->Get_FieldDetailsLayout().satisfaction = RoadNetwork::GetSatisfaction(zone);
 				m_MyGui->Get_FieldDetailsLayout().citizens_details = zone->Get_CitizenDetails();
 			}
 		}
@@ -141,9 +145,10 @@ void Application::Update()
 
 	}
 
-	if (Citizen::Log_Changed)
+	if (Citizen::Log_Changed())
 	{
 		m_MyGui->Get_LogLayout().log = Citizen::Get_Log();
+		Citizen::Log_Changed() = false;
 	}
 }
 

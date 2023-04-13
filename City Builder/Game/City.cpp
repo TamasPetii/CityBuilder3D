@@ -21,7 +21,7 @@ void City::GenerateCitizens(unsigned int x)
 {
 	if (RoadNetwork::FindEmptyResidentialArea() == nullptr) return;
 
-	for (int i = 0; i < x; i++)
+	for (unsigned int i = 0; i < x; i++)
 	{
 		Citizen* citizen = new Citizen();
 
