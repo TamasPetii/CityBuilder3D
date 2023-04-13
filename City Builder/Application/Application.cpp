@@ -90,8 +90,30 @@ void Application::Update()
 		m_MyGui->Get_TaxLayout().effect = false;
 	}
 
-	//------------------------------
+	if (m_MyGui->Get_LightsLayout().effect)
+	{
+		m_Renderer->Set_Light_Properties(m_MyGui->Get_LightsLayout().lightDir, m_MyGui->Get_LightsLayout().specularPow, m_MyGui->Get_LightsLayout().La, m_MyGui->Get_LightsLayout().Ld, m_MyGui->Get_LightsLayout().Ls, m_MyGui->Get_LightsLayout().Ka, m_MyGui->Get_LightsLayout().Kd, m_MyGui->Get_LightsLayout().Ks);
+		m_MyGui->Get_LightsLayout().effect = false;
+	}
 
+	if (m_MyGui->Get_LightsLayout().reset)
+	{
+		m_Renderer->Reset_Light_Properties();
+
+		m_MyGui->Get_LightsLayout().lightDir = glm::vec3(1, -1, 1);
+		m_MyGui->Get_LightsLayout().specularPow = 64;
+		m_MyGui->Get_LightsLayout().La = glm::vec3(0.5, 0.5, 0.5);
+		m_MyGui->Get_LightsLayout().Ld = glm::vec3(1, 1, 0.85);
+		m_MyGui->Get_LightsLayout().Ls = glm::vec3(1, 1, 1);
+		m_MyGui->Get_LightsLayout().Ka = glm::vec3(0.8, 0.8, 0.8);
+		m_MyGui->Get_LightsLayout().Kd = glm::vec3(1, 1, 1);
+		m_MyGui->Get_LightsLayout().Ks = glm::vec3(0.7, 0.6, 0.6);
+
+		m_MyGui->Get_LightsLayout().reset = false;
+	}
+
+	//------------------------------
+	
 	if (m_MyGui->hit)
 	{
 		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, m_Renderer->Get_FrameBuffer()->Get_FrameWidth(), m_Renderer->Get_FrameBuffer()->Get_FrameHeight());
@@ -113,6 +135,7 @@ void Application::RenderUI()
 	m_MyGui->Build_Window();
 	m_MyGui->GameDetails_Window();
 	m_MyGui->GameOptions_Window();
+	m_MyGui->RenderOptions_Window();
 	m_MyGui->ViewPort_Render(m_Renderer->Get_FrameBuffer());
 
 	m_MyGui->Post_Render();

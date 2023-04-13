@@ -17,6 +17,19 @@
 
 #include <cmath>
 
+struct LightProperties
+{
+	glm::vec3 lightDir = glm::vec3(1, -1, 1);
+	int specularPow = 64;
+	glm::vec3 La = glm::vec3(0.5, 0.5, 0.5);
+	glm::vec3 Ld = glm::vec3(1, 1, 0.85);
+	glm::vec3 Ls = glm::vec3(1, 1, 1);
+	glm::vec3 Ka = glm::vec3(0.8, 0.8, 0.8);
+	glm::vec3 Kd = glm::vec3(1, 1, 1);
+	glm::vec3 Ks = glm::vec3(0.7, 0.6, 0.6);
+
+};
+
 class Renderer 
 {
 public:
@@ -42,6 +55,9 @@ public:
 	void Render(Technique tech, Object obj, const std::vector<glm::mat4>& matrices, Transform transform = {});
 	void Render_Ground(const std::vector<glm::mat4>& matrices, const std::vector<GLfloat>& numbers);
 	void Render_SkyBox();
+
+	void Set_Light_Properties(glm::vec3 dir, int spec, glm::vec3 la, glm::vec3 ld, glm::vec3 ls, glm::vec3 ka, glm::vec3 kd, glm::vec3 ks);
+	void Reset_Light_Properties();
 
 protected:
 	void Init_Programs();
@@ -97,4 +113,5 @@ private:
 	Tree* r_Tree = nullptr;
 	WindTurbine* r_Turbine = nullptr;
 	WindTurbinePropeller* r_TurbinePropeller = nullptr;
+	LightProperties r_LightProperties;
 };

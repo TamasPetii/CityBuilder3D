@@ -473,6 +473,72 @@ void MyGui::GameOptions_Window()
     ImGui::End();
 }
 
+void MyGui::RenderOptions_Window()
+{
+    ImGui::Begin("Render options");
+
+    ImGui::SeparatorText("Light properties");
+
+    ImGui::Text("Direction: ");
+    ImGui::SameLine();
+
+    if (ImGui::SliderFloat3("##light_direction", &m_LightsLayout.lightDir.x, -1, 1, "%.3f", 0))
+        m_LightsLayout.effect = true;
+
+    ImGui::Text("Shininess: ");
+    ImGui::SameLine();
+
+    //if (ImGui::SliderInt("##shininess", &m_LightsLayout.specularPow, 0, 100, "%d", 0))
+    //    m_LightsLayout.effect = true;
+
+    if (ImGui::InputInt("##shininess", &m_LightsLayout.specularPow, 1, 100, 0))
+        m_LightsLayout.effect = true;
+
+    ImGui::Text("La: ");
+    ImGui::SameLine();
+
+    if (ImGui::SliderFloat3("##la", &m_LightsLayout.La.x, 0, 1, "%.3f", 0))
+        m_LightsLayout.effect = true;
+
+    ImGui::Text("Ld: ");
+    ImGui::SameLine();
+
+    if (ImGui::SliderFloat3("##ld", &m_LightsLayout.Ld.x, 0, 1, "%.3f", 0))
+        m_LightsLayout.effect = true;
+
+    ImGui::Text("Ls: ");
+    ImGui::SameLine();
+
+    if (ImGui::SliderFloat3("##ls", &m_LightsLayout.Ls.x, 0, 1, "%.3f", 0))
+        m_LightsLayout.effect = true;
+
+    ImGui::Text("Ka: ");
+    ImGui::SameLine();
+
+    if (ImGui::SliderFloat3("##ka", &m_LightsLayout.Ka.x, 0, 1, "%.3f", 0))
+        m_LightsLayout.effect = true;
+
+    ImGui::Text("Kd: ");
+    ImGui::SameLine();
+
+    if (ImGui::SliderFloat3("##kd", &m_LightsLayout.Kd.x, 0, 1, "%.3f", 0))
+        m_LightsLayout.effect = true;
+
+    ImGui::Text("Ks: ");
+    ImGui::SameLine();
+
+    if (ImGui::SliderFloat3("##ks", &m_LightsLayout.Ks.x, 0, 1, "%.3f", 0))
+        m_LightsLayout.effect = true;
+
+    if (ImGui::Button("Reset"))
+    {
+        m_LightsLayout.reset = true;
+    }
+
+
+    ImGui::End();
+}
+
 //---------------------------------------------------------|EVENTS|---------------------------------------------------------//
 //---------------------------------------------------------|EVENTS|---------------------------------------------------------//
 //---------------------------------------------------------|EVENTS|---------------------------------------------------------//

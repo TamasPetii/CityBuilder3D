@@ -15,6 +15,15 @@ uniform int  u_UseTexture = 0;
 
 uniform vec3 u_eye;
 
+uniform vec3 u_LightDir;
+uniform int u_Specular_Pow;
+uniform vec3 u_La;
+uniform vec3 u_Ld;
+uniform vec3 u_Ls;
+uniform vec3 u_Ka;
+uniform vec3 u_Kd;
+uniform vec3 u_Ks;
+
 vec3 CalcDirLight(vec3 light_dir, int specular_pow, vec3 La, vec3 Ld, vec3 Ls, vec3 Ka, vec3 Kd, vec3 Ks)
 {
 	vec3 ambient = La * Ka;
@@ -26,7 +35,7 @@ vec3 CalcDirLight(vec3 light_dir, int specular_pow, vec3 La, vec3 Ld, vec3 Ls, v
 
 	vec3 to_eye = normalize(u_eye - frag_position);
 	vec3 lr = normalize(reflect(light_dir,frag_normal));
-	vec3 specular = Ls * Ks * clamp(pow(dot(lr,to_eye),specular_pow),0,1);
+	vec3 specular = Ls * Ks * pow(clamp(dot(lr,to_eye),0,1),specular_pow);
 
     return (ambient + diffuse + specular);
 }
@@ -34,7 +43,7 @@ vec3 CalcDirLight(vec3 light_dir, int specular_pow, vec3 La, vec3 Ld, vec3 Ls, v
 void main()
 {	
 	vec3 light = vec3(0, 0, 0);
-	light += CalcDirLight(vec3(1, -1, 1), 8, vec3(0.5, 0.5, 0.5), vec3(1, 1, 0.85), vec3(1, 1, 1), vec3(0.8,0.8,0.8), vec3(1,1,1), vec3(0.7,0.6,0.6));
+	light += CalcDirLight(u_LightDir, u_Specular_Pow, u_La, u_Ld, u_Ls, u_Ka, u_Kd, u_Ks);
 
 	if(u_UseTexture == 1)
 	{

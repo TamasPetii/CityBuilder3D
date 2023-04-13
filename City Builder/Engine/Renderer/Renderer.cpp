@@ -414,6 +414,15 @@ void Renderer::Render_Instanced(Shape* shape, const std::vector<glm::mat4>& matr
 	m_InstanceProgram->SetUniform("u_UseVertexTexID", (float)(shape == r_Ground));
 	m_InstanceProgram->SetUniform("u_eye", m_Camera->Get_CameraEye());
 
+	m_InstanceProgram->SetUniform("u_LightDir", r_LightProperties.lightDir);
+	m_InstanceProgram->SetUniform("u_Specular_Pow", r_LightProperties.specularPow);
+	m_InstanceProgram->SetUniform("u_La", r_LightProperties.La);
+	m_InstanceProgram->SetUniform("u_Ld", r_LightProperties.Ld);
+	m_InstanceProgram->SetUniform("u_Ls", r_LightProperties.Ls);
+	m_InstanceProgram->SetUniform("u_Ka", r_LightProperties.Ka);
+	m_InstanceProgram->SetUniform("u_Kd", r_LightProperties.Kd);
+	m_InstanceProgram->SetUniform("u_Ks", r_LightProperties.Ks);
+
 	shape->Bind();
 	if (changed) shape->AttachMatricesSubData(matrices);
 
@@ -473,4 +482,28 @@ void Renderer::Render_SkyBox()
 	r_Skybox->Render();
 
 	m_SkyBoxProgram->UnBind();
+}
+
+void Renderer::Set_Light_Properties(glm::vec3 dir, int spec, glm::vec3 la, glm::vec3 ld, glm::vec3 ls, glm::vec3 ka, glm::vec3 kd, glm::vec3 ks)
+{
+	r_LightProperties.lightDir = dir;
+	r_LightProperties.specularPow = spec;
+	r_LightProperties.La = la;
+	r_LightProperties.Ld = ld;
+	r_LightProperties.Ls = ls;
+	r_LightProperties.Ka = ka;
+	r_LightProperties.Kd = kd;
+	r_LightProperties.Ks = ks;
+}
+
+void Renderer::Reset_Light_Properties()
+{
+	r_LightProperties.lightDir = glm::vec3(1, -1, 1);
+	r_LightProperties.specularPow = 64;
+	r_LightProperties.La = glm::vec3(0.5, 0.5, 0.5);
+	r_LightProperties.Ld = glm::vec3(1, 1, 0.85);
+	r_LightProperties.Ls = glm::vec3(1, 1, 1);
+	r_LightProperties.Ka = glm::vec3(0.8, 0.8, 0.8);
+	r_LightProperties.Kd = glm::vec3(1, 1, 1);
+	r_LightProperties.Ks = glm::vec3(0.7, 0.6, 0.6);
 }
