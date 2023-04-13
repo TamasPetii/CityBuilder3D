@@ -6,7 +6,7 @@
 class Stadium : public Building
 {
 public:
-    Stadium(float cost) : Building(cost) {};
+    Stadium(FieldType type, int x, int y, float cost) : Building(type, x, y, cost) {};
     ~Stadium() {}
 
     bool inline IsStadium() const override { return true; }

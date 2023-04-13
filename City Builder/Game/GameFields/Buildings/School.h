@@ -6,7 +6,7 @@
 class School : public Building
 {
 protected:
-    School(float cost) : Building(cost) {};
+    School(FieldType type, int x, int y, float cost) : Building(type, x, y, cost) {};
 
 public:
     ~School() {}
@@ -20,7 +20,7 @@ public:
 class HighSchool : public School
 {
 public:
-    HighSchool(float cost) : School(cost) {};
+    HighSchool(FieldType type, int x, int y, float cost) : School(type, x, y, cost) {};
     ~HighSchool() {}
 
     bool inline IsHighSchool() const override { return true; };
@@ -29,7 +29,7 @@ public:
 class University : public School
 {
 public:
-    University(float cost) : School(cost) {};
+    University(FieldType type, int x, int y, float cost) : School(type, x, y, cost) {};
     ~University() {}
 
     bool inline IsUniversity() const override { return true; };

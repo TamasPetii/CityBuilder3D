@@ -6,7 +6,7 @@
 class ResidentalArea : public Zone
 {
 public:
-	ResidentalArea(Level level, float cost) : Zone(level, cost) {}
+	ResidentalArea(Level level, FieldType type, int x, int y, float cost) : Zone(level, type, x, y, cost) {}
 	~ResidentalArea() {}
 
 	bool inline IsResidentalArea() const override { return true; }

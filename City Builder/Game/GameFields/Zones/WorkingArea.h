@@ -6,7 +6,7 @@
 class WorkingArea : public Zone
 {
 protected:
-	WorkingArea(Level level, float cost) : Zone(level, cost) {}
+	WorkingArea(Level level, FieldType type, int x, int y, float cost) : Zone(level, type, x, y, cost) {}
 public:
 	~WorkingArea() {}
 
@@ -18,7 +18,7 @@ public:
 class IndustrialArea : public WorkingArea 
 {
 public:
-	IndustrialArea(Level level, float cost) : WorkingArea(level, cost) {}
+	IndustrialArea(Level level, FieldType type, int x, int y, float cost) : WorkingArea(level, type, x, y, cost) {}
 	~IndustrialArea() {}
 
 	bool inline IsIndustrialArea() const override{ return true; }
@@ -40,7 +40,7 @@ private:
 class ServiceArea : public WorkingArea
 {
 public:
-	ServiceArea(Level level, float cost) : WorkingArea(level, cost) {}
+	ServiceArea(Level level, FieldType type, int x, int y, float cost) : WorkingArea(level, type, x, y, cost) {}
 	~ServiceArea() {}
 
 	bool inline IsServiceArea() const override { return true; }

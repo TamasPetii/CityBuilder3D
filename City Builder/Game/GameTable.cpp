@@ -13,11 +13,11 @@ GameTable::GameTable(int TableSize) : m_TableSize(TableSize)
 
 		for (int j = 0; j < m_TableSize; j++)
 		{
-			m_Table[i][j] = GameField::CreateField(EMPTY);
+			m_Table[i][j] = GameField::CreateField(EMPTY, i, j);
 		}
 	}
 
-	m_Table[0][0] = GameField::CreateField(RESIDENTIAL_LVL3);
+	m_Table[0][0] = GameField::CreateField(RESIDENTIAL_LVL3, 0, 0);
 }
 
 void GameTable::Set_TableValue(int x, int y, FieldType type) {
@@ -29,7 +29,7 @@ void GameTable::Set_TableValue(int x, int y, FieldType type) {
 		delete(m_Table[x][y]);
 		isDelete = true;
 	}
-	m_Table[x][y] = GameField::CreateField(type);
+	m_Table[x][y] = GameField::CreateField(type, x, y);
 	GameField* newField = m_Table[x][y];
 
 	if (isRoad && isDelete) RebuildRoadNetwork();
