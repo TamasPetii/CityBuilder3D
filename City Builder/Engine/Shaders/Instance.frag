@@ -34,7 +34,7 @@ vec3 CalcDirLight(vec3 light_dir, int specular_pow, vec3 La, vec3 Ld, vec3 Ls, v
 	vec3 diffuse = Ld * Kd * clamp(dot(to_light,normal),0,1);
 
 	vec3 to_eye = normalize(u_eye - frag_position);
-	vec3 lr = normalize(reflect(light_dir,frag_normal));
+	vec3 lr = normalize(reflect(light_dir,normal));
 	vec3 specular = Ls * Ks * pow(clamp(dot(lr,to_eye),0,1),specular_pow);
 
     return (ambient + diffuse + specular);
