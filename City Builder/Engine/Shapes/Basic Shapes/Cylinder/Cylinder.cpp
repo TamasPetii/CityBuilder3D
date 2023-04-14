@@ -1,6 +1,6 @@
 #include "Cylinder.h"
 
-void Cylinder::CreateBuffers()
+void Cylinder::CreateBuffers(GLuint buffer_size)
 {
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
@@ -10,7 +10,7 @@ void Cylinder::CreateBuffers()
 	Shape::ConcatenateIndices(indices, Cylinder::GenerateIndices(layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cylinder::GenerateVertices(layout));
 
-	AttachToGPU(vertices, indices);
+	AttachToGPU(vertices, indices, buffer_size);
 }
 
 glm::vec3 Cylinder::GenerateVertexPositon(const glm::vec3 origo, GLfloat radius, GLfloat u)

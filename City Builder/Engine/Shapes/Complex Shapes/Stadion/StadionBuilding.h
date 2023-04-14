@@ -5,5 +5,5 @@ class StadionBuilding : public Shape
 {
 public:
 	StadionBuilding();
-	void CreateBuffers() override;
+	void CreateBuffers(GLuint buffer_size) override;
 };

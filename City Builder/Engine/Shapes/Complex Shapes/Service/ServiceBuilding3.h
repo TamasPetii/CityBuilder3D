@@ -5,6 +5,6 @@ class ServiceBuilding3 : public Shape
 {
 public:
 	ServiceBuilding3();
-	void CreateBuffers() override;
+	void CreateBuffers(GLuint buffer_size) override;
 };
 

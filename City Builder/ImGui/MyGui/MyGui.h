@@ -45,6 +45,7 @@ public:
 	inline LightsLayout& Get_LightsLayout() { return m_LightsLayout; }
 	inline FieldDetailsLayout& Get_FieldDetailsLayout() { return m_FieldDetailsLayout; }
 	inline LogLayout& Get_LogLayout() { return m_LogLayout; }
+	inline CatastropheLayout& Get_CatastropheLayout() { return m_MeteorLayout; }
 
 	bool BuildHover = false;
 	int r = 0;
@@ -77,8 +78,8 @@ private:
 	TaxLayout m_TaxLayout;
 	FieldDetailsLayout m_FieldDetailsLayout;
 	LogLayout m_LogLayout;
-
 	LightsLayout m_LightsLayout;
+	CatastropheLayout m_MeteorLayout;
 
 	imgui_addons::ImGuiFileBrowser file_dialog;
 };

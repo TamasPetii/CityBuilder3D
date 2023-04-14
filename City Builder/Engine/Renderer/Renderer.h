@@ -14,6 +14,7 @@
 #include "../Shapes/Complex Shapes/ComplexShape.h"
 #include "SkyBox/Skybox.h"
 #include "RendererLayout.h"
+#include "Idk/Meteor.h"
 
 #include <cmath>
 
@@ -59,6 +60,8 @@ public:
 	void Set_Light_Properties(glm::vec3 dir, int spec, glm::vec3 la, glm::vec3 ld, glm::vec3 ls, glm::vec3 ka, glm::vec3 kd, glm::vec3 ks);
 	void Reset_Light_Properties();
 
+	void Render_Meteors();
+
 protected:
 	void Init_Programs();
 	void Delete_Programs();
@@ -91,6 +94,7 @@ private:
 	Pyramid* r_Pyramid = nullptr;
 	Cylinder* r_Cylinder = nullptr;
 
+	Shape_Meteor* r_Meteor = nullptr;
 	Skybox* r_Skybox = nullptr;
 	Ground* r_Ground = nullptr;
 	ResidenceBuilding1* r_Residence1 = nullptr;

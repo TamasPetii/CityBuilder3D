@@ -36,6 +36,8 @@ void Application::Update()
 	if (m_Timer->Tick())
 	{
 		m_City->Simulate();
+		
+		//Meteor::Add(rand() % m_City->Get_GameTableSize(), rand() % m_City->Get_GameTableSize());
 	}
 
 	if (m_FrameCounter->Tick())
@@ -48,6 +50,7 @@ void Application::Update()
 	{
 		m_City = new City(m_MyGui->Get_NewGameLayout().size, 10000);
 		RoadNetwork::ResetNetworks();
+		Meteor::FullClear();
 		Citizen::Log().str("");
 		Citizen::Log().clear();
 		Citizen::Log_Changed() = true;
@@ -153,6 +156,43 @@ void Application::Update()
 		m_MyGui->Get_LogLayout().log = Citizen::Get_Log();
 		Citizen::Log_Changed() = false;
 	}
+
+	if (Meteor::IsActive())
+	{
+		if (Meteor::Init)
+		{
+			Meteor::Init = false;
+			Meteor::AdjustTime();
+		}
+
+		Meteor::Update();
+
+		std::vector<std::pair<int, int>> fields = Meteor::Get_Fields();
+
+		for (int i = 0; i < fields.size(); i++)
+		{
+			if (fields[i].second != 49)
+			{
+				m_City->Set_GameTableValue(fields[i].first, fields[i].second, CRATER);
+			}
+			changed = true;
+		}
+
+		Meteor::Clear();
+	}
+	else 
+	{
+		Meteor::Init = true;
+	}
+
+	if (m_MyGui->Get_CatastropheLayout().effect)
+	{
+		m_MyGui->Get_CatastropheLayout().effect = false;
+		for (int i = 0; i < m_MyGui->Get_CatastropheLayout().count; i++)
+		{
+			Meteor::Add(rand() % m_City->Get_GameTableSize(), rand() % m_City->Get_GameTableSize());
+		}
+	}
 }
 
 void Application::RenderUI()
@@ -186,11 +226,15 @@ void Application::Render()
 				GameField* field = m_City->Get_GameField(i, j);
 
 				if (!field->IsRoad())
-					transforms_GROUND.push_back(Shape::MultiplyTransformMatrices(transform));
+					transforms_GROUND.push_back(Transform::MultiplyTransformMatrices(transform));
 
 				if (field->IsEmpty())
 				{
 					numbers_GROUND.push_back(0);
+				}
+				else if (field->IsCrater())
+				{
+					numbers_GROUND.push_back(49);
 				}
 				else if (field->IsRoad())
 				{
@@ -264,11 +308,11 @@ void Application::Render()
 						numbers_GROUND.push_back(7);
 					}
 
-					transforms_GROUND.push_back(Shape::MultiplyTransformMatrices(transform));
+					transforms_GROUND.push_back(Transform::MultiplyTransformMatrices(transform));
 				}
 				else if (field->IsForest())
 				{
-					transforms_FOREST.push_back(Shape::MultiplyTransformMatrices(transform));
+					transforms_FOREST.push_back(Transform::MultiplyTransformMatrices(transform));
 					numbers_GROUND.push_back(1);
 				}
 				else if (field->IsZone())
@@ -278,9 +322,9 @@ void Application::Render()
 					{
 						switch(zone->Get_Level())
 						{
-						case LEVEL_1: transforms_RESIDENCE1.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
-						case LEVEL_2: transforms_RESIDENCE2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
-						case LEVEL_3: transforms_RESIDENCE3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
+						case LEVEL_1: transforms_RESIDENCE1.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
+						case LEVEL_2: transforms_RESIDENCE2.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
+						case LEVEL_3: transforms_RESIDENCE3.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
 						}
 					}
 					else if (zone->IsWorkingArea()) 
@@ -290,18 +334,18 @@ void Application::Render()
 						{
 							switch (area->Get_Level())
 							{
-							case LEVEL_1: transforms_INDUSTRY1.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
-							case LEVEL_2: transforms_INDUSTRY2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
-							case LEVEL_3: transforms_INDUSTRY3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
+							case LEVEL_1: transforms_INDUSTRY1.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
+							case LEVEL_2: transforms_INDUSTRY2.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
+							case LEVEL_3: transforms_INDUSTRY3.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
 							}
 						}
 						else if (area->IsServiceArea())
 						{
 							switch (area->Get_Level())
 							{
-							case LEVEL_1: transforms_SERVICE1.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
-							case LEVEL_2: transforms_SERVICE2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
-							case LEVEL_3: transforms_SERVICE3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
+							case LEVEL_1: transforms_SERVICE1.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
+							case LEVEL_2: transforms_SERVICE2.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
+							case LEVEL_3: transforms_SERVICE3.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
 							}
 						}
 					}
@@ -311,17 +355,17 @@ void Application::Render()
 					Building* building = dynamic_cast<Building*>(field);
 					if (building->IsPoliceStation()) 
 					{
-						transforms_POLICESTATION.push_back(Shape::MultiplyTransformMatrices(transform));
+						transforms_POLICESTATION.push_back(Transform::MultiplyTransformMatrices(transform));
 						numbers_GROUND.push_back(15);
 					}
 					else if (building->IsFireStation()) 
 					{
-						transforms_FIRESTATION.push_back(Shape::MultiplyTransformMatrices(transform));
+						transforms_FIRESTATION.push_back(Transform::MultiplyTransformMatrices(transform));
 						numbers_GROUND.push_back(15);
 					}
 					else if (building->IsStadium())
 					{
-						transforms_STADION.push_back(Shape::MultiplyTransformMatrices(transform));
+						transforms_STADION.push_back(Transform::MultiplyTransformMatrices(transform));
 						numbers_GROUND.push_back(11);
 					}
 					else if (building->IsSchool()) 
@@ -329,24 +373,24 @@ void Application::Render()
 						School* school = dynamic_cast<School*>(building);
 						if (school->IsHighSchool()) 
 						{
-							transforms_SCHOOL1.push_back(Shape::MultiplyTransformMatrices(transform));
+							transforms_SCHOOL1.push_back(Transform::MultiplyTransformMatrices(transform));
 							numbers_GROUND.push_back(14);
 						}
 						else if (school->IsUniversity()) 
 						{
-							transforms_SCHOOL2.push_back(Shape::MultiplyTransformMatrices(transform));
+							transforms_SCHOOL2.push_back(Transform::MultiplyTransformMatrices(transform));
 							numbers_GROUND.push_back(14);
 						}
 					}
 					else if (building->IsPowerStation()) 
 					{
 						//transform.rotate = glm::rotate<float>(glfwGetTime() * M_PI, glm::vec3(0, 1, 0));
-						transforms_POWERSTATION.push_back(Shape::MultiplyTransformMatrices(transform));
+						transforms_POWERSTATION.push_back(Transform::MultiplyTransformMatrices(transform));
 						numbers_GROUND.push_back(2);
 					}
 					else if (building->IsPowerWire())
 					{
-						transforms_POWERWIRE.push_back(Shape::MultiplyTransformMatrices(transform));
+						transforms_POWERWIRE.push_back(Transform::MultiplyTransformMatrices(transform));
 						numbers_GROUND.push_back(63);
 					}
 				}
@@ -384,6 +428,9 @@ void Application::Render()
 
 		}
 	}
+
+
+	m_Renderer->Render(INSTANCED, R_METEOR, Meteor::Get_Transforms());
 
 	m_Renderer->Render_Ground(transforms_GROUND, numbers_GROUND);
 	m_Renderer->Render(INSTANCED, R_FOREST,                transforms_FOREST);

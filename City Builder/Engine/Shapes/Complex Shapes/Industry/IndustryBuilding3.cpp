@@ -10,7 +10,7 @@ IndustryBuilding3::IndustryBuilding3()
 	shape_transform.push_back(transform);
 }
 
-void IndustryBuilding3::CreateBuffers()
+void IndustryBuilding3::CreateBuffers(GLuint buffer_size)
 {
 
 	std::vector<Vertex> vertices;
@@ -93,6 +93,6 @@ void IndustryBuilding3::CreateBuffers()
 	Shape::ConcatenateIndices(indices, Cylinder::GenerateIndices(cylinder_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cylinder::GenerateVertices(cylinder_layout));
 
-	AttachToGPU(vertices, indices);
+	AttachToGPU(vertices, indices, buffer_size);
 
 }

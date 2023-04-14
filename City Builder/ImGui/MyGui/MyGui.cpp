@@ -470,6 +470,10 @@ void MyGui::GameOptions_Window()
 
     ImGui::PopStyleColor(5);
 
+    ImGui::SeparatorText("Meteor");
+    ImGui::SliderInt("Count: ", &m_MeteorLayout.count, 1, 2500);
+    m_MeteorLayout.effect = ImGui::Button("Start Meteors");
+
     ImGui::End();
 }
 

@@ -16,9 +16,8 @@ class Shape
 public:
 	static void ConcatenateVertices(std::vector<Vertex>& vertices0, std::vector<Vertex> vertices1);
 	static void ConcatenateIndices(std::vector<GLuint>& indices0, std::vector<GLuint> indices1);
-	static glm::mat4 MultiplyTransformMatrices(Transform transform) { return transform.translate * transform.rotate * transform.scale; }
 
-	virtual void CreateBuffers() = 0;
+	virtual void CreateBuffers(GLuint buffer_size) = 0;
 
 	void Bind() const;
 	void UnBind() const;
@@ -37,7 +36,7 @@ public:
 	inline GLuint Get_InstanceCount() const { return m_InstanceCount; }
 	inline std::vector<Transform> Get_Transforms() { return shape_transform; }
 protected:
-	void AttachToGPU(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices);
+	void AttachToGPU(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, GLuint buffer_size);
 
 	VertexArrayObject     m_VAO;
 	VertexBufferObject    m_VBO;

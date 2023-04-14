@@ -82,3 +82,9 @@ struct LogLayout
 {
 	std::string log;
 };
+
+struct CatastropheLayout
+{
+	bool effect;
+	int count;
+};

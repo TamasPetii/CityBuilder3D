@@ -6,7 +6,7 @@
 class Cylinder : public Shape
 {
 public:
-	void CreateBuffers() override;
+	void CreateBuffers(GLuint buffer_size) override;
 	static std::vector<Vertex> GenerateVertices(const CylinderLayout& layout);
 	static std::vector<GLuint> GenerateIndices(const CylinderLayout& layout, GLuint start);
 private:

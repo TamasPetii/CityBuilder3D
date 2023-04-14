@@ -5,5 +5,5 @@ class FireBuilding : public Shape
 {
 public:
 	FireBuilding();
-	void CreateBuffers() override;
+	void CreateBuffers(GLuint buffer_size) override;
 };

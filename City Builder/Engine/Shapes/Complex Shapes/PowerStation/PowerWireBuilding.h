@@ -5,5 +5,5 @@ class PowerWireBuilding : public Shape
 {
 public:
 	PowerWireBuilding();
-	void CreateBuffers() override;
+	void CreateBuffers(GLuint buffer_size) override;
 };

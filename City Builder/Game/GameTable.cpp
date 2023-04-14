@@ -18,11 +18,12 @@ GameTable::GameTable(int TableSize) : m_TableSize(TableSize)
 	}
 }
 
-void GameTable::Set_TableValue(int x, int y, FieldType type) {
+void GameTable::Set_TableValue(int x, int y, FieldType type)
+{
 	bool isRoad = dynamic_cast<Road*>(m_Table[x][y]);
 	bool isDelete = false;
 	if (!m_Table[x][y]->IsEmpty()) {
-		if (type != EMPTY) return;
+		if (!(type == EMPTY || type == CRATER)) return;
 		if (!isRoad)
 		{
 			if (m_Table[x][y]->IsZone())
@@ -36,6 +37,7 @@ void GameTable::Set_TableValue(int x, int y, FieldType type) {
 		delete(m_Table[x][y]);
 		isDelete = true;
 	}
+
 	m_Table[x][y] = GameField::CreateField(type, x, y);
 	GameField* newField = m_Table[x][y];
 
