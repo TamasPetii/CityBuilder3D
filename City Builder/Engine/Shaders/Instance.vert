@@ -21,10 +21,10 @@ uniform mat4 u_M = mat4(1);
 
 void main()
 {
-	vec4 position = u_VP * vert_transforms * u_M *  vec4(vert_position, 1);
+	vec4 position = vert_transforms * u_M *  vec4(vert_position, 1);
 	vec4 normal = inverse(transpose(vert_transforms * u_M)) * vec4(vert_normal, 1);
 
-	gl_Position = position;
+	gl_Position = u_VP * position;
 	frag_position = position.xyz;
 	frag_normal = normal.xyz;
 	frag_texture = vert_texture;
