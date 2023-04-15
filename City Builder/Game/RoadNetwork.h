@@ -21,6 +21,8 @@ public:
 	static double GetSatisfaction(Zone* field);
 	static Zone* FindEmptyResidentialArea();
 	static std::string NetworksToString();
+	static void AddToNetworkSatisfaction(GameField*, int);
+	static void SetZoneSatisfaction(GameField*, int);
 
 private:
 	class Network {

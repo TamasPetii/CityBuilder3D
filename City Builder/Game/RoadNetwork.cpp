@@ -14,7 +14,7 @@ int RoadNetwork::GetNetworkId(GameField* field) {
 
 int RoadNetwork::CreateNetwork() {
 	int i = 1;
-	while (m_id_set.find(i) != m_id_set.end()) i++; //keresnk egy 0-nl nagyobb id-t, ami mg nem foglalt
+	while (m_id_set.find(i) != m_id_set.end()) i++; //keresünk egy 0-nál nagyobb id-t, ami még nem foglalt
 	m_id_set.emplace(i);
 	m_networks.emplace_back(i);
 	return i;
@@ -35,8 +35,13 @@ void RoadNetwork::RemoveFromNetwork(GameField* field) {
 			it->zoneSet.erase(field);
 		if (field->IsRoad() && it->roadSet.find(field) != it->roadSet.end())
 			it->roadSet.erase(field);
-		if (field->IsBuilding() && it->buildingSet.find(field) != it->buildingSet.end())
+		if (field->IsBuilding() && it->buildingSet.find(field) != it->buildingSet.end()) {
 			it->buildingSet.erase(field);
+			for (auto& zone : it->zoneSet) {
+				RoadNetwork::SetZoneSatisfaction(zone, it->id);
+			}
+		}
+			
 
 		if (it->zoneSet.size() == 0 && it->roadSet.size() == 0 && it->buildingSet.size() == 0) {
 			m_id_set.erase(it->id);
@@ -66,8 +71,15 @@ void RoadNetwork::MergeNetworks(int id1, int id2) { //id: a network id-je. vec_i
 		std::make_move_iterator(m_networks[vec_ind2].buildingSet.begin()),
 		std::make_move_iterator(m_networks[vec_ind2].buildingSet.end())
 	);
+	int newNetworkId = m_networks[vec_ind1].id;
 	m_networks.erase(m_networks.begin() + vec_ind2);
 	m_id_set.erase(id2);
+	for (auto& network : m_networks) {
+		if (network.id != newNetworkId) continue;
+		for (auto& zone : network.zoneSet) {
+			RoadNetwork::SetZoneSatisfaction(zone, newNetworkId);
+		}
+	} 
 }
 
 bool RoadNetwork::IsConnected(GameField* field1, GameField* field2) {
@@ -84,8 +96,8 @@ bool RoadNetwork::IsConnected(GameField* field1, GameField* field2) {
 			if (network.buildingSet.find(field1) == network.buildingSet.end()) continue;
 			if (network.zoneSet.find(field2) == network.zoneSet.end()) continue;
 		}
-		//Tbbi esetre nem ltom hogy mirt lenne szksg(pl t-zna), 
-		//de knny hozzadni
+		//Többi esetre nem látom hogy miért lenne szükség(pl út-zóna), 
+		//de könnyû hozzáadni
 		return true;
 	}
 
@@ -95,18 +107,18 @@ bool RoadNetwork::IsConnected(GameField* field1, GameField* field2) {
 Zone* RoadNetwork::FindEmptyWorkingArea(Zone* field) {
 	if (field == nullptr) return nullptr;
 
-	for (auto& network : m_networks) {
-		if (network.zoneSet.find(field) == network.zoneSet.end()) continue;
+for (auto& network : m_networks) {
+	if (network.zoneSet.find(field) == network.zoneSet.end()) continue;
 
-		for (auto& otherField : network.zoneSet) {
-			if (WorkingArea* workingArea = dynamic_cast<WorkingArea*>(otherField)) {
-				if (workingArea->Get_ZoneDetails().contain < workingArea->Get_ZoneDetails().capacity)
-					return workingArea;
-			}
-
+	for (auto& otherField : network.zoneSet) {
+		if (WorkingArea* workingArea = dynamic_cast<WorkingArea*>(otherField)) {
+			if (workingArea->Get_ZoneDetails().contain < workingArea->Get_ZoneDetails().capacity)
+				return workingArea;
 		}
+
 	}
-	return nullptr;
+}
+return nullptr;
 }
 
 std::string RoadNetwork::NetworksToString() {
@@ -130,51 +142,6 @@ void RoadNetwork::ResetNetworks() {
 	m_networks.clear();
 }
 
-double RoadNetwork::GetSatisfaction(Zone* field) {
-	bool stadiumBonus = false;
-	bool policeBonus = false;
-	int closestIndustrial = 10;
-	double satisfaction = 0;
-
-	for (auto& network : m_networks) {
-		//Rendõrség, stadion vizsgálata
-		if (network.zoneSet.find(field) == network.zoneSet.end()) continue;
-		for (auto& b : network.buildingSet) {
-			Building* building = dynamic_cast<Building*>(b);
-			if (!stadiumBonus && building->IsStadium()) {
-				if (distance(field, building) < 10) {
-					satisfaction += 0.3;
-					stadiumBonus = true;
-				}
-			}
-			else if (!policeBonus && building->IsPoliceStation()) {
-				if (distance(field, building) < 10) {
-					satisfaction += 0.7;
-					policeBonus = true;
-				}
-			}
-		}
-
-		//Közelben lévõ ipari zóna vizsgálata
-		for (auto& z : network.zoneSet) {
-			Zone* zone = dynamic_cast<Zone*>(z);
-			if (zone->IsWorkingArea()) {
-				WorkingArea* workingZone = dynamic_cast<WorkingArea*>(zone);
-				if (workingZone->IsIndustrialArea()) {
-					double d = distance(field, workingZone);
-					if (d < closestIndustrial) closestIndustrial = (int)d;
-				}
-			}
-		}
-		
-		if (closestIndustrial < 10) {
-			satisfaction -= (10 - closestIndustrial) / 10; //0.9 - 0.1-et von le
-		}
-	}
-
-	return satisfaction < 0 ? 0 : satisfaction;
-}
-
 Zone* RoadNetwork::FindEmptyResidentialArea() {
 	for (auto& network : m_networks) {
 		for (auto& z : network.zoneSet) {
@@ -188,6 +155,63 @@ Zone* RoadNetwork::FindEmptyResidentialArea() {
 
 double RoadNetwork::distance(GameField* g1, GameField* g2) {
 	return sqrt(pow(g1->Get_X() - g2->Get_X(), 2) + pow(g1->Get_Y() - g2->Get_Y(), 2));
+}
+
+void RoadNetwork::AddToNetworkSatisfaction(GameField* field, int id) {
+	for (auto& network : m_networks) {
+		if (network.id != id) continue;
+		for (auto& z : network.zoneSet) {
+			if (Building* building = dynamic_cast<Building*>(field)) {
+				Zone* zone = dynamic_cast<Zone*>(z);
+				if (distance(building, zone) < 10) {
+					if (building->IsPoliceStation()) {
+						if (zone->Get_ZoneDetails().policeBonus) continue;
+						zone->Set_PoliceBonus(true);
+					}
+					else if (building->IsStadium()) {
+						if (zone->Get_ZoneDetails().stadiumBonus) continue;
+						zone->Set_StadiumBonus(true);
+					}
+				}
+			}
+		}
+	}
+}
+
+void RoadNetwork::SetZoneSatisfaction(GameField* field, int id = -1) {//ha az id -1 minden networkot megnézünk
+	bool onePolice = false;
+	bool oneStadium = false;
+	Zone* zone = dynamic_cast<Zone*>(field);
+	for (auto& network : m_networks) {
+		if (id != -1) {
+			if (network.id != id || network.zoneSet.find(zone) == network.zoneSet.end()) continue;
+		}
+		for (auto& b : network.buildingSet) {
+			Building* building = dynamic_cast<Building*>(b);
+			if (distance(building, zone) < 10) {
+				if (building->IsPoliceStation()) {
+					onePolice = true;
+					if (zone->Get_ZoneDetails().policeBonus) continue;
+					zone->Set_PoliceBonus(true);
+				}
+				else if (building->IsStadium()) {
+					oneStadium = true;
+					if (zone->Get_ZoneDetails().stadiumBonus) continue;
+					zone->Set_StadiumBonus(true);
+				}
+			}
+		}
+	}
+	if (!onePolice) {
+		if (zone->Get_ZoneDetails().policeBonus) {
+			zone->Set_PoliceBonus(false);
+		}
+	}
+	if (!oneStadium) {
+		if (zone->Get_ZoneDetails().stadiumBonus) {
+			zone->Set_StadiumBonus(false);
+		}
+	}
 }
 
 

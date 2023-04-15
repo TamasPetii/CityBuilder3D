@@ -27,5 +27,13 @@ private:
 	int m_TableSize;
 	void SetRoadNetwork(int x, int y);
 	void SetBuildingNetwork(int x, int y);
+	void SetZoneNetwork(int x, int y);
 	void RebuildRoadNetwork();
+
+	template<typename Function>
+	void LoopThroughNeighbors(int, int, Function);
+	void FindNearestIndustrial(GameField*);
+	void CheckNewIndustrial(GameField*);
+	void DeleteField(int, int);
+	static float distance(GameField*, GameField*);
 };

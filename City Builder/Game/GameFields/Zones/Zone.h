@@ -16,7 +16,10 @@ struct ZoneDetails {
 public:
 	int capacity;
 	int contain;
+	float industrialPenalty;
 	Level level;
+	bool stadiumBonus;
+	bool policeBonus;
 };
 
 class Zone : public GameField
@@ -41,8 +44,9 @@ public:
 
 	Level Get_Level() { return m_details.level; }
 	float Get_Satisfaction() const;
-	float Set_Satisfaction(float value);
-	float AddToSatisfaction(float value);
+	void Set_PoliceBonus(bool b) { m_details.policeBonus = b; }
+	void Set_StadiumBonus(bool b) { m_details.stadiumBonus = b; }
+	void Set_IndustrialPenalty(float f) { m_details.industrialPenalty = f; }
 	virtual float GetTaxRate() const = 0;
 
 	inline ZoneDetails Get_ZoneDetails() const { return m_details; }
