@@ -12,7 +12,7 @@ class RoadNetwork
 public:
 	static int GetNetworkId(GameField*);
 	static int CreateNetwork();
-	static void AddToNetwork(GameField*, int);
+	static bool AddToNetwork(GameField*, int);
 	static void RemoveFromNetwork(GameField*);
 	static void MergeNetworks(int, int);
 	static bool IsConnected(GameField*, GameField*);
@@ -22,7 +22,8 @@ public:
 	static Zone* FindEmptyResidentialArea();
 	static std::string NetworksToString();
 	static void AddToNetworkSatisfaction(GameField*, int);
-	static void SetZoneSatisfaction(GameField*, int);
+	static void SetZoneSatisfaction(GameField*);
+	static bool IsConnectedMultiple(GameField*, GameField*);
 
 private:
 	class Network {

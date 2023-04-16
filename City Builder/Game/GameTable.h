@@ -32,8 +32,8 @@ private:
 
 	template<typename Function>
 	void LoopThroughNeighbors(int, int, Function);
-	void FindNearestIndustrial(GameField*);
-	void CheckNewIndustrial(GameField*);
+	void AddIndustrialAreaBonus(GameField*, int);
+	void CheckZoneIndustrialBonus(GameField*);
 	void DeleteField(int, int);
 	static float distance(GameField*, GameField*);
 };

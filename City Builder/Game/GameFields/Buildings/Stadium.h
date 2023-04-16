@@ -10,6 +10,7 @@ public:
     ~Stadium() {}
 
     bool inline IsStadium() const override { return true; }
+    float inline GetBuildingSatisfaction() const override { return 2; }
 };
 
 #endif

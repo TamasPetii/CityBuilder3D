@@ -14,6 +14,7 @@ public:
     bool inline IsSchool() const override { return true; }
     virtual inline bool IsHighSchool() const { return false; }
     virtual inline bool IsUniversity() const { return false; }
+    float inline GetBuildingSatisfaction() const override { return 1; }
 
 };
 

@@ -10,6 +10,7 @@ public:
     ~FireStation() {}
 
     bool inline IsFireStation() const override { return true; }
+    float inline GetBuildingSatisfaction() const override { return 1; }
 };
 
 #endif

@@ -5,9 +5,9 @@ Zone::Zone(Level level, FieldType type, int x, int y, float cost)
 {
 	m_details.level = level;
 	m_details.contain = 0;
-	m_details.stadiumBonus = false;
-	m_details.policeBonus = false;
-	m_details.industrialPenalty = 0;
+	m_details.satisfaction = 0;
+	m_details.safety = 0;
+	m_details.industrial_penalty = 0;
 
 	//TODO: Adjust the zone capacities
 	if (level == LEVEL_1)
@@ -60,10 +60,21 @@ std::string Zone::Get_CitizenDetails()
 }
 
 float Zone::Get_Satisfaction() const {
+	//valami kezdetleges algoritmus
 	float satisfaction = 0;
-	if (m_details.policeBonus) satisfaction += 0.7;
-	if (m_details.stadiumBonus) satisfaction += 0.3;
-	satisfaction -= m_details.industrialPenalty;
-	if (satisfaction < 0) satisfaction = 0;
-	return satisfaction;
+	float safety = 0;
+	if (m_details.satisfaction + m_details.industrial_penalty < 5) satisfaction += m_details.satisfaction + m_details.industrial_penalty;
+	else satisfaction += 5;
+
+	if (m_details.safety < 1) safety += m_details.safety;
+	else safety += 1;
+
+	//végsõ elégedettségbe a kiszolgáló épületek 0.7-t számítanak max,
+	//a közbiztonság pedig 0.3-at, így 0-tól 1-ig ad ez a függvény vissza
+	return satisfaction / 5 * 0.7 + safety * 0.3;
+}
+
+//teszteléshez metódus
+float Zone::Get_SatisfactionAll() const {
+	return m_details.satisfaction + m_details.safety + m_details.industrial_penalty;
 }
