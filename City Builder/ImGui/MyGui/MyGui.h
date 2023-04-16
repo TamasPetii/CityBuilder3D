@@ -25,6 +25,7 @@ public:
 	void Pre_Render();
 	void Post_Render();
 
+	void CityDetials_Window();
 	void DockSpace();
 	void Demo_Window();
 	void Build_Window();
@@ -34,6 +35,7 @@ public:
 	void Log_Window();
 	void RenderOptions_Window();
 	void ViewPort_Render(FrameBuffer* fbo);
+	void GameIdk();
 
 
 
@@ -45,6 +47,8 @@ public:
 	inline LightsLayout& Get_LightsLayout() { return m_LightsLayout; }
 	inline FieldDetailsLayout& Get_FieldDetailsLayout() { return m_FieldDetailsLayout; }
 	inline LogLayout& Get_LogLayout() { return m_LogLayout; }
+	inline CityLayout& Get_CityLayout() { return m_CityLayout; }
+
 
 	bool BuildHover = false;
 	int r = 0;
@@ -77,6 +81,7 @@ private:
 	TaxLayout m_TaxLayout;
 	FieldDetailsLayout m_FieldDetailsLayout;
 	LogLayout m_LogLayout;
+	CityLayout m_CityLayout;
 
 	LightsLayout m_LightsLayout;
 

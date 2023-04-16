@@ -35,6 +35,9 @@ private:
 	static float m_Lvl1TaxRate;
 	static float m_Lvl2TaxRate;
 	static float m_Lvl3TaxRate;
+	static float m_LVL1Payment;
+	static float m_LVL2Payment;
+	static float m_LVL3Payment;
 };
 
 class ServiceArea : public WorkingArea
@@ -57,6 +60,9 @@ private:
 	static float m_Lvl1TaxRate;
 	static float m_Lvl2TaxRate;
 	static float m_Lvl3TaxRate;
+	static float m_LVL1Payment;
+	static float m_LVL2Payment;
+	static float m_LVL3Payment;
 };
 
 #endif

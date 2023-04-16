@@ -84,3 +84,9 @@ struct LogLayout
 	std::string build_log;
 	std::string money_log;
 };
+
+struct CityLayout
+{
+	int money;
+	std::string time;
+};

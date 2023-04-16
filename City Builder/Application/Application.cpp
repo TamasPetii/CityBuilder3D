@@ -12,7 +12,7 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 	m_Renderer = new Renderer(m_Camera);
 	m_MyGui = new MyGui(m_Camera);
 	m_FrameCounter = new FrameCounter();
-	m_Timer = new Timer(0.5);
+	m_Timer = new Timer(0.1);
 	m_Timer->Start();
 
 	m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
@@ -36,6 +36,9 @@ void Application::Update()
 	if (m_Timer->Tick())
 	{
 		m_City->Simulate();
+
+		m_MyGui->Get_CityLayout().money = m_City->Get_Money();
+		m_MyGui->Get_CityLayout().time = m_City->Get_Time_Str();
 	}
 
 	if (m_FrameCounter->Tick())
@@ -169,7 +172,9 @@ void Application::RenderUI()
 	m_MyGui->GameOptions_Window();
 	m_MyGui->RenderOptions_Window();
 	m_MyGui->FieldDetails_Window();
+	m_MyGui->CityDetials_Window();
 	m_MyGui->Log_Window();
+	//m_MyGui->GameIdk();
 	m_MyGui->ViewPort_Render(m_Renderer->Get_FrameBuffer());
 
 	m_MyGui->Post_Render();

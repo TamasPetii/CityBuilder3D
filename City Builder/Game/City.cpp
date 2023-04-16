@@ -18,25 +18,69 @@ void City::Simulate()
 {
 	GenerateCitizens(rand() % 2 == 0 ? rand() % 2 : 0);
 	HandleLooingZone();
-	++m_MonthlyTickCounter;
-	++m_YearlyTickCounter;
 
-	if (m_MonthlyTickCounter >= 30)
+	++m_DailyTickCounter;
+
+	if (m_DailyTickCounter != 0 && m_DailyTickCounter % 30 == 0)
 	{
-		m_MonthlyTickCounter = 0;
-		CollectTax();
-		//std::cout << "A month passed!" << std::endl;
-		//std::cout << "CurrentMoney: " << Get_Money() << std::endl;
+		CollectMonthlyTax();
 	}
 
-	if (m_YearlyTickCounter >= 360)
+	if (m_DailyTickCounter != 0 && m_DailyTickCounter % 360 == 0)
 	{
-		m_YearlyTickCounter = 0;
+		CollectAnnualCosts();
 		SimulatePopulationAging();
-		//std::cout << "A year passed!" << std::endl;
-		//std::cout << "CurrentMoney: " << Get_Money() << std::endl;
 	}
 }
+
+void City::UpdateMoney(float amount)
+{
+	m_Money += amount;
+}
+
+float City::CalculateMonthlyTax()
+{
+	float tax = 0;
+	for (Citizen* citizen : m_Citizens)
+	{
+		tax += citizen->PayTax();
+	}
+	return tax;
+}
+
+void City::CollectMonthlyTax()
+{
+	float tax = CalculateMonthlyTax();
+	UpdateMoney(tax);
+	
+	m_MoneyLog << ((tax >= 0) ? "+ " : "- ") << tax << "$ >> Monthly Tax {" << Get_Time_Str() << "}" << std::endl;
+	m_ChangedLog = true;
+
+}
+
+void City::CollectAnnualCosts()
+{
+	float cost = m_GameTable->Get_TotalCost();
+	UpdateMoney(-cost);
+
+	m_MoneyLog << "- " << cost << "$ >> Annual Cost {" << Get_Time_Str() << "}" << std::endl;
+	m_ChangedLog = true;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void City::GenerateCitizens(unsigned int x)
 {
@@ -132,31 +176,6 @@ void City::DeleteField(int x, int y)
 void City::UpgradeField(int x, int y)
 {
 	m_GameTable->UpgradeField(x, y);
-}
-
-void City::CollectTax() //should be called monthly
-{
-	for (Citizen* citizen : m_Citizens) {
-		m_Money += citizen->PayTax();
-	}
-
-	m_MoneyLog << "Collected Tax: " << 0 << std::endl;
-	m_ChangedLog = true;
-}
-
-void City::CollectAnnualCosts()
-{
-	float totalCost = m_GameTable->Get_TotalCost();
-
-	m_MoneyLog << "Collected Annual Cost: " << totalCost << std::endl;
-	m_ChangedLog = true;
-
-	UpdateMoney(-totalCost);
-}
-
-void City::UpdateMoney(float amount)
-{
-	m_Money += amount;
 }
 
 void City::SimulatePopulationAging() //should be called yearly
@@ -266,13 +285,6 @@ void City::SetTaxRate(FieldType type, float rate)
 	}
 }
 
-ZoneDetails City::Get_ZoneDetails(int x, int y) const
-{
-	ZoneDetails z;
-	z.capacity = 0;
-	return z;
-}
-
 void City::Set_GameTableValue(int x, int y, FieldType type)
 { 
 	GameField* PreviousField = m_GameTable->Get_TableValue(x, y);
@@ -280,7 +292,7 @@ void City::Set_GameTableValue(int x, int y, FieldType type)
 	GameField* CurrentField = m_GameTable->Get_TableValue(x, y);
 	if (PreviousField != CurrentField)
 	{
-		m_BuildLog << "0. Day >> " << GameField::ConvertTypeToStr(type) << ": " << CurrentField->Get_Cost() << std::endl;
+		m_BuildLog << GameField::ConvertTypeToStr(type) << ": " << CurrentField->Get_Cost() << "$" << std::endl;
 		m_ChangedLog = true;
 	}
 }

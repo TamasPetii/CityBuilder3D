@@ -124,7 +124,7 @@ void MyGui::DockSpace()
     static bool opt_padding = false;
     static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
-    ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
     if (opt_fullscreen)
     {
         const ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -163,9 +163,33 @@ void MyGui::DockSpace()
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     }
 
-    DockSpace_MenuBar();
+    GameIdk();
 
     ImGui::End();
+}
+
+void MyGui::GameIdk()
+{
+    ImGui::Begin("Game-IDK");
+
+    if (ImGui::Button("New Game"))
+    {
+        m_NewGameLayout.show = true;
+    }
+    if (ImGui::Button("Load Game"))
+    {
+        m_LoadGameLayout.show = true;
+    }
+    if (ImGui::Button("Save Game"))
+    {
+        m_SaveGameLayout.show = true;
+    }
+
+    ImGui::End();
+
+    NewGame_Window();
+    LoadGame_Window();
+    SaveGame_Window();
 }
 
 void MyGui::DockSpace_MenuBar()
@@ -578,6 +602,19 @@ void MyGui::Build_MouseClickEvent()
             //std::cout << "Hitting content area: " << "{x = " << RelativWindowCursor_X - ImGui::GetWindowContentRegionMin().x << "} | {y = } " << RelativWindowCursor_Y - ImGui::GetWindowContentRegionMin().y << "}" << std::endl;
         }
     }
+}
+
+void MyGui::CityDetials_Window()
+{
+    ImGui::Begin("City-Detials");
+
+    std::string str_money = "Money: " + std::to_string(m_CityLayout.money);
+    ImGui::Text(str_money.c_str());
+
+    std::string str_time = "Time: " + m_CityLayout.time;
+    ImGui::Text(str_time.c_str());
+
+    ImGui::End();
 }
 
 void MyGui::Log_Window()
