@@ -29,3 +29,31 @@ GameField* GameField::CreateField(FieldType type, int x, int y)
 	default: return nullptr;
 	}
 }
+
+std::string GameField::ConvertTypeToStr(FieldType type)
+{
+	switch (type)
+	{
+	case RESIDENTIAL_LVL1: return "Residential Area (LVL1)";
+	case RESIDENTIAL_LVL2: return "Residential Area (LVL2)";
+	case RESIDENTIAL_LVL3: return "Residential Area (LVL3)";
+	case INDUSTRIAL_LVL1: return "Industrial Area (LVL1)";
+	case INDUSTRIAL_LVL2: return "Industrial Area (LVL2)";
+	case INDUSTRIAL_LVL3: return "Industrial Area (LVL3)";
+	case SERVICE_LVL1: return "Service Area (LVL1)";
+	case SERVICE_LVL2: return "Service Area (LVL2)";
+	case SERVICE_LVL3: return "Service Area (LVL3)";
+	case EMPTY: return "Emtpy";
+	case ROAD: return "Road";
+	case FOREST: return "Forest";
+	case POLICESTATION: return "PoliceStation";
+	case FIRESTATION: return "FireStation";
+	case HIGHSCHOOL: return "HighSchool";
+	case UNIVERSITY: return "University";
+	case STADIUM: return "Stadium";
+	case POWERSTATION: return "PowerStation";
+	case POWERWIRE: return "PowerWire";
+	}
+
+	return "";
+}

@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <vector>
-
 #include "GameFields/_GameFieldHeaders.h"
 
 class GameTable

@@ -80,5 +80,7 @@ struct FieldDetailsLayout
 
 struct LogLayout 
 {
-	std::string log;
+	std::string citizen_log;
+	std::string build_log;
+	std::string money_log;
 };

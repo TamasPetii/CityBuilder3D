@@ -1,5 +1,5 @@
 #pragma once
-
+#include <string>
 #include "GameFieldType.h"
 
 class GameField
@@ -9,6 +9,7 @@ public:
 	~GameField() {}
 
 	static GameField* CreateField(FieldType type, int x, int y);
+	static std::string ConvertTypeToStr(FieldType type);
 
 	virtual bool IsZone() const { return false; };
 	virtual bool IsEmpty() const { return false; };

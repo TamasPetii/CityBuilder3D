@@ -1,8 +1,11 @@
 ﻿#include "City.h"
 #include <stdlib.h> 
 #include <time.h>
-
 #include <random>
+
+bool City::m_ChangedLog = false;
+std::stringstream City::m_BuildLog;
+std::stringstream City::m_MoneyLog;
 
 City::City(int size, float money): m_Money(money)
 {
@@ -118,11 +121,18 @@ void City::CollectTax()
 	for (const Citizen* citizen : m_Citizens) {
 		m_Money += citizen->PayTax();
 	}
+
+	m_MoneyLog << "Collected Tax: " << 0 << std::endl;
+	m_ChangedLog = true;
 }
 
 void City::CollectAnnualCosts()
 {
 	float totalCost = m_GameTable->Get_TotalCost();
+
+	m_MoneyLog << "Collected Annual Cost: " << totalCost << std::endl;
+	m_ChangedLog = true;
+
 	UpdateMoney(-totalCost);
 }
 
@@ -207,4 +217,16 @@ ZoneDetails City::Get_ZoneDetails(int x, int y) const
 	ZoneDetails z;
 	z.capacity = 0;
 	return z;
+}
+
+void City::Set_GameTableValue(int x, int y, FieldType type)
+{ 
+	GameField* PreviousField = m_GameTable->Get_TableValue(x, y);
+	m_GameTable->Set_TableValue(x, y, type);
+	GameField* CurrentField = m_GameTable->Get_TableValue(x, y);
+	if (PreviousField != CurrentField)
+	{
+		m_BuildLog << "0. Day >> " << GameField::ConvertTypeToStr(type) << ": " << CurrentField->Get_Cost() << std::endl;
+		m_ChangedLog = true;
+	}
 }
