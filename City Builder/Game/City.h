@@ -27,12 +27,14 @@ public:
 	void CollectAnnualCosts();
 	void UpdateMoney(float amount);
 	void GenerateForests(int iterations, double initialRatio);
+	void SimulatePopulationAging();
 
 	void SetTaxRate(FieldType type, float rate);
 	ZoneDetails Get_ZoneDetails(int x, int y) const;
 	inline GameField* Get_GameField(int x, int y) const { return m_GameTable->Get_TableValue(x, y); };
 	inline int Get_GameTableSize() const { return m_GameTable->Get_TableSize(); }
 	inline void Set_GameTableValue(int x, int y, FieldType type) { m_GameTable->Set_TableValue(x, y, type); }
+	inline float Get_Money() { return m_Money; }
 
 private:
 	std::unordered_set<Citizen*> m_Citizens;
@@ -40,4 +42,6 @@ private:
 
 	float m_Money;
 	float m_Tax = 0;
+	int m_MonthlyTickCounter = 0;
+	int m_YearlyTickCounter = 0;
 };
