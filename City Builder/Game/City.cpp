@@ -113,9 +113,9 @@ void City::UpgradeField(int x, int y)
 	m_GameTable->UpgradeField(x, y);
 }
 
-void City::CollectTax()
+void City::CollectTax() //should be called monthly
 {
-	for (const Citizen* citizen : m_Citizens) {
+	for (Citizen* citizen : m_Citizens) {
 		m_Money += citizen->PayTax();
 	}
 }
@@ -129,6 +129,42 @@ void City::CollectAnnualCosts()
 void City::UpdateMoney(float amount)
 {
 	m_Money += amount;
+}
+
+void City::SimulatePopulationAging() //should be called yearly
+{
+	std::vector<Citizen*> to_remove;
+
+	for (auto citizen : m_Citizens)
+	{
+		citizen->Age();
+
+		if (citizen->IsPensioner())
+		{
+			if (citizen->Get_Workplace() != nullptr)
+			{
+				//std::cout << "A retired from work!" << std::endl;
+				citizen->LeaveWorkplace();
+			}
+
+			int yearsInPension = citizen->Get_Age() - 65;
+			double probabilityOfRIP = (yearsInPension + 1) * 0.025;
+
+			double random = (double)rand() / RAND_MAX;
+
+			if (random < probabilityOfRIP)
+			{
+				//std::cout << "A citizen died at the age of: " << citizen->Get_Age() << std::endl;
+				to_remove.push_back(citizen);
+			}
+		}
+	}
+
+	for (auto citizen : to_remove)
+	{
+		LeaveCity(citizen);
+		JoinCity(new Citizen(18));
+	}
 }
 
 void City::GenerateForests(int iterations, double initialRatio)
