@@ -15,6 +15,24 @@ void City::Simulate()
 {
 	GenerateCitizens(rand() % 2 == 0 ? rand() % 2 : 0);
 	HandleLooingZone();
+	++m_MonthlyTickCounter;
+	++m_YearlyTickCounter;
+
+	if (m_MonthlyTickCounter >= 30)
+	{
+		m_MonthlyTickCounter = 0;
+		CollectTax();
+		//std::cout << "A month passed!" << std::endl;
+		//std::cout << "CurrentMoney: " << Get_Money() << std::endl;
+	}
+
+	if (m_YearlyTickCounter >= 360)
+	{
+		m_YearlyTickCounter = 0;
+		SimulatePopulationAging();
+		//std::cout << "A year passed!" << std::endl;
+		//std::cout << "CurrentMoney: " << Get_Money() << std::endl;
+	}
 }
 
 void City::GenerateCitizens(unsigned int x)

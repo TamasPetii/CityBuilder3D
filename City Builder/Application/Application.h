@@ -84,8 +84,5 @@ private:
 
 	int HitX;
 	int HitY;
-
-	int m_MonthlyTickCounter = 0;
-	int m_YearlyTickCounter = 0;
 };
 

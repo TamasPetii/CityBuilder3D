@@ -36,26 +36,6 @@ void Application::Update()
 	if (m_Timer->Tick())
 	{
 		m_City->Simulate();
-		++m_MonthlyTickCounter;
-		++m_YearlyTickCounter;
-		//std::cout << "Days passed in current year: " << m_YearlyTickCounter << std::endl;
-
-		if (m_MonthlyTickCounter >= 30)
-		{
-			m_MonthlyTickCounter = 0;
-			m_City->CollectTax();	
-			//std::cout << "A month passed!" << std::endl;
-			//std::cout << "CurrentMoney: " << m_City->Get_Money() << std::endl;
-		}
-
-		if (m_YearlyTickCounter >= 360)
-		{
-			m_YearlyTickCounter = 0;
-			m_City->SimulatePopulationAging();
-			//std::cout << "A year passed!" << std::endl;
-			//std::cout << "CurrentMoney: " << m_City->Get_Money() << std::endl;
-
-		}
 	}
 
 	if (m_FrameCounter->Tick())
