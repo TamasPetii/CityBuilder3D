@@ -33,7 +33,7 @@ void GameTable::Set_TableValue(int x, int y, FieldType type) {
 		SetRoadNetwork(x, y);
 	}
 	else if (!(type == EMPTY || type == FOREST || type == POWERWIRE || type == POWERSTATION)) {
-		if (type == POLICESTATION || type == STADIUM) {
+		if (type == POLICESTATION || type == STADIUM || type == FIRESTATION) {
 			SetBuildingNetwork(x, y);
 		}
 		else {
@@ -72,7 +72,7 @@ void GameTable::DeleteField(int x, int y) {
 	if (isIndustrial) {
 		for (int i = -9; i <= 9; i++) {
 			for (int j = -9; j <= 9; j++) {
-				if (x + i < 0 || x + i >= m_TableSize || y + j < 0 || y + j > m_TableSize) continue;
+				if (x + i < 0 || x + i >= m_TableSize || y + j < 0 || y + j >= m_TableSize) continue;
 				if (Zone* zone = dynamic_cast<Zone*>(m_Table[x+i][y+j])) {
 					if (zone->IsResidentalArea()) FindNearestIndustrial(zone);
 				}	
@@ -122,15 +122,14 @@ void GameTable::SetRoadNetwork(int x, int y) {
 		if (!(dynamic_cast<Forest*>(adj) || dynamic_cast<Empty*>(adj)
 			|| dynamic_cast<PowerWire*>(adj) || dynamic_cast<PowerStation*>(adj) || dynamic_cast<Road*>(adj))) {
 			int id = RoadNetwork::GetNetworkId(newRoad);
-			if (RoadNetwork::GetNetworkId(adj) == -1) {
-				RoadNetwork::AddToNetwork(adj, id);
-				if (dynamic_cast<PoliceStation*>(adj) || dynamic_cast<Stadium*>(adj)) {
-					RoadNetwork::AddToNetworkSatisfaction(adj, id);
-				}
-				else {
-					RoadNetwork::SetZoneSatisfaction(adj, id);
-				}	
+
+			RoadNetwork::AddToNetwork(adj, id);
+			if (dynamic_cast<PoliceStation*>(adj) || dynamic_cast<Stadium*>(adj)) {
+				RoadNetwork::AddToNetworkSatisfaction(adj, id);
 			}
+			else {
+				RoadNetwork::SetZoneSatisfaction(adj, id);
+			}	
 		}
 	});
 }
@@ -178,6 +177,9 @@ void GameTable::RebuildRoadNetwork() {
 					SetBuildingNetwork(i, j);
 				}
 				else {
+					Zone* zone = dynamic_cast<Zone*>(tile);
+					zone->Set_PoliceBonus(0);
+					zone->Set_StadiumBonus(0);
 					SetZoneNetwork(i, j);
 				}
 				
