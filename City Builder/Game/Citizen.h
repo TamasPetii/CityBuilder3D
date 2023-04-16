@@ -36,6 +36,8 @@ public:
 	static std::string Get_Log() { return log.str(); }
 	static std::stringstream& Log() { return log; }
 	static bool& Log_Changed() { return log_changed; }
+	static bool log_changed;
+	static std::stringstream log;
 private:
 	Zone* m_Residence = nullptr;
 	Zone* m_Workplace = nullptr;
@@ -45,6 +47,4 @@ private:
 	int m_monthsBeforePension = 0;
 	Education m_Education;
 	
-	static bool log_changed;
-	static std::stringstream log;
 };

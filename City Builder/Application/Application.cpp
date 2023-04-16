@@ -148,10 +148,13 @@ void Application::Update()
 
 	}
 
-	if (Citizen::Log_Changed())
+	if (City::Log_Changed() || Citizen::Log_Changed())
 	{
-		m_MyGui->Get_LogLayout().log = Citizen::Get_Log();
+		m_MyGui->Get_LogLayout().build_log = City::Build_Log().str();
+		m_MyGui->Get_LogLayout().citizen_log = Citizen::Log().str();
+		m_MyGui->Get_LogLayout().money_log = City::Money_Log().str();
 		Citizen::Log_Changed() = false;
+		City::Log_Changed() = false;
 	}
 }
 

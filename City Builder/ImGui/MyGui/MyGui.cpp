@@ -582,10 +582,16 @@ void MyGui::Build_MouseClickEvent()
 
 void MyGui::Log_Window()
 {
-    ImGui::Begin("Log");
+    ImGui::Begin("Build-Log");
+    ImGui::TextUnformatted(m_LogLayout.build_log.c_str());
+    ImGui::End();
 
-    ImGui::Text(m_LogLayout.log.c_str());
+    ImGui::Begin("Citizen-Log");
+    ImGui::TextUnformatted(m_LogLayout.citizen_log.c_str());
+    ImGui::End();
 
+    ImGui::Begin("Money-Log");
+    ImGui::TextUnformatted(m_LogLayout.money_log.c_str());
     ImGui::End();
 }
 

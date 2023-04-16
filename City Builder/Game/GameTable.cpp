@@ -36,9 +36,10 @@ void GameTable::Set_TableValue(int x, int y, FieldType type) {
 		delete(m_Table[x][y]);
 		isDelete = true;
 	}
-	m_Table[x][y] = GameField::CreateField(type, x, y);
-	GameField* newField = m_Table[x][y];
 
+	m_Table[x][y] = GameField::CreateField(type, x, y);
+
+	GameField* newField = m_Table[x][y];
 	if (isRoad && isDelete) RebuildRoadNetwork();
 
 	if (type == ROAD) {
