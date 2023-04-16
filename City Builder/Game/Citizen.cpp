@@ -8,7 +8,19 @@ bool Citizen::log_changed = false;
 Citizen::Citizen()
 {
 	m_Education = BASIC;
-	m_Age = 18;
+
+	int minAge = 18;
+	int maxAge = 60;
+
+	int range = maxAge - minAge + 1;
+
+	m_Age = rand() % range + minAge;
+}
+
+Citizen::Citizen(int age)
+{
+	m_Education = BASIC;
+	m_Age = age;
 }
 
 void Citizen::JoinZone(Zone* zone)
@@ -89,12 +101,28 @@ float Citizen::Get_SatisfactionPoints() const
 	return 0;
 }
 
-float Citizen::PayTax() const
+float Citizen::PayTax()
 {
 	float educationRate = m_Education == BASIC ? 1.2f : (m_Education == INTERMEDIATE ? 1.5f : 2.0f);
 
 	if (IsPensioner())
-		return -100; //TODO: Calculate pension
+	{
+		//std::cout << "A citizen at the age of: " << Get_Age() << " got " << ((m_Pension / m_monthsBeforePension) / 2) << " pension\n";
+		return -((m_Pension / m_monthsBeforePension) / 2);
+	}
 	else
-		return (m_Workplace->GetTaxRate() + m_Residence->GetTaxRate()) * educationRate;
+	{
+		float workPlaceTax = m_Workplace == nullptr ? 0.0f : m_Workplace->GetTaxRate() / 12.0f;
+		float homeTax = m_Residence == nullptr ? 0.0f : m_Residence->GetTaxRate() / 12.0f;
+
+		float tax = (workPlaceTax + homeTax) * educationRate;
+
+		if (m_Age >= 45)
+		{
+			++m_monthsBeforePension;
+			m_Pension += tax;
+		}
+
+		return tax;
+	}
 }
