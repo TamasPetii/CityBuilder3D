@@ -1,6 +1,6 @@
 #include "Cube.h"
 
-void Cube::CreateBuffers()
+void Cube::CreateBuffers(GLuint buffer_size)
 {
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
@@ -10,7 +10,7 @@ void Cube::CreateBuffers()
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(layout));
 
-	AttachToGPU(vertices, indices);
+	AttachToGPU(vertices, indices, buffer_size);
 }
 
 std::vector<Vertex> Cube::GenerateVertices(const CubeLayout& layout)

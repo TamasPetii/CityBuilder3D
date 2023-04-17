@@ -1,9 +1,9 @@
 #pragma once
 #include "../../Basic Shapes/BasicShapes.h"
 
-class ServiceBuilding2: public Shape
+class Shape_Meteor : public Shape
 {
 public:
-	ServiceBuilding2();
+	Shape_Meteor();
 	void CreateBuffers(GLuint buffer_size) override;
 };

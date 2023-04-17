@@ -12,8 +12,10 @@
 //Shapes
 #include "../Shapes/Basic Shapes/BasicShapes.h"
 #include "../Shapes/Complex Shapes/ComplexShape.h"
-#include "SkyBox/Skybox.h"
 #include "RendererLayout.h"
+
+#include "Utilities/Skybox.h"
+#include "Utilities/Meteor.h"
 
 #include <cmath>
 
@@ -36,6 +38,9 @@ public:
 	Renderer(Camera* camera);
 	~Renderer();
 public:
+	void Render_Meteors();
+
+
 
 	FrameBuffer* Get_FrameBuffer() { return m_FrameBuffer; }
 
@@ -58,6 +63,7 @@ public:
 
 	void Set_Light_Properties(glm::vec3 dir, int spec, glm::vec3 la, glm::vec3 ld, glm::vec3 ls, glm::vec3 ka, glm::vec3 kd, glm::vec3 ks);
 	void Reset_Light_Properties();
+
 
 protected:
 	void Init_Programs();
@@ -91,6 +97,7 @@ private:
 	Pyramid* r_Pyramid = nullptr;
 	Cylinder* r_Cylinder = nullptr;
 
+	Shape_Meteor* r_Meteor = nullptr;
 	Skybox* r_Skybox = nullptr;
 	Ground* r_Ground = nullptr;
 	ResidenceBuilding1* r_Residence1 = nullptr;
@@ -114,4 +121,10 @@ private:
 	WindTurbine* r_Turbine = nullptr;
 	WindTurbinePropeller* r_TurbinePropeller = nullptr;
 	LightProperties r_LightProperties;
+
+
+
+
+
+
 };

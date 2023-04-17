@@ -47,6 +47,7 @@ public:
 	inline LightsLayout& Get_LightsLayout() { return m_LightsLayout; }
 	inline FieldDetailsLayout& Get_FieldDetailsLayout() { return m_FieldDetailsLayout; }
 	inline LogLayout& Get_LogLayout() { return m_LogLayout; }
+	inline CatastropheLayout& Get_CatastropheLayout() { return m_MeteorLayout; }
 	inline CityLayout& Get_CityLayout() { return m_CityLayout; }
 
 
@@ -84,6 +85,7 @@ private:
 	CityLayout m_CityLayout;
 
 	LightsLayout m_LightsLayout;
+	CatastropheLayout m_MeteorLayout;
 
 	imgui_addons::ImGuiFileBrowser file_dialog;
 };

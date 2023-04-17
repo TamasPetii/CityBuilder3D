@@ -90,3 +90,9 @@ struct CityLayout
 	int money;
 	std::string time;
 };
+
+struct CatastropheLayout
+{
+	bool effect;
+	int count;
+};

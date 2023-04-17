@@ -5,5 +5,5 @@ class Tree : public Shape
 {
 public:
 	Tree();
-	void CreateBuffers() override;
+	void CreateBuffers(GLuint buffer_size) override;
 };

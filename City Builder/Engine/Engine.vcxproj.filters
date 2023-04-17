@@ -156,7 +156,13 @@
     <ClCompile Include="Abstractions\Vertex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\Skybox\Skybox.cpp">
+    <ClCompile Include="Renderer\Utilities\Skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shapes\Complex Shapes\Meteor\Shape_Meteor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Utilities\Meteor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -305,13 +311,19 @@
     <ClInclude Include="Abstractions\Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\Skybox\Skybox.h">
+    <ClInclude Include="Renderer\Utilities\Skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utilities\Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utilities\FrameCounter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shapes\Complex Shapes\Meteor\Shape_Meteor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Utilities\Meteor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

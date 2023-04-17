@@ -5,6 +5,6 @@ class ResidenceBuilding2 : public Shape
 {
 public:
 	ResidenceBuilding2();
-	void CreateBuffers() override;
+	void CreateBuffers(GLuint buffer_size) override;
 };
 

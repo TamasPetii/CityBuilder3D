@@ -235,61 +235,66 @@ void Renderer::RenderInstanced_Character(const std::vector<glm::mat4>& transform
 
 void Renderer::Init_Shapes()
 {
+	unsigned int buffer_size = 2500;
+
 	r_Skybox = new Skybox();
 	r_Skybox->CreateBuffers();
 
 	r_Cube = new Cube();
-	r_Cube->CreateBuffers();
+	r_Cube->CreateBuffers(buffer_size);
 	r_Cone = new Cone();
-	r_Cone->CreateBuffers();
+	r_Cone->CreateBuffers(buffer_size);
 	r_Sphere = new Sphere();
-	r_Sphere->CreateBuffers();
+	r_Sphere->CreateBuffers(buffer_size);
 	r_Pyramid = new Pyramid();
-	r_Pyramid->CreateBuffers();
+	r_Pyramid->CreateBuffers(buffer_size);
 	r_Cylinder = new Cylinder();
-	r_Cylinder->CreateBuffers();
+	r_Cylinder->CreateBuffers(buffer_size);
 	r_Residence1 = new ResidenceBuilding1();
-	r_Residence1->CreateBuffers();
+	r_Residence1->CreateBuffers(buffer_size);
 	r_Residence2 = new ResidenceBuilding2();
-	r_Residence2->CreateBuffers();
+	r_Residence2->CreateBuffers(buffer_size);
 	r_Residence3 = new ResidenceBuilding3();
-	r_Residence3->CreateBuffers();
+	r_Residence3->CreateBuffers(buffer_size);
 	r_Industry1 = new IndustryBuilding1();
-	r_Industry1->CreateBuffers();
+	r_Industry1->CreateBuffers(buffer_size);
 	r_Industry2 = new IndustryBuilding2();
-	r_Industry2->CreateBuffers();
+	r_Industry2->CreateBuffers(buffer_size);
 	r_Industry3 = new IndustryBuilding3();
-	r_Industry3->CreateBuffers();
+	r_Industry3->CreateBuffers(buffer_size);
 	r_Service1 = new ServiceBuilding1();
-	r_Service1->CreateBuffers();
+	r_Service1->CreateBuffers(buffer_size);
 	r_Service2 = new ServiceBuilding2();
-	r_Service2->CreateBuffers();
+	r_Service2->CreateBuffers(buffer_size);
 	r_Service3 = new ServiceBuilding3();
-	r_Service3->CreateBuffers();
+	r_Service3->CreateBuffers(buffer_size);
 	r_School1 = new SchoolBuilding1();
-	r_School1->CreateBuffers();
+	r_School1->CreateBuffers(buffer_size);
 	r_School2 = new SchoolBuilding2();
-	r_School2->CreateBuffers();
+	r_School2->CreateBuffers(buffer_size);
 	r_PowerStation = new PowerBuilding();
-	r_PowerStation->CreateBuffers();
+	r_PowerStation->CreateBuffers(buffer_size);
 	r_PowerWire = new PowerWireBuilding();
-	r_PowerWire->CreateBuffers();
+	r_PowerWire->CreateBuffers(buffer_size);
 	r_PowerStationPlinth = new PowerBuildingPlinth();
-	r_PowerStationPlinth->CreateBuffers();
+	r_PowerStationPlinth->CreateBuffers(buffer_size);
 	r_FireStation = new FireBuilding();
-	r_FireStation->CreateBuffers();
+	r_FireStation->CreateBuffers(buffer_size);
 	r_PoliceStation = new PoliceBuilding();
-	r_PoliceStation->CreateBuffers();
+	r_PoliceStation->CreateBuffers(buffer_size);
 	r_Stadion = new StadionBuilding();
-	r_Stadion->CreateBuffers();
+	r_Stadion->CreateBuffers(buffer_size);
 	r_Tree = new Tree();
-	r_Tree->CreateBuffers();
+	r_Tree->CreateBuffers(buffer_size);
 	r_Turbine = new WindTurbine();
-	r_Turbine->CreateBuffers();
+	r_Turbine->CreateBuffers(buffer_size);
 	r_TurbinePropeller = new WindTurbinePropeller();
-	r_TurbinePropeller->CreateBuffers();
+	r_TurbinePropeller->CreateBuffers(buffer_size);
 	r_Ground = new Ground();
-	r_Ground->CreateBuffers();
+	r_Ground->CreateBuffers(buffer_size);
+
+	r_Meteor = new Shape_Meteor();
+	r_Meteor->CreateBuffers(2500);
 }
 
 void Renderer::Delete_Shapes()
@@ -320,10 +325,13 @@ void Renderer::Delete_Shapes()
 	delete r_Ground;
 	delete r_Tree;
 	delete r_Turbine;
+	delete r_Meteor;
 }
 
 void Renderer::Render(Technique tech, Object obj, const std::vector<glm::mat4>& matrices, Transform transform)
 {
+	bool deactivate = !changed;
+
 	Shape* shape = nullptr;
 	
 	switch (obj) 
@@ -346,8 +354,9 @@ void Renderer::Render(Technique tech, Object obj, const std::vector<glm::mat4>& 
 	case R_WINDTURBINE: shape = r_Turbine; break;
 	case R_WINDTURBINE_PROPELLER: shape = r_TurbinePropeller; break;
 	case R_POWERWIRE: shape = r_PowerWire; break;
+	case R_METEOR: shape = r_Meteor; changed = true; break;
 	}
-	
+
 	switch (tech)
 	{
 	case NORMAL:
@@ -363,6 +372,8 @@ void Renderer::Render(Technique tech, Object obj, const std::vector<glm::mat4>& 
 		Render_Instanced_WireFrame(shape, matrices, transform);
 		break;
 	}
+
+	if (deactivate) changed = false;
 }
 
 void Renderer::Render_Normal(Shape* shape, const Transform& transform)
@@ -381,7 +392,7 @@ void Renderer::Render_Normal(Shape* shape, const Transform& transform)
 		tf.rotate = transform.rotate * shape->Get_Transforms()[i].rotate;
 		tf.scale = transform.scale * shape->Get_Transforms()[i].scale;
 
-		m_BaseProgram->SetUniform("u_M", Shape::MultiplyTransformMatrices(tf));
+		m_BaseProgram->SetUniform("u_M", Transform::MultiplyTransformMatrices(tf));
 		m_BaseProgram->SetUniform("u_color", buildable ? glm::vec3(0, 1, 0) : glm::vec3(1, 0, 0));
 		shape->Render();
 	}
@@ -433,7 +444,7 @@ void Renderer::Render_Instanced(Shape* shape, const std::vector<glm::mat4>& matr
 		tf.rotate = transform.rotate * shape->Get_Transforms()[i].rotate;
 		tf.scale = transform.scale * shape->Get_Transforms()[i].scale;
 
-		m_InstanceProgram->SetUniform("u_M", Shape::MultiplyTransformMatrices(tf));
+		m_InstanceProgram->SetUniform("u_M", Transform::MultiplyTransformMatrices(tf));
 		shape->RenderInstanced();
 	}
 
@@ -506,4 +517,14 @@ void Renderer::Reset_Light_Properties()
 	r_LightProperties.Ka = glm::vec3(0.8, 0.8, 0.8);
 	r_LightProperties.Kd = glm::vec3(1, 1, 1);
 	r_LightProperties.Ks = glm::vec3(0.7, 0.6, 0.6);
+}
+
+void Renderer::Render_Meteors()
+{
+	bool not_changed = !changed;
+	changed = true;
+
+	Render_Instanced(r_Meteor, MeteorGrp::Get_Transforms(), {});
+	
+	if (not_changed) changed = false;
 }

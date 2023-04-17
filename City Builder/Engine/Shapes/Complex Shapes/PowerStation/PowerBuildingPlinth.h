@@ -5,5 +5,5 @@ class PowerBuildingPlinth : public Shape
 {
 public:
 	PowerBuildingPlinth();
-	void CreateBuffers() override;
+	void CreateBuffers(GLuint buffer_size) override;
 };

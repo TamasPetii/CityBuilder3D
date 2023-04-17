@@ -11,6 +11,7 @@ public:
 	static GameField* CreateField(FieldType type, int x, int y);
 	static std::string ConvertTypeToStr(FieldType type);
 
+	virtual bool IsCrater() const { return false; }
 	virtual bool IsZone() const { return false; };
 	virtual bool IsEmpty() const { return false; };
 	virtual bool IsRoad() const { return false; };

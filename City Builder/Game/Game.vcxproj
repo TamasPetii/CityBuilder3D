@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="GameFields\General\Crater.h" />
     <ClInclude Include="GameFields\Buildings\Building.h" />
     <ClInclude Include="Citizen.h" />
     <ClInclude Include="City.h" />
@@ -171,6 +172,7 @@
     <ClInclude Include="RoadNetwork.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameFields\General\Crater.cpp" />
     <ClCompile Include="GameFields\Buildings\Building.cpp" />
     <ClCompile Include="Citizen.cpp" />
     <ClCompile Include="City.cpp" />

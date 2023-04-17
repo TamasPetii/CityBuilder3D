@@ -1,6 +1,6 @@
 #include "Cone.h"
 
-void Cone::CreateBuffers()
+void Cone::CreateBuffers(GLuint buffer_size)
 {
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
@@ -10,7 +10,7 @@ void Cone::CreateBuffers()
 	Shape::ConcatenateIndices(indices, Cone::GenerateIndices(layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cone::GenerateVertices(layout));
 
-	AttachToGPU(vertices, indices);
+	AttachToGPU(vertices, indices, buffer_size);
 }
 
 std::vector<Vertex> Cone::GenerateVertices(const ConeLayout& layout)

@@ -1,6 +1,6 @@
 #include "Pyramid.h"
 
-void Pyramid::CreateBuffers()
+void Pyramid::CreateBuffers(GLuint buffer_size)
 {
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
@@ -10,7 +10,7 @@ void Pyramid::CreateBuffers()
 	Shape::ConcatenateIndices(indices, Pyramid::GenerateIndices(layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Pyramid::GenerateVertices(layout));
 
-	AttachToGPU(vertices, indices);
+	AttachToGPU(vertices, indices, buffer_size);
 }
 
 std::vector<Vertex> Pyramid::GenerateVertices(const PyramidLayout& layout)

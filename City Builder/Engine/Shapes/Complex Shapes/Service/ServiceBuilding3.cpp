@@ -16,7 +16,7 @@ ServiceBuilding3::ServiceBuilding3()
 	}
 }
 
-void ServiceBuilding3::CreateBuffers()
+void ServiceBuilding3::CreateBuffers(GLuint buffer_size)
 {
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
@@ -47,5 +47,5 @@ void ServiceBuilding3::CreateBuffers()
 	Shape::ConcatenateIndices(indices, Sphere::GenerateIndices(sphere_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Sphere::GenerateVertices(sphere_layout));
 
-	AttachToGPU(vertices, indices);
+	AttachToGPU(vertices, indices, buffer_size);
 }

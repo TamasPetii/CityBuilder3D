@@ -28,3 +28,5 @@
 
 #include "PowerStation/WindTurbine.h"
 #include "PowerStation/WindTurbinePropeller.h"
+
+#include "Meteor/Shape_Meteor.h"

@@ -17,6 +17,9 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 
 	m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
 	m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
+
+
+	MeteorGrp::Init();
 }
 
 Application::~Application()
@@ -29,6 +32,8 @@ Application::~Application()
 
 void Application::Update()
 {
+	MeteorGrp::Update();
+
 	m_Timer->Update();
 	m_FrameCounter->Update();
 	m_Camera->Update();
@@ -36,9 +41,20 @@ void Application::Update()
 	if (m_Timer->Tick())
 	{
 		m_City->Simulate();
-
 		m_MyGui->Get_CityLayout().money = m_City->Get_Money();
 		m_MyGui->Get_CityLayout().time = m_City->Get_Time_Str();
+
+		//Meteor shooting
+		if (rand() % 50 == 23)
+		{
+			int number = rand() % 5;
+			if (rand() % 1000 == 666) number = 2500;
+
+			for (int i = 0; i < number; i++)
+			{
+				MeteorGrp::Add(rand() % m_City->Get_GameTableSize(), rand() % m_City->Get_GameTableSize());
+			}
+		}
 	}
 
 	if (m_FrameCounter->Tick())
@@ -49,6 +65,8 @@ void Application::Update()
 
 	if (m_MyGui->Get_NewGameLayout().effect) 
 	{
+		MeteorGrp::Clear();
+
 		m_City = new City(m_MyGui->Get_NewGameLayout().size, 10000);
 		RoadNetwork::ResetNetworks();
 		Citizen::Log().str("");
@@ -159,6 +177,29 @@ void Application::Update()
 		Citizen::Log_Changed() = false;
 		City::Log_Changed() = false;
 	}
+
+	if (m_MyGui->Get_CatastropheLayout().effect)
+	{
+		m_MyGui->Get_CatastropheLayout().effect = false;
+		for (int i = 0; i < m_MyGui->Get_CatastropheLayout().count; i++)
+		{
+			MeteorGrp::Add(rand() % m_City->Get_GameTableSize(), rand() % m_City->Get_GameTableSize());
+		}
+	}
+
+	if (MeteorGrp::Effect())
+	{
+		auto fields = MeteorGrp::Change();
+
+		for (auto field : fields)
+		{
+			if(field.second != 49)
+				m_City->Set_GameTableValue(field.first, field.second, CRATER);
+			changed = true;
+		}
+
+		MeteorGrp::Delete();
+	}
 }
 
 void Application::RenderUI()
@@ -194,11 +235,15 @@ void Application::Render()
 				GameField* field = m_City->Get_GameField(i, j);
 
 				if (!field->IsRoad())
-					transforms_GROUND.push_back(Shape::MultiplyTransformMatrices(transform));
+					transforms_GROUND.push_back(Transform::MultiplyTransformMatrices(transform));
 
 				if (field->IsEmpty())
 				{
 					numbers_GROUND.push_back(0);
+				}
+				else if (field->IsCrater())
+				{
+					numbers_GROUND.push_back(49);
 				}
 				else if (field->IsRoad())
 				{
@@ -272,11 +317,11 @@ void Application::Render()
 						numbers_GROUND.push_back(7);
 					}
 
-					transforms_GROUND.push_back(Shape::MultiplyTransformMatrices(transform));
+					transforms_GROUND.push_back(Transform::MultiplyTransformMatrices(transform));
 				}
 				else if (field->IsForest())
 				{
-					transforms_FOREST.push_back(Shape::MultiplyTransformMatrices(transform));
+					transforms_FOREST.push_back(Transform::MultiplyTransformMatrices(transform));
 					numbers_GROUND.push_back(1);
 				}
 				else if (field->IsZone())
@@ -286,9 +331,9 @@ void Application::Render()
 					{
 						switch(zone->Get_Level())
 						{
-						case LEVEL_1: transforms_RESIDENCE1.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
-						case LEVEL_2: transforms_RESIDENCE2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
-						case LEVEL_3: transforms_RESIDENCE3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
+						case LEVEL_1: transforms_RESIDENCE1.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
+						case LEVEL_2: transforms_RESIDENCE2.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
+						case LEVEL_3: transforms_RESIDENCE3.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
 						}
 					}
 					else if (zone->IsWorkingArea()) 
@@ -298,18 +343,18 @@ void Application::Render()
 						{
 							switch (area->Get_Level())
 							{
-							case LEVEL_1: transforms_INDUSTRY1.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
-							case LEVEL_2: transforms_INDUSTRY2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
-							case LEVEL_3: transforms_INDUSTRY3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
+							case LEVEL_1: transforms_INDUSTRY1.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
+							case LEVEL_2: transforms_INDUSTRY2.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
+							case LEVEL_3: transforms_INDUSTRY3.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
 							}
 						}
 						else if (area->IsServiceArea())
 						{
 							switch (area->Get_Level())
 							{
-							case LEVEL_1: transforms_SERVICE1.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
-							case LEVEL_2: transforms_SERVICE2.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
-							case LEVEL_3: transforms_SERVICE3.push_back(Shape::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
+							case LEVEL_1: transforms_SERVICE1.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
+							case LEVEL_2: transforms_SERVICE2.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
+							case LEVEL_3: transforms_SERVICE3.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
 							}
 						}
 					}
@@ -319,17 +364,17 @@ void Application::Render()
 					Building* building = dynamic_cast<Building*>(field);
 					if (building->IsPoliceStation()) 
 					{
-						transforms_POLICESTATION.push_back(Shape::MultiplyTransformMatrices(transform));
+						transforms_POLICESTATION.push_back(Transform::MultiplyTransformMatrices(transform));
 						numbers_GROUND.push_back(15);
 					}
 					else if (building->IsFireStation()) 
 					{
-						transforms_FIRESTATION.push_back(Shape::MultiplyTransformMatrices(transform));
+						transforms_FIRESTATION.push_back(Transform::MultiplyTransformMatrices(transform));
 						numbers_GROUND.push_back(15);
 					}
 					else if (building->IsStadium())
 					{
-						transforms_STADION.push_back(Shape::MultiplyTransformMatrices(transform));
+						transforms_STADION.push_back(Transform::MultiplyTransformMatrices(transform));
 						numbers_GROUND.push_back(11);
 					}
 					else if (building->IsSchool()) 
@@ -337,24 +382,24 @@ void Application::Render()
 						School* school = dynamic_cast<School*>(building);
 						if (school->IsHighSchool()) 
 						{
-							transforms_SCHOOL1.push_back(Shape::MultiplyTransformMatrices(transform));
+							transforms_SCHOOL1.push_back(Transform::MultiplyTransformMatrices(transform));
 							numbers_GROUND.push_back(14);
 						}
 						else if (school->IsUniversity()) 
 						{
-							transforms_SCHOOL2.push_back(Shape::MultiplyTransformMatrices(transform));
+							transforms_SCHOOL2.push_back(Transform::MultiplyTransformMatrices(transform));
 							numbers_GROUND.push_back(14);
 						}
 					}
 					else if (building->IsPowerStation()) 
 					{
 						//transform.rotate = glm::rotate<float>(glfwGetTime() * M_PI, glm::vec3(0, 1, 0));
-						transforms_POWERSTATION.push_back(Shape::MultiplyTransformMatrices(transform));
+						transforms_POWERSTATION.push_back(Transform::MultiplyTransformMatrices(transform));
 						numbers_GROUND.push_back(2);
 					}
 					else if (building->IsPowerWire())
 					{
-						transforms_POWERWIRE.push_back(Shape::MultiplyTransformMatrices(transform));
+						transforms_POWERWIRE.push_back(Transform::MultiplyTransformMatrices(transform));
 						numbers_GROUND.push_back(63);
 					}
 				}
@@ -392,6 +437,9 @@ void Application::Render()
 
 		}
 	}
+
+
+	m_Renderer->Render_Meteors();
 
 	m_Renderer->Render_Ground(transforms_GROUND, numbers_GROUND);
 	m_Renderer->Render(INSTANCED, R_FOREST,                transforms_FOREST);

@@ -5,5 +5,5 @@ class Ground : public Shape
 {
 public:
 	Ground();
-	void CreateBuffers() override;
+	void CreateBuffers(GLuint buffer_size) override;
 };
