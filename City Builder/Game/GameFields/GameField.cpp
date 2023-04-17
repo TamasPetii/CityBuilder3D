@@ -26,6 +26,7 @@ GameField* GameField::CreateField(FieldType type, int x, int y)
 	case STADIUM: return new Stadium(type, x, y, 1025);
 	case POWERSTATION: return new PowerStation(type, x, y, 785);
 	case POWERWIRE: return new PowerWire(type, x, y, 155);
+	case CRATER: return new Crater(type, x, y, 50.f);
 	default: return nullptr;
 	}
 }

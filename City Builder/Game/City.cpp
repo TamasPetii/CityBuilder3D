@@ -292,7 +292,7 @@ void City::Set_GameTableValue(int x, int y, FieldType type)
 	GameField* CurrentField = m_GameTable->Get_TableValue(x, y);
 	if (PreviousField != CurrentField)
 	{
-		m_BuildLog << GameField::ConvertTypeToStr(type) << ": " << CurrentField->Get_Cost() << "$" << std::endl;
+    	m_BuildLog << GameField::ConvertTypeToStr(type) << ": " << CurrentField->Get_Cost() << "$" << std::endl;
 		m_ChangedLog = true;
 	}
 }
