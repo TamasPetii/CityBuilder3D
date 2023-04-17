@@ -9,9 +9,12 @@
 
 #include <iostream>
 
+enum Mode {TWO_DIMENSION, TWO_HALF_DIMENSION, THREE_DIMENSION };
+
 class Camera
 {
 public:
+
 	Camera(GLuint width, GLuint height);
 	~Camera();
 
@@ -28,7 +31,7 @@ public:
 	void Set_ProjMatrix(GLuint width, GLuint height);
 	void Set_ProjMatrix(GLfloat fov, GLuint width, GLuint height);
 	void Set_ProjMatrix(GLfloat fov, GLuint width, GLuint height, GLfloat near, GLfloat far);
-
+	void Set_Mode(int mode, int x, int y);
 	//Getter
 	inline GLfloat Get_Width() const { return m_Width; }
 	inline GLfloat Get_Height() const { return m_Heigth; }
@@ -51,6 +54,7 @@ private:
 	GLfloat m_Speed = 5.f;
 	GLfloat m_Forward = 0.f;
 	GLfloat m_Sideways = 0.f;
+	GLfloat m_UpWays = 0.f;
 
 	glm::vec3 m_Eye = glm::vec3(0.f, 1.f, 2.5f);
 	glm::vec3 m_At  = glm::vec3(0.f, 0.f, 0.f );
@@ -73,4 +77,6 @@ private:
 
 	glm::mat4 m_ProjMatrix = glm::mat4(1);
 	glm::mat4 m_ViewMatrix = glm::mat4(1);
+
+	Mode mode = THREE_DIMENSION;
 };

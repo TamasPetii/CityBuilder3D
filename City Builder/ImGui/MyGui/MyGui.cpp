@@ -185,11 +185,25 @@ void MyGui::GameIdk()
         m_SaveGameLayout.show = true;
     }
 
+    ImGui::Text("Dimension:");
+    ImGui::SameLine();
+    ImGui::SetNextItemWidth(60);
+
+    
+    if (ImGui::Combo("##dimension:", &m_DimensionLayout.dimension, m_DimensionLayout.items, IM_ARRAYSIZE(m_DimensionLayout.items)))
+    {
+        m_DimensionLayout.effect = true;
+        m_DimensionLayout.show = true;
+    }
+
     ImGui::End();
 
     NewGame_Window();
     LoadGame_Window();
     SaveGame_Window();
+
+    if (m_DimensionLayout.dimension == 2 && !m_DimensionLayout.DontAskMeNextTime_3D) Dimension_3D_Popup();
+    if (m_DimensionLayout.dimension != 2 && !m_DimensionLayout.DontAskMeNextTime_2D_AND_HALF) Dimension_2D_AND_HALF_Popup();
 }
 
 void MyGui::DockSpace_MenuBar()
@@ -712,15 +726,15 @@ void MyGui::Build_KeyboardKeyEvent()
 
 void MyGui::Camera_MouseClickEvent()
 {
-    if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+    if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && m_DimensionLayout.dimension == 2)
     {
         m_Camera->Mouse_ClickEvent(GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
     }
-    if (ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+    if (ImGui::IsMouseReleased(ImGuiMouseButton_Left) && m_DimensionLayout.dimension == 2)
     {
         m_Camera->Mouse_ClickEvent(GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE, 0);
     }
-    if (ImGui::IsWindowHovered())
+    if (ImGui::IsWindowHovered() && m_DimensionLayout.dimension == 2)
     {
         m_Camera->Mouse_MoveEvent(ImGui::GetIO().MousePos.x, ImGui::GetIO().MousePos.y);
     }
@@ -766,5 +780,115 @@ void MyGui::Camera_KeyboardKeyEvent()
     if (ImGui::IsKeyReleased(ImGuiKey_D))
     {
         m_Camera->Keyboard_ButtonEvent(GLFW_KEY_D, 0, GLFW_RELEASE, 0);
+    }
+
+    //CTRL
+    if (ImGui::IsKeyPressed(ImGuiKey_LeftCtrl))
+    {
+        m_Camera->Keyboard_ButtonEvent(GLFW_KEY_LEFT_CONTROL, 0, GLFW_PRESS, 0);
+    }
+    if (ImGui::IsKeyReleased(ImGuiKey_LeftCtrl))
+    {
+        m_Camera->Keyboard_ButtonEvent(GLFW_KEY_LEFT_CONTROL, 0, GLFW_RELEASE, 0);
+    }
+
+    //SHIFT
+    if (ImGui::IsKeyPressed(ImGuiKey_LeftShift))
+    {
+        m_Camera->Keyboard_ButtonEvent(GLFW_KEY_LEFT_SHIFT, 0, GLFW_PRESS, 0);
+    }
+    if (ImGui::IsKeyReleased(ImGuiKey_LeftShift))
+    {
+        m_Camera->Keyboard_ButtonEvent(GLFW_KEY_LEFT_SHIFT, 0, GLFW_RELEASE, 0);
+    }
+}
+
+void MyGui::Dimension_2D_AND_HALF_Popup()
+{
+    if (m_DimensionLayout.show)
+    {
+        ImGui::OpenPopup("Game Dimension 2D / 2.5D");
+    }
+
+    if (ImGui::BeginPopupModal("Game Dimension 2D / 2.5D", nullptr, ImGuiWindowFlags_NoResize))
+    {
+        ImGui::SetWindowSize(ImVec2(300, 270));
+
+        //[New Game] : City Name Text Input
+        ImGui::SeparatorText("Keyboard events");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "W >> Moving FRONT");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "S >> Moving BACK");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "A >> Moving LEFT");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "D >> Moving RIGHT");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "L_SHIFT >> Moving DOWN");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "L_CTRL >> Moving UP");
+
+        ImGui::SeparatorText("Mouse events");
+        ImGui::TextColored(ImVec4(1, 1, 0, 1), "LEFT CLICK >> DEACTIVATED");
+        ImGui::TextColored(ImVec4(1, 1, 0, 1), "RIGHT CLICK >> BUILD");
+
+        ImGui::Separator();
+        ImGui::Checkbox("Don't ask me next time", &m_DimensionLayout.Ask);
+        ImGui::Separator();
+
+        //[New Game] : Okay Button
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0.75, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0.7, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0.65, 0, 1));
+        if (ImGui::Button("Okay", ImVec2(282, 0))) 
+        {
+            ImGui::CloseCurrentPopup();
+            m_DimensionLayout.show = false;
+            m_DimensionLayout.DontAskMeNextTime_2D_AND_HALF = m_DimensionLayout.Ask;
+            m_DimensionLayout.Ask = false;
+        }
+        ImGui::SetItemDefaultFocus();
+        ImGui::PopStyleColor(3);
+
+        ImGui::EndPopup();
+    }
+}
+
+void MyGui::Dimension_3D_Popup()
+{
+    if (m_DimensionLayout.show)
+    {
+        ImGui::OpenPopup("Game Dimension 3D");
+    }
+
+    if (ImGui::BeginPopupModal("Game Dimension 3D", nullptr, ImGuiWindowFlags_NoResize))
+    {
+        ImGui::SetWindowSize(ImVec2(300, 235));
+
+        //[New Game] : City Name Text Input
+        ImGui::SeparatorText("Keyboard events");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "W >> Moving FRONT");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "S >> Moving BACK");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "A >> Moving LEFT");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "D >> Moving RIGHT");
+
+        ImGui::SeparatorText("Mouse events");
+        ImGui::TextColored(ImVec4(1, 1, 0, 1), "LEFT CLICK >> ROTATE");
+        ImGui::TextColored(ImVec4(1, 1, 0, 1), "RIGHT CLICK >> BUILD");
+
+        ImGui::Separator();
+        ImGui::Checkbox("Don't ask me next time", &m_DimensionLayout.Ask);
+        ImGui::Separator();
+
+        //[New Game] : Okay Button
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0.75, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0.7, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0.65, 0, 1));
+        if (ImGui::Button("Okay", ImVec2(282, 0))) 
+        { 
+            ImGui::CloseCurrentPopup();
+            m_DimensionLayout.show = false;
+            m_DimensionLayout.DontAskMeNextTime_3D = m_DimensionLayout.Ask;
+            m_DimensionLayout.Ask = false;
+        }
+        ImGui::SetItemDefaultFocus();
+        ImGui::PopStyleColor(3);
+
+        ImGui::EndPopup();
     }
 }

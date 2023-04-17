@@ -200,6 +200,12 @@ void Application::Update()
 
 		MeteorGrp::Delete();
 	}
+
+	if (m_MyGui->Get_DimensionLayout().effect)
+	{
+		m_MyGui->Get_DimensionLayout().effect = false;
+		m_Camera->Set_Mode(m_MyGui->Get_DimensionLayout().dimension, 0, 0);
+	}
 }
 
 void Application::RenderUI()
