@@ -46,6 +46,7 @@ void Application::Update()
 		if (rand() % 50 == 23)
 		{
 			int number = rand() % 5;
+			if (rand() % 1000 == 666) number = 2500;
 
 			for (int i = 0; i < number; i++)
 			{
