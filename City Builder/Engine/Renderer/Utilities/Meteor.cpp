@@ -64,6 +64,8 @@ std::vector<std::pair<int, int>> MeteorGrp::Change()
 
 void MeteorGrp::Add(int x, int y)
 {
+	if (m_Meteors.size() == 2500) return;
+
 	float random_float = ((float)rand()) / (float)RAND_MAX; //Random number from 0.0 to 1.0 (float)
 
 	float radius = 1;

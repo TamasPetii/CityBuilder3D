@@ -41,8 +41,17 @@ void Application::Update()
 	if (m_Timer->Tick())
 	{
 		m_City->Simulate();
-		
-		//Meteor::Add(rand() % m_City->Get_GameTableSize(), rand() % m_City->Get_GameTableSize());
+
+		//Meteor shooting
+		if (rand() % 50 == 23)
+		{
+			int number = rand() % 5;
+
+			for (int i = 0; i < number; i++)
+			{
+				MeteorGrp::Add(rand() % m_City->Get_GameTableSize(), rand() % m_City->Get_GameTableSize());
+			}
+		}
 	}
 
 	if (m_FrameCounter->Tick())
