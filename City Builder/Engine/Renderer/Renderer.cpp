@@ -518,3 +518,13 @@ void Renderer::Reset_Light_Properties()
 	r_LightProperties.Kd = glm::vec3(1, 1, 1);
 	r_LightProperties.Ks = glm::vec3(0.7, 0.6, 0.6);
 }
+
+void Renderer::Render_Meteors()
+{
+	bool not_changed = !changed;
+	changed = true;
+
+	Render_Instanced(r_Meteor, MeteorGrp::Get_Transforms(), {});
+	
+	if (not_changed) changed = false;
+}

@@ -17,6 +17,9 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 
 	m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
 	m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
+
+
+	MeteorGrp::Init();
 }
 
 Application::~Application()
@@ -29,6 +32,8 @@ Application::~Application()
 
 void Application::Update()
 {
+	MeteorGrp::Update();
+
 	m_Timer->Update();
 	m_FrameCounter->Update();
 	m_Camera->Update();
@@ -48,9 +53,10 @@ void Application::Update()
 
 	if (m_MyGui->Get_NewGameLayout().effect) 
 	{
+		MeteorGrp::Clear();
+
 		m_City = new City(m_MyGui->Get_NewGameLayout().size, 10000);
 		RoadNetwork::ResetNetworks();
-		Meteor::FullClear();
 		Citizen::Log().str("");
 		Citizen::Log().clear();
 		Citizen::Log_Changed() = true;
@@ -157,41 +163,27 @@ void Application::Update()
 		Citizen::Log_Changed() = false;
 	}
 
-	if (Meteor::IsActive())
-	{
-		if (Meteor::Init)
-		{
-			Meteor::Init = false;
-			Meteor::AdjustTime();
-		}
-
-		Meteor::Update();
-
-		std::vector<std::pair<int, int>> fields = Meteor::Get_Fields();
-
-		for (int i = 0; i < fields.size(); i++)
-		{
-			if (fields[i].second != 49)
-			{
-				m_City->Set_GameTableValue(fields[i].first, fields[i].second, CRATER);
-			}
-			changed = true;
-		}
-
-		Meteor::Clear();
-	}
-	else 
-	{
-		Meteor::Init = true;
-	}
-
 	if (m_MyGui->Get_CatastropheLayout().effect)
 	{
 		m_MyGui->Get_CatastropheLayout().effect = false;
 		for (int i = 0; i < m_MyGui->Get_CatastropheLayout().count; i++)
 		{
-			Meteor::Add(rand() % m_City->Get_GameTableSize(), rand() % m_City->Get_GameTableSize());
+			MeteorGrp::Add(rand() % m_City->Get_GameTableSize(), rand() % m_City->Get_GameTableSize());
 		}
+	}
+
+	if (MeteorGrp::Effect())
+	{
+		auto fields = MeteorGrp::Change();
+
+		for (auto field : fields)
+		{
+			if(field.second != 49)
+				m_City->Set_GameTableValue(field.first, field.second, CRATER);
+			changed = true;
+		}
+
+		MeteorGrp::Delete();
 	}
 }
 
@@ -430,7 +422,7 @@ void Application::Render()
 	}
 
 
-	m_Renderer->Render(INSTANCED, R_METEOR, Meteor::Get_Transforms());
+	m_Renderer->Render_Meteors();
 
 	m_Renderer->Render_Ground(transforms_GROUND, numbers_GROUND);
 	m_Renderer->Render(INSTANCED, R_FOREST,                transforms_FOREST);
