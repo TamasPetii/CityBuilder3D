@@ -9,7 +9,8 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 
 	m_Camera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
 	m_City = new City(50, 10000);
-	m_Renderer = new Renderer(m_Camera);
+	Renderer::Init(m_Camera);
+
 	m_MyGui = new MyGui(m_Camera);
 	m_FrameCounter = new FrameCounter();
 	m_Timer = new Timer(0.1);
@@ -25,7 +26,6 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 Application::~Application()
 {
 	delete m_Camera;
-	delete m_Renderer;
 	delete m_MyGui;
 	delete m_City;
 }
@@ -117,13 +117,13 @@ void Application::Update()
 
 	if (m_MyGui->Get_LightsLayout().effect)
 	{
-		m_Renderer->Set_Light_Properties(m_MyGui->Get_LightsLayout().lightDir, m_MyGui->Get_LightsLayout().specularPow, m_MyGui->Get_LightsLayout().La, m_MyGui->Get_LightsLayout().Ld, m_MyGui->Get_LightsLayout().Ls, m_MyGui->Get_LightsLayout().Ka, m_MyGui->Get_LightsLayout().Kd, m_MyGui->Get_LightsLayout().Ks);
+		//m_Renderer->Set_Light_Properties(m_MyGui->Get_LightsLayout().lightDir, m_MyGui->Get_LightsLayout().specularPow, m_MyGui->Get_LightsLayout().La, m_MyGui->Get_LightsLayout().Ld, m_MyGui->Get_LightsLayout().Ls, m_MyGui->Get_LightsLayout().Ka, m_MyGui->Get_LightsLayout().Kd, m_MyGui->Get_LightsLayout().Ks);
 		m_MyGui->Get_LightsLayout().effect = false;
 	}
 
 	if (m_MyGui->Get_LightsLayout().reset)
 	{
-		m_Renderer->Reset_Light_Properties();
+		//m_Renderer->Reset_Light_Properties();
 
 		m_MyGui->Get_LightsLayout().lightDir = glm::vec3(1, -1, 1);
 		m_MyGui->Get_LightsLayout().specularPow = 64;
@@ -142,7 +142,7 @@ void Application::Update()
 	if (m_MyGui->hit)
 	{
 		m_MyGui->hit = false;
-		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, m_Renderer->Get_FrameBuffer()->Get_FrameWidth(), m_Renderer->Get_FrameBuffer()->Get_FrameHeight());
+		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, Renderer::Get_FrameBuffer()->Get_FrameWidth(), Renderer::Get_FrameBuffer()->Get_FrameHeight());
 
 		if (m_MyGui->Get_BuildLayout().building == -1)
 		{
@@ -216,7 +216,7 @@ void Application::RenderUI()
 	m_MyGui->CityDetials_Window();
 	m_MyGui->Log_Window();
 	//m_MyGui->GameIdk();
-	m_MyGui->ViewPort_Render(m_Renderer->Get_FrameBuffer());
+	m_MyGui->ViewPort_Render(Renderer::Get_FrameBuffer());
 
 	m_MyGui->Post_Render();
 }
@@ -229,11 +229,18 @@ void Application::Render()
 		{
 			for (int j = 0; j < m_City->Get_GameTableSize(); j++)
 			{
-				Transform transform;
-				transform.translate = glm::translate(glm::vec3(2 * j + 1, 0, 2 * i + 1));
+				int type = m_City->Get_GameField(i, j)->Get_Type();
+				Renderer::AddTransforms((RenderShapeType)type, i, j, 0);
+			}
+		}
+		Renderer::Changed = true;
+		changed = false;
+	}
 
-				GameField* field = m_City->Get_GameField(i, j);
-
+	Renderer::PreRender();
+	Renderer::SceneRender(INSTANCED);
+	Renderer::PostRender();
+				/*
 				if (!field->IsRoad())
 					transforms_GROUND.push_back(Transform::MultiplyTransformMatrices(transform));
 
@@ -495,6 +502,7 @@ void Application::Render()
 		transforms_SCHOOL2.clear();
 		transforms_CHARACTER.clear();
 	}
+	*/
 }
 
 
@@ -506,8 +514,6 @@ void Application::Window_ResizedEvent(int width, int height)
 {
 	m_WindowWidth = width;
 	m_WindowHeight = height;
-
-	m_Renderer->Set_WindowSize(width, height);
 };
 
 void Application::FrameBuffer_ResizedEvent(int width, int height)

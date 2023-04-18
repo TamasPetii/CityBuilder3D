@@ -249,7 +249,6 @@
     <ClInclude Include="Abstractions\Texture.h" />
     <ClInclude Include="Abstractions\Vertex.h" />
     <ClInclude Include="Abstractions\VertexArrayObject.h" />
-    <ClInclude Include="Renderer\RendererLayout.h" />
     <ClInclude Include="Shapes\Complex Shapes\Ground\Ground.h" />
     <ClInclude Include="Renderer\Renderer.h" />
     <ClInclude Include="Shapes\Basic Shapes\BasicShapes.h" />

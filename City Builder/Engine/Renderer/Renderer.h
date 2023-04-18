@@ -2,6 +2,8 @@
 
 #define _USE_MATH_DEFINES
 
+#define CHECK_EMPTY(x) if(x == 0) return;
+
 //Abstractions
 #include "../Abstractions/Model.h"
 #include "../Utilities/Camera.h"
@@ -12,12 +14,15 @@
 //Shapes
 #include "../Shapes/Basic Shapes/BasicShapes.h"
 #include "../Shapes/Complex Shapes/ComplexShape.h"
-#include "RendererLayout.h"
 
 #include "Utilities/Skybox.h"
 #include "Utilities/Meteor.h"
 
 #include <cmath>
+#include <list>
+
+//#include "RenderTransforms.h"
+//#include "RenderShapes.h"
 
 struct LightProperties
 {
@@ -32,7 +37,9 @@ struct LightProperties
 
 };
 
-class Renderer 
+/*
+
+class asd 
 {
 public:
 	Renderer(Camera* camera);
@@ -44,9 +51,6 @@ public:
 
 	FrameBuffer* Get_FrameBuffer() { return m_FrameBuffer; }
 
-	inline void Set_WindowSize(int w, int h) { m_Window_Width = w; m_Window_Height = h; }
-	int m_Window_Width;
-	int m_Window_Height;
 	bool changed;
 	bool buildable;
 
@@ -91,40 +95,78 @@ private:
 	TextureMap* t_TextureSkybox = nullptr;
 
 	Model* m_Model = nullptr;
-	Cube* r_Cube = nullptr;
-	Cone* r_Cone = nullptr;
-	Sphere* r_Sphere = nullptr;
-	Pyramid* r_Pyramid = nullptr;
-	Cylinder* r_Cylinder = nullptr;
 
-	Shape_Meteor* r_Meteor = nullptr;
 	Skybox* r_Skybox = nullptr;
-	Ground* r_Ground = nullptr;
-	ResidenceBuilding1* r_Residence1 = nullptr;
-	ResidenceBuilding2* r_Residence2 = nullptr;
-	ResidenceBuilding3* r_Residence3 = nullptr;
-	IndustryBuilding1* r_Industry1 = nullptr;
-	IndustryBuilding2* r_Industry2 = nullptr;
-	IndustryBuilding3* r_Industry3 = nullptr;
-	ServiceBuilding1* r_Service1 = nullptr;
-	ServiceBuilding2* r_Service2 = nullptr;
-	ServiceBuilding3* r_Service3 = nullptr;
-	SchoolBuilding1* r_School1 = nullptr;
-	SchoolBuilding2* r_School2 = nullptr;
-	PowerBuilding* r_PowerStation = nullptr;
-	PowerWireBuilding* r_PowerWire = nullptr;
-	PowerBuildingPlinth* r_PowerStationPlinth = nullptr;
-	FireBuilding* r_FireStation = nullptr;
-	PoliceBuilding* r_PoliceStation = nullptr;
-	StadionBuilding* r_Stadion = nullptr;
-	Tree* r_Tree = nullptr;
-	WindTurbine* r_Turbine = nullptr;
-	WindTurbinePropeller* r_TurbinePropeller = nullptr;
 	LightProperties r_LightProperties;
+};
+*/
 
+#include <unordered_map>
+#include <utility>
 
+enum RenderShapeType;
+enum RenderMode;
 
+class Renderer
+{
+public:
+	static bool Changed;
 
+	static void Init(Camera* camera);
+	static void Destroy();
 
+	static void ResizeShapeBuffer(int buffer_size);
+	static void AddTransforms(RenderShapeType type, int x, int y, int direction);
+	static void ClearTransforms();
 
+	static void ClearScene();
+
+	static void PreRender();
+	static void SceneRender(RenderMode mode);
+	static void PostRender();
+
+	static FrameBuffer* Get_FrameBuffer() { return m_FrameBuffer; }
+protected:
+	static void RenderInstanced(Shape* shape, const std::vector<glm::mat4>& transforms);
+	static void RenderInstanced_Wireframe(Shape* shape, const std::vector<glm::mat4>& transforms);
+private:
+	static Camera* m_Camera;
+	static ProgramObject* m_InstanceProgram;
+	static ProgramObject* m_NormalProgram;
+	static ProgramObject* m_RayProgram;
+	static ProgramObject* m_SkyboxProgram;
+	static FrameBuffer* m_FrameBuffer;
+	static Texture2D* m_GameTexture;
+	static TextureMap* m_SkyboxTexture;
+	static std::unordered_map<RenderShapeType, std::pair<Shape*, std::vector<glm::mat4>>> m_ShapeData;
+};
+
+enum RenderMode
+{
+	INSTANCED,
+	INSTANCED_WIREFRAME,
+	NORMAL,
+	NORMAL_WIREFRAME
+};
+
+enum RenderShapeType
+{
+	RENDER_RESIDENTIAL_LVL1,
+	RENDER_RESIDENTIAL_LVL2,
+	RENDER_RESIDENTIAL_LVL3,
+	RENDER_INDUSTRIAL_LVL1,
+	RENDER_INDUSTRIAL_LVL2,
+	RENDER_INDUSTRIAL_LVL3,
+	RENDER_SERVICE_LVL1,
+	RENDER_SERVICE_LVL2,
+	RENDER_SERVICE_LVL3,
+	RENDER_FOREST,
+	RENDER_POLICESTATION,
+	RENDER_FIRESTATION,
+	RENDER_HIGHSCHOOL,
+	RENDER_UNIVERSITY,
+	RENDER_STADIUM,
+	RENDER_POWERWIRE,
+	RENDER_WINDTURBINE,
+	RENDER_WINDTURBINE_PROPELLER
 };
