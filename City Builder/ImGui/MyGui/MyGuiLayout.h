@@ -108,3 +108,26 @@ struct DimensionLayout
 	bool DontAskMeNextTime_2D_AND_HALF = false;
 	bool DontAskMeNextTime_3D = false;
 };
+
+struct RenderWindowLayout
+{
+	int fps;
+	float time;
+	bool fps_lock;
+
+	bool show = false;
+	bool Ask = false;
+	bool DontAskMeNextTime_2D_AND_HALF = false;
+	bool DontAskMeNextTime_3D = false;
+	const char* items[3] = { "2D", "2.5D", "3D" };
+};
+
+struct CameraLayout
+{
+	bool effect = false;
+	bool Ask = false;
+	bool DontAskMeNextTime_2D_AND_HALF = false;
+	bool DontAskMeNextTime_3D = false;
+
+	int dimension = 2;
+};

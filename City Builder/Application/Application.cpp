@@ -66,7 +66,8 @@ void Application::Update()
 
 	if (m_FrameCounter->Tick())
 	{
-		std::cout << m_FrameCounter->Get_FPS() << std::endl;
+		m_MyGui->Get_RenderWindowLayout().fps = m_FrameCounter->Get_FPS();
+		m_MyGui->Get_RenderWindowLayout().time = m_FrameCounter->Get_DeltaTime();
 		m_FrameCounter->Reset();
 	}
 

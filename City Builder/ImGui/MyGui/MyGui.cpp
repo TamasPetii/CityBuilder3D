@@ -23,7 +23,7 @@ void MyGui::Custom_Style()
 {
     ImGui::StyleColorsDark();
     ImGuiStyle& style = ImGui::GetStyle();
-
+    
     style.Colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
     style.Colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
     style.Colors[ImGuiCol_WindowBg] = ImVec4(0.13f, 0.14f, 0.15f, 1.00f);
@@ -74,8 +74,9 @@ void MyGui::Custom_Style()
     style.Colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
     style.Colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
     style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
-    style.GrabRounding = style.FrameRounding = 2.3f;
-
+    style.GrabRounding = style.FrameRounding = 2.f;
+    style.FramePadding = ImVec2(2, 2);
+    
     if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
         style.WindowRounding = 0.0f;
@@ -124,7 +125,7 @@ void MyGui::DockSpace()
     static bool opt_padding = false;
     static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
-    ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
     if (opt_fullscreen)
     {
         const ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -163,48 +164,12 @@ void MyGui::DockSpace()
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     }
 
-    GameIdk();
+    DockSpace_MenuBar();
+    Render_Window();
 
     ImGui::End();
 }
 
-void MyGui::GameIdk()
-{
-    ImGui::Begin("Game-IDK");
-
-    if (ImGui::Button("New Game"))
-    {
-        m_NewGameLayout.show = true;
-    }
-    if (ImGui::Button("Load Game"))
-    {
-        m_LoadGameLayout.show = true;
-    }
-    if (ImGui::Button("Save Game"))
-    {
-        m_SaveGameLayout.show = true;
-    }
-
-    ImGui::Text("Dimension:");
-    ImGui::SameLine();
-    ImGui::SetNextItemWidth(60);
-
-    
-    if (ImGui::Combo("##dimension:", &m_DimensionLayout.dimension, m_DimensionLayout.items, IM_ARRAYSIZE(m_DimensionLayout.items)))
-    {
-        m_DimensionLayout.effect = true;
-        m_DimensionLayout.show = true;
-    }
-
-    ImGui::End();
-
-    NewGame_Window();
-    LoadGame_Window();
-    SaveGame_Window();
-
-    if (m_DimensionLayout.dimension == 2 && !m_DimensionLayout.DontAskMeNextTime_3D) Dimension_3D_Popup();
-    if (m_DimensionLayout.dimension != 2 && !m_DimensionLayout.DontAskMeNextTime_2D_AND_HALF) Dimension_2D_AND_HALF_Popup();
-}
 
 void MyGui::DockSpace_MenuBar()
 {
@@ -892,4 +857,200 @@ void MyGui::Dimension_3D_Popup()
 
         ImGui::EndPopup();
     }
+}
+
+void MyGui::Render_Window()
+{
+    ImGui::Begin("Render-Options-Details");
+
+    ImGuiTableFlags table_flags = ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersH;
+    if (ImGui::CollapsingHeader("Frame", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        if (ImGui::BeginTable("Frame Table", 2, table_flags))
+        {
+            //1 RAW: FPS LOCK
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Frame Lock:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            if (ImGui::Checkbox("##frame-lock", &m_RenderWindowLayout.fps_lock))
+            {
+                glfwSwapInterval(m_RenderWindowLayout.fps_lock);
+            }
+
+            //2 RAW: FPS
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Frame:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            ImGui::Text("%d", m_RenderWindowLayout.fps);
+
+            //3 RAW: Time
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Time (ms):");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            ImGui::Text("%f", m_RenderWindowLayout.time);
+
+            ImGui::EndTable();
+        }
+    }
+
+    if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        if (ImGui::BeginTable("Camera Table", 2, table_flags))
+        {
+            //1 RAW: CAMERA DIMENSION MODE
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Mode:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            if (ImGui::Combo("##dimension:", &m_DimensionLayout.dimension, m_DimensionLayout.items, IM_ARRAYSIZE(m_DimensionLayout.items)))
+            {
+                m_DimensionLayout.effect = true;
+                m_DimensionLayout.show = true;
+            }
+
+            //2 RAW: CAMERA SPEED
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Speed:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            ImGui::SliderFloat("##camera-speed", &m_Camera->Get_Speed(), 5, 15);
+            
+            //3 RAW: CAMERA POSITON
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Position:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            ImGui::Text("(%.1f,%.1f,%.1f)", m_Camera->Get_CameraEye().x, m_Camera->Get_CameraEye().y, m_Camera->Get_CameraEye().z);
+
+            ImGui::EndTable();
+        }
+
+    }
+
+    if (ImGui::CollapsingHeader("Render", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        if (ImGui::BeginTable("Render Table", 2, table_flags))
+        {
+            for (int i = 0; i < 17; i++)
+            {
+                //1 RAW: FPS LOCK
+                ImGui::TableNextRow();
+                ImGui::TableNextColumn();
+                ImGui::Text("Tree:");
+                ImGui::TableNextColumn();
+                ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+                ImGui::Text("%d", 5);
+
+            }
+
+            ImGui::EndTable();
+        }
+    }
+
+    if (ImGui::CollapsingHeader("Lights", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        if (ImGui::BeginTable("Lights Table", 2, table_flags))
+        {
+            //1 RAW: Direction
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Direction:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            if (ImGui::SliderFloat3("##light_direction", &m_LightsLayout.lightDir.x, -1, 1, "%.1f", 0))
+                m_LightsLayout.effect = true;
+
+            //2 RAW: Shininess
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Shininess:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            if (ImGui::SliderInt("##shininess", &m_LightsLayout.specularPow, 1, 100, "%d", 0))
+                m_LightsLayout.effect = true;
+
+            //3 RAW: LA
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("La:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            if (ImGui::SliderFloat3("##la", &m_LightsLayout.La.x, 0, 1, "%.1f", 0))
+                m_LightsLayout.effect = true;
+
+            //4 RAW: LD
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Ld:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            if (ImGui::SliderFloat3("##ld", &m_LightsLayout.Ld.x, 0, 1, "%.1f", 0))
+                m_LightsLayout.effect = true;
+
+            //4 RAW: Ls
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Ls:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            if (ImGui::SliderFloat3("##ls", &m_LightsLayout.Ls.x, 0, 1, "%.1f", 0))
+                m_LightsLayout.effect = true;
+
+            //5 RAW: Ka
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Ka:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            if (ImGui::SliderFloat3("##ka", &m_LightsLayout.Ka.x, 0, 1, "%.1f", 0))
+                m_LightsLayout.effect = true;
+
+            //6 RAW: Kd
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Kd:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            if (ImGui::SliderFloat3("##kd", &m_LightsLayout.Kd.x, 0, 1, "%.1f", 0))
+                m_LightsLayout.effect = true;
+
+            //7 RAW: Ks
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Ks:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            if (ImGui::SliderFloat3("##ks", &m_LightsLayout.Ks.x, 0, 1, "%.1f", 0))
+                m_LightsLayout.effect = true;
+
+            //8 RAW: RESET
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Reset:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            if (ImGui::Button("Reset", ImVec2(ImGui::GetColumnWidth(), 0)))
+            {
+                m_LightsLayout.effect = true;
+                m_LightsLayout.reset = true;
+            }
+
+            ImGui::EndTable();
+        }
+
+    }
+
+    if (m_DimensionLayout.dimension == 2 && !m_DimensionLayout.DontAskMeNextTime_3D) Dimension_3D_Popup();
+    if (m_DimensionLayout.dimension != 2 && !m_DimensionLayout.DontAskMeNextTime_2D_AND_HALF) Dimension_2D_AND_HALF_Popup();
+
+    ImGui::End();
 }

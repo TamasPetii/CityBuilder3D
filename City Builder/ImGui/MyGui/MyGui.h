@@ -37,6 +37,7 @@ public:
 	void ViewPort_Render(FrameBuffer* fbo);
 	void GameIdk();
 
+	void Render_Window();
 
 
 	inline NewGameLayout& Get_NewGameLayout() { return m_NewGameLayout; }
@@ -50,6 +51,7 @@ public:
 	inline CatastropheLayout& Get_CatastropheLayout() { return m_MeteorLayout; }
 	inline CityLayout& Get_CityLayout() { return m_CityLayout; }
 	inline DimensionLayout& Get_DimensionLayout() { return m_DimensionLayout; }
+	inline RenderWindowLayout& Get_RenderWindowLayout() { return m_RenderWindowLayout; }
 
 	bool BuildHover = false;
 	int r = 0;
@@ -89,7 +91,7 @@ private:
 	LightsLayout m_LightsLayout;
 	CatastropheLayout m_MeteorLayout;
 	DimensionLayout m_DimensionLayout;
-
+	RenderWindowLayout m_RenderWindowLayout;
 	imgui_addons::ImGuiFileBrowser file_dialog;
 };
 

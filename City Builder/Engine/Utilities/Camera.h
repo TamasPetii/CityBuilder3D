@@ -44,6 +44,9 @@ public:
 	inline glm::vec3 Get_CameraAt() const { return m_At; }
 	inline glm::vec3 Get_CameraUp() const { return m_Up; }
 
+	inline GLfloat& Get_Speed() { return m_Speed; }
+	inline int& Get_Mode() { return mode; }
+
 protected:
 	void Keyboard_PressEvent(GLuint key);
 	void Keyboard_ReleaseEvent(GLint key);
@@ -78,5 +81,5 @@ private:
 	glm::mat4 m_ProjMatrix = glm::mat4(1);
 	glm::mat4 m_ViewMatrix = glm::mat4(1);
 
-	Mode mode = THREE_DIMENSION;
+	int mode = THREE_DIMENSION;
 };
