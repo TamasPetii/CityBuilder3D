@@ -34,7 +34,7 @@ public:
 	static void Destroy();
 
 	static void ResizeShapeBuffer(int buffer_size);
-	static void AddShapeTransforms(RenderShapeType type, int x, int y, int direction);
+	static void AddShapeTransforms(RenderShapeType type, int x, int y, int direction, int amount);
 	static void AddGroundTransforms(int x, int y, int texture);
 	static void ClearShapeTransforms();
 	static int  DetermineGroundTextureID(RenderShapeType type);

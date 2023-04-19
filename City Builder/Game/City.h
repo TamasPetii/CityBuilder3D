@@ -48,6 +48,8 @@ public:
 	int Get_Year() { return m_DailyTickCounter / 360 + 2000; }
 	int Get_Month() { return m_DailyTickCounter % 360 / 30; }
 	int Get_Day() { return (m_DailyTickCounter % 360) % 30 + 1; }
+
+	int Get_CitizenSize() { return m_Citizens.size(); }
 private:
 	std::unordered_set<Citizen*> m_Citizens;
 	GameTable* m_GameTable;

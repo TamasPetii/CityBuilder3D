@@ -43,6 +43,8 @@ void Application::Update()
 
 	if (m_Timer->Tick())
 	{
+		int size = m_City->Get_CitizenSize();
+
 		m_City->Simulate();
 		m_MyGui->Get_CityLayout().money = m_City->Get_Money();
 		m_MyGui->Get_CityLayout().time = m_City->Get_Time_Str();
@@ -58,6 +60,8 @@ void Application::Update()
 				MeteorGrp::Add(rand() % m_City->Get_GameTableSize(), rand() % m_City->Get_GameTableSize());
 			}
 		}
+
+		changed = m_City->Get_CitizenSize() != size;
 	}
 
 	if (m_FrameCounter->Tick())
@@ -229,7 +233,29 @@ void Application::Render()
 			for (int j = 0; j < m_City->Get_GameTableSize(); j++)
 			{
 				int type = m_City->Get_GameField(i, j)->Get_Type();
-				Renderer::AddShapeTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_FieldDirection());
+				int amount = 1;
+
+				if (m_City->Get_GameField(i, j)->IsZone())
+				{
+					Zone* zone = dynamic_cast<Zone*>(m_City->Get_GameField(i, j));
+					if (type == RESIDENTIAL_LVL1) amount = zone->Get_ZoneDetails().contain;
+					if (type == RESIDENTIAL_LVL2) amount = zone->Get_ZoneDetails().contain / 2 + zone->Get_ZoneDetails().contain % 2;
+					if (type == RESIDENTIAL_LVL3) amount = zone->Get_ZoneDetails().contain / 8 + (zone->Get_ZoneDetails().contain % 8 == 0 ? 0 : 1);
+					if (type == INDUSTRIAL_LVL1) amount = zone->Get_ZoneDetails().contain;
+					if (type == INDUSTRIAL_LVL2) amount = zone->Get_ZoneDetails().contain;
+					if (type == INDUSTRIAL_LVL3) amount = zone->Get_ZoneDetails().contain;
+					if (type == SERVICE_LVL1) amount = zone->Get_ZoneDetails().contain;
+					if (type == SERVICE_LVL2) amount = zone->Get_ZoneDetails().contain / 2 + zone->Get_ZoneDetails().contain % 2;
+					if (type == SERVICE_LVL3) amount = zone->Get_ZoneDetails().contain / 4 + (zone->Get_ZoneDetails().contain % 4 == 0 ? 0 : 1);
+				}
+
+				if (m_City->Get_GameField(i, j)->IsForest())
+				{
+					Forest* zone = dynamic_cast<Forest*>(m_City->Get_GameField(i, j));
+					amount = zone->age;
+				}
+
+				Renderer::AddShapeTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_FieldDirection(), amount);
 				Renderer::AddGroundTransforms(i, j, type == ROAD ? DetermineRoadTextureID(i, j) : Renderer::DetermineGroundTextureID((RenderShapeType)type));
 			}
 		}
