@@ -96,3 +96,15 @@ struct CatastropheLayout
 	bool effect;
 	int count;
 };
+
+struct DimensionLayout
+{
+	bool show = false;
+	bool effect = false;
+	int dimension = 2;
+	const char* items[3] = { "2D", "2.5D", "3D" };
+
+	bool Ask = false;
+	bool DontAskMeNextTime_2D_AND_HALF = false;
+	bool DontAskMeNextTime_3D = false;
+};

@@ -49,7 +49,7 @@ public:
 	inline LogLayout& Get_LogLayout() { return m_LogLayout; }
 	inline CatastropheLayout& Get_CatastropheLayout() { return m_MeteorLayout; }
 	inline CityLayout& Get_CityLayout() { return m_CityLayout; }
-
+	inline DimensionLayout& Get_DimensionLayout() { return m_DimensionLayout; }
 
 	bool BuildHover = false;
 	int r = 0;
@@ -69,6 +69,9 @@ protected:
 	void LoadGame_Window();
 	void SaveGame_Window();
 	void DockSpace_MenuBar();
+
+	void Dimension_2D_AND_HALF_Popup();
+	void Dimension_3D_Popup();
 private:
 	Camera* m_Camera = nullptr;
 	int m_ViewPort_Width = 0;
@@ -83,9 +86,9 @@ private:
 	FieldDetailsLayout m_FieldDetailsLayout;
 	LogLayout m_LogLayout;
 	CityLayout m_CityLayout;
-
 	LightsLayout m_LightsLayout;
 	CatastropheLayout m_MeteorLayout;
+	DimensionLayout m_DimensionLayout;
 
 	imgui_addons::ImGuiFileBrowser file_dialog;
 };
