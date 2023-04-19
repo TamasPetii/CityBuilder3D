@@ -151,7 +151,6 @@
     <ClInclude Include="Citizen.h" />
     <ClInclude Include="City.h" />
     <ClInclude Include="GameFields\Buildings\_BuildingHeaders.h" />
-    <ClInclude Include="GameFields\GameFieldType.h" />
     <ClInclude Include="GameFields\General\Empty.h" />
     <ClInclude Include="GameFields\Buildings\FireStation.h" />
     <ClInclude Include="GameFields\General\Forest.h" />

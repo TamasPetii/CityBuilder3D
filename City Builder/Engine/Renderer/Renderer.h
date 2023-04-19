@@ -47,8 +47,8 @@ public:
 	static void Set_LightProperties(const LightProperties& LightProperties);
 	static inline FrameBuffer* Get_FrameBuffer() { return m_FrameBuffer; }
 
-	static void RenderNormal(RenderShapeType type, int x, int y);
-	static void RenderNormal_Wireframe(RenderShapeType type, int x, int y);
+	static void RenderNormal(RenderShapeType type, int x, int y, int direction);
+	static void RenderNormal_Wireframe(RenderShapeType type, int x, int y, int direction);
 	static void RenderInstanced(Shape* shape, const std::vector<glm::mat4>& transforms);
 	static void RenderInstanced_Wireframe(Shape* shape, const std::vector<glm::mat4>& transforms);
 protected:

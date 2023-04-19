@@ -36,7 +36,7 @@ public:
 	void SetTaxRate(FieldType type, float rate);
 	inline GameField* Get_GameField(int x, int y) const { return m_GameTable->Get_TableValue(x, y); };
 	inline int Get_GameTableSize() const { return m_GameTable->Get_TableSize(); }
-	void Set_GameTableValue(int x, int y, FieldType type);
+	void Set_GameTableValue(int x, int y, FieldType type, FieldDirection dir);
 	inline float Get_Money() { return m_Money; }
 	inline int Get_Time() { return m_DailyTickCounter; }
 	inline std::string Get_Time_Str() { return std::to_string(Get_Year()) + "." + std::to_string(Get_Month()) + "." + std::to_string(Get_Day()); }
