@@ -21,6 +21,9 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 
 
 	MeteorGrp::Init();
+
+	m_MyGui->Get_LightsLayout().effect = true;
+	m_MyGui->Get_LightsLayout().reset = true;
 }
 
 Application::~Application()
@@ -117,23 +120,18 @@ void Application::Update()
 
 	if (m_MyGui->Get_LightsLayout().effect)
 	{
-		//m_Renderer->Set_Light_Properties(m_MyGui->Get_LightsLayout().lightDir, m_MyGui->Get_LightsLayout().specularPow, m_MyGui->Get_LightsLayout().La, m_MyGui->Get_LightsLayout().Ld, m_MyGui->Get_LightsLayout().Ls, m_MyGui->Get_LightsLayout().Ka, m_MyGui->Get_LightsLayout().Kd, m_MyGui->Get_LightsLayout().Ks);
+		LightProperties r_LightProperties;
+		r_LightProperties.lightDir    = m_MyGui->Get_LightsLayout().reset ? glm::vec3(1, -1, 1) : m_MyGui->Get_LightsLayout().lightDir;
+		r_LightProperties.specularPow = m_MyGui->Get_LightsLayout().reset ? 64 : m_MyGui->Get_LightsLayout().specularPow;
+		r_LightProperties.La = m_MyGui->Get_LightsLayout().reset ? glm::vec3(0.5, 0.5, 0.5) : m_MyGui->Get_LightsLayout().La;
+		r_LightProperties.Ld = m_MyGui->Get_LightsLayout().reset ? glm::vec3(1, 1, 0.85) : m_MyGui->Get_LightsLayout().Ld;
+		r_LightProperties.Ls = m_MyGui->Get_LightsLayout().reset ? glm::vec3(1, 1, 1) : m_MyGui->Get_LightsLayout().Ls;
+		r_LightProperties.Ka = m_MyGui->Get_LightsLayout().reset ? glm::vec3(0.8, 0.8, 0.8) : m_MyGui->Get_LightsLayout().Ka;
+		r_LightProperties.Kd = m_MyGui->Get_LightsLayout().reset ? glm::vec3(1, 1, 1) : m_MyGui->Get_LightsLayout().Kd;
+		r_LightProperties.Ks = m_MyGui->Get_LightsLayout().reset ? glm::vec3(0.7, 0.6, 0.6) : m_MyGui->Get_LightsLayout().Ks;
+		Renderer::Set_LightProperties(r_LightProperties);
+
 		m_MyGui->Get_LightsLayout().effect = false;
-	}
-
-	if (m_MyGui->Get_LightsLayout().reset)
-	{
-		//m_Renderer->Reset_Light_Properties();
-
-		m_MyGui->Get_LightsLayout().lightDir = glm::vec3(1, -1, 1);
-		m_MyGui->Get_LightsLayout().specularPow = 64;
-		m_MyGui->Get_LightsLayout().La = glm::vec3(0.5, 0.5, 0.5);
-		m_MyGui->Get_LightsLayout().Ld = glm::vec3(1, 1, 0.85);
-		m_MyGui->Get_LightsLayout().Ls = glm::vec3(1, 1, 1);
-		m_MyGui->Get_LightsLayout().Ka = glm::vec3(0.8, 0.8, 0.8);
-		m_MyGui->Get_LightsLayout().Kd = glm::vec3(1, 1, 1);
-		m_MyGui->Get_LightsLayout().Ks = glm::vec3(0.7, 0.6, 0.6);
-
 		m_MyGui->Get_LightsLayout().reset = false;
 	}
 
@@ -230,7 +228,8 @@ void Application::Render()
 			for (int j = 0; j < m_City->Get_GameTableSize(); j++)
 			{
 				int type = m_City->Get_GameField(i, j)->Get_Type();
-				Renderer::AddTransforms((RenderShapeType)type, i, j, 0);
+				Renderer::AddShapeTransforms((RenderShapeType)type, i, j, 0);
+				Renderer::AddGroundTransforms(i, j, type == ROAD ? DetermineRoadTextureID(i, j) : Renderer::DetermineGroundTextureID((RenderShapeType)type));
 			}
 		}
 		Renderer::Changed = true;
@@ -239,270 +238,22 @@ void Application::Render()
 
 	Renderer::PreRender();
 	Renderer::SceneRender(INSTANCED);
-	Renderer::PostRender();
-				/*
-				if (!field->IsRoad())
-					transforms_GROUND.push_back(Transform::MultiplyTransformMatrices(transform));
 
-				if (field->IsEmpty())
-				{
-					numbers_GROUND.push_back(0);
-				}
-				else if (field->IsCrater())
-				{
-					numbers_GROUND.push_back(49);
-				}
-				else if (field->IsRoad())
-				{
-					bool upper_field = false;
-					bool lower_field = false;
-					bool left_field = false;
-					bool right_field = false;
-
-					if (j + 1 < m_City->Get_GameTableSize())
-						upper_field = m_City->Get_GameField(i, j + 1)->IsRoad();
-					if (j - 1 >= 0)
-						lower_field = m_City->Get_GameField(i, j - 1)->IsRoad();
-					if (i + 1 < m_City->Get_GameTableSize())
-						right_field = m_City->Get_GameField(i + 1, j)->IsRoad();
-					if (i - 1 >= 0)
-						left_field = m_City->Get_GameField(i - 1, j)->IsRoad();
-
-					if (upper_field && lower_field && right_field && left_field)
-					{
-						numbers_GROUND.push_back(6); //Keresztezõdés
-					}
-					else if ((upper_field && !lower_field && !right_field && !left_field) || (!upper_field && lower_field && !right_field && !left_field) || (upper_field && lower_field && !right_field && !left_field))
-					{
-						numbers_GROUND.push_back(7); //Átmenõ fel-le
-					}
-					else if ((!upper_field && !lower_field && right_field && !left_field) || (!upper_field && !lower_field && !right_field && left_field) || (!upper_field && !lower_field && right_field && left_field))
-					{
-						numbers_GROUND.push_back(7); //Átmenõ jobbra-balra
-						transform.rotate = glm::rotate<float>(M_PI / 2, glm::vec3(0, 1, 0));
-					}
-					else if ((upper_field && !lower_field && right_field && left_field))
-					{
-						numbers_GROUND.push_back(5); //Három ágú balra-fel-jobbra
-					}
-					else if ((!upper_field && lower_field && right_field && left_field))
-					{
-						numbers_GROUND.push_back(5);//Három ágú balra-le-jobbra
-						transform.rotate = glm::rotate<float>(M_PI, glm::vec3(0, 1, 0));
-					}
-					else if ((upper_field && lower_field && right_field && !left_field))
-					{
-						numbers_GROUND.push_back(5);//Három ágú jobbra-fel-le
-						transform.rotate = glm::rotate<float>(-M_PI/2, glm::vec3(0, 1, 0));
-					}
-					else if ((upper_field && lower_field && !right_field && left_field))
-					{
-						numbers_GROUND.push_back(5);//Három ágú balra-fel-le
-						transform.rotate = glm::rotate<float>(M_PI/2, glm::vec3(0, 1, 0));
-					}
-					else if ((!upper_field && lower_field && right_field && !left_field))
-					{
-						numbers_GROUND.push_back(4);//kanyar lentrõl-jobbra
-						transform.rotate = glm::rotate<float>(M_PI/2, glm::vec3(0, 1, 0));
-					}
-					else if ((!upper_field && lower_field && !right_field && left_field))
-					{
-						numbers_GROUND.push_back(4);//kanyar lentrõl-balra
-					}
-					else if ((upper_field && !lower_field && !right_field && left_field))
-					{
-						numbers_GROUND.push_back(4);//kanyar balról-felfele
-						transform.rotate = glm::rotate<float>(-M_PI/2, glm::vec3(0, 1, 0));
-					}
-					else if ((upper_field && !lower_field && right_field && !left_field))
-					{
-						numbers_GROUND.push_back(4);//kanyar jobbról-felfele
-						transform.rotate = glm::rotate<float>(M_PI, glm::vec3(0, 1, 0));
-					}
-					else
-					{
-						numbers_GROUND.push_back(7);
-					}
-
-					transforms_GROUND.push_back(Transform::MultiplyTransformMatrices(transform));
-				}
-				else if (field->IsForest())
-				{
-					transforms_FOREST.push_back(Transform::MultiplyTransformMatrices(transform));
-					numbers_GROUND.push_back(1);
-				}
-				else if (field->IsZone())
-				{
-					Zone* zone = dynamic_cast<Zone*>(field);
-					if (zone->IsResidentalArea()) 
-					{
-						switch(zone->Get_Level())
-						{
-						case LEVEL_1: transforms_RESIDENCE1.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
-						case LEVEL_2: transforms_RESIDENCE2.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
-						case LEVEL_3: transforms_RESIDENCE3.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(8); break;
-						}
-					}
-					else if (zone->IsWorkingArea()) 
-					{
-						WorkingArea* area = dynamic_cast<WorkingArea*>(zone);
-						if (area->IsIndustrialArea()) 
-						{
-							switch (area->Get_Level())
-							{
-							case LEVEL_1: transforms_INDUSTRY1.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
-							case LEVEL_2: transforms_INDUSTRY2.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
-							case LEVEL_3: transforms_INDUSTRY3.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(12); break;
-							}
-						}
-						else if (area->IsServiceArea())
-						{
-							switch (area->Get_Level())
-							{
-							case LEVEL_1: transforms_SERVICE1.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
-							case LEVEL_2: transforms_SERVICE2.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
-							case LEVEL_3: transforms_SERVICE3.push_back(Transform::MultiplyTransformMatrices(transform)); numbers_GROUND.push_back(10); break;
-							}
-						}
-					}
-				}
-				else if (field->IsBuilding()) 
-				{
-					Building* building = dynamic_cast<Building*>(field);
-					if (building->IsPoliceStation()) 
-					{
-						transforms_POLICESTATION.push_back(Transform::MultiplyTransformMatrices(transform));
-						numbers_GROUND.push_back(15);
-					}
-					else if (building->IsFireStation()) 
-					{
-						transforms_FIRESTATION.push_back(Transform::MultiplyTransformMatrices(transform));
-						numbers_GROUND.push_back(15);
-					}
-					else if (building->IsStadium())
-					{
-						transforms_STADION.push_back(Transform::MultiplyTransformMatrices(transform));
-						numbers_GROUND.push_back(11);
-					}
-					else if (building->IsSchool()) 
-					{
-						School* school = dynamic_cast<School*>(building);
-						if (school->IsHighSchool()) 
-						{
-							transforms_SCHOOL1.push_back(Transform::MultiplyTransformMatrices(transform));
-							numbers_GROUND.push_back(14);
-						}
-						else if (school->IsUniversity()) 
-						{
-							transforms_SCHOOL2.push_back(Transform::MultiplyTransformMatrices(transform));
-							numbers_GROUND.push_back(14);
-						}
-					}
-					else if (building->IsPowerStation()) 
-					{
-						//transform.rotate = glm::rotate<float>(glfwGetTime() * M_PI, glm::vec3(0, 1, 0));
-						transforms_POWERSTATION.push_back(Transform::MultiplyTransformMatrices(transform));
-						numbers_GROUND.push_back(2);
-					}
-					else if (building->IsPowerWire())
-					{
-						transforms_POWERWIRE.push_back(Transform::MultiplyTransformMatrices(transform));
-						numbers_GROUND.push_back(63);
-					}
-				}
-			}
-		}
-	}
-
-	m_Renderer->Render_PreRender(changed);
-	
-	if (m_MyGui->BuildHover) 
+	if (m_MyGui->BuildHover)
 	{
 		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, (int)m_MyGui->content_size.x, (int)m_MyGui->content_size.y);
-		int x = (int)RayHit.x / 2 * 2 + 1;
-		int z = (int)RayHit.z / 2 * 2 + 1;
 
-		bool l1 = RayHit.x > 0 && RayHit.x < m_City->Get_GameTableSize() * 2;
-		bool l2 = RayHit.z > 0 && RayHit.z < m_City->Get_GameTableSize() * 2;
+		bool l1 = HitX >= 0 && HitX < m_City->Get_GameTableSize();
+		bool l2 = HitY >= 0 && HitY < m_City->Get_GameTableSize();
 
 		if (l1 && l2)
 		{
-			m_Renderer->buildable = m_City->Get_GameField(RayHit.z / 2, RayHit.x / 2)->IsEmpty();
-			Transform tr;
-			tr.translate = glm::translate(glm::vec3(x, 0, z));
-			tr.rotate = glm::rotate<float>(glm::radians(90.f) * (m_MyGui->r % 4), glm::vec3(0, 1, 0));
-
-			if (m_MyGui->Get_BuildLayout().building == POWERSTATION)
-			{
-				m_Renderer->Render(NORMAL_WIREFRAME, R_WINDTURBINE, {}, tr);
-				m_Renderer->Render(NORMAL_WIREFRAME, R_WINDTURBINE_PROPELLER, {}, tr);
-			}
-			else
-			{
-				m_Renderer->Render(NORMAL_WIREFRAME, (Object)m_MyGui->Get_BuildLayout().building, {}, tr);
-			}
-
+			Renderer::Buildable = m_City->Get_GameField(HitX, HitY)->IsEmpty();
+			Renderer::RenderNormal((RenderShapeType)m_MyGui->Get_BuildLayout().building, HitX, HitY);
 		}
 	}
 
-
-	m_Renderer->Render_Meteors();
-
-	m_Renderer->Render_Ground(transforms_GROUND, numbers_GROUND);
-	m_Renderer->Render(INSTANCED, R_FOREST,                transforms_FOREST);
-	m_Renderer->Render(INSTANCED, R_RESIDENTIAL_LVL1,      transforms_RESIDENCE1);
-	m_Renderer->Render(INSTANCED, R_RESIDENTIAL_LVL2,      transforms_RESIDENCE2);
-	m_Renderer->Render(INSTANCED, R_RESIDENTIAL_LVL3,      transforms_RESIDENCE3);
-	m_Renderer->Render(INSTANCED, R_INDUSTRIAL_LVL1,       transforms_INDUSTRY1);
-	m_Renderer->Render(INSTANCED, R_INDUSTRIAL_LVL2,       transforms_INDUSTRY2);
-	m_Renderer->Render(INSTANCED, R_INDUSTRIAL_LVL3,       transforms_INDUSTRY3);
-	m_Renderer->Render(INSTANCED, R_SERVICE_LVL1,          transforms_SERVICE1);
-	m_Renderer->Render(INSTANCED, R_SERVICE_LVL2,          transforms_SERVICE2);
-	m_Renderer->Render(INSTANCED, R_SERVICE_LVL3,          transforms_SERVICE3);
-	m_Renderer->Render(INSTANCED, R_FIRESTATION,           transforms_FIRESTATION);
-	m_Renderer->Render(INSTANCED, R_POLICESTATION,         transforms_POLICESTATION);
-	m_Renderer->Render(INSTANCED, R_STADIUM,               transforms_STADION);
-	m_Renderer->Render(INSTANCED, R_WINDTURBINE,		   transforms_POWERSTATION);
-	m_Renderer->Render(INSTANCED, R_WINDTURBINE_PROPELLER, transforms_POWERSTATION, {glm::mat4(1), glm::rotate<float>(abs(glfwGetTime() * 2 * M_PI), glm::vec3(0, 0, 1)), glm::mat4(1)});
-	m_Renderer->Render(INSTANCED, R_POWERWIRE,             transforms_POWERWIRE);
-	m_Renderer->Render(INSTANCED, R_HIGHSCHOOL,            transforms_SCHOOL1);
-	m_Renderer->Render(INSTANCED, R_UNIVERSITY,            transforms_SCHOOL2);
-	m_Renderer->Render_Axis();
-	m_Renderer->Render_Ray(RayOrigin, RayHit);
-	m_Renderer->Render_SkyBox();
-	m_Renderer->Render_PostRender();
-
-	if (changed) 
-	{
-		changed = false;
-		transforms_GROUND.clear();
-		numbers_GROUND.clear();
-
-		transforms_CUBE.clear();
-		transforms_CONE.clear();
-		transforms_CYLINDER.clear();
-		transforms_PYRAMID.clear();
-		transforms_SPHERE.clear();
-		transforms_FOREST.clear();
-		transforms_RESIDENCE1.clear();
-		transforms_RESIDENCE2.clear();
-		transforms_RESIDENCE3.clear();
-		transforms_INDUSTRY1.clear();
-		transforms_INDUSTRY2.clear();
-		transforms_INDUSTRY3.clear();
-		transforms_SERVICE1.clear();
-		transforms_SERVICE2.clear();
-		transforms_SERVICE3.clear();
-		transforms_FIRESTATION.clear();
-		transforms_POLICESTATION.clear();
-		transforms_STADION.clear();
-		transforms_POWERSTATION.clear();
-		transforms_POWERWIRE.clear();
-		transforms_SCHOOL1.clear();
-		transforms_SCHOOL2.clear();
-		transforms_CHARACTER.clear();
-	}
-	*/
+	Renderer::PostRender();
 }
 
 
@@ -571,4 +322,70 @@ void Application::ConvertMouseInputTo3D(int xpos, int ypos, int width, int heigh
 		HitY = (int)rayx;
 	}
 
+}
+
+int Application::DetermineRoadTextureID(int x, int y)
+{
+	bool upper_field = false;
+	bool lower_field = false;
+	bool left_field = false;
+	bool right_field = false;
+
+	if (y + 1 < m_City->Get_GameTableSize())
+		upper_field = m_City->Get_GameField(x, y + 1)->IsRoad();
+	if (y - 1 >= 0)
+		lower_field = m_City->Get_GameField(x, y - 1)->IsRoad();
+	if (x + 1 < m_City->Get_GameTableSize())
+		right_field = m_City->Get_GameField(x + 1, y)->IsRoad();
+	if (x - 1 >= 0)
+		left_field = m_City->Get_GameField(x - 1, y)->IsRoad();
+
+	if (upper_field && lower_field && right_field && left_field)
+	{
+		return 6; //Keresztezõdés
+	}
+	else if ((upper_field && !lower_field && !right_field && !left_field) || (!upper_field && lower_field && !right_field && !left_field) || (upper_field && lower_field && !right_field && !left_field))
+	{
+		return 7; //Átmenõ fel-le
+	}
+	else if ((!upper_field && !lower_field && right_field && !left_field) || (!upper_field && !lower_field && !right_field && left_field) || (!upper_field && !lower_field && right_field && left_field))
+	{
+		return 107; //Átmenõ jobbra-balra
+	}
+	else if ((upper_field && !lower_field && right_field && left_field))
+	{
+		return 5; //Három ágú balra-fel-jobbra
+	}
+	else if ((!upper_field && lower_field && right_field && left_field))
+	{
+		return 205; //Három ágú balra-le-jobbra
+	}
+	else if ((upper_field && lower_field && right_field && !left_field))
+	{
+		return 305;//Három ágú jobbra-fel-le
+	}
+	else if ((upper_field && lower_field && !right_field && left_field))
+	{
+		return 105;//Három ágú balra-fel-le
+	}
+	else if ((!upper_field && lower_field && right_field && !left_field))
+	{
+		return 104;//kanyar lentrõl-jobbra
+	}
+	else if ((!upper_field && lower_field && !right_field && left_field))
+	{
+		return 4;//kanyar lentrõl-balra
+	}
+	else if ((upper_field && !lower_field && !right_field && left_field))
+	{
+		return 304;//kanyar balról-felfele
+	}
+	else if ((upper_field && !lower_field && right_field && !left_field))
+	{
+		return 204;//kanyar jobbról-felfele
+	}
+	else
+	{
+		return 7;
+	}
 }

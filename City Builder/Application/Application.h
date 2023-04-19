@@ -36,6 +36,8 @@ public:
 	void FrameBuffer_ResizedEvent(int width, int height);
 	void ConvertMouseInputTo3D(int xpos, int ypos, int width, int height);
 
+	int DetermineRoadTextureID(int x, int y);
+
 private:
 	GLFWwindow* m_Window = nullptr;
 	Camera* m_Camera = nullptr;

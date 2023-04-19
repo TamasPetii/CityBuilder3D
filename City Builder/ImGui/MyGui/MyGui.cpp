@@ -560,6 +560,7 @@ void MyGui::RenderOptions_Window()
 
     if (ImGui::Button("Reset"))
     {
+        m_LightsLayout.effect = true;
         m_LightsLayout.reset = true;
     }
 
@@ -676,9 +677,9 @@ void MyGui::Build_Window()
     ImGui::RadioButton("Check field details", &m_BuildLayout.building, -1);
 
     ImGui::SeparatorText("General");
-    ImGui::RadioButton("Empty", &m_BuildLayout.building, 9);
-    ImGui::RadioButton("Road", &m_BuildLayout.building, 10);
-    ImGui::RadioButton("Forest", &m_BuildLayout.building, 11);
+    ImGui::RadioButton("Empty", &m_BuildLayout.building, 17);
+    ImGui::RadioButton("Road", &m_BuildLayout.building, 18);
+    ImGui::RadioButton("Forest", &m_BuildLayout.building, 9);
 
     ImGui::SeparatorText("Zone");
     ImGui::RadioButton("Residence_LVL1", &m_BuildLayout.building, 0);
@@ -692,13 +693,13 @@ void MyGui::Build_Window()
     ImGui::RadioButton("Service_LVL3", &m_BuildLayout.building, 8);
 
     ImGui::SeparatorText("Buildings");
-    ImGui::RadioButton("FireStation", &m_BuildLayout.building, 13);
-    ImGui::RadioButton("PoliceStation", &m_BuildLayout.building, 12);
-    ImGui::RadioButton("Stadion", &m_BuildLayout.building, 16);
-    ImGui::RadioButton("HighSchool", &m_BuildLayout.building, 14);
-    ImGui::RadioButton("University", &m_BuildLayout.building, 15);
-    ImGui::RadioButton("PowerStation", &m_BuildLayout.building, 17);
-    ImGui::RadioButton("PowerWire", &m_BuildLayout.building, 18);
+    ImGui::RadioButton("FireStation", &m_BuildLayout.building, 11);
+    ImGui::RadioButton("PoliceStation", &m_BuildLayout.building, 10);
+    ImGui::RadioButton("Stadion", &m_BuildLayout.building, 14);
+    ImGui::RadioButton("HighSchool", &m_BuildLayout.building, 12);
+    ImGui::RadioButton("University", &m_BuildLayout.building, 13);
+    ImGui::RadioButton("PowerStation", &m_BuildLayout.building, 16);
+    ImGui::RadioButton("PowerWire", &m_BuildLayout.building, 15);
     ImGui::End();
 }
 
