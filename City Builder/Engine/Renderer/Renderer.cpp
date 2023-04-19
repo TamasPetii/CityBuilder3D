@@ -248,7 +248,7 @@ void Renderer::ResizeShapeBuffer(int buffer_size)
 	}
 }
 
-void Renderer::AddShapeTransforms(RenderShapeType type, int x, int y, int direction)
+void Renderer::AddShapeTransforms(RenderShapeType type, int x, int y, int direction, int amount)
 {
 	if (m_ShapeData.find(type) == m_ShapeData.end()) return;
 
@@ -257,7 +257,7 @@ void Renderer::AddShapeTransforms(RenderShapeType type, int x, int y, int direct
 	transform_MAJOR.rotate = glm::rotate<float>(M_PI / 2 * direction, glm::vec3(0, 1, 0));
 	transform_MAJOR.scale = glm::mat4(1); //TODO: 2x2 field
 
-	for (int i = 0; i < m_ShapeData[type].first->Get_Transforms().size(); i++)
+	for (int i = 0; i < m_ShapeData[type].first->Get_Transforms().size() && i < amount; i++)
 	{
 		Transform transform_MINOR;
 		transform_MINOR.translate = m_ShapeData[type].first->Get_Transforms()[i].translate;
