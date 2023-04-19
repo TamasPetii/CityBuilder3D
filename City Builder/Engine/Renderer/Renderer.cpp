@@ -161,6 +161,11 @@ void Renderer::PreRender()
 	m_InstanceProgram->SetUniform("u_eye", m_Camera->Get_CameraEye());
 	m_InstanceProgram->SetUniformTexture("u_SpriteTexture", 0, m_GameTexture);
 	m_InstanceProgram->UnBind();
+
+	m_NormalProgram->Bind();
+	m_NormalProgram->SetUniform("u_VP", m_Camera->Get_ViewProjMatrix());
+	m_NormalProgram->SetUniformTexture("u_SpriteTexture", 0, m_GameTexture);
+	m_NormalProgram->UnBind();
 }
 
 void Renderer::PostRender()
@@ -359,7 +364,7 @@ void Renderer::Render_Meteors()
 	if (not_changed) Changed = false;
 }
 
-void Renderer::RenderNormal(RenderShapeType type, int x, int y)
+void Renderer::RenderNormal(RenderShapeType type, int x, int y, int direction)
 {
 	if (m_ShapeData.find(type) == m_ShapeData.end()) return;
 
@@ -368,14 +373,19 @@ void Renderer::RenderNormal(RenderShapeType type, int x, int y)
 	m_NormalProgram->Bind();
 	m_NormalProgram->SetUniform("u_VP", m_Camera->Get_ViewProjMatrix());
 
+	Transform transform_MAJOR;
+	transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 1));
+	transform_MAJOR.rotate = glm::rotate<float>(M_PI / 2 * direction, glm::vec3(0, 1, 0));
+	transform_MAJOR.scale = glm::mat4(1); //TODO SCALE
+
 	for (int i = 0; i < shape->Get_Transforms().size(); i++)
 	{
-		Transform transform;
-		transform.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 1)) * shape->Get_Transforms()[i].translate;
-		transform.rotate = transform.rotate * shape->Get_Transforms()[i].rotate;
-		transform.scale = transform.scale * shape->Get_Transforms()[i].scale;
+		Transform transform_MINOR;
+		transform_MINOR.translate = shape->Get_Transforms()[i].translate;
+		transform_MINOR.rotate = shape->Get_Transforms()[i].rotate;
+		transform_MINOR.scale = shape->Get_Transforms()[i].scale;
 
-		m_NormalProgram->SetUniform("u_M", Transform::ConvertToMatrix(transform));
+		m_NormalProgram->SetUniform("u_M", Transform::ConvertToMatrix(transform_MAJOR) * Transform::ConvertToMatrix(transform_MINOR));
 		m_NormalProgram->SetUniform("u_color", Buildable ? glm::vec3(0, 1, 0) : glm::vec3(1, 0, 0));
 
 		shape->Bind();
@@ -386,13 +396,13 @@ void Renderer::RenderNormal(RenderShapeType type, int x, int y)
 	m_NormalProgram->UnBind();
 }
 
-void Renderer::RenderNormal_Wireframe(RenderShapeType type, int x, int y)
+void Renderer::RenderNormal_Wireframe(RenderShapeType type, int x, int y, int direction)
 {
 	glDisable(GL_CULL_FACE);
 	glLineWidth(1.0f);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	RenderNormal(type, x, y);
+	RenderNormal(type, x, y, direction);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glLineWidth(1.0f);

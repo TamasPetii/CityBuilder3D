@@ -161,7 +161,8 @@ void Application::Update()
 		}
 		else 
 		{
-			m_City->Set_GameTableValue(HitX, HitY, (FieldType)m_MyGui->Get_BuildLayout().building);
+			GameField* field = m_City->Get_GameField(HitX, HitY);
+			m_City->Set_GameTableValue(HitX, HitY, (FieldType)m_MyGui->Get_BuildLayout().building, (FieldDirection)(m_MyGui->r % 4));
 			changed = true;
 		}
 
@@ -192,7 +193,7 @@ void Application::Update()
 		for (auto field : fields)
 		{
 			if(field.second != 49)
-				m_City->Set_GameTableValue(field.first, field.second, CRATER);
+				m_City->Set_GameTableValue(field.first, field.second, CRATER, (FieldDirection)LEFT);
 			changed = true;
 		}
 
@@ -228,7 +229,7 @@ void Application::Render()
 			for (int j = 0; j < m_City->Get_GameTableSize(); j++)
 			{
 				int type = m_City->Get_GameField(i, j)->Get_Type();
-				Renderer::AddShapeTransforms((RenderShapeType)type, i, j, 0);
+				Renderer::AddShapeTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_FieldDirection());
 				Renderer::AddGroundTransforms(i, j, type == ROAD ? DetermineRoadTextureID(i, j) : Renderer::DetermineGroundTextureID((RenderShapeType)type));
 			}
 		}
@@ -249,7 +250,7 @@ void Application::Render()
 		if (l1 && l2)
 		{
 			Renderer::Buildable = m_City->Get_GameField(HitX, HitY)->IsEmpty();
-			Renderer::RenderNormal((RenderShapeType)m_MyGui->Get_BuildLayout().building, HitX, HitY);
+			Renderer::RenderNormal((RenderShapeType)m_MyGui->Get_BuildLayout().building, HitX, HitY, (m_MyGui->r % 4));
 		}
 	}
 
