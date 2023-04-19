@@ -33,7 +33,9 @@ public:
 	static void Init(Camera* camera);
 	static void Destroy();
 
-	static void ResizeShapeBuffer(int buffer_size);
+	static void InitShapeBuffers();
+	static void ResizeShapeBuffers(int buffer_size);
+
 	static void AddShapeTransforms(RenderShapeType type, int x, int y, int direction, int amount);
 	static void AddGroundTransforms(int x, int y, int texture);
 	static void ClearShapeTransforms();
@@ -52,10 +54,10 @@ public:
 	static void RenderInstanced(Shape* shape, const std::vector<glm::mat4>& transforms);
 	static void RenderInstanced_Wireframe(Shape* shape, const std::vector<glm::mat4>& transforms);
 protected:
-
 	static void RenderInstancedGround();
 	static void Render_Meteors();
 	static void Render_Skybox();
+
 private:
 	static Ground* m_Ground;
 	static std::vector<glm::mat4> GroundTransforms;
