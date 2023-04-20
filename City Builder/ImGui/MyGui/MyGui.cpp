@@ -81,7 +81,7 @@ void MyGui::Custom_Style()
     {
         style.WindowRounding = 0.0f;
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-        style.WindowMinSize = ImVec2(100, 100);
+        style.WindowMinSize = ImVec2(50, 50);
     }
 }
 
@@ -166,6 +166,7 @@ void MyGui::DockSpace()
 
     DockSpace_MenuBar();
     Render_Window();
+    Game_Window();
 
     ImGui::End();
 }
@@ -482,69 +483,6 @@ void MyGui::GameOptions_Window()
 
 void MyGui::RenderOptions_Window()
 {
-    ImGui::Begin("Render options");
-
-    ImGui::SeparatorText("Light properties");
-
-    ImGui::Text("Dir: ");
-    ImGui::SameLine();
-
-    if (ImGui::SliderFloat3("##light_direction", &m_LightsLayout.lightDir.x, -1, 1, "%.3f", 0))
-        m_LightsLayout.effect = true;
-
-    ImGui::Text("Shi: ");
-    ImGui::SameLine();
-
-    //if (ImGui::SliderInt("##shininess", &m_LightsLayout.specularPow, 0, 100, "%d", 0))
-    //    m_LightsLayout.effect = true;
-
-    if (ImGui::InputInt("##shininess", &m_LightsLayout.specularPow, 1, 100, 0))
-        m_LightsLayout.effect = true;
-
-    ImGui::Text("La:  ");
-    ImGui::SameLine();
-
-    if (ImGui::SliderFloat3("##la", &m_LightsLayout.La.x, 0, 1, "%.3f", 0))
-        m_LightsLayout.effect = true;
-
-    ImGui::Text("Ld:  ");
-    ImGui::SameLine();
-
-    if (ImGui::SliderFloat3("##ld", &m_LightsLayout.Ld.x, 0, 1, "%.3f", 0))
-        m_LightsLayout.effect = true;
-
-    ImGui::Text("Ls:  ");
-    ImGui::SameLine();
-
-    if (ImGui::SliderFloat3("##ls", &m_LightsLayout.Ls.x, 0, 1, "%.3f", 0))
-        m_LightsLayout.effect = true;
-
-    ImGui::Text("Ka:  ");
-    ImGui::SameLine();
-
-    if (ImGui::SliderFloat3("##ka", &m_LightsLayout.Ka.x, 0, 1, "%.3f", 0))
-        m_LightsLayout.effect = true;
-
-    ImGui::Text("Kd:  ");
-    ImGui::SameLine();
-
-    if (ImGui::SliderFloat3("##kd", &m_LightsLayout.Kd.x, 0, 1, "%.3f", 0))
-        m_LightsLayout.effect = true;
-
-    ImGui::Text("Ks:  ");
-    ImGui::SameLine();
-
-    if (ImGui::SliderFloat3("##ks", &m_LightsLayout.Ks.x, 0, 1, "%.3f", 0))
-        m_LightsLayout.effect = true;
-
-    if (ImGui::Button("Reset"))
-    {
-        m_LightsLayout.effect = true;
-        m_LightsLayout.reset = true;
-    }
-
-
-    ImGui::End();
 }
 
 //---------------------------------------------------------|EVENTS|---------------------------------------------------------//
@@ -642,44 +580,170 @@ void MyGui::FieldDetails_Window()
         ImGui::Text(m_FieldDetailsLayout.citizens_details.c_str());
     }
 
-
-
-
     ImGui::End();
 }
 
-void MyGui::Build_Window()
+ImVec2 MyGui::Get_UV(int index, int type)
 {
+    float pos_x = 0.1f * (index % 10);
+    float pos_y = 0.1f * (index / 10);
+
+    if (type == 0)
+    {
+        return ImVec2(pos_x, 1 - pos_y);
+    }
+    else 
+    {
+        return ImVec2(pos_x + 0.1f, 1 - (pos_y + 0.1f));
+    }
+}
+
+void MyGui::Build_Window(Texture* texture)
+{
+    int id;
+    int building = m_BuildLayout.building;
+
+    ImGui::Begin("Edit");
+
+    //Delete
+    id = 92;
+    if(ImGui::ImageButton("Delete-image", (void*)texture->Get_TextureID(), ImVec2(30, 30), Get_UV(id, 0), Get_UV(id, 1))) building = 17;
+    ImGui::SameLine();
+
+    id = 93;
+    if(ImGui::ImageButton("Check-image", (void*)texture->Get_TextureID(), ImVec2(30, 30), Get_UV(id, 0), Get_UV(id, 1))) building = -1;
+    ImGui::SameLine();
+
+    id = 90;
+    if(ImGui::ImageButton("Upgrade-image", (void*)texture->Get_TextureID(), ImVec2(30, 30), Get_UV(id, 0), Get_UV(id, 1))) building = -2;
+    ImGui::SameLine();
+
+    id = 91;
+    if(ImGui::ImageButton("Degrade-image", (void*)texture->Get_TextureID(), ImVec2(30, 30), Get_UV(id, 0), Get_UV(id, 1))) building = -3;
+
+    ImGui::End();
+
     ImGui::Begin("Build");
 
-    ImGui::SeparatorText("Statistics");
-    ImGui::RadioButton("Check field details", &m_BuildLayout.building, -1);
+    if(ImGui::CollapsingHeader("General Fields", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        ImGui::Separator();
 
-    ImGui::SeparatorText("General");
-    ImGui::RadioButton("Empty", &m_BuildLayout.building, 17);
-    ImGui::RadioButton("Road", &m_BuildLayout.building, 18);
-    ImGui::RadioButton("Forest", &m_BuildLayout.building, 9);
+        //ROAD
+        id = 7;
+        ImGui::Text("ROAD -> ");
+        ImGui::SameLine();
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "150$");
+        if(ImGui::ImageButton("Road-image", (void*)texture->Get_TextureID(), ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 18;
 
-    ImGui::SeparatorText("Zone");
-    ImGui::RadioButton("Residence_LVL1", &m_BuildLayout.building, 0);
-    ImGui::RadioButton("Residence_LVL2", &m_BuildLayout.building, 1);
-    ImGui::RadioButton("Residence_LVL3", &m_BuildLayout.building, 2);
-    ImGui::RadioButton("Industry_LVL1", &m_BuildLayout.building, 3);
-    ImGui::RadioButton("Industry_LVL2", &m_BuildLayout.building, 4);
-    ImGui::RadioButton("Industry_LVL3", &m_BuildLayout.building, 5);
-    ImGui::RadioButton("Service_LVL1", &m_BuildLayout.building, 6);
-    ImGui::RadioButton("Service_LVL2", &m_BuildLayout.building, 7);
-    ImGui::RadioButton("Service_LVL3", &m_BuildLayout.building, 8);
+        ImGui::Separator();
 
-    ImGui::SeparatorText("Buildings");
-    ImGui::RadioButton("FireStation", &m_BuildLayout.building, 11);
-    ImGui::RadioButton("PoliceStation", &m_BuildLayout.building, 10);
-    ImGui::RadioButton("Stadion", &m_BuildLayout.building, 14);
-    ImGui::RadioButton("HighSchool", &m_BuildLayout.building, 12);
-    ImGui::RadioButton("University", &m_BuildLayout.building, 13);
-    ImGui::RadioButton("PowerStation", &m_BuildLayout.building, 16);
-    ImGui::RadioButton("PowerWire", &m_BuildLayout.building, 15);
+        //FOREST
+        id = 42;
+        ImGui::Text("FOREST -> ");
+        ImGui::SameLine();
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "750$");
+        if(ImGui::ImageButton("Forest-image", (void*)texture->Get_TextureID(), ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 9;
+
+    }
+
+    if (ImGui::CollapsingHeader("Zone Fields", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        //RESIDENCE
+        id = 16;
+        ImGui::Text("RESIDENCE -> ");
+        ImGui::SameLine();
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "6650$");
+        if(ImGui::ImageButton("Residence-image", (void*)texture->Get_TextureID(), ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 0;
+        
+        ImGui::Separator();
+
+        //INDUSTRY
+        id = 30;
+        ImGui::Text("INDUSTRY -> ");
+        ImGui::SameLine();
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "16650$");
+        if(ImGui::ImageButton("Industry-image", (void*)texture->Get_TextureID(), ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 3;
+
+        ImGui::Separator();
+
+        //SERVICE
+        id = 20;
+        ImGui::Text("SERVICE -> ");
+        ImGui::SameLine();
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "13650$");
+        if(ImGui::ImageButton("Service-image", (void*)texture->Get_TextureID(), ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 6;
+    }
+
+    if (ImGui::CollapsingHeader("Building Fields", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        //Firestation
+        id = 50;
+        ImGui::Text("FIRESTATION -> ");
+        ImGui::SameLine();
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "6650$");
+        if(ImGui::ImageButton("Firestation-image", (void*)texture->Get_TextureID(), ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 11;
+
+        ImGui::Separator();
+
+        //Firestation
+        id = 52;
+        ImGui::Text("POLICESTATION -> ");
+        ImGui::SameLine();
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "6650$");
+        if(ImGui::ImageButton("Policestation-image", (void*)texture->Get_TextureID(), ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 10;
+
+        ImGui::Separator();
+
+        //Stadion
+        id = 45;
+        ImGui::Text("STADION -> ");
+        ImGui::SameLine();
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "6650$");
+        if(ImGui::ImageButton("Stadion-image", (void*)texture->Get_TextureID(), ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 14;
+
+        ImGui::Separator();
+
+        //Highschool
+        id = 55;
+        ImGui::Text("HIGHSCHOOL -> ");
+        ImGui::SameLine();
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "6650$");
+        if(ImGui::ImageButton("Highschool-image", (void*)texture->Get_TextureID(), ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 12;
+
+        ImGui::Separator();
+
+        //University
+        id = 57;
+        ImGui::Text("UNIVERSITY -> ");
+        ImGui::SameLine();
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "6650$");
+        if(ImGui::ImageButton("University-image", (void*)texture->Get_TextureID(), ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 13;
+
+        ImGui::Separator();
+
+        //Powerstation
+        id = 47;
+        ImGui::Text("POWERSTATION -> ");
+        ImGui::SameLine();
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "6650$");
+        if(ImGui::ImageButton("Powerstation-image", (void*)texture->Get_TextureID(), ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 16;
+
+        ImGui::Separator();
+
+        //Powerwire
+        id = 63;
+        ImGui::Text("POWERWIRE -> ");
+        ImGui::SameLine();
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "6650$");
+        if(ImGui::ImageButton("Powerwire-image", (void*)texture->Get_TextureID(), ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 15;
+
+        ImGui::Separator();
+    }
+
     ImGui::End();
+
+    m_BuildLayout.building = building;
 }
 
 void MyGui::Build_KeyboardKeyEvent()
@@ -769,6 +833,95 @@ void MyGui::Camera_KeyboardKeyEvent()
     }
 }
 
+void MyGui::Table_Game_Tax()
+{
+    ImGuiTableFlags table_flags = ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersH;
+    if (ImGui::CollapsingHeader("Tax", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        if (ImGui::BeginTable("Tax-Table", 2, table_flags))
+        {
+            //1 RAW: FPS LOCK
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("LVL1:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            ImGui::SliderFloat("##city-tick", &m_GameWindowLayout.tick, 0.05, 2);
+
+            ImGui::EndTable();
+        }
+    }
+}
+
+void MyGui::Table_Game_Time()
+{
+    ImGuiTableFlags table_flags = ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersH;
+    if (ImGui::CollapsingHeader("Time", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+
+        if (ImGui::BeginTable("Time-Table", 2, table_flags))
+        {
+            //1 RAW: FPS LOCK
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Tick (sec):");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            ImGui::SliderFloat("##city-tick", &m_GameWindowLayout.tick, 0.05, 2);
+
+            //2 RAW: GAME TIME
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Time (game):");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            ImGui::Text(m_GameWindowLayout.gameTime.c_str());
+
+            //3 RAW: REAL TIME
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Time (real):");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            ImGui::Text(m_GameWindowLayout.realTime.c_str());
+
+            ImGui::EndTable();
+        }
+    }
+}
+
+void MyGui::Table_Game_General()
+{
+    ImGuiTableFlags table_flags = ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersH;
+    if (ImGui::CollapsingHeader("General", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        if (ImGui::BeginTable("General-Table", 2, table_flags))
+        {
+            //1 RAW: MONEY
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Money:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            ImGui::Text(m_GameWindowLayout.gameTime.c_str());
+
+            ImGui::EndTable();
+        }
+
+    }
+}
+
+void MyGui::Game_Window()
+{
+    ImGui::Begin("Game-Options-Details");
+    
+    Table_Game_General();
+    Table_Game_Time();
+
+    ImGui::End();
+}
+
+
 void MyGui::Dimension_2D_AND_HALF_Popup()
 {
     if (m_DimensionLayout.show)
@@ -801,7 +954,7 @@ void MyGui::Dimension_2D_AND_HALF_Popup()
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0.75, 0, 1));
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0.7, 0, 1));
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0.65, 0, 1));
-        if (ImGui::Button("Okay", ImVec2(282, 0))) 
+        if (ImGui::Button("Okay", ImVec2(282, 0)))
         {
             ImGui::CloseCurrentPopup();
             m_DimensionLayout.show = false;
@@ -845,8 +998,8 @@ void MyGui::Dimension_3D_Popup()
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0.75, 0, 1));
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0.7, 0, 1));
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0.65, 0, 1));
-        if (ImGui::Button("Okay", ImVec2(282, 0))) 
-        { 
+        if (ImGui::Button("Okay", ImVec2(282, 0)))
+        {
             ImGui::CloseCurrentPopup();
             m_DimensionLayout.show = false;
             m_DimensionLayout.DontAskMeNextTime_3D = m_DimensionLayout.Ask;
@@ -859,103 +1012,9 @@ void MyGui::Dimension_3D_Popup()
     }
 }
 
-void MyGui::Render_Window()
+void MyGui::Table_Render_Lights()
 {
-    ImGui::Begin("Render-Options-Details");
-
     ImGuiTableFlags table_flags = ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersH;
-    if (ImGui::CollapsingHeader("Frame", ImGuiTreeNodeFlags_DefaultOpen))
-    {
-        if (ImGui::BeginTable("Frame Table", 2, table_flags))
-        {
-            //1 RAW: FPS LOCK
-            ImGui::TableNextRow();
-            ImGui::TableNextColumn();
-            ImGui::Text("Frame Lock:");
-            ImGui::TableNextColumn();
-            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
-            if (ImGui::Checkbox("##frame-lock", &m_RenderWindowLayout.fps_lock))
-            {
-                glfwSwapInterval(m_RenderWindowLayout.fps_lock);
-            }
-
-            //2 RAW: FPS
-            ImGui::TableNextRow();
-            ImGui::TableNextColumn();
-            ImGui::Text("Frame:");
-            ImGui::TableNextColumn();
-            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
-            ImGui::Text("%d", m_RenderWindowLayout.fps);
-
-            //3 RAW: Time
-            ImGui::TableNextRow();
-            ImGui::TableNextColumn();
-            ImGui::Text("Time (ms):");
-            ImGui::TableNextColumn();
-            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
-            ImGui::Text("%f", m_RenderWindowLayout.time);
-
-            ImGui::EndTable();
-        }
-    }
-
-    if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
-    {
-        if (ImGui::BeginTable("Camera Table", 2, table_flags))
-        {
-            //1 RAW: CAMERA DIMENSION MODE
-            ImGui::TableNextRow();
-            ImGui::TableNextColumn();
-            ImGui::Text("Mode:");
-            ImGui::TableNextColumn();
-            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
-            if (ImGui::Combo("##dimension:", &m_DimensionLayout.dimension, m_DimensionLayout.items, IM_ARRAYSIZE(m_DimensionLayout.items)))
-            {
-                m_DimensionLayout.effect = true;
-                m_DimensionLayout.show = true;
-            }
-
-            //2 RAW: CAMERA SPEED
-            ImGui::TableNextRow();
-            ImGui::TableNextColumn();
-            ImGui::Text("Speed:");
-            ImGui::TableNextColumn();
-            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
-            ImGui::SliderFloat("##camera-speed", &m_Camera->Get_Speed(), 5, 15);
-            
-            //3 RAW: CAMERA POSITON
-            ImGui::TableNextRow();
-            ImGui::TableNextColumn();
-            ImGui::Text("Position:");
-            ImGui::TableNextColumn();
-            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
-            ImGui::Text("(%.1f,%.1f,%.1f)", m_Camera->Get_CameraEye().x, m_Camera->Get_CameraEye().y, m_Camera->Get_CameraEye().z);
-
-            ImGui::EndTable();
-        }
-
-    }
-
-    if (ImGui::CollapsingHeader("Render", ImGuiTreeNodeFlags_DefaultOpen))
-    {
-        if (ImGui::BeginTable("Render Table", 2, table_flags))
-        {
-            for (int i = 0; i < 17; i++)
-            {
-                //1 RAW: FPS LOCK
-                ImGui::TableNextRow();
-                ImGui::TableNextColumn();
-                ImGui::Text("Tree:");
-                ImGui::TableNextColumn();
-                ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
-                ImGui::Text("%d", 5);
-
-            }
-
-            ImGui::EndTable();
-        }
-    }
-
     if (ImGui::CollapsingHeader("Lights", ImGuiTreeNodeFlags_DefaultOpen))
     {
         if (ImGui::BeginTable("Lights Table", 2, table_flags))
@@ -1046,8 +1105,121 @@ void MyGui::Render_Window()
 
             ImGui::EndTable();
         }
+    }
+}
+
+void MyGui::Table_Render_Objects()
+{
+    ImGuiTableFlags table_flags = ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersH;
+    if (ImGui::CollapsingHeader("Render", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        if (ImGui::BeginTable("Render Table", 2, table_flags))
+        {
+            for (int i = 0; i < 17; i++)
+            {
+                //1 RAW: FPS LOCK
+                ImGui::TableNextRow();
+                ImGui::TableNextColumn();
+                ImGui::Text("Tree:");
+                ImGui::TableNextColumn();
+                ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+                ImGui::Text("%d", 5);
+            }
+
+            ImGui::EndTable();
+        }
+    }
+}
+
+void MyGui::Table_Render_Camera()
+{
+    ImGuiTableFlags table_flags = ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersH;
+
+    if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        if (ImGui::BeginTable("Camera Table", 2, table_flags))
+        {
+            //1 RAW: CAMERA DIMENSION MODE
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Mode:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            if (ImGui::Combo("##dimension:", &m_DimensionLayout.dimension, m_DimensionLayout.items, IM_ARRAYSIZE(m_DimensionLayout.items)))
+            {
+                m_DimensionLayout.effect = true;
+                m_DimensionLayout.show = true;
+            }
+
+            //2 RAW: CAMERA SPEED
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Speed:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            ImGui::SliderFloat("##camera-speed", &m_Camera->Get_Speed(), 5, 15);
+
+            //3 RAW: CAMERA POSITON
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Position:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            ImGui::Text("(%.1f,%.1f,%.1f)", m_Camera->Get_CameraEye().x, m_Camera->Get_CameraEye().y, m_Camera->Get_CameraEye().z);
+
+            ImGui::EndTable();
+        }
 
     }
+}
+
+void MyGui::Table_Render_Frame()
+{
+    ImGuiTableFlags table_flags = ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersH;
+    if (ImGui::CollapsingHeader("Frame", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        if (ImGui::BeginTable("Frame Table", 2, table_flags))
+        {
+            //1 RAW: FPS LOCK
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Frame Lock:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            if (ImGui::Checkbox("##frame-lock", &m_RenderWindowLayout.fps_lock))
+            {
+                glfwSwapInterval(m_RenderWindowLayout.fps_lock);
+            }
+
+            //2 RAW: FPS
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Frame:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            ImGui::Text("%d", m_RenderWindowLayout.fps);
+
+            //3 RAW: Time
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Time (ms):");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            ImGui::Text("%f", m_RenderWindowLayout.time);
+
+            ImGui::EndTable();
+        }
+    }
+}
+
+void MyGui::Render_Window()
+{
+    ImGui::Begin("Render-Options-Details");
+
+    Table_Render_Frame();
+    Table_Render_Camera();
+    Table_Render_Objects();
+    Table_Render_Lights();
 
     if (m_DimensionLayout.dimension == 2 && !m_DimensionLayout.DontAskMeNextTime_3D) Dimension_3D_Popup();
     if (m_DimensionLayout.dimension != 2 && !m_DimensionLayout.DontAskMeNextTime_2D_AND_HALF) Dimension_2D_AND_HALF_Popup();

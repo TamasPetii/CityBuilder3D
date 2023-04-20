@@ -24,6 +24,7 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 
 	m_MyGui->Get_LightsLayout().effect = true;
 	m_MyGui->Get_LightsLayout().reset = true;
+	changed = true;
 }
 
 Application::~Application()
@@ -218,7 +219,7 @@ void Application::RenderUI()
 
 	m_MyGui->DockSpace();
 	m_MyGui->Demo_Window();
-	m_MyGui->Build_Window();
+	m_MyGui->Build_Window(Renderer::Get_Texture());
 	m_MyGui->GameDetails_Window();
 	m_MyGui->GameOptions_Window();
 	m_MyGui->RenderOptions_Window();

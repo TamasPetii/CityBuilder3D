@@ -5,6 +5,7 @@
 
 #include "Utilities/Camera.h"
 #include "Abstractions/FrameBuffer.h"
+#include "Abstractions/Texture.h"
 
 #include "../ImGui/imgui.h"
 #include "../ImGui/imgui_impl_glfw.h"
@@ -28,17 +29,19 @@ public:
 	void CityDetials_Window();
 	void DockSpace();
 	void Demo_Window();
-	void Build_Window();
 	void GameDetails_Window();
 	void GameOptions_Window();
 	void FieldDetails_Window();
 	void Log_Window();
 	void RenderOptions_Window();
+	void Build_Window(Texture* texture);
 	void ViewPort_Render(FrameBuffer* fbo);
 	void GameIdk();
 
+	void Game_Window();
 	void Render_Window();
 
+	int pos;
 
 	inline NewGameLayout& Get_NewGameLayout() { return m_NewGameLayout; }
 	inline LoadGameLayout& Get_LoadGameLayout() { return m_LoadGameLayout; }
@@ -51,7 +54,9 @@ public:
 	inline CatastropheLayout& Get_CatastropheLayout() { return m_MeteorLayout; }
 	inline CityLayout& Get_CityLayout() { return m_CityLayout; }
 	inline DimensionLayout& Get_DimensionLayout() { return m_DimensionLayout; }
+
 	inline RenderWindowLayout& Get_RenderWindowLayout() { return m_RenderWindowLayout; }
+	inline GameWindowLayout& Get_GameWindowLayout() { return m_GameWindowLayout; }
 
 	bool BuildHover = false;
 	int r = 0;
@@ -74,6 +79,15 @@ protected:
 
 	void Dimension_2D_AND_HALF_Popup();
 	void Dimension_3D_Popup();
+
+	void Table_Game_General();
+	void Table_Game_Time();
+	void Table_Game_Tax();
+
+	void Table_Render_Lights();
+	void Table_Render_Objects();
+	void Table_Render_Camera();
+	void Table_Render_Frame();
 private:
 	Camera* m_Camera = nullptr;
 	int m_ViewPort_Width = 0;
@@ -91,7 +105,13 @@ private:
 	LightsLayout m_LightsLayout;
 	CatastropheLayout m_MeteorLayout;
 	DimensionLayout m_DimensionLayout;
+
+	GameWindowLayout m_GameWindowLayout;
 	RenderWindowLayout m_RenderWindowLayout;
 	imgui_addons::ImGuiFileBrowser file_dialog;
+
+
+
+	ImVec2 Get_UV(int index, int type);
 };
 

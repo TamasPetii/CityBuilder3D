@@ -109,6 +109,16 @@ struct DimensionLayout
 	bool DontAskMeNextTime_3D = false;
 };
 
+struct GameWindowLayout
+{
+	int money;
+
+
+	float tick;
+	std::string gameTime;
+	std::string realTime;
+};
+
 struct RenderWindowLayout
 {
 	int fps;
@@ -120,14 +130,4 @@ struct RenderWindowLayout
 	bool DontAskMeNextTime_2D_AND_HALF = false;
 	bool DontAskMeNextTime_3D = false;
 	const char* items[3] = { "2D", "2.5D", "3D" };
-};
-
-struct CameraLayout
-{
-	bool effect = false;
-	bool Ask = false;
-	bool DontAskMeNextTime_2D_AND_HALF = false;
-	bool DontAskMeNextTime_3D = false;
-
-	int dimension = 2;
 };
