@@ -76,6 +76,9 @@ private:
 	static Texture2D* m_GameTexture;
 	static TextureMap* m_SkyboxTexture;
 	static std::unordered_map<RenderShapeType, std::pair<Shape*, std::vector<glm::mat4>>> m_ShapeData;
+
+	static float current_time;
+	static float last_time;
 };
 
 enum RenderMode

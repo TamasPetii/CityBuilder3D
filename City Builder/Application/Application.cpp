@@ -335,6 +335,10 @@ void Application::Render()
 		{
 			Renderer::Buildable = m_City->Get_GameField(HitX, HitY)->IsEmpty();
 			Renderer::RenderNormal((RenderShapeType)m_MyGui->Get_BuildWindowLayout().Build_Id, HitX, HitY, (m_MyGui->Get_EventLayout().Rotate % 4));
+			if (m_MyGui->Get_BuildWindowLayout().Build_Id == RENDER_WINDTURBINE)
+			{
+				Renderer::RenderNormal(RENDER_WINDTURBINE_PROPELLER, HitX, HitY, (m_MyGui->Get_EventLayout().Rotate % 4));
+			}
 		}
 	}
 
