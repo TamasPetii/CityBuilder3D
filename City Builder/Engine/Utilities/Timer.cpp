@@ -13,7 +13,9 @@ void Timer::Pause()
 
 void Timer::Reset()
 {
+	pause = false;
 	m_OverallTime = 0;
+	m_LastTime = (float)glfwGetTime();
 }
 
 void Timer::Update()
@@ -30,12 +32,10 @@ void Timer::Update()
 
 bool Timer::Tick()
 {
-	if (pause) return false;
-
 	if (m_TickTime >= m_Tick)
 	{
 		m_TickTime = 0;
-		return true;
+		return true && !pause;
 	}
 
 	return false;

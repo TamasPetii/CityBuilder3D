@@ -214,6 +214,8 @@ void Camera::Set_At(const glm::vec3& at)
 
 void Camera::Set_Mode(int mode, int x, int y)
 {
+	m_IsMovable = true;
+
 	if (mode == TWO_DIMENSION)
 	{
 		m_Yaw = -90.f;
@@ -224,7 +226,7 @@ void Camera::Set_Mode(int mode, int x, int y)
 	else if (mode == TWO_HALF_DIMENSION)
 	{
 		m_Yaw = -90.f;
-		m_Pitch = -45.f;
+		m_Pitch = -26.565f;
 		Mouse_MoveEvent(x, y);
 		this->mode = (Mode)mode;
 	}
@@ -232,4 +234,6 @@ void Camera::Set_Mode(int mode, int x, int y)
 	{
 		this->mode = (Mode)mode;
 	}
+
+	m_IsMovable = false;
 }

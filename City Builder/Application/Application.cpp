@@ -12,6 +12,7 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 	Renderer::Init(m_Camera);
 
 	m_MyGui = new MyGui(m_Camera);
+
 	m_FrameCounter = new FrameCounter();
 	m_Timer = new Timer(0.1);
 	m_Timer->Start();
@@ -22,8 +23,9 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 
 	MeteorGrp::Init();
 
-	m_MyGui->Get_LightsLayout().effect = true;
-	m_MyGui->Get_LightsLayout().reset = true;
+	m_MyGui->Get_RenderWindowLayout().Lights_Effect = true;
+	m_MyGui->Get_RenderWindowLayout().Lights_Reset = true;
+	changed = true;
 }
 
 Application::~Application()
@@ -36,24 +38,38 @@ Application::~Application()
 void Application::Update()
 {
 	MeteorGrp::Update();
-
 	m_Timer->Update();
 	m_FrameCounter->Update();
 	m_Camera->Update();
+
+	m_MyGui->Get_ViewPortLayout().ViewPort_TextureID = Renderer::Get_FrameBuffer()->Get_TextureId();
+	m_MyGui->Get_RenderWindowLayout().Camera_Position = m_Camera->Get_CameraEye();
+	m_MyGui->Get_DetailsWindowLayout().Network_details = RoadNetwork::NetworksToString();
+	m_MyGui->Get_BuildWindowLayout().TextureID = Renderer::Get_Texture()->Get_TextureID();
+
+	if (m_MyGui->Get_ViewPortLayout().ViewPort_Effect)
+	{
+		int width = m_MyGui->Get_ViewPortLayout().ViewPort_Width;
+		int height = m_MyGui->Get_ViewPortLayout().ViewPort_Height;
+		Renderer::Get_FrameBuffer()->Resize(width, height);
+	}
 
 	if (m_Timer->Tick())
 	{
 		int size = m_City->Get_CitizenSize();
 
 		m_City->Simulate();
-		m_MyGui->Get_CityLayout().money = m_City->Get_Money();
-		m_MyGui->Get_CityLayout().time = m_City->Get_Time_Str();
+
+		m_MyGui->Get_GameWindowLayout().City_Money = m_City->Get_Money();
+		m_MyGui->Get_GameWindowLayout().City_Satisfaction = 0;
+		m_MyGui->Get_GameWindowLayout().Time_Game = m_City->Get_Time_Str();
+		m_MyGui->Get_GameWindowLayout().Time_Real += m_Timer->Get_TickTime();
 
 		//Meteor shooting
 		if (rand() % 50 == 23)
 		{
 			int number = rand() % 5;
-			if (rand() % 1000 == 666) number = 2500;
+			if (rand() % 100000 == 666) number = 2500;
 
 			for (int i = 0; i < number; i++)
 			{
@@ -64,132 +80,182 @@ void Application::Update()
 		changed = m_City->Get_CitizenSize() != size;
 	}
 
-	if (m_FrameCounter->Tick())
+	//NEW-GAME
+	if (m_MyGui->Get_MenuBarLayout().NewGame_Effect)
 	{
-		std::cout << m_FrameCounter->Get_FPS() << std::endl;
-		m_FrameCounter->Reset();
-	}
+		m_MyGui->Get_MenuBarLayout().NewGame_Effect = false;
+		m_MyGui->Get_GameWindowLayout().Time_Tick = m_MyGui->Get_MenuBarLayout().City_Time;
+		m_Timer->Reset();
+		m_Timer->SetTickTime(m_MyGui->Get_MenuBarLayout().City_Time);
+		changed = true;
 
-	if (m_MyGui->Get_NewGameLayout().effect) 
-	{
 		MeteorGrp::Clear();
-
-		m_City = new City(m_MyGui->Get_NewGameLayout().size, 10000);
 		RoadNetwork::ResetNetworks();
-		Citizen::Log().str("");
+		City::Build_Log().clear();
+		City::Build_Log().str("");
+		City::Money_Log().clear();
+		City::Money_Log().str("");
+		City::Log_Changed() = true;
 		Citizen::Log().clear();
+		Citizen::Log().str("");
 		Citizen::Log_Changed() = true;
+
+		delete m_City;
+		m_City = new City(m_MyGui->Get_MenuBarLayout().City_Size, 800000);
 
 		m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
 		m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
-
-		m_MyGui->Get_NewGameLayout().effect = false;
-		changed = true;
 	}
 
-	if (m_MyGui->Get_LoadGameLayout().effect)
+	//LOAD-GAME
+	if (m_MyGui->Get_MenuBarLayout().LoadGame_Effect)
 	{
+		m_MyGui->Get_MenuBarLayout().LoadGame_Effect = false;
+
 		std::cout << "Load-Game" << std::endl;
-		std::cout << m_MyGui->Get_LoadGameLayout().path << std::endl;
-		std::cout << m_MyGui->Get_LoadGameLayout().name << std::endl;
-
-		m_MyGui->Get_LoadGameLayout().effect = false;
+		std::cout << "PATH: " << m_MyGui->Get_MenuBarLayout().LoadFile_Path << std::endl;
+		std::cout << "NAME: " << m_MyGui->Get_MenuBarLayout().LoadFile_Name << std::endl;
 	}
-	
-	if (m_MyGui->Get_SaveGameLayout().effect)
+
+	//LOAD-GAME
+	if (m_MyGui->Get_MenuBarLayout().SaveGame_Effect)
 	{
+		m_MyGui->Get_MenuBarLayout().SaveGame_Effect = false;
+
 		std::cout << "Save-Game" << std::endl;
-		std::cout << m_MyGui->Get_SaveGameLayout().path << std::endl;
-		std::cout << m_MyGui->Get_SaveGameLayout().name << std::endl;
-
-		m_MyGui->Get_SaveGameLayout().effect = false;
+		std::cout << "PATH: " << m_MyGui->Get_MenuBarLayout().SaveFile_Path << std::endl;
+		std::cout << "NAME: " << m_MyGui->Get_MenuBarLayout().SaveFile_Name << std::endl;
 	}
 
-	if (m_MyGui->Get_TaxLayout().effect)
+	//GAME-TIME
+	if (m_MyGui->Get_GameWindowLayout().Time_Effect)
 	{
-		m_City->SetTaxRate(RESIDENTIAL_LVL1, m_MyGui->Get_TaxLayout().ResidenceTaxLvl1);
-		m_City->SetTaxRate(RESIDENTIAL_LVL2, m_MyGui->Get_TaxLayout().ResidenceTaxLvl2);
-		m_City->SetTaxRate(RESIDENTIAL_LVL3, m_MyGui->Get_TaxLayout().ResidenceTaxLvl3);
+		m_MyGui->Get_GameWindowLayout().Time_Effect = false;
 
-		m_City->SetTaxRate(SERVICE_LVL1, m_MyGui->Get_TaxLayout().ServiceTaxLvl1);
-		m_City->SetTaxRate(SERVICE_LVL2, m_MyGui->Get_TaxLayout().ServiceTaxLvl2);
-		m_City->SetTaxRate(SERVICE_LVL3, m_MyGui->Get_TaxLayout().ServiceTaxLvl3);
-
-		m_City->SetTaxRate(INDUSTRIAL_LVL1, m_MyGui->Get_TaxLayout().IndustrialTaxLvl1);
-		m_City->SetTaxRate(INDUSTRIAL_LVL2, m_MyGui->Get_TaxLayout().IndustrialTaxLvl2);
-		m_City->SetTaxRate(INDUSTRIAL_LVL3, m_MyGui->Get_TaxLayout().IndustrialTaxLvl3);
-
-		m_MyGui->Get_TaxLayout().effect = false;
+		m_Timer->SetTickTime(m_MyGui->Get_GameWindowLayout().Time_Tick);
 	}
 
-	if (m_MyGui->Get_LightsLayout().effect)
+	//GAME-CATASTROPHE
+	if (m_MyGui->Get_GameWindowLayout().Catastrophe_Effect)
 	{
-		LightProperties r_LightProperties;
-		r_LightProperties.lightDir    = m_MyGui->Get_LightsLayout().reset ? glm::vec3(1, -1, 1) : m_MyGui->Get_LightsLayout().lightDir;
-		r_LightProperties.specularPow = m_MyGui->Get_LightsLayout().reset ? 64 : m_MyGui->Get_LightsLayout().specularPow;
-		r_LightProperties.La = m_MyGui->Get_LightsLayout().reset ? glm::vec3(0.5, 0.5, 0.5) : m_MyGui->Get_LightsLayout().La;
-		r_LightProperties.Ld = m_MyGui->Get_LightsLayout().reset ? glm::vec3(1, 1, 0.85) : m_MyGui->Get_LightsLayout().Ld;
-		r_LightProperties.Ls = m_MyGui->Get_LightsLayout().reset ? glm::vec3(1, 1, 1) : m_MyGui->Get_LightsLayout().Ls;
-		r_LightProperties.Ka = m_MyGui->Get_LightsLayout().reset ? glm::vec3(0.8, 0.8, 0.8) : m_MyGui->Get_LightsLayout().Ka;
-		r_LightProperties.Kd = m_MyGui->Get_LightsLayout().reset ? glm::vec3(1, 1, 1) : m_MyGui->Get_LightsLayout().Kd;
-		r_LightProperties.Ks = m_MyGui->Get_LightsLayout().reset ? glm::vec3(0.7, 0.6, 0.6) : m_MyGui->Get_LightsLayout().Ks;
-		Renderer::Set_LightProperties(r_LightProperties);
+		m_MyGui->Get_GameWindowLayout().Catastrophe_Effect = false;
 
-		m_MyGui->Get_LightsLayout().effect = false;
-		m_MyGui->Get_LightsLayout().reset = false;
-	}
-
-	//------------------------------
-	
-	if (m_MyGui->hit)
-	{
-		m_MyGui->hit = false;
-		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, Renderer::Get_FrameBuffer()->Get_FrameWidth(), Renderer::Get_FrameBuffer()->Get_FrameHeight());
-
-		if (m_MyGui->Get_BuildLayout().building == -1)
-		{
-			m_MyGui->Get_FieldDetailsLayout().isZone = false;
-			m_MyGui->Get_FieldDetailsLayout().x = HitX;
-			m_MyGui->Get_FieldDetailsLayout().y = HitY;
-
-			if (m_City->Get_GameField(HitX, HitY)->IsZone())
-			{
-				Zone* zone = dynamic_cast<Zone*>(m_City->Get_GameField(HitX, HitY));
-				m_MyGui->Get_FieldDetailsLayout().isZone = true;
-				m_MyGui->Get_FieldDetailsLayout().satisfaction = RoadNetwork::GetSatisfaction(zone);
-				m_MyGui->Get_FieldDetailsLayout().citizens_details = zone->Get_CitizenDetails();
-				m_MyGui->Get_FieldDetailsLayout().level = zone->Get_ZoneDetails().level + 1;
-				m_MyGui->Get_FieldDetailsLayout().contain = zone->Get_ZoneDetails().contain;
-				m_MyGui->Get_FieldDetailsLayout().capacity = zone->Get_ZoneDetails().capacity;
-			}
-		}
-		else 
-		{
-			GameField* field = m_City->Get_GameField(HitX, HitY);
-			m_City->Set_GameTableValue(HitX, HitY, (FieldType)m_MyGui->Get_BuildLayout().building, (FieldDirection)(m_MyGui->r % 4));
-			changed = true;
-		}
-
-	}
-
-	if (City::Log_Changed() || Citizen::Log_Changed())
-	{
-		m_MyGui->Get_LogLayout().build_log = City::Build_Log().str();
-		m_MyGui->Get_LogLayout().citizen_log = Citizen::Log().str();
-		m_MyGui->Get_LogLayout().money_log = City::Money_Log().str();
-		Citizen::Log_Changed() = false;
-		City::Log_Changed() = false;
-	}
-
-	if (m_MyGui->Get_CatastropheLayout().effect)
-	{
-		m_MyGui->Get_CatastropheLayout().effect = false;
-		for (int i = 0; i < m_MyGui->Get_CatastropheLayout().count; i++)
+		for (int i = 0; i < m_MyGui->Get_GameWindowLayout().Catastrophe_Count; i++)
 		{
 			MeteorGrp::Add(rand() % m_City->Get_GameTableSize(), rand() % m_City->Get_GameTableSize());
 		}
 	}
 
+	//GAME-TAX
+	if (m_MyGui->Get_GameWindowLayout().Tax_Effect)
+	{
+		m_MyGui->Get_GameWindowLayout().Tax_Effect = false;
+
+		m_City->SetTaxRate(RESIDENTIAL_LVL1, m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl1);
+		m_City->SetTaxRate(RESIDENTIAL_LVL2, m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl2);
+		m_City->SetTaxRate(RESIDENTIAL_LVL3, m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl3);
+
+		m_City->SetTaxRate(SERVICE_LVL1, m_MyGui->Get_GameWindowLayout().ServiceTaxLvl1);
+		m_City->SetTaxRate(SERVICE_LVL2, m_MyGui->Get_GameWindowLayout().ServiceTaxLvl2);
+		m_City->SetTaxRate(SERVICE_LVL3, m_MyGui->Get_GameWindowLayout().ServiceTaxLvl3);
+
+		m_City->SetTaxRate(INDUSTRIAL_LVL1, m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl1);
+		m_City->SetTaxRate(INDUSTRIAL_LVL2, m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl2);
+		m_City->SetTaxRate(INDUSTRIAL_LVL3, m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl3);
+	}
+	
+	//RENDER-FRAME
+	if (m_FrameCounter->Tick())
+	{
+		m_MyGui->Get_RenderWindowLayout().Frame_Fps = m_FrameCounter->Get_FPS();
+		m_MyGui->Get_RenderWindowLayout().Frame_Time = m_FrameCounter->Get_DeltaTime();
+		m_FrameCounter->Reset();
+	}
+
+	//RENDER-CAMERA
+	if (m_MyGui->Get_RenderWindowLayout().Camera_Effect)
+	{
+		m_MyGui->Get_RenderWindowLayout().Camera_Effect = false;
+
+		m_Camera->Set_Mode(m_MyGui->Get_RenderWindowLayout().Camera_Mode, 0, 0);
+		m_Camera->Get_Speed() = m_MyGui->Get_RenderWindowLayout().Camera_Speed;
+	}
+
+	//RENDER-LIGHTS
+	if (m_MyGui->Get_RenderWindowLayout().Lights_Effect)
+	{
+		LightProperties r_LightProperties;
+		r_LightProperties.lightDir = m_MyGui->Get_RenderWindowLayout().Lights_Reset ? glm::vec3(1, -1, 1) : m_MyGui->Get_RenderWindowLayout().Lights_Direction;
+		r_LightProperties.specularPow = m_MyGui->Get_RenderWindowLayout().Lights_Reset ? 64 : m_MyGui->Get_RenderWindowLayout().Lights_SpecularPow;
+		r_LightProperties.La = m_MyGui->Get_RenderWindowLayout().Lights_Reset ? glm::vec3(0.5, 0.5, 0.5) : m_MyGui->Get_RenderWindowLayout().La;
+		r_LightProperties.Ld = m_MyGui->Get_RenderWindowLayout().Lights_Reset ? glm::vec3(1, 1, 0.85) : m_MyGui->Get_RenderWindowLayout().Ld;
+		r_LightProperties.Ls = m_MyGui->Get_RenderWindowLayout().Lights_Reset ? glm::vec3(1, 1, 1) : m_MyGui->Get_RenderWindowLayout().Ls;
+		r_LightProperties.Ka = m_MyGui->Get_RenderWindowLayout().Lights_Reset ? glm::vec3(0.8, 0.8, 0.8) : m_MyGui->Get_RenderWindowLayout().Ka;
+		r_LightProperties.Kd = m_MyGui->Get_RenderWindowLayout().Lights_Reset ? glm::vec3(1, 1, 1) : m_MyGui->Get_RenderWindowLayout().Kd;
+		r_LightProperties.Ks = m_MyGui->Get_RenderWindowLayout().Lights_Reset ? glm::vec3(0.7, 0.6, 0.6) : m_MyGui->Get_RenderWindowLayout().Ks;
+		Renderer::Set_LightProperties(r_LightProperties);
+
+		m_MyGui->Get_RenderWindowLayout().Lights_Effect = false;
+		m_MyGui->Get_RenderWindowLayout().Lights_Reset  = false;
+	}
+
+	//LOG
+	if (City::Log_Changed() || Citizen::Log_Changed())
+	{
+		m_MyGui->Get_LogWindowLayout().build_log   = City::Build_Log().str();
+		m_MyGui->Get_LogWindowLayout().citizen_log = Citizen::Log().str();
+		m_MyGui->Get_LogWindowLayout().money_log   = City::Money_Log().str();
+		Citizen::Log_Changed() = false;
+		City::Log_Changed() = false;
+	}
+
+	//BUILD - OR MOUSE EVENT
+
+	if (m_MyGui->Get_EventLayout().Hit)
+	{
+		m_MyGui->Get_EventLayout().Hit = false;
+		ConvertMouseInputTo3D(m_MyGui->Get_EventLayout().Mouse_X, m_MyGui->Get_EventLayout().Mouse_Y, Renderer::Get_FrameBuffer()->Get_FrameWidth(), Renderer::Get_FrameBuffer()->Get_FrameHeight());
+		
+		if (m_MyGui->Get_BuildWindowLayout().Build_Id == -1) //CHECK DETAILS
+		{
+			m_MyGui->Get_DetailsWindowLayout().Field_IsZone = false;
+			m_MyGui->Get_DetailsWindowLayout().Field_Type = m_City->Get_GameField(HitX, HitY)->Get_Type();
+			m_MyGui->Get_DetailsWindowLayout().Field_Coord_x = HitX;
+			m_MyGui->Get_DetailsWindowLayout().Field_Coord_y = HitY;
+
+			if (m_City->Get_GameField(HitX, HitY)->IsZone())
+			{
+				Zone* zone = dynamic_cast<Zone*>(m_City->Get_GameField(HitX, HitY));
+				m_MyGui->Get_DetailsWindowLayout().Field_IsZone = true;
+				m_MyGui->Get_DetailsWindowLayout().Field_Satisfaction = RoadNetwork::GetSatisfaction(zone);
+				m_MyGui->Get_DetailsWindowLayout().Field_Level = zone->Get_ZoneDetails().level + 1;
+				m_MyGui->Get_DetailsWindowLayout().Field_Contain = zone->Get_ZoneDetails().contain;
+				m_MyGui->Get_DetailsWindowLayout().Field_Capacity = zone->Get_ZoneDetails().capacity;
+				m_MyGui->Get_DetailsWindowLayout().Citizens_details = zone->Get_CitizenDetails();
+			}
+		}
+
+		else if (m_MyGui->Get_BuildWindowLayout().Build_Id == -2)
+		{
+			//TODO: UPGRADE
+		}
+
+		else if (m_MyGui->Get_BuildWindowLayout().Build_Id == -3)
+		{
+			//TODO: DEGRADE
+		}
+
+		else 
+		{
+			GameField* field = m_City->Get_GameField(HitX, HitY);
+			m_City->Set_GameTableValue(HitX, HitY, (FieldType)m_MyGui->Get_BuildWindowLayout().Build_Id, (FieldDirection)(m_MyGui->Get_EventLayout().Rotate % 4));
+			changed = true;
+		}
+
+
+	}
+
+	//METEOR HITS GROUND
 	if (MeteorGrp::Effect())
 	{
 		auto fields = MeteorGrp::Change();
@@ -203,12 +269,6 @@ void Application::Update()
 
 		MeteorGrp::Delete();
 	}
-
-	if (m_MyGui->Get_DimensionLayout().effect)
-	{
-		m_MyGui->Get_DimensionLayout().effect = false;
-		m_Camera->Set_Mode(m_MyGui->Get_DimensionLayout().dimension, 0, 0);
-	}
 }
 
 void Application::RenderUI()
@@ -216,16 +276,6 @@ void Application::RenderUI()
 	m_MyGui->Pre_Render();
 
 	m_MyGui->DockSpace();
-	m_MyGui->Demo_Window();
-	m_MyGui->Build_Window();
-	m_MyGui->GameDetails_Window();
-	m_MyGui->GameOptions_Window();
-	m_MyGui->RenderOptions_Window();
-	m_MyGui->FieldDetails_Window();
-	m_MyGui->CityDetials_Window();
-	m_MyGui->Log_Window();
-	//m_MyGui->GameIdk();
-	m_MyGui->ViewPort_Render(Renderer::Get_FrameBuffer());
 
 	m_MyGui->Post_Render();
 }
@@ -274,7 +324,7 @@ void Application::Render()
 
 	if (m_MyGui->BuildHover)
 	{
-		ConvertMouseInputTo3D(m_MyGui->mouse_x, m_MyGui->mouse_y, (int)m_MyGui->content_size.x, (int)m_MyGui->content_size.y);
+		ConvertMouseInputTo3D(m_MyGui->Get_EventLayout().Mouse_X, m_MyGui->Get_EventLayout().Mouse_Y, (int)m_MyGui->Get_EventLayout().Content_X, (int)m_MyGui->Get_EventLayout().Content_Y);
 
 		bool l1 = HitX >= 0 && HitX < m_City->Get_GameTableSize();
 		bool l2 = HitY >= 0 && HitY < m_City->Get_GameTableSize();
@@ -282,7 +332,7 @@ void Application::Render()
 		if (l1 && l2)
 		{
 			Renderer::Buildable = m_City->Get_GameField(HitX, HitY)->IsEmpty();
-			Renderer::RenderNormal((RenderShapeType)m_MyGui->Get_BuildLayout().building, HitX, HitY, (m_MyGui->r % 4));
+			Renderer::RenderNormal((RenderShapeType)m_MyGui->Get_BuildWindowLayout().Build_Id, HitX, HitY, (m_MyGui->Get_EventLayout().Rotate % 4));
 		}
 	}
 

@@ -51,6 +51,8 @@ public:
 	static void RenderNormal_Wireframe(RenderShapeType type, int x, int y, int direction);
 	static void RenderInstanced(Shape* shape, const std::vector<glm::mat4>& transforms);
 	static void RenderInstanced_Wireframe(Shape* shape, const std::vector<glm::mat4>& transforms);
+
+	static Texture2D* Get_Texture() { return m_GameTexture; }
 protected:
 
 	static void RenderInstancedGround();
