@@ -31,5 +31,25 @@ void ResidenceBuilding3::CreateBuffers(GLuint buffer_size)
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));
 
+	cube_layout.GeometryDetails.BOTTOM_BACK_LEFT = glm::vec3(-0.6, 0.5, -0.6);
+	cube_layout.GeometryDetails.BOTTOM_BACK_RIGHT = glm::vec3(0.6, 0.5, -0.6);
+	cube_layout.GeometryDetails.BOTTOM_FRONT_LEFT = glm::vec3(-0.6, 0.5, 0.6);
+	cube_layout.GeometryDetails.BOTTOM_FRONT_RIGHT = glm::vec3(0.6, 0.5, 0.6);
+
+	cube_layout.GeometryDetails.TOP_BACK_LEFT = glm::vec3(-0.4999, 1, 0);
+	cube_layout.GeometryDetails.TOP_BACK_RIGHT = glm::vec3(0.4999, 1, 0);
+	cube_layout.GeometryDetails.TOP_FRONT_LEFT = glm::vec3(-0.4999, 1, 0);
+	cube_layout.GeometryDetails.TOP_FRONT_RIGHT = glm::vec3(0.4999, 1, 0);
+
+	cube_layout.TextureDetails.FRONT_ID = 27;
+	cube_layout.TextureDetails.BACK_ID = 27;
+	cube_layout.TextureDetails.LEFT_ID = 27;
+	cube_layout.TextureDetails.RIGHT_ID = 27;
+	cube_layout.TextureDetails.TOP_ID = 27;
+	cube_layout.TextureDetails.BOTTOM_ID = 27;
+
+	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
+	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));
+
 	AttachToGPU(vertices, indices, buffer_size);
 }

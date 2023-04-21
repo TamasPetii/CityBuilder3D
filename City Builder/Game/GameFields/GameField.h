@@ -1,11 +1,13 @@
 #pragma once
 #include <string>
-#include "GameFieldType.h"
+
+enum FieldDirection;
+enum FieldType;
 
 class GameField
 {
 public:
-	GameField(FieldType type, int x, int y, float cost): m_Type(type), m_X(x), m_Y(y), m_Cost(cost) {}
+	GameField(FieldType type, int x, int y,  float cost): m_Type(type), m_X(x), m_Y(y), m_Cost(cost) {}
 	~GameField() {}
 
 	static GameField* CreateField(FieldType type, int x, int y);
@@ -25,6 +27,8 @@ public:
 	inline float Get_Cost() const { return m_Cost; };
 	inline FieldType Get_Type() const { return m_Type; };
 
+	inline void Set_FieldDirection(FieldDirection dir) { m_Direction = dir; }
+	inline FieldDirection Get_FieldDirection() { return m_Direction; }
 private:
 	int m_X;
 	int m_Y;
@@ -33,4 +37,37 @@ private:
 	float m_SatisfactionPoints;
 	float m_Power;
 	FieldType m_Type;
+	FieldDirection m_Direction;
+};
+
+enum FieldType
+{
+	RESIDENTIAL_LVL1,
+	RESIDENTIAL_LVL2,
+	RESIDENTIAL_LVL3,
+	INDUSTRIAL_LVL1,
+	INDUSTRIAL_LVL2,
+	INDUSTRIAL_LVL3,
+	SERVICE_LVL1,
+	SERVICE_LVL2,
+	SERVICE_LVL3,
+	FOREST,
+	POLICESTATION,
+	FIRESTATION,
+	HIGHSCHOOL,
+	UNIVERSITY,
+	STADIUM,
+	POWERWIRE,
+	POWERSTATION,
+	EMPTY,
+	ROAD,
+	CRATER
+};
+
+enum FieldDirection
+{
+	FRONT,
+	RIGHT,
+	BACK,
+	LEFT
 };

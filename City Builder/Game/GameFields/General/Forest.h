@@ -10,6 +10,8 @@ public:
     ~Forest() {}
 
     bool inline IsForest() const override { return true; }
+
+    int age = 9;
 };
 
 #endif

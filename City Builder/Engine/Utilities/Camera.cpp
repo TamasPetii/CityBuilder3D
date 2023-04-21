@@ -23,8 +23,17 @@ void Camera::Update()
 	m_DeltaTime = currentTime - m_LastTime;
 	m_LastTime = currentTime;
 
-	m_Eye += m_Forward * m_DirVec * m_Speed * m_DeltaTime;
-	m_Eye += m_Sideways * glm::normalize(glm::cross(m_DirVec, m_Up)) * m_Speed * m_DeltaTime;
+	if (mode == THREE_DIMENSION)
+	{
+		m_Eye += m_Forward * m_DirVec * m_Speed * m_DeltaTime;
+		m_Eye += m_Sideways * glm::normalize(glm::cross(m_DirVec, m_Up)) * m_Speed * m_DeltaTime;
+	}
+	else 
+	{
+		m_Eye += m_Sideways * glm::normalize(glm::cross(m_DirVec, m_Up)) * m_Speed * m_DeltaTime;
+		m_Eye += m_Forward * glm::normalize(glm::cross(m_Up, glm::normalize(glm::cross(m_DirVec, m_Up)))) * m_Speed * m_DeltaTime;
+		m_Eye += m_UpWays * m_Up * m_Speed * m_DeltaTime;
+	}
 
 	m_ViewMatrix = glm::lookAt(m_Eye, m_Eye + m_DirVec, m_Up);
 }
@@ -61,6 +70,14 @@ void Camera::Keyboard_PressEvent(GLuint key)
 	{
 		m_Sideways = 1;
 	}
+	if (key == GLFW_KEY_LEFT_CONTROL)
+	{
+		m_UpWays = 1;
+	}
+	if (key == GLFW_KEY_LEFT_SHIFT)
+	{
+		m_UpWays = -1;
+	}
 }
 
 void Camera::Keyboard_ReleaseEvent(GLint key)
@@ -72,6 +89,10 @@ void Camera::Keyboard_ReleaseEvent(GLint key)
 	if (key == GLFW_KEY_A || key == GLFW_KEY_D)
 	{
 		m_Sideways = 0;
+	}
+	if (key == GLFW_KEY_LEFT_CONTROL || key == GLFW_KEY_LEFT_SHIFT)
+	{
+		m_UpWays = 0;
 	}
 }
 
@@ -180,6 +201,7 @@ void Camera::Set_Eye(const glm::vec3& eye)
 	m_Yaw = glm::degrees(atan2f(m_DirVec.z, m_DirVec.x));
 	m_Pitch = glm::degrees(asinf(m_DirVec.y));
 }
+
 void Camera::Set_At(const glm::vec3& at)
 {
 	m_At = at;
@@ -188,4 +210,30 @@ void Camera::Set_At(const glm::vec3& at)
 	m_DirVec = glm::normalize(m_At - m_Eye);
 	m_Yaw = glm::degrees(atan2f(m_DirVec.z, m_DirVec.x));
 	m_Pitch = glm::degrees(asinf(m_DirVec.y));
+}
+
+void Camera::Set_Mode(int mode, int x, int y)
+{
+	m_IsMovable = true;
+
+	if (mode == TWO_DIMENSION)
+	{
+		m_Yaw = -90.f;
+		m_Pitch = -89.f;
+		Mouse_MoveEvent(x, y);
+		this->mode = (Mode)mode;
+	}
+	else if (mode == TWO_HALF_DIMENSION)
+	{
+		m_Yaw = -90.f;
+		m_Pitch = -26.565f;
+		Mouse_MoveEvent(x, y);
+		this->mode = (Mode)mode;
+	}
+	else if(mode == THREE_DIMENSION)
+	{
+		this->mode = (Mode)mode;
+	}
+
+	m_IsMovable = false;
 }

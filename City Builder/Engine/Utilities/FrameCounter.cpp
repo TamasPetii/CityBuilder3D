@@ -2,7 +2,7 @@
 
 FrameCounter::FrameCounter()
 {
-	m_Timer = new Timer(1);
+	m_Timer = new Timer(0.5);
 	m_Timer->Start();
 }
 

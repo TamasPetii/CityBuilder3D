@@ -66,9 +66,6 @@
     <ClInclude Include="GameFields\Zones\Zone.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameFields\GameFieldType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GameFields\Zones\_ZoneHeaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>

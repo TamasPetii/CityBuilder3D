@@ -285,13 +285,14 @@ void City::SetTaxRate(FieldType type, float rate)
 	}
 }
 
-void City::Set_GameTableValue(int x, int y, FieldType type)
+void City::Set_GameTableValue(int x, int y, FieldType type, FieldDirection dir)
 { 
 	GameField* PreviousField = m_GameTable->Get_TableValue(x, y);
 	m_GameTable->Set_TableValue(x, y, type);
 	GameField* CurrentField = m_GameTable->Get_TableValue(x, y);
 	if (PreviousField != CurrentField)
 	{
+		CurrentField->Set_FieldDirection(dir);
     	m_BuildLog << GameField::ConvertTypeToStr(type) << ": " << CurrentField->Get_Cost() << "$" << std::endl;
 		m_ChangedLog = true;
 	}
