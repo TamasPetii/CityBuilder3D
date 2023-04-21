@@ -116,7 +116,7 @@ void GameTable::SetBuildingNetwork(int x, int y) {
 		for (int j = -1; j < 2; j += 1) {
 			if ((abs(i) + abs(j)) == 2) continue;
 			if (i == 0 && j == 0) continue;
-			if (x + i < 0 || x + i >= m_TableSize || y + j < 0 || y + j > m_TableSize) continue;
+			if (x + i < 0 || x + i >= m_TableSize || y + j < 0 || y + j >= m_TableSize) continue;
 			GameField* adj = m_Table[x + i][y + j];
 			if (Road* road = dynamic_cast<Road*>(adj)) {
 				int id = RoadNetwork::GetNetworkId(adj);

@@ -101,7 +101,7 @@ void Application::Update()
 		Citizen::Log().clear();
 		Citizen::Log().str("");
 		Citizen::Log_Changed() = true;
-		Renderer::ResizeShapeBuffers(m_MyGui->Get_NewGameLayout().size * m_MyGui->Get_NewGameLayout().size);
+		Renderer::ResizeShapeBuffers(m_MyGui->Get_MenuBarLayout().City_Size * m_MyGui->Get_MenuBarLayout().City_Size);
 
 		delete m_City;
 		m_City = new City(m_MyGui->Get_MenuBarLayout().City_Size, 800000);
@@ -265,8 +265,7 @@ void Application::Update()
 
 		for (auto field : fields)
 		{
-			if(field.second != 49)
-				m_City->Set_GameTableValue(field.first, field.second, CRATER, (FieldDirection)LEFT);
+			m_City->Set_GameTableValue(field.first, field.second, CRATER, (FieldDirection)LEFT);
 			changed = true;
 		}
 
