@@ -19,9 +19,8 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 	m_Timer = new Timer(0.1);
 	m_Timer->Start();
 
-	m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
-	m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
-
+	//m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
+	//m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
 
 	MeteorGrp::Init();
 
@@ -40,6 +39,7 @@ Application::~Application()
 void Application::Update()
 {
 	MeteorGrp::Update();
+	Cars::Update();
 	m_Timer->Update();
 	m_FrameCounter->Update();
 	m_Camera->Update();

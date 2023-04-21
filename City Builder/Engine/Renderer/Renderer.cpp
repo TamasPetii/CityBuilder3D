@@ -6,6 +6,7 @@ Camera*        Renderer::m_Camera;
 Skybox*        Renderer::m_Skybox;
 Ground*        Renderer::m_Ground;
 Shape_Meteor*  Renderer::m_Meteor;
+Shape_Car*	   Renderer::m_Car;
 std::vector<glm::mat4> Renderer::GroundTransforms;
 std::vector<GLfloat> Renderer::GroundTexturesID;
 ProgramObject* Renderer::m_InstanceProgram;
@@ -109,6 +110,7 @@ void Renderer::Init(Camera* camera)
 	m_Skybox = new Skybox();
 	m_Ground = new Ground();
 	m_Meteor = new Shape_Meteor();
+	m_Car = new Shape_Car();
 
 	m_ShapeData[RENDER_RESIDENTIAL_LVL1] = std::make_pair(new ResidenceBuilding1(), std::vector<glm::mat4>());
 	m_ShapeData[RENDER_RESIDENTIAL_LVL2] = std::make_pair(new ResidenceBuilding2(), std::vector<glm::mat4>());
@@ -179,6 +181,7 @@ void Renderer::SceneRender(RenderMode mode)
 	}
 
 	Render_Meteors();
+	Render_Cars();
 	RenderInstancedGround();
 	Render_Skybox();
 }
@@ -350,6 +353,16 @@ void Renderer::Render_Meteors()
 	if (not_changed) Changed = false;
 }
 
+void Renderer::Render_Cars()
+{
+	bool not_changed = !Changed;
+	Changed = true;
+
+	RenderInstanced(m_Car, Cars::Get_Transforms());
+
+	if (not_changed) Changed = false;
+}
+
 void Renderer::RenderNormal(RenderShapeType type, int x, int y, int direction)
 {
 	if (m_ShapeData.find(type) == m_ShapeData.end()) return;
@@ -405,6 +418,7 @@ void Renderer::InitShapeBuffers()
 	m_Skybox->CreateBuffers();
 	m_Ground->CreateBuffers(1);
 	m_Meteor->CreateBuffers(2500);
+	m_Car->CreateBuffers(2500);
 }
 
 void Renderer::ResizeShapeBuffers(int buffer_size)
