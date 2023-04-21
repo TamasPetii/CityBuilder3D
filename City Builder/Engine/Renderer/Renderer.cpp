@@ -107,13 +107,8 @@ void Renderer::Init(Camera* camera)
 	//[SHAPES]---------------------------------------------------------------------------//
 
 	m_Skybox = new Skybox();
-	m_Skybox->CreateBuffers();
-
 	m_Ground = new Ground();
-	m_Ground->CreateBuffers(5000);
-
 	m_Meteor = new Shape_Meteor();
-	m_Meteor->CreateBuffers(2500);
 
 	m_ShapeData[RENDER_RESIDENTIAL_LVL1] = std::make_pair(new ResidenceBuilding1(), std::vector<glm::mat4>());
 	m_ShapeData[RENDER_RESIDENTIAL_LVL2] = std::make_pair(new ResidenceBuilding2(), std::vector<glm::mat4>());
@@ -134,7 +129,7 @@ void Renderer::Init(Camera* camera)
 	m_ShapeData[RENDER_WINDTURBINE]      = std::make_pair(new WindTurbine(), std::vector<glm::mat4>());
 	m_ShapeData[RENDER_WINDTURBINE_PROPELLER] = std::make_pair(new WindTurbinePropeller(), std::vector<glm::mat4>());
 
-	ResizeShapeBuffer(50000);
+	InitShapeBuffers();
 }
 
 void Renderer::Destroy()
@@ -237,15 +232,6 @@ void Renderer::ClearShapeTransforms()
 
 	GroundTransforms.clear();
 	GroundTexturesID.clear();
-}
-
-void Renderer::ResizeShapeBuffer(int buffer_size)
-{
-	//TODO!!!
-	for (auto it = m_ShapeData.begin(); it != m_ShapeData.end(); it++)
-	{
-		it->second.first->CreateBuffers(buffer_size);
-	}
 }
 
 void Renderer::AddShapeTransforms(RenderShapeType type, int x, int y, int direction, int amount)
@@ -407,4 +393,29 @@ void Renderer::RenderNormal_Wireframe(RenderShapeType type, int x, int y, int di
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glLineWidth(1.0f);
 	glEnable(GL_CULL_FACE);
+}
+
+void Renderer::InitShapeBuffers()
+{
+	for (auto it = m_ShapeData.begin(); it != m_ShapeData.end(); it++)
+	{
+		it->second.first->CreateBuffers(1);
+	}
+
+	m_Skybox->CreateBuffers();
+	m_Ground->CreateBuffers(1);
+	m_Meteor->CreateBuffers(2500);
+}
+
+void Renderer::ResizeShapeBuffers(int buffer_size)
+{
+	std::cout << "RESIZED SHAPE BUFFER: " << buffer_size << std::endl;
+
+	for (auto it = m_ShapeData.begin(); it != m_ShapeData.end(); it++)
+	{
+		it->second.first->AttachMatricesDynamic(std::vector<glm::mat4>(buffer_size * it->second.first->Get_Transforms().size()));
+	}
+
+	m_Ground->AttachMatricesDynamic(std::vector<glm::mat4>(buffer_size));
+	m_Ground->AttachNumbersDynamic(std::vector<GLfloat>(buffer_size));
 }

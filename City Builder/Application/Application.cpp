@@ -9,7 +9,9 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 
 	m_Camera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
 	m_City = new City(50, 10000);
+
 	Renderer::Init(m_Camera);
+	Renderer::ResizeShapeBuffers(m_City->Get_GameTableSize() * m_City->Get_GameTableSize());
 
 	m_MyGui = new MyGui(m_Camera);
 
@@ -99,6 +101,7 @@ void Application::Update()
 		Citizen::Log().clear();
 		Citizen::Log().str("");
 		Citizen::Log_Changed() = true;
+		Renderer::ResizeShapeBuffers(m_MyGui->Get_NewGameLayout().size * m_MyGui->Get_NewGameLayout().size);
 
 		delete m_City;
 		m_City = new City(m_MyGui->Get_MenuBarLayout().City_Size, 800000);
