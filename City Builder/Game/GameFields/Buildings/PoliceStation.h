@@ -10,6 +10,8 @@ public:
     ~PoliceStation() {}
 
     bool inline IsPoliceStation() const override { return true; }
+    //azért 0, mert a közbiztonságot külön számoljuk
+    float inline GetBuildingSatisfaction() const override { return 0; }
 };
 
 #endif

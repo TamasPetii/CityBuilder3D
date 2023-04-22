@@ -10,6 +10,7 @@ public:
     ~PowerWire() {}
 
     bool inline IsPowerWire() const override { return true; }
+    float inline GetBuildingSatisfaction() const override { return 0; }
 };
 
 #endif

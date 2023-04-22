@@ -10,6 +10,7 @@ public:
     ~PowerStation() {}
 
     bool inline IsPowerStation() const override { return true; }
+    float inline GetBuildingSatisfaction() const override { return -1; }
 };
 
 #endif
