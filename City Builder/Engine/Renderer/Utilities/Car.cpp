@@ -1,31 +1,6 @@
 #include "Car.h"
 
-std::unordered_set<Car*> Cars::m_Cars = { new Car(
-	{
-	glm::vec3(3,0,1),
-	glm::vec3(5,0,1),
-	glm::vec3(7,0,1),
-	glm::vec3(9,0,1),
-	glm::vec3(9,0,3),
-	glm::vec3(9,0,5),
-	glm::vec3(9,0,7),
-	glm::vec3(9,0,9),
-	glm::vec3(9,0,11),
-	glm::vec3(7,0,11),
-	glm::vec3(5,0,11),
-	glm::vec3(3,0,11),
-	glm::vec3(1,0,11),
-	glm::vec3(1,0,13),
-	glm::vec3(1,0,15),
-	glm::vec3(1,0,17),
-	glm::vec3(3,0,17),
-	glm::vec3(5,0,17),
-	glm::vec3(7,0,17),
-	glm::vec3(9,0,17),
-	glm::vec3(9,0,15),
-	glm::vec3(9,0,13),
-	}
-) };
+std::unordered_set<Car*> Cars::m_Cars;
 
 float Cars::last_time;
 float Cars::current_time;
@@ -177,6 +152,70 @@ Car::Car(std::vector<glm::vec3> coordinates)
 			++i;
 		}
 	}
+
+	//kompenzáció kanyarokban
+	for (int i = 0; i < m_RouteSections.size(); i++)
+	{
+		//az út után kanyar van
+		if (i < m_RouteSections.size() - 1)
+		{
+			if (m_RouteSections[i]->Get_NumberOfCoordinates() == 2 && m_RouteSections[i + 1]->Get_NumberOfCoordinates() == 3)
+			{
+				RouteSection* straight = m_RouteSections[i];
+				RouteSection* curve = m_RouteSections[i + 1];
+
+				if (straight->Get_FirstPoint().x < straight->Get_LastPoint().x) //x mentén növekvõen vagyunk
+				{
+					straight->Increase_LastX(1);
+					curve->Increase_FirstX(1);
+				}
+				else if (straight->Get_FirstPoint().x > straight->Get_LastPoint().x) //x mentén csökkenõen vagyunk
+				{
+					straight->Increase_LastX(-1);
+					curve->Increase_FirstX(-1);
+				}
+				else if (straight->Get_FirstPoint().z < straight->Get_LastPoint().z) //z mentén növekvõen vagyunk
+				{
+					straight->Increase_LastZ(1);
+					curve->Increase_FirstZ(1);
+				}
+				else if (straight->Get_FirstPoint().z > straight->Get_LastPoint().z) //z mentén csökkenõen vagyunk
+				{
+					straight->Increase_LastZ(-1);
+					curve->Increase_FirstZ(-1);
+				}
+			}
+		}
+		if (i > 0)
+		{
+			if (m_RouteSections[i]->Get_NumberOfCoordinates() == 2 && m_RouteSections[i - 1]->Get_NumberOfCoordinates() == 3)
+			{
+				RouteSection* straight = m_RouteSections[i];
+				RouteSection* curve = m_RouteSections[i - 1];
+
+				if (straight->Get_FirstPoint().x < straight->Get_LastPoint().x) //x mentén növekvõen vagyunk
+				{
+					straight->Increase_FirstX(-1);
+					curve->Increase_LastX(-1);
+				}
+				else if (straight->Get_FirstPoint().x > straight->Get_LastPoint().x) //x mentén csökkenõen vagyunk
+				{
+					straight->Increase_FirstX(1);
+					curve->Increase_LastX(1);
+				}
+				else if (straight->Get_FirstPoint().z < straight->Get_LastPoint().z) //z mentén növekvõen vagyunk
+				{
+					straight->Increase_FirstZ(-1);
+					curve->Increase_LastZ(-1);
+				}
+				else if (straight->Get_FirstPoint().z > straight->Get_LastPoint().z) //z mentén csökkenõen vagyunk
+				{
+					straight->Increase_FirstZ(1);
+					curve->Increase_LastZ(1);
+				}
+			}
+		}
+	}
 }
 
 glm::vec3 Car::Get_CurrentPosition(float& rotation)
@@ -193,7 +232,7 @@ glm::vec3 Car::Get_CurrentPosition(float& rotation)
 	if (m_RouteSections[static_cast<int>(m_Param)]->Get_NumberOfCoordinates() == 3)
 	{
 		glm::vec3 der = 2 * (1 - localT) * (m_RouteSections[interval]->Get_MiddlePoint() - m_RouteSections[interval]->Get_FirstPoint()) + 2 * localT * (m_RouteSections[interval]->Get_LastPoint() - m_RouteSections[interval]->Get_MiddlePoint());
-		std::cout << der.x << " " << der.y << " " << der.z << std::endl;
+		//std::cout << der.x << " " << der.y << " " << der.z << std::endl;
 		if (m_RouteSections[interval]->Get_FirstPoint().x < m_RouteSections[interval]->Get_LastPoint().x)
 			rotation = -glm::atan(der.z, der.x);
 		else
@@ -223,18 +262,10 @@ glm::mat4 Car::Get_Transform()
 
 void Car::Move(float t)
 {
-	if (m_Param < m_RouteSections.size())
-	{
-		if (m_RouteSections[static_cast<int>(m_Param)]->Get_NumberOfCoordinates() == 3)
-			m_Param += (t * 0.27f);
-		else
-			m_Param += (t * 0.5f);
-	}
-	else {
-		m_Param = 0.0f;
-	}
-
-	//std::cout << m_Param << std::endl;
+	if (m_RouteSections[static_cast<int>(m_Param)]->Get_NumberOfCoordinates() == 3)
+		m_Param += (t * 0.5f);
+	else
+		m_Param += (t * 0.4f);
 }
 
 //CARS//
@@ -259,6 +290,16 @@ void Cars::Update()
 
 	for (Car* car : m_Cars)
 	{
-		car->Move(delta_time);
+		if (car->ShouldBeDeleted())
+		{
+			m_Cars.erase(car);
+		}
+		else
+			car->Move(delta_time);
 	}
+}
+
+void Cars::Add(std::vector<glm::vec3> coords)
+{
+	m_Cars.insert(new Car(coords));
 }
