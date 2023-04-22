@@ -75,6 +75,6 @@ float Zone::Get_Satisfaction() const {
 }
 
 //teszteléshez metódus
-float Zone::Get_SatisfactionAll() const {
+float Zone::Get_RawSatisfaction() const {
 	return m_details.satisfaction + m_details.safety + m_details.industrial_penalty;
 }

@@ -44,7 +44,7 @@ public:
 
 	Level Get_Level() { return m_details.level; }
 	float Get_Satisfaction() const;
-	float Get_SatisfactionAll() const;
+	float Get_RawSatisfaction() const;
 	void Add_Satisfaction(float f) { m_details.satisfaction += f; }
 	void Set_Satisfaction(float f) { m_details.satisfaction = f; }
 	void Add_Safety(float f) { m_details.safety += f; }

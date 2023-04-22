@@ -230,7 +230,7 @@ void Application::Update()
 			{
 				Zone* zone = dynamic_cast<Zone*>(m_City->Get_GameField(HitX, HitY));
 				m_MyGui->Get_DetailsWindowLayout().Field_IsZone = true;
-				m_MyGui->Get_DetailsWindowLayout().Field_Satisfaction = RoadNetwork::GetSatisfaction(zone);
+				m_MyGui->Get_DetailsWindowLayout().Field_Satisfaction = zone->Get_RawSatisfaction();
 				m_MyGui->Get_DetailsWindowLayout().Field_Level = zone->Get_ZoneDetails().level + 1;
 				m_MyGui->Get_DetailsWindowLayout().Field_Contain = zone->Get_ZoneDetails().contain;
 				m_MyGui->Get_DetailsWindowLayout().Field_Capacity = zone->Get_ZoneDetails().capacity;
