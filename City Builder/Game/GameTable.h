@@ -2,7 +2,12 @@
 
 #include <iostream>
 #include <vector>
+#include <queue>
 #include "GameFields/_GameFieldHeaders.h"
+
+struct Point {
+	int x, y;
+};
 
 class GameTable
 {
@@ -20,6 +25,7 @@ public:
 	float Get_TotalCost() const;
 
 	void UpgradeField(int x, int y) {};
+	std::vector<Point> PathFinder(Point start, Point end);
 
 private:
 	std::vector<std::vector<GameField*>> m_Table;
