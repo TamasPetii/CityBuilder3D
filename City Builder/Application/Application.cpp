@@ -19,8 +19,8 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 	m_Timer = new Timer(0.1);
 	m_Timer->Start();
 
-	//m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
-	//m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
+	m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
+	m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
 
 	MeteorGrp::Init();
 
@@ -77,6 +77,18 @@ void Application::Update()
 			{
 				MeteorGrp::Add(rand() % m_City->Get_GameTableSize(), rand() % m_City->Get_GameTableSize());
 			}
+		}
+
+		//Cars
+		std::vector<std::vector<Point>> cars = m_City->Get_CarPaths();
+		for (int i = 0; i < cars.size(); ++i)
+		{
+			std::vector<glm::vec3> coordinates;
+			for (int j = 0; j < cars[i].size(); ++j)
+			{
+				coordinates.push_back(glm::vec3(cars[i][j].y * 2 + 1,0, cars[i][j].x * 2 + 1));
+			}
+			Cars::Add(coordinates);
 		}
 
 		changed = m_City->Get_CitizenSize() != size;

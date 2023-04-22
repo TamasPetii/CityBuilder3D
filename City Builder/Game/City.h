@@ -49,6 +49,11 @@ public:
 	int Get_Month() { return m_DailyTickCounter % 360 / 30; }
 	int Get_Day() { return (m_DailyTickCounter % 360) % 30 + 1; }
 
+	//TO BE DELETED
+	GameTable* Get_GameTable() { return m_GameTable; }
+
+	std::vector<std::vector<Point>> Get_CarPaths();
+
 	int Get_CitizenSize() { return m_Citizens.size(); }
 private:
 	std::unordered_set<Citizen*> m_Citizens;

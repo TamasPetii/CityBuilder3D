@@ -11,6 +11,9 @@ public:
 
 	bool inline IsResidentalArea() const override { return true; }
 
+	//Cars
+	Citizen* GetRandomDriver();
+
 	//Setter
 	static void inline SetLvl1TaxRate(float taxRate) { m_Lvl1TaxRate = taxRate; }
 	static void inline SetLvl2TaxRate(float taxRate) { m_Lvl2TaxRate = taxRate; }
