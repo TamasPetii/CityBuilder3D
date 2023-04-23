@@ -24,6 +24,7 @@ public:
 	static void AddToNetworkSatisfaction(GameField*, int);
 	static void SetZoneSatisfaction(GameField*);
 	static bool IsConnectedMultiple(GameField*, GameField*);
+	static Zone* FindOptimalResidentialArea(float);
 
 private:
 	class Network {

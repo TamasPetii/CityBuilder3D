@@ -69,4 +69,6 @@ private:
 	float m_combinedHappiness = 0;
 	int m_serviceWorkers = 0;
 	int m_industrialWorkers = 0;
+
+	int m_initialCitizens = 0;
 };

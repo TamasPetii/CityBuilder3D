@@ -85,6 +85,7 @@ void City::HandleRecalculation() {
 }
 
 void City::CalculateHappiness() {
+	std::vector<Citizen*> to_remove;
 	float totalHappiness = 0;
 	m_serviceWorkers = 0;
 	m_industrialWorkers = 0;
@@ -99,16 +100,27 @@ void City::CalculateHappiness() {
 	}
 
 	float ratio = m_serviceWorkers * 1.f / m_industrialWorkers;
+	int i = 0;
 	for (auto& citizen : m_Citizens) {
 		float happiness = 0;
 		happiness += citizen->Get_SatisfactionPoints();
 		if (m_Money < 0) happiness -= 0.1;
 		if (ratio < 0.5 || ratio > 2) happiness -= 0.1;
-		if (happiness < 0) happiness = 0;
+		if (happiness <= 0 && m_initialCitizens >= 50 && i>=49) { //első 50 lakos nem költözik el
+			happiness = 0;
+			to_remove.push_back(citizen);
+		}
 		totalHappiness += happiness;
+		i++;
 	}
 
-	m_combinedHappiness = totalHappiness / (Get_CitizenSize() * 1.f);
+	if (Get_CitizenSize() == 0) m_combinedHappiness = 0;
+	else m_combinedHappiness = totalHappiness / (Get_CitizenSize() * 1.f);
+
+	for (auto citizen : to_remove)
+	{
+		LeaveCity(citizen);
+	}
 }
 
 void City::GenerateCitizens(unsigned int x)
@@ -171,7 +183,17 @@ bool City::JoinCity(Citizen* citizen)
 {
 	if (citizen == nullptr) return false;
 
-	Zone* residence = RoadNetwork::FindEmptyResidentialArea();
+	Zone* residence = nullptr;
+	if (m_initialCitizens < 50) {
+		//a kezdetben 50 lakos feltétel nélkül beköltözik
+		residence = RoadNetwork::FindEmptyResidentialArea();
+		if (residence != nullptr) m_initialCitizens++;
+	}
+	else {
+		//a kezdeti után csak akkor költözik be, ha talál elég jó lakózónát
+		residence = RoadNetwork::FindOptimalResidentialArea(m_combinedHappiness);
+	}
+
 	Zone* workplace = RoadNetwork::FindEmptyWorkingArea(residence);
 
 	if (residence != nullptr)

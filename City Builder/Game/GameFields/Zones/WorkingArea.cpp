@@ -21,7 +21,7 @@ float IndustrialArea::GetTaxRate() const
 	else { return m_LVL3Payment * (1 - m_Lvl3TaxRate / 100); }
 }
 
-float ServiceArea::GetTaxRatePercentage() const {
+float IndustrialArea::GetTaxRatePercentage() const {
 	if (m_details.level == LEVEL_1) return m_Lvl1TaxRate;
 	if (m_details.level == LEVEL_2) return m_Lvl2TaxRate;
 	else return m_Lvl3TaxRate;
@@ -43,7 +43,7 @@ float ServiceArea::GetTaxRate() const
 	else { return m_LVL3Payment * (1 - m_Lvl3TaxRate / 100); }
 }
 
-float IndustrialArea::GetTaxRatePercentage() const {
+float ServiceArea::GetTaxRatePercentage() const {
 	if (m_details.level == LEVEL_1) return m_Lvl1TaxRate;
 	if (m_details.level == LEVEL_2) return m_Lvl2TaxRate;
 	else return m_Lvl3TaxRate;

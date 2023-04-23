@@ -108,7 +108,6 @@ float Citizen::Get_SatisfactionPoints() const
 		workplaceSatisfaction = 0;
 	}
 	else {
-		float test1 = m_Workplace->GetTaxRatePercentage() + m_Residence->GetTaxRatePercentage();
 		taxSatisfaction = 1 - (m_Workplace->GetTaxRatePercentage() + m_Residence->GetTaxRatePercentage()) / 2 / 100;
 		workplaceSatisfaction = m_Workplace->Get_Satisfaction();
 	}
