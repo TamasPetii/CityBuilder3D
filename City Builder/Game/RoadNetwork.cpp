@@ -130,10 +130,12 @@ bool RoadNetwork::IsConnectedMultiple(GameField* field1, GameField* field2) {
 	return false;
 }
 
-Zone* RoadNetwork::FindEmptyWorkingArea(Zone* field) {
+Zone* RoadNetwork::FindEmptyWorkingArea(Zone* field, float ratio) {
 	if (field == nullptr) return nullptr;
-	float minDistance = 100000;
-	Zone* closestZone = nullptr;
+	float minDistanceI = 100000;
+	Zone* closestZoneI = nullptr;
+	float minDistanceS = 100000;
+	Zone* closestZoneS = nullptr;
 
 	for (auto& network : m_networks) {
 		if (network.zoneSet.find(field) == network.zoneSet.end()) continue;
@@ -142,16 +144,37 @@ Zone* RoadNetwork::FindEmptyWorkingArea(Zone* field) {
 			if (WorkingArea* workingArea = dynamic_cast<WorkingArea*>(otherField)) {
 				if (workingArea->Get_ZoneDetails().contain < workingArea->Get_ZoneDetails().capacity) {
 					float d = distance(workingArea, field);
-					if (d < minDistance) {
-						minDistance = d;
-						closestZone = workingArea;
+					if (workingArea->IsIndustrialArea()) {
+						if (d < minDistanceI) {
+							minDistanceI = d;
+							closestZoneI = workingArea;
+						}
+					}
+					else {
+						if (d < minDistanceS) {
+							minDistanceS = d;
+							closestZoneS = workingArea;
+						}
 					}
 				}
 			}
 
 		}
 	}
-	return closestZone;
+	if (ratio > 1.5) { //több service van ezért industrial kell
+		if (closestZoneI == nullptr) return closestZoneS;
+		else return closestZoneI;
+	}
+	else if (ratio < 0.66) {
+		if (closestZoneS == nullptr) return closestZoneI;
+		else return closestZoneS;
+	}
+	else {
+		if (minDistanceI < minDistanceS && closestZoneI != nullptr) return closestZoneI;
+		if (minDistanceS <= minDistanceI && closestZoneS != nullptr) return closestZoneS;
+		if (closestZoneI == nullptr) return closestZoneS;
+		if (closestZoneS == nullptr) return closestZoneI;
+	}
 }
 
 std::string RoadNetwork::NetworksToString() {

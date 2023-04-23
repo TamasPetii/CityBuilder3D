@@ -149,7 +149,7 @@ void City::HandleLooingZone()
 			citizen->LeaveWorkplace();
 
 			Zone* residence = RoadNetwork::FindEmptyResidentialArea();
-			Zone* workplace = RoadNetwork::FindEmptyWorkingArea(residence);
+			Zone* workplace = RoadNetwork::FindEmptyWorkingArea(residence, m_serviceWorkers * 1.f / m_industrialWorkers);
 
 			if (residence != nullptr)
 			{
@@ -164,7 +164,7 @@ void City::HandleLooingZone()
 		}
 		else if (citizen->Get_Workplace() == nullptr)
 		{
-			Zone* workplace = RoadNetwork::FindEmptyWorkingArea(citizen->Get_Residence());
+			Zone* workplace = RoadNetwork::FindEmptyWorkingArea(citizen->Get_Residence(), m_serviceWorkers * 1.f / m_industrialWorkers);
 
 			if (workplace != nullptr)
 			{
@@ -194,7 +194,7 @@ bool City::JoinCity(Citizen* citizen)
 		residence = RoadNetwork::FindOptimalResidentialArea(m_combinedHappiness);
 	}
 
-	Zone* workplace = RoadNetwork::FindEmptyWorkingArea(residence);
+	Zone* workplace = RoadNetwork::FindEmptyWorkingArea(residence, m_serviceWorkers * 1.f / m_industrialWorkers);
 
 	if (residence != nullptr)
 	{
