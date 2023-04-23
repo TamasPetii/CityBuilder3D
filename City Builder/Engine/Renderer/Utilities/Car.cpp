@@ -268,6 +268,14 @@ void Car::Move(float t)
 		m_Param += (t * 0.4f);
 }
 
+Car::~Car()
+{
+	for (int i = 0; i < m_RouteSections.size(); ++i)
+	{
+		delete(m_RouteSections[i]);
+	}
+}
+
 //CARS//
 
 std::vector<glm::mat4> Cars::Get_Transforms()
@@ -288,14 +296,19 @@ void Cars::Update()
 	delta_time = current_time - last_time;
 	last_time = current_time;
 
-	for (Car* car : m_Cars)
+	for (auto it = m_Cars.begin(); it != m_Cars.end(); )
 	{
+		Car* car = *it;
 		if (car->ShouldBeDeleted())
 		{
-			m_Cars.erase(car);
+			delete car;
+			it = m_Cars.erase(it);
 		}
 		else
+		{
 			car->Move(delta_time);
+			++it;
+		}
 	}
 }
 

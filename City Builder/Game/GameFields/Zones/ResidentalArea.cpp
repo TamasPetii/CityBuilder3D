@@ -19,11 +19,13 @@ Citizen* ResidentalArea::GetRandomDriver()
 	double probability = (m_details.contain + 1) * 0.001;
 	double random = (double)rand() / RAND_MAX;
 
-	if (random < probability)
+	if (random < probability && m_citizens.size() > 0)
 	{
 		//TODO: Random element from unordered set
 		return *m_citizens.begin();
 	}
 	else
+	{
 		return nullptr;
+	}
 }

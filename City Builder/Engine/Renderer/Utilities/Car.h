@@ -41,6 +41,7 @@ class Car
 {
 public:
 	Car(std::vector<glm::vec3> coordinates);
+	~Car();
 	void Move(float t);
 	glm::vec3 Get_CurrentPosition(float& rotation);
 	glm::mat4 Get_Transform();

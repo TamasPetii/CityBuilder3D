@@ -304,33 +304,33 @@ std::vector<std::vector<Point>> City::Get_CarPaths()
 	int dx[] = { -1, 0, 1, 0 };
 	int dy[] = { 0, 1, 0, -1 };
 
-	for (int i = 0; i < m_GameTable->Get_TableSize(); i++)
+	for (int i = 0; i < m_GameTable->Get_TableSize(); ++i)
 	{
-		for (int j = 0; j < m_GameTable->Get_TableSize(); j++)
+		for (int j = 0; j < m_GameTable->Get_TableSize(); ++j)
 		{
 			Citizen* citizen = nullptr;
 
 			if (Get_GameField(i, j)->IsZone())
 			{
-				if (dynamic_cast<Zone*>(Get_GameField(i, j))->IsResidentalArea())
+				if ((dynamic_cast<Zone*>(Get_GameField(i, j)))->IsResidentalArea())
 				{
-					citizen = dynamic_cast<ResidentalArea*>(Get_GameField(i, j))->GetRandomDriver();
+					citizen = (dynamic_cast<ResidentalArea*>(Get_GameField(i, j))->GetRandomDriver());
 				}
-
 			}
+
 			if (citizen != nullptr)
 			{
 				if (citizen->Get_Residence() != nullptr && citizen->Get_Workplace() != nullptr)
 				{
 					Point start = { 0,0 };
 
-					for (int i = 0; i < 4; ++i)
+					for (int k = 0; k < 4; ++k)
 					{
-						if (citizen->Get_Residence()->Get_X() + dx[i] >= 0 && citizen->Get_Residence()->Get_X() + dx[i] < Get_GameTableSize()
-							&& citizen->Get_Residence()->Get_Y() + dy[i] >= 0 && citizen->Get_Residence()->Get_Y() + dy[i] < Get_GameTableSize())
+						if (citizen->Get_Residence()->Get_X() + dx[k] >= 0 && citizen->Get_Residence()->Get_X() + dx[k] < Get_GameTableSize()
+							&& citizen->Get_Residence()->Get_Y() + dy[k] >= 0 && citizen->Get_Residence()->Get_Y() + dy[k] < Get_GameTableSize())
 						{
-							if (Get_GameField(citizen->Get_Residence()->Get_X() + dx[i], citizen->Get_Residence()->Get_Y() + dy[i])->IsRoad())
-								start = { citizen->Get_Residence()->Get_X() + dx[i], citizen->Get_Residence()->Get_Y() + dy[i] };
+							if (Get_GameField(citizen->Get_Residence()->Get_X() + dx[k], citizen->Get_Residence()->Get_Y() + dy[k])->IsRoad())
+								start = { citizen->Get_Residence()->Get_X() + dx[k], citizen->Get_Residence()->Get_Y() + dy[k] };
 						}
 					}
 					std::vector<Point> path = m_GameTable->PathFinder(start, { citizen->Get_Workplace()->Get_X(), citizen->Get_Workplace()->Get_Y() });

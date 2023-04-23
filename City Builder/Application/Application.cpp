@@ -83,12 +83,15 @@ void Application::Update()
 		std::vector<std::vector<Point>> cars = m_City->Get_CarPaths();
 		for (int i = 0; i < cars.size(); ++i)
 		{
-			std::vector<glm::vec3> coordinates;
-			for (int j = 0; j < cars[i].size(); ++j)
+			if (cars[i].size() > 1)
 			{
-				coordinates.push_back(glm::vec3(cars[i][j].y * 2 + 1,0, cars[i][j].x * 2 + 1));
+				std::vector<glm::vec3> coordinates;
+				for (int j = 0; j < cars[i].size(); ++j)
+				{
+					coordinates.push_back(glm::vec3(cars[i][j].y * 2 + 1, 0, cars[i][j].x * 2 + 1));
+				}
+				Cars::Add(coordinates);
 			}
-			Cars::Add(coordinates);
 		}
 
 		changed = m_City->Get_CitizenSize() != size;
