@@ -60,18 +60,7 @@ std::string Zone::Get_CitizenDetails()
 }
 
 float Zone::Get_Satisfaction() const {
-	//valami kezdetleges algoritmus
-	float satisfaction = 0;
-	float safety = 0;
-	if (m_details.satisfaction + m_details.industrial_penalty < 5) satisfaction += m_details.satisfaction + m_details.industrial_penalty;
-	else satisfaction += 5;
-
-	if (m_details.safety < 1) safety += m_details.safety;
-	else safety += 1;
-
-	//végsõ elégedettségbe a kiszolgáló épületek 0.7-t számítanak max,
-	//a közbiztonság pedig 0.3-at, így 0-tól 1-ig ad ez a függvény vissza
-	return satisfaction / 5 * 0.7 + safety * 0.3;
+	return 0;
 }
 
 //teszteléshez metódus

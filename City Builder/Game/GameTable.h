@@ -21,6 +21,8 @@ public:
 
 	void UpgradeField(int x, int y) {};
 
+	bool recalculate = false;
+
 private:
 	std::vector<std::vector<GameField*>> m_Table;
 	int m_TableSize;

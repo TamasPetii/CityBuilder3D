@@ -63,7 +63,7 @@ void Application::Update()
 		m_City->Simulate();
 
 		m_MyGui->Get_GameWindowLayout().City_Money = m_City->Get_Money();
-		m_MyGui->Get_GameWindowLayout().City_Satisfaction = 0;
+		m_MyGui->Get_GameWindowLayout().City_Satisfaction = m_City -> Get_CombinedHappiness();
 		m_MyGui->Get_GameWindowLayout().Time_Game = m_City->Get_Time_Str();
 		m_MyGui->Get_GameWindowLayout().Time_Real += m_Timer->Get_TickTime();
 

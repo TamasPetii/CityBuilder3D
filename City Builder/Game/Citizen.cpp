@@ -98,7 +98,23 @@ void Citizen::DeletedZone(Zone* zone)
 
 float Citizen::Get_SatisfactionPoints() const
 {
-	return 0;
+	if (m_Residence == nullptr) return 0;
+	float taxSatisfaction = 0;
+	float residenceSatisfaction = 0;
+	float workplaceSatisfaction = 0;
+	if (m_Workplace == nullptr) {
+		taxSatisfaction = 1 - (m_Residence->GetTaxRatePercentage() / 100) - 0.5;
+		if (taxSatisfaction < 0) taxSatisfaction = 0;
+		workplaceSatisfaction = 0;
+	}
+	else {
+		float test1 = m_Workplace->GetTaxRatePercentage() + m_Residence->GetTaxRatePercentage();
+		taxSatisfaction = 1 - (m_Workplace->GetTaxRatePercentage() + m_Residence->GetTaxRatePercentage()) / 2 / 100;
+		workplaceSatisfaction = m_Workplace->Get_Satisfaction();
+	}
+	residenceSatisfaction = m_Residence->Get_Satisfaction();
+	
+	return taxSatisfaction * 0.3 + residenceSatisfaction * 0.5 + workplaceSatisfaction * 0.2;
 }
 
 float Citizen::PayTax()

@@ -12,6 +12,12 @@ enum Level {
 	LEVEL_3
 };
 
+enum ZoneType {
+	RESIDENTIAL,
+	INDUSTRIAL,
+	SERVICE
+};
+
 struct ZoneDetails {
 public:
 	int capacity;
@@ -43,7 +49,7 @@ public:
 	void DeleteZone();
 
 	Level Get_Level() { return m_details.level; }
-	float Get_Satisfaction() const;
+	virtual float Get_Satisfaction() const;
 	float Get_RawSatisfaction() const;
 	void Add_Satisfaction(float f) { m_details.satisfaction += f; }
 	void Set_Satisfaction(float f) { m_details.satisfaction = f; }
@@ -52,6 +58,7 @@ public:
 	void Add_IndustrialPenalty(float f) { m_details.industrial_penalty += f; }
 	void Set_IndustrialPenalty(float f) { m_details.industrial_penalty = f; }
 	virtual float GetTaxRate() const = 0;
+	virtual float GetTaxRatePercentage() const = 0;
 
 	inline ZoneDetails Get_ZoneDetails() const { return m_details; }
 

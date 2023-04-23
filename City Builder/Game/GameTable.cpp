@@ -191,6 +191,7 @@ void GameTable::RebuildRoadNetwork() {
 			}
 		}
 	}
+	recalculate = true;
 }
 
 template<typename Function>

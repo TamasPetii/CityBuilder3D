@@ -16,6 +16,8 @@ City::City(int size, float money): m_Money(money)
 
 void City::Simulate()
 {
+	HandleRecalculation(); // konfliktusos bontás esetén
+	CalculateHappiness();
 	GenerateCitizens(rand() % 2 == 0 ? rand() % 2 : 0);
 	HandleLooingZone();
 
@@ -67,20 +69,47 @@ void City::CollectAnnualCosts()
 	m_ChangedLog = true;
 }
 
+void City::HandleRecalculation() {
+	if (m_GameTable->recalculate) {
+		for (auto& citizen : m_Citizens) {
+			Zone* residence = citizen->Get_Residence();
+			Zone* workplace = citizen->Get_Workplace();
+			if (residence == nullptr || workplace == nullptr) continue;
 
+			if (!RoadNetwork::IsConnected(residence, workplace)) {
+				citizen->LeaveWorkplace();
+			}
+		}
+		m_GameTable->recalculate = false;
+	}
+}
 
+void City::CalculateHappiness() {
+	float totalHappiness = 0;
+	m_serviceWorkers = 0;
+	m_industrialWorkers = 0;
 
+	for (auto& citizen : m_Citizens) {
+		if (dynamic_cast<IndustrialArea*>(citizen->Get_Workplace())) {
+			m_industrialWorkers++;
+		}
+		else if (dynamic_cast<ServiceArea*>(citizen->Get_Workplace())) {
+			m_serviceWorkers++;
+		}
+	}
 
+	float ratio = m_serviceWorkers * 1.f / m_industrialWorkers;
+	for (auto& citizen : m_Citizens) {
+		float happiness = 0;
+		happiness += citizen->Get_SatisfactionPoints();
+		if (m_Money < 0) happiness -= 0.1;
+		if (ratio < 0.5 || ratio > 2) happiness -= 0.1;
+		if (happiness < 0) happiness = 0;
+		totalHappiness += happiness;
+	}
 
-
-
-
-
-
-
-
-
-
+	m_combinedHappiness = totalHappiness / (Get_CitizenSize() * 1.f);
+}
 
 void City::GenerateCitizens(unsigned int x)
 {
