@@ -18,6 +18,7 @@ public:
     virtual inline bool IsPowerStation() const { return false; }
     virtual inline bool IsSchool() const { return false; }
     virtual inline bool IsStadium() const { return false; }
+    virtual inline float GetBuildingSatisfaction() const { return 0; }
 };
 
 #endif

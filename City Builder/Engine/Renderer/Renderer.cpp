@@ -253,6 +253,33 @@ void Renderer::AddShapeTransforms(RenderShapeType type, int x, int y, int direct
 	transform_MAJOR.rotate = glm::rotate<float>(M_PI / 2 * direction, glm::vec3(0, 1, 0));
 	transform_MAJOR.scale = glm::mat4(1); //TODO: 2x2 field
 
+	if (type == RENDER_STADIUM || type == RENDER_UNIVERSITY)
+	{
+		transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 2));
+		transform_MAJOR.scale = glm::scale(glm::vec3(2.5,1.5,2.5));
+	}
+
+	if (type == RENDER_HIGHSCHOOL)
+	{
+		if (direction == 0)
+		{
+			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 1));
+		}
+		if (direction == 1)
+		{
+			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 2));
+		}
+		if (direction == 2)
+		{
+			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 1));
+		}
+		if (direction == 3)
+		{
+			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 2));
+		}
+		transform_MAJOR.scale = glm::scale(glm::vec3(2.5, 1, 1));
+	}
+
 	for (int i = 0; i < m_ShapeData[type].first->Get_Transforms().size() && i < amount; i++)
 	{
 		Transform transform_MINOR;
@@ -301,12 +328,41 @@ void Renderer::Render_Skybox()
 	m_SkyboxProgram->UnBind();
 }
 
-void Renderer::AddGroundTransforms(int x, int y, int texture)
+void Renderer::AddGroundTransforms(RenderShapeType type, int x, int y, int direction, int texture)
 {
 	Transform transform_MAJOR;
 	transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 1));
 	transform_MAJOR.rotate = glm::rotate<float>(M_PI / 2 * (texture / 100), glm::vec3(0,1,0));
 	transform_MAJOR.scale = glm::mat4(1); //TODO SCALE
+
+	if (type == RENDER_STADIUM || type == RENDER_UNIVERSITY)
+	{
+		transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 2));
+		transform_MAJOR.scale = glm::scale(glm::vec3(2, 1, 2));
+	}
+	if (type == RENDER_HIGHSCHOOL)
+	{
+		transform_MAJOR.rotate = glm::rotate<float>(M_PI / 2 * direction, glm::vec3(0, 1, 0));
+
+		if (direction == 0)
+		{
+			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 1));
+		}
+		if (direction == 1)
+		{
+			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 2));
+		}
+		if (direction == 2)
+		{
+			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 1));
+		}
+		if (direction == 3)
+		{
+			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 2));
+		}
+
+		transform_MAJOR.scale = glm::scale(glm::vec3(2, 1, 1));
+	}
 
 	for (int i = 0; i < m_Ground->Get_Transforms().size(); i++)
 	{
@@ -383,6 +439,33 @@ void Renderer::RenderNormal(RenderShapeType type, int x, int y, int direction)
 	transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 1));
 	transform_MAJOR.rotate = glm::rotate<float>(M_PI / 2 * direction, glm::vec3(0, 1, 0));
 	transform_MAJOR.scale = glm::mat4(1); //TODO SCALE
+
+	if (type == RENDER_STADIUM || type == RENDER_UNIVERSITY)
+	{
+		transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 2));
+		transform_MAJOR.scale = glm::scale(glm::vec3(2.5, 1.5, 2.5));
+	}
+	if (type == RENDER_HIGHSCHOOL)
+	{
+		if (direction == 0)
+		{
+			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 1));
+		}
+		if (direction == 1)
+		{
+			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x));
+		}
+		if (direction == 2)
+		{
+			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y, 0, 2 * x + 1));
+		}
+		if (direction == 3)
+		{
+			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 2));
+		}
+
+		transform_MAJOR.scale = glm::scale(glm::vec3(2.5, 1, 1));
+	}
 
 	for (int i = 0; i < shape->Get_Transforms().size(); i++)
 	{

@@ -10,9 +10,15 @@ public:
 	GameTable(int TableSize);
 	~GameTable() = default;
 
+	bool ValidateCoordinate(int c);
+	bool ValidateCoordinate(int c1, int c2);
+	bool IsBuildableField(int x, int y);
+	bool IsBuildable(FieldType type, FieldDirection dir, int x, int y);
+
 	//Setter
 	void Set_TableValue(int x, int y, FieldType type);// TODO: Delete previous field (We are using heap to store objects -> need to delete)
-	
+	void Set_TableValue(int x, int y, GameField* field);
+
 	//Getter
 	inline int Get_TableSize() const { return m_TableSize; }
 	inline GameField* Get_TableValue(int x, int y) const { return m_Table[x][y]; }; //Todo: check for wrong x,y value
@@ -26,5 +32,13 @@ private:
 	int m_TableSize;
 	void SetRoadNetwork(int x, int y);
 	void SetBuildingNetwork(int x, int y);
+	void SetZoneNetwork(int x, int y);
 	void RebuildRoadNetwork();
+
+	template<typename Function>
+	void LoopThroughNeighbors(int, int, Function);
+	void AddIndustrialAreaBonus(GameField*, int);
+	void CheckZoneIndustrialBonus(GameField*);
+	void DeleteField(int, int);
+	static float distance(GameField*, GameField*);
 };
