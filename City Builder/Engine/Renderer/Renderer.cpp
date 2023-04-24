@@ -261,19 +261,11 @@ void Renderer::AddShapeTransforms(RenderShapeType type, int x, int y, int direct
 
 	if (type == RENDER_HIGHSCHOOL)
 	{
-		if (direction == 0)
+		if (direction == 0 || direction == 2)
 		{
 			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 1));
 		}
-		if (direction == 1)
-		{
-			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 2));
-		}
-		if (direction == 2)
-		{
-			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 1));
-		}
-		if (direction == 3)
+		if (direction == 1 || direction == 3)
 		{
 			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 2));
 		}
@@ -340,27 +332,18 @@ void Renderer::AddGroundTransforms(RenderShapeType type, int x, int y, int direc
 		transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 2));
 		transform_MAJOR.scale = glm::scale(glm::vec3(2, 1, 2));
 	}
+
 	if (type == RENDER_HIGHSCHOOL)
 	{
 		transform_MAJOR.rotate = glm::rotate<float>(M_PI / 2 * direction, glm::vec3(0, 1, 0));
-
-		if (direction == 0)
+		if (direction == 0 || direction == 2)
 		{
 			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 1));
 		}
-		if (direction == 1)
+		if (direction == 1 || direction == 3)
 		{
 			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 2));
 		}
-		if (direction == 2)
-		{
-			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 1));
-		}
-		if (direction == 3)
-		{
-			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 2));
-		}
-
 		transform_MAJOR.scale = glm::scale(glm::vec3(2, 1, 1));
 	}
 
@@ -440,30 +423,22 @@ void Renderer::RenderNormal(RenderShapeType type, int x, int y, int direction)
 	transform_MAJOR.rotate = glm::rotate<float>(M_PI / 2 * direction, glm::vec3(0, 1, 0));
 	transform_MAJOR.scale = glm::mat4(1); //TODO SCALE
 
-	if (type == RENDER_STADIUM || type == RENDER_UNIVERSITY)
+	if (type == RENDER_UNIVERSITY || type == RENDER_STADIUM)
 	{
 		transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 2));
 		transform_MAJOR.scale = glm::scale(glm::vec3(2.5, 1.5, 2.5));
 	}
+
 	if (type == RENDER_HIGHSCHOOL)
 	{
-		if (direction == 0)
+		if (direction == 0 || direction == 2)
 		{
 			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 1));
 		}
-		if (direction == 1)
-		{
-			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x));
-		}
-		if (direction == 2)
-		{
-			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y, 0, 2 * x + 1));
-		}
-		if (direction == 3)
+		if (direction == 1 || direction == 3)
 		{
 			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 2));
 		}
-
 		transform_MAJOR.scale = glm::scale(glm::vec3(2.5, 1, 1));
 	}
 

@@ -300,22 +300,12 @@ bool GameTable::IsBuildable(FieldType type, FieldDirection dir, int x, int y)
 	{
 		if (!IsBuildableField(x, y)) return false;
 
-		if (dir == FRONT)
+		if (dir == FRONT || dir == BACK)
 		{
 			if (!IsBuildableField(x, y + 1)) return false;
 		}
 
-		if (dir == RIGHT)
-		{
-			if (!IsBuildableField(x - 1, y)) return false;
-		}
-
-		if (dir == BACK)
-		{
-			if (!IsBuildableField(x, y - 1)) return false;
-		}
-
-		if (dir == LEFT)
+		if (dir == LEFT || dir == RIGHT)
 		{
 			if (!IsBuildableField(x + 1, y)) return false;
 		}

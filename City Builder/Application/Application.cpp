@@ -352,10 +352,20 @@ void Application::Render()
 			FieldDirection dir = (FieldDirection)(m_MyGui->Get_EventLayout().Rotate % 4);
 
 			Renderer::Buildable = m_City->IsBuildable(type, dir, HitX, HitY);
-			Renderer::RenderNormal((RenderShapeType)m_MyGui->Get_BuildWindowLayout().Build_Id, HitX, HitY, (m_MyGui->Get_EventLayout().Rotate % 4));
 			if (m_MyGui->Get_BuildWindowLayout().Build_Id == RENDER_WINDTURBINE)
 			{
 				Renderer::RenderNormal(RENDER_WINDTURBINE_PROPELLER, HitX, HitY, (m_MyGui->Get_EventLayout().Rotate % 4));
+				Renderer::RenderNormal((RenderShapeType)m_MyGui->Get_BuildWindowLayout().Build_Id, HitX, HitY, (m_MyGui->Get_EventLayout().Rotate % 4));
+				Renderer::RenderNormal(RENDER_WINDTURBINE_PROPELLER, HitX + 1, HitY, (m_MyGui->Get_EventLayout().Rotate % 4));
+				Renderer::RenderNormal((RenderShapeType)m_MyGui->Get_BuildWindowLayout().Build_Id, HitX + 1, HitY, (m_MyGui->Get_EventLayout().Rotate % 4));
+				Renderer::RenderNormal(RENDER_WINDTURBINE_PROPELLER, HitX, HitY + 1, (m_MyGui->Get_EventLayout().Rotate % 4));
+				Renderer::RenderNormal((RenderShapeType)m_MyGui->Get_BuildWindowLayout().Build_Id, HitX, HitY + 1, (m_MyGui->Get_EventLayout().Rotate % 4));
+				Renderer::RenderNormal(RENDER_WINDTURBINE_PROPELLER, HitX + 1, HitY + 1, (m_MyGui->Get_EventLayout().Rotate % 4));
+				Renderer::RenderNormal((RenderShapeType)m_MyGui->Get_BuildWindowLayout().Build_Id, HitX + 1, HitY + 1, (m_MyGui->Get_EventLayout().Rotate % 4));
+			}
+			else 
+			{
+				Renderer::RenderNormal((RenderShapeType)m_MyGui->Get_BuildWindowLayout().Build_Id, HitX, HitY, (m_MyGui->Get_EventLayout().Rotate % 4));
 			}
 		}
 	}

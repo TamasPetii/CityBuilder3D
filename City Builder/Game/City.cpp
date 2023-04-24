@@ -301,10 +301,8 @@ void City::Set_GameTableValue(int x, int y, FieldType type, FieldDirection dir)
 		else if (type == HIGHSCHOOL)
 		{
 			m_GameTable->Set_TableValue(x, y, type);
-			if (dir == FRONT) m_GameTable->Set_TableValue(x, y + 1, m_GameTable->Get_TableValue(x, y));
-			if (dir == RIGHT) m_GameTable->Set_TableValue(x - 1, y, m_GameTable->Get_TableValue(x, y));
-			if (dir == BACK) m_GameTable->Set_TableValue(x, y - 1, m_GameTable->Get_TableValue(x, y));
-			if (dir == LEFT) m_GameTable->Set_TableValue(x + 1, y, m_GameTable->Get_TableValue(x, y));
+			if (dir == FRONT || dir == BACK)  m_GameTable->Set_TableValue(x, y + 1, m_GameTable->Get_TableValue(x, y));
+			if (dir == RIGHT || dir == LEFT)  m_GameTable->Set_TableValue(x + 1, y, m_GameTable->Get_TableValue(x, y));
 
 			m_GameTable->Get_TableValue(x, y)->Set_FieldDirection(dir);
 		}
