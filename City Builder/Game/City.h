@@ -36,6 +36,7 @@ public:
 	void SetTaxRate(FieldType type, float rate);
 	inline GameField* Get_GameField(int x, int y) const { return m_GameTable->Get_TableValue(x, y); };
 	inline int Get_GameTableSize() const { return m_GameTable->Get_TableSize(); }
+	bool IsBuildable(FieldType type, FieldDirection dir, int x, int y) { return m_GameTable->IsBuildable(type, dir, x, y) || type == EMPTY || type == CRATER; }
 	void Set_GameTableValue(int x, int y, FieldType type, FieldDirection dir);
 	inline float Get_Money() { return m_Money; }
 	inline int Get_Time() { return m_DailyTickCounter; }

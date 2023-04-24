@@ -250,12 +250,20 @@ void Application::Update()
 
 		else 
 		{
-			GameField* field = m_City->Get_GameField(HitX, HitY);
-			m_City->Set_GameTableValue(HitX, HitY, (FieldType)m_MyGui->Get_BuildWindowLayout().Build_Id, (FieldDirection)(m_MyGui->Get_EventLayout().Rotate % 4));
-			changed = true;
+			FieldType type = (FieldType)m_MyGui->Get_BuildWindowLayout().Build_Id;
+			FieldDirection dir = (FieldDirection)(m_MyGui->Get_EventLayout().Rotate % 4);
+
+			if (m_City->IsBuildable(type, dir, HitX, HitY))
+			{
+				std::cout << ">> BUILDING PLACED" << std::endl;
+				m_City->Set_GameTableValue(HitX, HitY, type, dir);
+				changed = true;
+			}
+			else
+			{
+				std::cout << ">> NOT BUILDABLE" << std::endl;
+			}
 		}
-
-
 	}
 
 	//METEOR HITS GROUND
@@ -286,6 +294,7 @@ void Application::Render()
 {
 	if (changed)
 	{
+		std::unordered_set<GameField*> fields_2x2;
 		for (int i = 0; i < m_City->Get_GameTableSize(); i++)
 		{
 			for (int j = 0; j < m_City->Get_GameTableSize(); j++)
@@ -313,8 +322,14 @@ void Application::Render()
 					amount = zone->age;
 				}
 
+				if (type == UNIVERSITY || type == STADIUM || type == HIGHSCHOOL)
+				{
+					if (fields_2x2.find(m_City->Get_GameField(i, j)) != fields_2x2.end()) continue;
+					fields_2x2.insert(m_City->Get_GameField(i, j));
+				}
+
 				Renderer::AddShapeTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_FieldDirection(), amount);
-				Renderer::AddGroundTransforms(i, j, type == ROAD ? DetermineRoadTextureID(i, j) : Renderer::DetermineGroundTextureID((RenderShapeType)type));
+				Renderer::AddGroundTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_FieldDirection(), type == ROAD ? DetermineRoadTextureID(i, j) : Renderer::DetermineGroundTextureID((RenderShapeType)type));
 			}
 		}
 		Renderer::Changed = true;
@@ -333,7 +348,10 @@ void Application::Render()
 
 		if (l1 && l2)
 		{
-			Renderer::Buildable = m_City->Get_GameField(HitX, HitY)->IsEmpty();
+			FieldType type = (FieldType)m_MyGui->Get_BuildWindowLayout().Build_Id;
+			FieldDirection dir = (FieldDirection)(m_MyGui->Get_EventLayout().Rotate % 4);
+
+			Renderer::Buildable = m_City->IsBuildable(type, dir, HitX, HitY);
 			Renderer::RenderNormal((RenderShapeType)m_MyGui->Get_BuildWindowLayout().Build_Id, HitX, HitY, (m_MyGui->Get_EventLayout().Rotate % 4));
 		}
 	}
