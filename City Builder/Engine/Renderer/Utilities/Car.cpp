@@ -2,7 +2,9 @@
 
 std::unordered_set<Car*> Cars::m_Cars;
 
-HitBox Car::m_HitBox = { glm::vec3(-0.25 - 0.2, 0.0, -0.115 - 0.2), glm::vec3(0.3 + 0.2,0.14,0.115 + 0.2) };
+//HitBox Car::m_HitBox = { glm::vec3(-0.25 - 0.2, 0.0, -0.115 - 0.2), glm::vec3(0.3 + 0.2,0.14,0.115 + 0.2) };
+
+HitBox Car::m_HitBox = { glm::vec3(-0.3, 0.0, -0.3), glm::vec3(0.3,0.14,0.3) };
 
 float Cars::last_time;
 float Cars::current_time;
@@ -377,7 +379,7 @@ bool Cars::Intersect(Car* car1, Car* car2)
 
 void Cars::Update()
 {
-	std::cout << m_Cars.size() << std::endl;
+	//std::cout << m_Cars.size() << std::endl;
 	current_time = glfwGetTime();
 	delta_time = current_time - last_time;
 	last_time = current_time;
@@ -396,7 +398,7 @@ void Cars::Update()
 
 			for (const auto& carPtr : m_Cars)
 			{
-				//float dummy;
+				float dummy;
 				if (carPtr != car)
 				{
 					if (Cars::Intersect(car,carPtr))
@@ -406,22 +408,56 @@ void Cars::Update()
 						if (car->Get_CurrentRouteSection() != nullptr && carPtr->Get_CurrentRouteSection() != nullptr)
 						{
 							//Ha ugyanazon útszakaszon vagyunk
-							if (car->Get_CurrentRouteSection()->Get_FirstPoint() == carPtr->Get_CurrentRouteSection()->Get_FirstPoint())
+							if (car->Get_CurrentRouteSection()->Get_FirstPoint() == carPtr->Get_CurrentRouteSection()->Get_FirstPoint()
+								&& car->Get_CurrentRouteSection()->Get_LastPoint() == carPtr->Get_CurrentRouteSection()->Get_LastPoint()
+							)
 							{
+								//std::cout << "ugyanaz" << std::endl;
 								if (car->Get_LocalParam() < carPtr->Get_LocalParam())
 								{
 									noCollison = false;
 								}
 							}
 							//Ha a mi kocsink van késõbbi útszakaszon
-							else if (car->Get_CurrentRouteSection()->Get_FirstPoint() == carPtr->Get_CurrentRouteSection()->Get_LastPoint())
+							else if (car->Get_CurrentRouteSection()->Get_FirstPoint() == carPtr->Get_CurrentRouteSection()->Get_LastPoint()
+							&& car->Get_CurrentRouteSection()->Get_LastPoint() != carPtr->Get_CurrentRouteSection()->Get_FirstPoint()
+							)
 							{
+								//std::cout << "elorebb" << std::endl;
 								//ekkor nincs baj, mi jutunk elõre
 							}
 							//Ha a másik kocsi van késõbbi útszakaszon
-							else if (car->Get_CurrentRouteSection()->Get_LastPoint() == carPtr->Get_CurrentRouteSection()->Get_FirstPoint())
+							else if (car->Get_CurrentRouteSection()->Get_LastPoint() == carPtr->Get_CurrentRouteSection()->Get_FirstPoint()
+							&& car->Get_CurrentRouteSection()->Get_FirstPoint() != carPtr->Get_CurrentRouteSection()->Get_LastPoint()
+							)
 							{
-								noCollison = false;
+								//ITT A HIBA
+								//std::cout << "hatrebb" << std::endl;
+								//noCollison = false;
+							}
+							// Ha csak az utolsó koordináták eggyeznek, akkor azonos végpontú, különbözõ kanyarokban vagyunk, ekkor a végponthoz közelebbi jut tovább
+							else if (car->Get_CurrentRouteSection()->Get_LastPoint() == carPtr->Get_CurrentRouteSection()->Get_LastPoint()
+							&& car->Get_CurrentRouteSection()->Get_FirstPoint() != carPtr->Get_CurrentRouteSection()->Get_FirstPoint()
+							)
+							{
+								if (glm::distance(car->Get_CurrentPosition(dummy), car->Get_CurrentRouteSection()->Get_LastPoint())
+								> glm::distance(carPtr->Get_CurrentPosition(dummy), carPtr->Get_CurrentRouteSection()->Get_LastPoint())
+								)
+								{
+									noCollison = false;
+								}
+							}
+							//Mint az elõzõ eset, csak elsõ koordinátákkal
+							else if (car->Get_CurrentRouteSection()->Get_FirstPoint() == carPtr->Get_CurrentRouteSection()->Get_FirstPoint()
+							&& car->Get_CurrentRouteSection()->Get_LastPoint() == carPtr->Get_CurrentRouteSection()->Get_LastPoint()
+							)
+							{
+								if (glm::distance(car->Get_CurrentPosition(dummy), car->Get_CurrentRouteSection()->Get_FirstPoint())
+								< glm::distance(carPtr->Get_CurrentPosition(dummy), carPtr->Get_CurrentRouteSection()->Get_FirstPoint())
+								)
+								{
+									noCollison = false;
+								}
 							}
 							else
 							{
@@ -429,9 +465,9 @@ void Cars::Update()
 								{
 									noCollison = false;
 								}
+
 							}
 						}
-						//Pl.: keresztezõdés
 						else
 						{
 							if (car->Get_LocalParam() < carPtr->Get_LocalParam())
@@ -448,10 +484,12 @@ void Cars::Update()
 			{
 				car->Move(delta_time);
 			}
+			/*
 			else if ((current_time - car->Get_LastMove()) > 3)
 			{
 				car->Move(0.5);
 			}
+			*/
 			++it;
 		}
 	}
