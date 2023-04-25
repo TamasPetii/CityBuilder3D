@@ -64,6 +64,7 @@ protected:
 	void LogWindow();
 	void BuildWindow();
 	void DetailsWindow();
+	void Upgrade_Popup();
 
 	ImVec2 Get_UV(int index, int type);
 private:

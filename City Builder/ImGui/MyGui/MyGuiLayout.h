@@ -130,6 +130,11 @@ struct DetailsWindowLayout
 
 	//NetWork Details
 	std::string Network_details;
+
+	//Upgrade details
+	bool Upgrade_Effect = false;
+	bool Upgrade_Show = false;
+	int level = 0;
 };
 
 struct EventLayout

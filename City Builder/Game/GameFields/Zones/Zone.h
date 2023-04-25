@@ -55,6 +55,10 @@ public:
 
 	inline ZoneDetails Get_ZoneDetails() const { return m_details; }
 
+	int Get_UpgradeFee();
+	bool UpgradeZone();
+	void AdjustCapacity();
+
 	std::string Get_CitizenDetails();
 };
 

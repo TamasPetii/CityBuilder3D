@@ -213,7 +213,6 @@ void Application::Update()
 	}
 
 	//BUILD - OR MOUSE EVENT
-
 	if (m_MyGui->Get_EventLayout().Hit)
 	{
 		m_MyGui->Get_EventLayout().Hit = false;
@@ -240,7 +239,19 @@ void Application::Update()
 
 		else if (m_MyGui->Get_BuildWindowLayout().Build_Id == -2)
 		{
-			//TODO: UPGRADE
+			if (m_City->Get_GameField(HitX, HitY)->IsZone())
+			{
+				Zone* zone = dynamic_cast<Zone*>(m_City->Get_GameField(HitX, HitY));
+
+				m_MyGui->Get_DetailsWindowLayout().Field_Type = m_City->Get_GameField(HitX, HitY)->Get_Type();
+				m_MyGui->Get_DetailsWindowLayout().Field_Coord_x = HitX;
+				m_MyGui->Get_DetailsWindowLayout().Field_Coord_y = HitY;
+
+				m_MyGui->Get_DetailsWindowLayout().Upgrade_Show = true;
+				m_MyGui->Get_DetailsWindowLayout().level = zone->Get_Level();
+
+				std::cout << "LEVEL: " << m_MyGui->Get_DetailsWindowLayout().level << std::endl;
+			}
 		}
 
 		else if (m_MyGui->Get_BuildWindowLayout().Build_Id == -3)
@@ -254,8 +265,6 @@ void Application::Update()
 			m_City->Set_GameTableValue(HitX, HitY, (FieldType)m_MyGui->Get_BuildWindowLayout().Build_Id, (FieldDirection)(m_MyGui->Get_EventLayout().Rotate % 4));
 			changed = true;
 		}
-
-
 	}
 
 	//METEOR HITS GROUND
@@ -270,6 +279,15 @@ void Application::Update()
 		}
 
 		MeteorGrp::Delete();
+	}
+
+	if (m_MyGui->Get_DetailsWindowLayout().Upgrade_Effect)
+	{
+		m_City->UpgradeField(m_MyGui->Get_DetailsWindowLayout().Field_Coord_x, m_MyGui->Get_DetailsWindowLayout().Field_Coord_y);
+		m_MyGui->Get_DetailsWindowLayout().Upgrade_Effect = false;
+		changed = true;
+
+		std::cout << "UPGRADED" << std::endl;
 	}
 }
 

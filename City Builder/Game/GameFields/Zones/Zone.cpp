@@ -9,19 +9,7 @@ Zone::Zone(Level level, FieldType type, int x, int y, float cost)
 	m_details.safety = 0;
 	m_details.industrial_penalty = 0;
 
-	//TODO: Adjust the zone capacities
-	if (level == LEVEL_1)
-	{
-		m_details.capacity = 4;
-	}
-	if (level == LEVEL_2)
-	{
-		m_details.capacity = 8;
-	}
-	if (level == LEVEL_3)
-	{
-		m_details.capacity = 16;
-	}
+	AdjustCapacity();
 }
 
 
@@ -77,4 +65,46 @@ float Zone::Get_Satisfaction() const {
 //teszteléshez metódus
 float Zone::Get_RawSatisfaction() const {
 	return m_details.satisfaction + m_details.safety + m_details.industrial_penalty;
+}
+
+void Zone::AdjustCapacity()
+{
+	if (m_details.level == LEVEL_1)
+	{
+		m_details.capacity = 4;
+	}
+	if (m_details.level == LEVEL_2)
+	{
+		m_details.capacity = 8;
+	}
+	if (m_details.level == LEVEL_3)
+	{
+		m_details.capacity = 16;
+	}
+}
+
+bool Zone::UpgradeZone()
+{
+	if (m_details.level == LEVEL_3) return false;
+
+	m_details.level = (Level)((int)m_details.level + 1);
+	m_Type = (FieldType)((int)m_Type + 1);
+
+	AdjustCapacity();
+
+	return true;
+}
+
+int Zone::Get_UpgradeFee()
+{
+	//TODO: Adjust fees
+	if (m_details.level == LEVEL_2)
+	{
+		return 100;
+	}
+	else
+	{
+		return 300;
+	}
+
 }

@@ -19,8 +19,6 @@ public:
 	ZoneDetails Get_ZoneDetails(int x, int y) const { ZoneDetails s;  return s; };
 	float Get_TotalCost() const;
 
-	void UpgradeField(int x, int y) {};
-
 private:
 	std::vector<std::vector<GameField*>> m_Table;
 	int m_TableSize;
