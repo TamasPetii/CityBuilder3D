@@ -107,6 +107,7 @@ void Application::Update()
 		changed = true;
 
 		MeteorGrp::Clear();
+		Cars::Clear();
 		RoadNetwork::ResetNetworks();
 		City::Build_Log().clear();
 		City::Build_Log().str("");

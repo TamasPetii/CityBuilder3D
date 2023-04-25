@@ -3,9 +3,9 @@
 Shape_Car::Shape_Car()
 {
 	Transform transform;
-	transform.translate = glm::translate(glm::vec3(0, 0.5, 0));
+	transform.translate = glm::translate(glm::vec3(1, 0.5, 0));
 	transform.rotate = glm::mat4(1);
-	transform.scale = glm::mat4(1);
+	transform.scale = glm::mat4(10);
 
 	shape_transform.push_back(transform);
 }
