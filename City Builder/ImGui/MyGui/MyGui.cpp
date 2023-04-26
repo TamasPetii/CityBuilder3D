@@ -169,6 +169,7 @@ void MyGui::DockSpace()
     LogWindow();
     BuildWindow();
     DetailsWindow();
+    Upgrade_Popup();
 
     ImGui::End();
 }
@@ -1154,6 +1155,85 @@ void MyGui::BuildWindow()
     ImGui::End();
 
     m_BuildWindowLayout.Build_Id = building;
+}
+
+void MyGui::Upgrade_Popup()
+{
+    if (m_DetailsWindowLayout.Upgrade_Show)
+    {
+        ImGui::OpenPopup("Upgrade zone");
+    }
+
+    if (ImGui::BeginPopupModal("Upgrade zone", nullptr, ImGuiWindowFlags_NoResize))
+    {
+        ImGui::SetWindowSize(ImVec2(300, 0));
+
+        if (m_DetailsWindowLayout.level < 2)
+        {
+            ImGui::Text("The upgrade will cost: ");
+            ImGui::SameLine();
+
+            if (m_DetailsWindowLayout.level == 0)
+                ImGui::Text("100");
+            else if (m_DetailsWindowLayout.level == 1)
+                ImGui::Text("300");
+
+            ImGui::SameLine();
+            ImGui::Text(" $");
+            ImGui::Text("Are you sure?");
+
+            //Yes Button
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0.75, 0, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0.7, 0, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0.65, 0, 1));
+            ImGui::SetCursorPosY(70.0f);
+            if (ImGui::Button("Yes", ImVec2(120, 0)))
+            {
+                ImGui::CloseCurrentPopup();
+                m_DetailsWindowLayout.Upgrade_Effect = true;
+                m_DetailsWindowLayout.Upgrade_Show = false;
+            }
+            ImGui::SetItemDefaultFocus();
+            ImGui::PopStyleColor(3);
+
+            ImGui::SameLine();
+
+            //Cancel Button
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1, 0, 0, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9, 0, 0, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8, 0, 0, 1));
+            ImGui::SetCursorPosX(ImGui::GetWindowContentRegionMax().x - 120);
+            ImGui::SetCursorPosY(70.0f);
+            if (ImGui::Button("Cancel", ImVec2(120, 0))) 
+            { 
+                ImGui::CloseCurrentPopup();
+                m_DetailsWindowLayout.Upgrade_Show = false;
+            }
+
+            ImGui::PopStyleColor(3);
+        }
+        else
+        {
+            ImGui::Text("The zone is fully upgraded!");
+
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 1, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0.9, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0.8, 1));
+
+            ImVec2 windowSize = ImGui::GetWindowSize();
+            ImVec2 buttonSize(80.0f, 20.0f);
+            ImVec2 buttonPos((windowSize.x - buttonSize.x) / 2.0f, 60.0f);
+            ImGui::SetCursorPos(buttonPos);
+
+            if (ImGui::Button("Ok", ImVec2(80, 20))) 
+            { 
+                ImGui::CloseCurrentPopup();
+                m_DetailsWindowLayout.Upgrade_Show = false;      
+            }
+            ImGui::PopStyleColor(3);
+        }
+        ImGui::EndPopup();
+    }
 }
 
 //|DETAILS-WINDOW|-------------------------------------------------------------------------------------------//

@@ -24,6 +24,7 @@ public:
 
 	void DeleteField(int x, int y);
 	void UpgradeField(int x, int y);
+
 	float CalculateMonthlyTax();
 	void CollectMonthlyTax();
 	void CollectAnnualCosts();

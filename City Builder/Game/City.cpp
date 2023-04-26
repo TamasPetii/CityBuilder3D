@@ -175,7 +175,18 @@ void City::DeleteField(int x, int y)
 
 void City::UpgradeField(int x, int y)
 {
-	m_GameTable->UpgradeField(x, y);
+	if (m_GameTable->Get_TableValue(x, y)->IsZone())
+	{
+		Zone* zone = dynamic_cast<Zone*>(m_GameTable->Get_TableValue(x, y));
+
+		if (zone->UpgradeZone())
+		{
+			float cost = zone->Get_UpgradeFee();
+			UpdateMoney(-cost);
+			m_MoneyLog << "- " << cost << "$ >> Upgrading zone {" << Get_Time_Str() << "}" << std::endl;
+			m_ChangedLog = true;
+		}
+	}
 }
 
 void City::SimulatePopulationAging() //should be called yearly

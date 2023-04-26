@@ -29,7 +29,7 @@ public:
 
 	inline void Set_FieldDirection(FieldDirection dir) { m_Direction = dir; }
 	inline FieldDirection Get_FieldDirection() { return m_Direction; }
-private:
+protected:
 	int m_X;
 	int m_Y;
 	float m_Fee;
