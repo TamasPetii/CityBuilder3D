@@ -287,13 +287,32 @@ void City::SetTaxRate(FieldType type, float rate)
 
 void City::Set_GameTableValue(int x, int y, FieldType type, FieldDirection dir)
 { 
-	GameField* PreviousField = m_GameTable->Get_TableValue(x, y);
-	m_GameTable->Set_TableValue(x, y, type);
-	GameField* CurrentField = m_GameTable->Get_TableValue(x, y);
-	if (PreviousField != CurrentField)
+	if (IsBuildable(type, dir, x, y))
 	{
-		CurrentField->Set_FieldDirection(dir);
-    	m_BuildLog << GameField::ConvertTypeToStr(type) << ": " << CurrentField->Get_Cost() << "$" << std::endl;
+		if (type == STADIUM || type == POWERSTATION || type == UNIVERSITY)
+		{
+			m_GameTable->Set_TableValue(x, y, type);
+			m_GameTable->Set_TableValue(x + 1, y, m_GameTable->Get_TableValue(x, y));
+			m_GameTable->Set_TableValue(x, y + 1, m_GameTable->Get_TableValue(x, y));
+			m_GameTable->Set_TableValue(x + 1, y + 1, m_GameTable->Get_TableValue(x, y));
+
+			m_GameTable->Get_TableValue(x, y)->Set_FieldDirection(dir);
+		}
+		else if (type == HIGHSCHOOL)
+		{
+			m_GameTable->Set_TableValue(x, y, type);
+			if (dir == FRONT || dir == BACK)  m_GameTable->Set_TableValue(x, y + 1, m_GameTable->Get_TableValue(x, y));
+			if (dir == RIGHT || dir == LEFT)  m_GameTable->Set_TableValue(x + 1, y, m_GameTable->Get_TableValue(x, y));
+
+			m_GameTable->Get_TableValue(x, y)->Set_FieldDirection(dir);
+		}
+		else
+		{
+			m_GameTable->Set_TableValue(x, y, type);
+			m_GameTable->Get_TableValue(x, y)->Set_FieldDirection(dir);
+		}
+
+		m_BuildLog << GameField::ConvertTypeToStr(type) << ": " << m_GameTable->Get_TableValue(x, y)->Get_Cost() << "$" << std::endl;
 		m_ChangedLog = true;
 	}
 }

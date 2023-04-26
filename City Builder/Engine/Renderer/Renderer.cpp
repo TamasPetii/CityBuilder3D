@@ -1,5 +1,7 @@
 #include "Renderer.h"
 
+float Renderer::current_time;
+float Renderer::last_time;
 bool Renderer::Buildable = false;
 bool Renderer::Changed = false;
 Camera*        Renderer::m_Camera;
@@ -130,6 +132,8 @@ void Renderer::Init(Camera* camera)
 	m_ShapeData[RENDER_WINDTURBINE_PROPELLER] = std::make_pair(new WindTurbinePropeller(), std::vector<glm::mat4>());
 
 	InitShapeBuffers();
+
+	last_time = glfwGetTime();
 }
 
 void Renderer::Destroy()
@@ -161,6 +165,8 @@ void Renderer::PreRender()
 	m_NormalProgram->SetUniform("u_VP", m_Camera->Get_ViewProjMatrix());
 	m_NormalProgram->SetUniformTexture("u_SpriteTexture", 0, m_GameTexture);
 	m_NormalProgram->UnBind();
+
+	current_time = glfwGetTime();
 }
 
 void Renderer::PostRender()
@@ -168,6 +174,7 @@ void Renderer::PostRender()
 	m_FrameBuffer->UnBind();
 	ClearShapeTransforms();
 	Changed = false;
+	last_time = current_time;
 }
 
 void Renderer::SceneRender(RenderMode mode)
@@ -189,6 +196,9 @@ void Renderer::RenderInstanced(Shape* shape, const std::vector<glm::mat4>& trans
 
 	m_InstanceProgram->Bind();
 	m_InstanceProgram->SetUniform("u_UseVertexTexID", (float)(shape == m_Ground));
+
+	glm::mat4 rotation = (shape == m_ShapeData[RENDER_WINDTURBINE_PROPELLER].first ? glm::rotate<float>(M_PI * glfwGetTime(), glm::vec3(0, 0, 1)) : glm::mat4(1));
+	m_InstanceProgram->SetUniform("u_M", rotation);
 
 	shape->Bind();
 	if (Changed)
@@ -243,6 +253,25 @@ void Renderer::AddShapeTransforms(RenderShapeType type, int x, int y, int direct
 	transform_MAJOR.rotate = glm::rotate<float>(M_PI / 2 * direction, glm::vec3(0, 1, 0));
 	transform_MAJOR.scale = glm::mat4(1); //TODO: 2x2 field
 
+	if (type == RENDER_STADIUM || type == RENDER_UNIVERSITY)
+	{
+		transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 2));
+		transform_MAJOR.scale = glm::scale(glm::vec3(2.5,1.5,2.5));
+	}
+
+	if (type == RENDER_HIGHSCHOOL)
+	{
+		if (direction == 0 || direction == 2)
+		{
+			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 1));
+		}
+		if (direction == 1 || direction == 3)
+		{
+			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 2));
+		}
+		transform_MAJOR.scale = glm::scale(glm::vec3(2.5, 1, 1));
+	}
+
 	for (int i = 0; i < m_ShapeData[type].first->Get_Transforms().size() && i < amount; i++)
 	{
 		Transform transform_MINOR;
@@ -251,6 +280,16 @@ void Renderer::AddShapeTransforms(RenderShapeType type, int x, int y, int direct
 		transform_MINOR.scale = m_ShapeData[type].first->Get_Transforms()[i].scale;
 
 		m_ShapeData[type].second.push_back(Transform::ConvertToMatrix(transform_MAJOR) * Transform::ConvertToMatrix(transform_MINOR));
+		
+		if (type == RENDER_WINDTURBINE)
+		{
+			Transform transform_MINOR_2;
+			transform_MINOR_2.translate = m_ShapeData[RENDER_WINDTURBINE_PROPELLER].first->Get_Transforms()[i].translate;
+			transform_MINOR_2.rotate = m_ShapeData[RENDER_WINDTURBINE_PROPELLER].first->Get_Transforms()[i].rotate; //TODO: Dynamic
+			transform_MINOR_2.scale = m_ShapeData[RENDER_WINDTURBINE_PROPELLER].first->Get_Transforms()[i].scale;
+
+			m_ShapeData[RENDER_WINDTURBINE_PROPELLER].second.push_back(Transform::ConvertToMatrix(transform_MAJOR) * Transform::ConvertToMatrix(transform_MINOR_2));
+		}
 	}
 }
 
@@ -281,12 +320,32 @@ void Renderer::Render_Skybox()
 	m_SkyboxProgram->UnBind();
 }
 
-void Renderer::AddGroundTransforms(int x, int y, int texture)
+void Renderer::AddGroundTransforms(RenderShapeType type, int x, int y, int direction, int texture)
 {
 	Transform transform_MAJOR;
 	transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 1));
 	transform_MAJOR.rotate = glm::rotate<float>(M_PI / 2 * (texture / 100), glm::vec3(0,1,0));
 	transform_MAJOR.scale = glm::mat4(1); //TODO SCALE
+
+	if (type == RENDER_STADIUM || type == RENDER_UNIVERSITY)
+	{
+		transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 2));
+		transform_MAJOR.scale = glm::scale(glm::vec3(2, 1, 2));
+	}
+
+	if (type == RENDER_HIGHSCHOOL)
+	{
+		transform_MAJOR.rotate = glm::rotate<float>(M_PI / 2 * direction, glm::vec3(0, 1, 0));
+		if (direction == 0 || direction == 2)
+		{
+			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 1));
+		}
+		if (direction == 1 || direction == 3)
+		{
+			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 2));
+		}
+		transform_MAJOR.scale = glm::scale(glm::vec3(2, 1, 1));
+	}
 
 	for (int i = 0; i < m_Ground->Get_Transforms().size(); i++)
 	{
@@ -364,6 +423,25 @@ void Renderer::RenderNormal(RenderShapeType type, int x, int y, int direction)
 	transform_MAJOR.rotate = glm::rotate<float>(M_PI / 2 * direction, glm::vec3(0, 1, 0));
 	transform_MAJOR.scale = glm::mat4(1); //TODO SCALE
 
+	if (type == RENDER_UNIVERSITY || type == RENDER_STADIUM)
+	{
+		transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 2));
+		transform_MAJOR.scale = glm::scale(glm::vec3(2.5, 1.5, 2.5));
+	}
+
+	if (type == RENDER_HIGHSCHOOL)
+	{
+		if (direction == 0 || direction == 2)
+		{
+			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 1));
+		}
+		if (direction == 1 || direction == 3)
+		{
+			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 2));
+		}
+		transform_MAJOR.scale = glm::scale(glm::vec3(2.5, 1, 1));
+	}
+
 	for (int i = 0; i < shape->Get_Transforms().size(); i++)
 	{
 		Transform transform_MINOR;
@@ -371,7 +449,8 @@ void Renderer::RenderNormal(RenderShapeType type, int x, int y, int direction)
 		transform_MINOR.rotate = shape->Get_Transforms()[i].rotate;
 		transform_MINOR.scale = shape->Get_Transforms()[i].scale;
 
-		m_NormalProgram->SetUniform("u_M", Transform::ConvertToMatrix(transform_MAJOR) * Transform::ConvertToMatrix(transform_MINOR));
+		glm::mat4 rotation = (shape == m_ShapeData[RENDER_WINDTURBINE_PROPELLER].first ? glm::rotate<float>(M_PI * glfwGetTime(), glm::vec3(0, 0, 1)) : glm::mat4(1));
+		m_NormalProgram->SetUniform("u_M", Transform::ConvertToMatrix(transform_MAJOR) * Transform::ConvertToMatrix(transform_MINOR) * rotation);
 		m_NormalProgram->SetUniform("u_color", Buildable ? glm::vec3(0, 1, 0) : glm::vec3(1, 0, 0));
 
 		shape->Bind();

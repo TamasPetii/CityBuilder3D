@@ -18,9 +18,16 @@ GameTable::GameTable(int TableSize) : m_TableSize(TableSize)
 	}
 }
 
+void GameTable::Set_TableValue(int x, int y, GameField* field)
+{
+	delete m_Table[x][y];
+	m_Table[x][y] = field;
+	SetBuildingNetwork(x, y);
+}
+
 void GameTable::Set_TableValue(int x, int y, FieldType type) {
 	if (!m_Table[x][y]->IsEmpty()) { //törlés
-		if (type != EMPTY) return;
+		if (!(type == EMPTY || type == CRATER)) return;
 		DeleteField(x, y);
 		return;
 	}
@@ -58,6 +65,7 @@ void GameTable::Set_TableValue(int x, int y, FieldType type) {
 void GameTable::DeleteField(int x, int y) {
 	bool isRoad = dynamic_cast<Road*>(m_Table[x][y]);
 	bool isIndustrial = false;
+	bool type_big = m_Table[x][y]->Get_Type() == STADIUM || m_Table[x][y]->Get_Type() == UNIVERSITY || m_Table[x][y]->Get_Type() == POWERSTATION || m_Table[x][y]->Get_Type() == HIGHSCHOOL;
 	if (!isRoad) {
 		if (m_Table[x][y]->IsZone())
 		{
@@ -69,6 +77,22 @@ void GameTable::DeleteField(int x, int y) {
 				}
 			}
 			zone->DeleteZone();
+		}
+		if (type_big)
+		{
+			for (int i = -1; i <= 1; i++)
+			{
+				for (int j = -1; j <= 1; j++)
+				{
+					int new_x = x + i;
+					int new_y = y + j;
+					if (ValidateCoordinate(new_x, new_y) && !(i == 0 && j == 0) && m_Table[x][y] == m_Table[new_x][new_y])
+					{
+						RoadNetwork::RemoveFromNetwork(m_Table[new_x][new_y]);
+						m_Table[new_x][new_y] = GameField::CreateField(EMPTY, new_x, new_y);
+					}
+				}
+			}
 		}
 
 		RoadNetwork::RemoveFromNetwork(m_Table[x][y]);
@@ -245,4 +269,51 @@ void GameTable::CheckZoneIndustrialBonus(GameField* f) {
 
 		}
 	}
+}
+
+bool GameTable::ValidateCoordinate(int c)
+{
+	return c >= 0 && c < m_Table.size();
+}
+
+bool GameTable::ValidateCoordinate(int c1, int c2)
+{
+	return ValidateCoordinate(c1) && ValidateCoordinate(c2);
+}
+
+bool GameTable::IsBuildableField(int x, int y)
+{
+	return ValidateCoordinate(x, y) && m_Table[x][y]->IsEmpty();
+}
+
+
+bool GameTable::IsBuildable(FieldType type, FieldDirection dir, int x, int y)
+{
+	if (type == STADIUM || type == POWERSTATION || type == UNIVERSITY)
+	{
+		if (!IsBuildableField(x, y)) return false;
+		if (!IsBuildableField(x + 1, y)) return false;
+		if (!IsBuildableField(x, y + 1)) return false;
+		if (!IsBuildableField(x + 1, y + 1)) return false;
+	}
+	else if (type == HIGHSCHOOL)
+	{
+		if (!IsBuildableField(x, y)) return false;
+
+		if (dir == FRONT || dir == BACK)
+		{
+			if (!IsBuildableField(x, y + 1)) return false;
+		}
+
+		if (dir == LEFT || dir == RIGHT)
+		{
+			if (!IsBuildableField(x + 1, y)) return false;
+		}
+	}
+	else
+	{
+		if (!IsBuildableField(x, y)) return false;
+	}
+
+	return true;
 }
