@@ -13,6 +13,7 @@ public:
 	bool inline IsWorkingArea() const override { return true; }
 	virtual inline bool IsIndustrialArea() const { return false; }
 	virtual inline bool IsServiceArea() const { return false; }
+	float Get_Satisfaction() const override;
 };
 
 class IndustrialArea : public WorkingArea 
@@ -30,6 +31,7 @@ public:
 
 	//Getter
 	float GetTaxRate() const override;
+	float GetTaxRatePercentage() const override;
 
 private:
 	static float m_Lvl1TaxRate;
@@ -55,6 +57,7 @@ public:
 
 	//Getter
 	float GetTaxRate() const override;
+	float GetTaxRatePercentage() const override;
 
 private:
 	static float m_Lvl1TaxRate;

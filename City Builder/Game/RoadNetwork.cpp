@@ -130,21 +130,51 @@ bool RoadNetwork::IsConnectedMultiple(GameField* field1, GameField* field2) {
 	return false;
 }
 
-Zone* RoadNetwork::FindEmptyWorkingArea(Zone* field) {
+Zone* RoadNetwork::FindEmptyWorkingArea(Zone* field, float ratio) {
 	if (field == nullptr) return nullptr;
+	float minDistanceI = 100000;
+	Zone* closestZoneI = nullptr;
+	float minDistanceS = 100000;
+	Zone* closestZoneS = nullptr;
 
-for (auto& network : m_networks) {
-	if (network.zoneSet.find(field) == network.zoneSet.end()) continue;
+	for (auto& network : m_networks) {
+		if (network.zoneSet.find(field) == network.zoneSet.end()) continue;
 
-	for (auto& otherField : network.zoneSet) {
-		if (WorkingArea* workingArea = dynamic_cast<WorkingArea*>(otherField)) {
-			if (workingArea->Get_ZoneDetails().contain < workingArea->Get_ZoneDetails().capacity)
-				return workingArea;
+		for (auto& otherField : network.zoneSet) {
+			if (WorkingArea* workingArea = dynamic_cast<WorkingArea*>(otherField)) {
+				if (workingArea->Get_ZoneDetails().contain < workingArea->Get_ZoneDetails().capacity) {
+					float d = distance(workingArea, field);
+					if (workingArea->IsIndustrialArea()) {
+						if (d < minDistanceI) {
+							minDistanceI = d;
+							closestZoneI = workingArea;
+						}
+					}
+					else {
+						if (d < minDistanceS) {
+							minDistanceS = d;
+							closestZoneS = workingArea;
+						}
+					}
+				}
+			}
+
 		}
-
 	}
-}
-return nullptr;
+	if (ratio > 1.5) { //több service van ezért industrial kell
+		if (closestZoneI == nullptr) return closestZoneS;
+		else return closestZoneI;
+	}
+	else if (ratio < 0.66) {
+		if (closestZoneS == nullptr) return closestZoneI;
+		else return closestZoneS;
+	}
+	else {
+		if (minDistanceI < minDistanceS && closestZoneI != nullptr) return closestZoneI;
+		if (minDistanceS <= minDistanceI && closestZoneS != nullptr) return closestZoneS;
+		if (closestZoneI == nullptr) return closestZoneS;
+		if (closestZoneS == nullptr) return closestZoneI;
+	}
 }
 
 std::string RoadNetwork::NetworksToString() {
@@ -230,6 +260,38 @@ void RoadNetwork::SetZoneSatisfaction(GameField* field) {
 
 	zone->Set_Satisfaction(satisfaction);
 	zone->Set_Safety(safety);
+}
+
+Zone* RoadNetwork::FindOptimalResidentialArea(float happiness) {
+	float moveInThreshold = happiness * 3;
+	float industrialPenalty = 0;
+	for (auto& network : m_networks) {
+		for (auto& z : network.zoneSet) {
+			Zone* zone = dynamic_cast<Zone*>(z);
+			if (!(zone->IsResidentalArea() && zone->Get_ZoneDetails().contain < zone->Get_ZoneDetails().capacity))
+				continue;
+
+			//industrialPenalty: közvetlenül melletted lévõ ipari zóna -0.9, 9 blokkra lévõ -0.1;
+			industrialPenalty = zone->Get_ZoneDetails().industrial_penalty;
+
+			for (auto& w : network.zoneSet) {
+				Zone* wZone = dynamic_cast<Zone*>(w);
+				if (!(wZone->IsWorkingArea() && wZone->Get_ZoneDetails().contain < wZone->Get_ZoneDetails().capacity))
+					continue;
+				float d = distance(wZone, zone);
+				float workDistancePenalty = -(d / 20 - 0.05); //ha mellette van 0 penalty, különben 0.05esével nõ
+				if (industrialPenalty < -0.5) industrialPenalty = -0.5;
+				//szóval ha happiness 30%, akkor a threshold 0.9 lesz,
+				//ami megengedi a beköltözést, ha: van 5 blokkon belül ipari de van üres munkahely 8 blokkon belül,
+				//vagy nincs a közelben ipari és van üres munkahely 18 blokkon belül(vagy valami köztes)
+				if (moveInThreshold + industrialPenalty + workDistancePenalty > 0) {
+					return zone;
+				}
+			}
+		}
+	}
+	
+	return nullptr;
 }
 
 

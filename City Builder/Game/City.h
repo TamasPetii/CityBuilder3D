@@ -33,6 +33,8 @@ public:
 	void UpdateMoney(float amount);
 	void GenerateForests(int iterations, double initialRatio);
 	void SimulatePopulationAging();
+	void CalculateHappiness();
+	void HandleRecalculation();
 
 	void SetTaxRate(FieldType type, float rate);
 	inline GameField* Get_GameField(int x, int y) const { return m_GameTable->Get_TableValue(x, y); };
@@ -52,6 +54,7 @@ public:
 	int Get_Day() { return (m_DailyTickCounter % 360) % 30 + 1; }
 
 	int Get_CitizenSize() { return m_Citizens.size(); }
+	float Get_CombinedHappiness() { if (Get_CitizenSize() == 0) return 0; else return m_combinedHappiness * 100; }
 private:
 	std::unordered_set<Citizen*> m_Citizens;
 	GameTable* m_GameTable;
@@ -64,4 +67,10 @@ private:
 	static std::stringstream m_BuildLog;
 	static std::stringstream m_MoneyLog;
 	int m_DailyTickCounter = 0;
+
+	float m_combinedHappiness = 0;
+	int m_serviceWorkers = 0;
+	int m_industrialWorkers = 0;
+
+	int m_initialCitizens = 0;
 };

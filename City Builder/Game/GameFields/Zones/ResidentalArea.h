@@ -18,6 +18,8 @@ public:
 
 	//Getter
 	float GetTaxRate() const override;
+	float GetTaxRatePercentage() const override;
+	float Get_Satisfaction() const override;
 
 private:
 	static float m_Lvl1TaxRate;

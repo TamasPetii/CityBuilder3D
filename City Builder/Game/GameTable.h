@@ -24,6 +24,7 @@ public:
 	inline GameField* Get_TableValue(int x, int y) const { return m_Table[x][y]; }; //Todo: check for wrong x,y value
 	ZoneDetails Get_ZoneDetails(int x, int y) const { ZoneDetails s;  return s; };
 	float Get_TotalCost() const;
+	bool recalculate = false;
 
 private:
 	std::vector<std::vector<GameField*>> m_Table;

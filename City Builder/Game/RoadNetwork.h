@@ -16,7 +16,7 @@ public:
 	static void RemoveFromNetwork(GameField*);
 	static void MergeNetworks(int, int);
 	static bool IsConnected(GameField*, GameField*);
-	static Zone* FindEmptyWorkingArea(Zone*);
+	static Zone* FindEmptyWorkingArea(Zone*, float);
 	static void ResetNetworks();
 	static double GetSatisfaction(Zone* field);
 	static Zone* FindEmptyResidentialArea();
@@ -24,6 +24,7 @@ public:
 	static void AddToNetworkSatisfaction(GameField*, int);
 	static void SetZoneSatisfaction(GameField*);
 	static bool IsConnectedMultiple(GameField*, GameField*);
+	static Zone* FindOptimalResidentialArea(float);
 
 private:
 	class Network {
