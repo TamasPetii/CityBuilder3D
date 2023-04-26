@@ -219,8 +219,7 @@ void MyGui::DockSpace_MenuBar()
     LoadGame_Popup();
     SaveGame_Popup();
     InfoGame_Popup();
-    ImGui::ShowDemoWindow(&m_MenuBarLayout.ImGuiDemo_Show);
-
+    //ImGui::ShowDemoWindow(&m_MenuBarLayout.ImGuiDemo_Show);
 }
 
 void MyGui::NewGame_Popup()
