@@ -53,7 +53,6 @@ enum FieldType
 	SERVICE_LVL2,
 	SERVICE_LVL3,
 	FOREST,
-	LAKE,
 	POLICESTATION,
 	FIRESTATION,
 	HIGHSCHOOL,
@@ -63,7 +62,8 @@ enum FieldType
 	POWERSTATION,
 	EMPTY,
 	ROAD,
-	CRATER
+	CRATER,
+	LAKE
 };
 
 enum FieldDirection
