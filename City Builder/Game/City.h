@@ -32,6 +32,7 @@ public:
 
 	void UpdateMoney(float amount);
 	void GenerateForests(int iterations, double initialRatio);
+	void GenerateLakes(int iterations, double initialRatio);
 	void SimulatePopulationAging();
 	void CalculateHappiness();
 	void HandleRecalculation();
@@ -55,6 +56,10 @@ public:
 
 	int Get_CitizenSize() { return m_Citizens.size(); }
 	float Get_CombinedHappiness() { if (Get_CitizenSize() == 0) return 0; else return m_combinedHappiness * 100; }
+
+private:
+	void GenerateCellularFields(int iterations, double initialRatio, FieldType fieldType);
+
 private:
 	std::unordered_set<Citizen*> m_Citizens;
 	GameTable* m_GameTable;

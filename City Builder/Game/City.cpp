@@ -12,6 +12,7 @@ City::City(int size, float money): m_Money(money)
 	m_GameTable = new GameTable(size);
 
 	GenerateForests(5, 0.4);
+	GenerateLakes(5, 0.4);
 }
 
 void City::Simulate()
@@ -278,57 +279,12 @@ void City::SimulatePopulationAging() //should be called yearly
 
 void City::GenerateForests(int iterations, double initialRatio)
 {
-	// simple cellular automata algorithm
+	GenerateCellularFields(iterations, initialRatio, FieldType::FOREST);
+}
 
-	int tableSize = m_GameTable->Get_TableSize();
-	std::vector<std::vector<bool>> forestMatrix(tableSize, std::vector<bool>(tableSize, false));
-
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_real_distribution<> dis(0.0, 1.0);
-
-	for (int x = 0; x < tableSize; ++x) {
-		for (int y = 0; y < tableSize; ++y) {
-			if (dis(gen) < initialRatio) {
-				forestMatrix[x][y] = true;
-			}
-		}
-	}
-
-	for (int i = 0; i < iterations; ++i) {
-		std::vector<std::vector<bool>> newMatrix = forestMatrix;
-		for (int x = 0; x < tableSize; ++x) {
-			for (int y = 0; y < tableSize; ++y) {
-				int neighbors = 0;
-				for (int dx = -1; dx <= 1; ++dx) {
-					for (int dy = -1; dy <= 1; ++dy) {
-						int nx = x + dx;
-						int ny = y + dy;
-						if (nx >= 0 && nx < tableSize && ny >= 0 && ny < tableSize && !(dx == 0 && dy == 0)) {
-							if (forestMatrix[nx][ny]) {
-								neighbors++;
-							}
-						}
-					}
-				}
-				if (forestMatrix[x][y]) {
-					newMatrix[x][y] = neighbors >= 4;
-				}
-				else {
-					newMatrix[x][y] = neighbors >= 5;
-				}
-			}
-		}
-		forestMatrix = newMatrix;
-	}
-
-	for (int x = 0; x < tableSize; ++x) {
-		for (int y = 0; y < tableSize; ++y) {
-			if (forestMatrix[x][y]) {
-				m_GameTable->Set_TableValue(x, y, FieldType::FOREST);
-			}
-		}
-	}
+void City::GenerateLakes(int iterations, double initialRatio)
+{
+	GenerateCellularFields(iterations, initialRatio, FieldType::LAKE);
 }
 
 void City::SetTaxRate(FieldType type, float rate)
@@ -376,5 +332,60 @@ void City::Set_GameTableValue(int x, int y, FieldType type, FieldDirection dir)
 
 		m_BuildLog << GameField::ConvertTypeToStr(type) << ": " << m_GameTable->Get_TableValue(x, y)->Get_Cost() << "$" << std::endl;
 		m_ChangedLog = true;
+	}
+}
+
+void City::GenerateCellularFields(int iterations, double initialRatio, FieldType fieldType)
+{
+	// simple cellular automata algorithm
+
+	int tableSize = m_GameTable->Get_TableSize();
+	std::vector<std::vector<bool>> cellularMatrix(tableSize, std::vector<bool>(tableSize, false));
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<> dis(0.0, 1.0);
+
+	for (int x = 0; x < tableSize; ++x) {
+		for (int y = 0; y < tableSize; ++y) {
+			if (dis(gen) < initialRatio) {
+				cellularMatrix[x][y] = true;
+			}
+		}
+	}
+
+	for (int i = 0; i < iterations; ++i) {
+		std::vector<std::vector<bool>> newMatrix = cellularMatrix;
+		for (int x = 0; x < tableSize; ++x) {
+			for (int y = 0; y < tableSize; ++y) {
+				int neighbors = 0;
+				for (int dx = -1; dx <= 1; ++dx) {
+					for (int dy = -1; dy <= 1; ++dy) {
+						int nx = x + dx;
+						int ny = y + dy;
+						if (nx >= 0 && nx < tableSize && ny >= 0 && ny < tableSize && !(dx == 0 && dy == 0)) {
+							if (cellularMatrix[nx][ny]) {
+								neighbors++;
+							}
+						}
+					}
+				}
+				if (cellularMatrix[x][y]) {
+					newMatrix[x][y] = neighbors >= 4;
+				}
+				else {
+					newMatrix[x][y] = neighbors >= 5;
+				}
+			}
+		}
+		cellularMatrix = newMatrix;
+	}
+
+	for (int x = 0; x < tableSize; ++x) {
+		for (int y = 0; y < tableSize; ++y) {
+			if (cellularMatrix[x][y] && m_GameTable->Get_TableValue(x, y)->IsEmpty()) {
+				m_GameTable->Set_TableValue(x, y, fieldType);
+			}
+		}
 	}
 }

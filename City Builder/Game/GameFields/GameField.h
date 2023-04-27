@@ -18,6 +18,7 @@ public:
 	virtual bool IsEmpty() const { return false; };
 	virtual bool IsRoad() const { return false; };
 	virtual bool IsForest() const { return false; };
+	virtual bool IsLake() const { return false; };
 	virtual bool IsBuilding() const { return false; };
 
 	inline int Get_X() const { return m_X; }
@@ -52,6 +53,7 @@ enum FieldType
 	SERVICE_LVL2,
 	SERVICE_LVL3,
 	FOREST,
+	LAKE,
 	POLICESTATION,
 	FIRESTATION,
 	HIGHSCHOOL,
