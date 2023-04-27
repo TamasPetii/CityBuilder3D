@@ -1,5 +1,5 @@
 #define _USE_MATH_DEFINES
-#define VELOCITY 20
+#define VELOCITY 40
 
 #include <vector>
 #include <iostream>
@@ -16,76 +16,120 @@ struct HitBox
 	glm::vec3 max;
 };
 
+struct CarCoord
+{
+	glm::vec3 coord;
+	bool isInterSection;
+};
+
 class RouteSection
 {
 public:
-	RouteSection(glm::vec3 c1, glm::vec3 c2) { m_FirstPoint = c1; m_LastPoint = c2; m_MiddlePoint = glm::vec3(0); m_NumberOfCooordinates = 2; }
-	RouteSection(glm::vec3 c1, glm::vec3 c2, glm::vec3 c3) { m_FirstPoint = c1; m_MiddlePoint = c2; m_LastPoint = c3; m_NumberOfCooordinates = 3; }
-	inline int Get_NumberOfCoordinates() { return m_NumberOfCooordinates; }
+	RouteSection(CarCoord c1, CarCoord c2);
+	RouteSection(CarCoord c1, CarCoord c2, CarCoord c3);
 
-	inline glm::vec3 Get_FirstPoint() { return m_FirstPoint; }
-	inline glm::vec3 Get_MiddlePoint() { return m_MiddlePoint; }
-	inline glm::vec3 Get_LastPoint() { return m_LastPoint; }
-	inline float Get_Length() { return m_Length; }
-	
+	inline void Increase_FirstX(float v) { m_FirstPoint.coord.x += v; }
+	inline void Increase_FirstZ(float v) { m_FirstPoint.coord.z += v; }
 
-	inline void Increase_FirstX(float v) { m_FirstPoint.x += v; }
-	inline void Increase_FirstZ(float v) { m_FirstPoint.z += v; }
+	inline void Increase_MiddleX(float v) { m_MiddlePoint.coord.x += v; }
+	inline void Increase_MiddleZ(float v) { m_MiddlePoint.coord.z += v; }
 
-	inline void Increase_MiddleX(float v) { m_MiddlePoint.x += v; }
-	inline void Increase_MiddleZ(float v) { m_MiddlePoint.z += v; }
-
-	inline void Increase_LastX(float v) { m_LastPoint.x += v; }
-	inline void Increase_LastZ(float v) { m_LastPoint.z += v; }
+	inline void Increase_LastX(float v) { m_LastPoint.coord.x += v; }
+	inline void Increase_LastZ(float v) { m_LastPoint.coord.z += v; }
 
 	void CalculateSegmentLength();
 
+	//Getters
+	inline int Get_NumberOfCoordinates() { return m_NumberOfCooordinates; }
+	inline glm::vec3 Get_FirstPoint() { return m_FirstPoint.coord; }
+	inline glm::vec3 Get_MiddlePoint() { return m_MiddlePoint.coord; }
+	inline glm::vec3 Get_LastPoint() { return m_LastPoint.coord; }
+	inline float Get_Length() { return m_Length; }
+	inline bool Get_IsInterSection() { return m_IsInterSection; }
+	inline bool Get_IsInterSectionFirstCoord() { return m_FirstPoint.isInterSection; }
+	inline bool Get_IsInterSectionMiddleCoord() { return m_MiddlePoint.isInterSection; }
+	inline bool Get_IsInterSectionLastCoord() { return m_LastPoint.isInterSection; }
+
 private:
-	glm::vec3 m_FirstPoint;
-	glm::vec3 m_MiddlePoint;
-	glm::vec3 m_LastPoint;
+	CarCoord m_FirstPoint;
+	CarCoord m_MiddlePoint;
+	CarCoord m_LastPoint;
+
+	//glm::vec3 m_InterSectionCoord = glm::vec3(0);
 
 	int m_NumberOfCooordinates;
 	float m_Length = 0;
+	bool m_IsInterSection;
 };
 
 class Car
 {
 public:
-	Car(std::vector<glm::vec3> coordinates);
+	Car(std::vector<CarCoord> coordinates);
 	~Car();
+
 	void Move(float t);
-	glm::vec3 Get_CurrentPosition(float& rotation);
-	glm::mat4 Get_Transform();
-	glm::mat4 Get_HitBoxTransform();
 	bool ShouldBeDeleted() { return m_Param >= m_RouteSections.size(); }
-	inline float Get_LastMove() { return m_LastMove; }
+	inline bool IsInIntersection() { return m_RouteSections[static_cast<int>(m_Param)]->Get_IsInterSection(); }
+
+	//Getters
+	glm::vec3 Get_CurrentPosition(float& rotation);
+	glm::mat4 Get_Transform() { return glm::translate(Get_CurrentPosition(m_Rotation)) * glm::rotate(m_Rotation, glm::vec3(0, 1, 0)); }
+
 	inline float Get_LocalParam() { return (m_Param - static_cast<int>(m_Param)); }
+	inline float Get_Param() { return m_Param; }
+
 	RouteSection* Get_CurrentRouteSection();
+	RouteSection* Get_CurrentOriginalRouteSection();
+	inline int Get_NumberOfRouteSections() { return m_RouteSections.size(); }
+	inline RouteSection* Get_SpecificCurOrigRouteSection(int i) { return m_OriginalRouteSections[i]; }
+
+	inline glm::mat4 Get_HitBoxTransform() { return glm::translate(Get_CurrentPosition(m_Rotation)); }
 	HitBox Get_HitBox();
 
+	inline float Get_LastMove() { return m_LastMove; }
+
 private:
-	float m_LastMove = 0.0f;
 	float m_Param = 0.0f;
 	float m_Rotation = 0.0f;
+	float m_LastMove = 0.0f;
+
 	std::vector<RouteSection*> m_RouteSections;
+	std::vector<RouteSection*> m_OriginalRouteSections;
 
 	static HitBox m_HitBox;
-
 };
 
-class Cars
+class CarAndCoord
+{
+private:
+	glm::vec3 m_Coord;
+	Car* m_Car;
+public:
+	CarAndCoord(glm::vec3 coordinate, Car* car) { m_Coord = coordinate; m_Car = car; }
+
+	//Getters
+	inline glm::vec3 Get_Coord() const { return m_Coord; }
+	inline Car* Get_Car() const { return m_Car; }
+};
+
+class CarGroup
 {
 public:
 	static std::vector<glm::mat4> Get_Transforms();
 	static void Update();
-	static void Add(std::vector<glm::vec3>);
+	static void Add(std::vector<CarCoord>);
 	static void Clear();
 	static bool Intersect(Car* car1, Car* car2);
+
+	//Setters
+	static void Set_CarLimit(int limit);
 private:
 	static std::unordered_set<Car*> m_Cars;
+	static std::unordered_set<CarAndCoord*> m_InUseIntersections;
 
 	static float last_time;
 	static float current_time;
 	static float delta_time;
+	static int car_limit;
 };

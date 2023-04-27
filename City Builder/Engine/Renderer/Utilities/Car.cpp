@@ -1,14 +1,19 @@
 #include "Car.h"
 
-std::unordered_set<Car*> Cars::m_Cars;
+//Static members of CarGroup//
 
-//HitBox Car::m_HitBox = { glm::vec3(-0.25 - 0.2, 0.0, -0.115 - 0.2), glm::vec3(0.3 + 0.2,0.14,0.115 + 0.2) };
+std::unordered_set<Car*> CarGroup::m_Cars;
+std::unordered_set<CarAndCoord*> CarGroup::m_InUseIntersections;
 
-HitBox Car::m_HitBox = { glm::vec3(-0.3, 0.0, -0.3), glm::vec3(0.3,0.14,0.3) };
+int CarGroup::car_limit = 0;
 
-float Cars::last_time;
-float Cars::current_time;
-float Cars::delta_time;
+float CarGroup::last_time;
+float CarGroup::current_time;
+float CarGroup::delta_time;
+
+//Static members of Car//
+
+HitBox Car::m_HitBox = { glm::vec3(-0.28, 0.0, -0.28), glm::vec3(0.28,0.14,0.28) };
 
 //RouteSection//
 
@@ -16,7 +21,7 @@ void RouteSection::CalculateSegmentLength()
 {
 	if (Get_NumberOfCoordinates() == 2)
 	{
-		m_Length = sqrt((m_FirstPoint.x - m_LastPoint.x) * (m_FirstPoint.x - m_LastPoint.x) + (m_FirstPoint.z - m_LastPoint.z) * (m_FirstPoint.z - m_LastPoint.z));
+		m_Length = sqrt((m_FirstPoint.coord.x - m_LastPoint.coord.x) * (m_FirstPoint.coord.x - m_LastPoint.coord.x) + (m_FirstPoint.coord.z - m_LastPoint.coord.z) * (m_FirstPoint.coord.z - m_LastPoint.coord.z));
 	}
 	else if (Get_NumberOfCoordinates() == 3)
 	{
@@ -24,12 +29,12 @@ void RouteSection::CalculateSegmentLength()
 		const int num_segments = 100;
 
 		float t = 0.0;
-		glm::vec3 px = m_FirstPoint;
+		glm::vec3 px = m_FirstPoint.coord;
 		for (int i = 1; i <= num_segments; i++)
 		{
 			t = (float)i / num_segments;
-			glm::vec3 qx = (1 - t) * m_FirstPoint + t * m_MiddlePoint;
-			glm::vec3 rx = (1 - t) * m_MiddlePoint + t * m_LastPoint;
+			glm::vec3 qx = (1 - t) * m_FirstPoint.coord + t * m_MiddlePoint.coord;
+			glm::vec3 rx = (1 - t) * m_MiddlePoint.coord + t * m_LastPoint.coord;
 			glm::vec3 sx = (1 - t) * qx + t * rx;
 			length += glm::length(sx - px);
 			px = sx;
@@ -39,9 +44,43 @@ void RouteSection::CalculateSegmentLength()
 	}
 }
 
+RouteSection::RouteSection(CarCoord c1, CarCoord c2)
+{
+	m_FirstPoint = c1;
+	m_LastPoint = c2;
+	m_MiddlePoint = { glm::vec3(0), false };
+	m_NumberOfCooordinates = 2;
+
+	if (c1.isInterSection || c2.isInterSection)
+	{
+		m_IsInterSection = true;
+	}
+	else
+	{
+		m_IsInterSection = false;
+	}
+}
+
+RouteSection::RouteSection(CarCoord c1, CarCoord c2, CarCoord c3)
+{
+	m_FirstPoint = c1;
+	m_MiddlePoint = c2;
+	m_LastPoint = c3;
+	m_NumberOfCooordinates = 3;
+
+	if (c1.isInterSection || c2.isInterSection || c3.isInterSection)
+	{
+		m_IsInterSection = true;
+	}
+	else
+	{
+		m_IsInterSection = false;
+	}
+}
+
 //Car//
 
-Car::Car(std::vector<glm::vec3> coordinates)
+Car::Car(std::vector<CarCoord> coordinates)
 {
 	float roadCompensation = 0.3f;
 
@@ -51,12 +90,14 @@ Car::Car(std::vector<glm::vec3> coordinates)
 	{
 		if (i + 2 < coordinates.size())
 		{
-			if ((coordinates[i].x != coordinates[i + 2].x && coordinates[i].z != coordinates[i + 2].z))
+			if ((coordinates[i].coord.x != coordinates[i + 2].coord.x && coordinates[i].coord.z != coordinates[i + 2].coord.z))
 			{
-				//kanyar
-				glm::vec3 coordinate1 = coordinates[i];
-				glm::vec3 coordinate2 = coordinates[i + 1];
-				glm::vec3 coordinate3 = coordinates[i + 2];
+				//curve
+				glm::vec3 coordinate1 = coordinates[i].coord;
+				glm::vec3 coordinate2 = coordinates[i + 1].coord;
+				glm::vec3 coordinate3 = coordinates[i + 2].coord;
+
+				m_OriginalRouteSections.push_back(new RouteSection(coordinates[i], coordinates[i + 1], coordinates[i + 2]));
 
 				if (coordinate1.x != coordinate2.x && coordinate1.z == coordinate2.z) //x mentén
 				{
@@ -107,14 +148,20 @@ Car::Car(std::vector<glm::vec3> coordinates)
 					}
 				}
 
-				m_RouteSections.push_back(new RouteSection(coordinate1, coordinate2, coordinate3));
+				CarCoord transfCoord1 = { coordinate1 };
+				CarCoord transfCoord2 = { coordinate2 };
+				CarCoord transfCoord3 = { coordinate3 };
+
+				m_RouteSections.push_back(new RouteSection(transfCoord1, transfCoord2, transfCoord3));
 				i += 2;
 			}
 			else
 			{
-				//egyenes
-				glm::vec3 coordinate1 = coordinates[i];
-				glm::vec3 coordinate2 = coordinates[i + 1];
+				//straight
+				glm::vec3 coordinate1 = coordinates[i].coord;
+				glm::vec3 coordinate2 = coordinates[i + 1].coord;
+
+				m_OriginalRouteSections.push_back(new RouteSection(coordinates[i], coordinates[i + 1]));
 
 				if (coordinate1.x != coordinate2.x && coordinate1.z == coordinate2.z)
 				{
@@ -143,15 +190,20 @@ Car::Car(std::vector<glm::vec3> coordinates)
 					}
 				}
 
-				m_RouteSections.push_back(new RouteSection(coordinate1, coordinate2));
+				CarCoord transfCoord1 = { coordinate1 };
+				CarCoord transfCoord2 = { coordinate2 };
+
+				m_RouteSections.push_back(new RouteSection(transfCoord1, transfCoord2));
 				++i;
 			}
 		}
 		else if (i + 1 < coordinates.size())
 		{
-			//egyenes
-			glm::vec3 coordinate1 = coordinates[i];
-			glm::vec3 coordinate2 = coordinates[i + 1];
+			//straight
+			glm::vec3 coordinate1 = coordinates[i].coord;
+			glm::vec3 coordinate2 = coordinates[i + 1].coord;
+
+			m_OriginalRouteSections.push_back(new RouteSection(coordinates[i], coordinates[i + 1]));
 
 			if (coordinate1.x != coordinate2.x && coordinate1.z == coordinate2.z)
 			{
@@ -179,7 +231,10 @@ Car::Car(std::vector<glm::vec3> coordinates)
 					coordinate2.x += roadCompensation;
 				}
 			}
-			m_RouteSections.push_back(new RouteSection(coordinate1, coordinate2));
+			CarCoord transfCoord1 = { coordinate1 };
+			CarCoord transfCoord2 = { coordinate2 };
+
+			m_RouteSections.push_back(new RouteSection(transfCoord1, transfCoord2));
 			++i;
 		}
 		else
@@ -188,12 +243,13 @@ Car::Car(std::vector<glm::vec3> coordinates)
 		}
 	}
 
-	//kompenzáció kanyarokban
+	//compensation in curves
+
 	for (int i = 0; i < m_RouteSections.size(); i++)
 	{
-		//az út után kanyar van
 		if (i < m_RouteSections.size() - 1)
 		{
+			//if there's a curve after a straight section
 			if (m_RouteSections[i]->Get_NumberOfCoordinates() == 2 && m_RouteSections[i + 1]->Get_NumberOfCoordinates() == 3)
 			{
 				RouteSection* straight = m_RouteSections[i];
@@ -220,9 +276,37 @@ Car::Car(std::vector<glm::vec3> coordinates)
 					curve->Increase_FirstZ(-1);
 				}
 			}
+			//if a straight section goes through an inersection (the intersection is after the first straight section) (we have to do it because of the collsion detection)
+			if (m_RouteSections[i]->Get_NumberOfCoordinates() == 2 && m_RouteSections[i + 1]->Get_NumberOfCoordinates() == 2 && m_OriginalRouteSections[i + 1]->Get_IsInterSection())
+			{
+				RouteSection* straight_first = m_RouteSections[i];
+				RouteSection* straight_second = m_RouteSections[i + 1];
+
+				if (straight_first->Get_FirstPoint().x < straight_first->Get_LastPoint().x) //x mentén növekvõen vagyunk
+				{
+					straight_first->Increase_LastX(1);
+					straight_second->Increase_FirstX(1);
+				}
+				else if (straight_first->Get_FirstPoint().x > straight_first->Get_LastPoint().x) //x mentén csökkenõen vagyunk
+				{
+					straight_first->Increase_LastX(-1);
+					straight_second->Increase_FirstX(-1);
+				}
+				else if (straight_first->Get_FirstPoint().z < straight_first->Get_LastPoint().z) //z mentén növekvõen vagyunk
+				{
+					straight_first->Increase_LastZ(1);
+					straight_second->Increase_FirstZ(1);
+				}
+				else if (straight_first->Get_FirstPoint().z > straight_first->Get_LastPoint().z) //z mentén csökkenõen vagyunk
+				{
+					straight_first->Increase_LastZ(-1);
+					straight_second->Increase_FirstZ(-1);
+				}
+			}
 		}
 		if (i > 0)
 		{
+			//if there's a curve before a straight section
 			if (m_RouteSections[i]->Get_NumberOfCoordinates() == 2 && m_RouteSections[i - 1]->Get_NumberOfCoordinates() == 3)
 			{
 				RouteSection* straight = m_RouteSections[i];
@@ -249,13 +333,66 @@ Car::Car(std::vector<glm::vec3> coordinates)
 					curve->Increase_LastZ(1);
 				}
 			}
+			//if a straight section goes through an inersection (the intersection is before the first straight section) (we have to do it because of the collsion detection)
+			if (m_RouteSections[i]->Get_NumberOfCoordinates() == 2 && m_RouteSections[i - 1]->Get_NumberOfCoordinates() == 2 && m_OriginalRouteSections[i - 1]->Get_IsInterSection())
+			{
+				RouteSection* straight = m_RouteSections[i];
+				RouteSection* straight_before = m_RouteSections[i - 1];
+
+				if (straight->Get_FirstPoint().x < straight->Get_LastPoint().x) //x mentén növekvõen vagyunk
+				{
+					straight->Increase_FirstX(-1);
+					straight_before->Increase_LastX(-1);
+				}
+				else if (straight->Get_FirstPoint().x > straight->Get_LastPoint().x) //x mentén csökkenõen vagyunk
+				{
+					straight->Increase_FirstX(1);
+					straight_before->Increase_LastX(1);
+				}
+				else if (straight->Get_FirstPoint().z < straight->Get_LastPoint().z) //z mentén növekvõen vagyunk
+				{
+					straight->Increase_FirstZ(-1);
+					straight_before->Increase_LastZ(-1);
+				}
+				else if (straight->Get_FirstPoint().z > straight->Get_LastPoint().z) //z mentén csökkenõen vagyunk
+				{
+					straight->Increase_FirstZ(1);
+					straight_before->Increase_LastZ(1);
+				}
+			}
 		}
 	}
 
+	//Calculating the length of each RouteSection
+	for (int i = 0; i < m_RouteSections.size(); ++i)
+		m_RouteSections[i]->CalculateSegmentLength();
+	
+
+	//We push the car until it isn't in an intersection
+	bool foundNonIntersection = false;
+
+	for (int i = 0; i < m_OriginalRouteSections.size(); ++i)
+	{
+		if (!foundNonIntersection)
+		{
+			if (m_OriginalRouteSections[i]->Get_IsInterSection())
+			{
+				std::cout << "tovabb lokve" << std::endl;
+				m_Param += 1.05f;
+			}
+			else
+			{
+				foundNonIntersection = true;
+			}
+		}
+	}
+
+	
 	for (int i = 0; i < m_RouteSections.size(); ++i)
 	{
-		m_RouteSections[i]->CalculateSegmentLength();
+		std::cout << m_OriginalRouteSections[i]->Get_IsInterSection() << std::endl;
 	}
+	
 }
 
 glm::vec3 Car::Get_CurrentPosition(float& rotation)
@@ -295,16 +432,6 @@ glm::vec3 Car::Get_CurrentPosition(float& rotation)
 	}
 }
 
-glm::mat4 Car::Get_Transform()
-{
-	return glm::translate(Get_CurrentPosition(m_Rotation)) * glm::rotate(m_Rotation, glm::vec3(0, 1, 0));
-}
-
-glm::mat4 Car::Get_HitBoxTransform()
-{
-	return glm::translate(Get_CurrentPosition(m_Rotation));
-}
-
 void Car::Move(float t)
 {
 	//(eltelt idõ) * (sebesség) * (útszakasz hossza miatti kompenzáció)
@@ -325,7 +452,11 @@ Car::~Car()
 	for (int i = 0; i < m_RouteSections.size(); ++i)
 	{
 		delete(m_RouteSections[i]);
+		delete(m_OriginalRouteSections[i]);
 	}
+
+	m_RouteSections.clear();
+	m_OriginalRouteSections.clear();
 }
 
 RouteSection* Car::Get_CurrentRouteSection()
@@ -335,6 +466,18 @@ RouteSection* Car::Get_CurrentRouteSection()
 		return m_RouteSections[static_cast<int>(m_Param)];
 	}
 	else 
+	{
+		return nullptr;
+	}
+}
+
+RouteSection* Car::Get_CurrentOriginalRouteSection()
+{
+	if (static_cast<int>(m_Param) <= m_RouteSections.size() - 1)
+	{
+		return m_OriginalRouteSections[static_cast<int>(m_Param)];
+	}
+	else
 	{
 		return nullptr;
 	}
@@ -350,9 +493,9 @@ HitBox Car::Get_HitBox()
 	return { glm::vec3(min.x, min.y, min.z), glm::vec3(max.x, max.y, max.z) };
 }
 
-//Cars//
+//CarGroup//
 
-std::vector<glm::mat4> Cars::Get_Transforms()
+std::vector<glm::mat4> CarGroup::Get_Transforms()
 {
 	std::vector<glm::mat4> transforms;
 
@@ -364,7 +507,7 @@ std::vector<glm::mat4> Cars::Get_Transforms()
 	return transforms;
 }
 
-bool Cars::Intersect(Car* car1, Car* car2)
+bool CarGroup::Intersect(Car* car1, Car* car2)
 {
 	HitBox a = car1->Get_HitBox();
 	HitBox b = car2->Get_HitBox();
@@ -377,9 +520,10 @@ bool Cars::Intersect(Car* car1, Car* car2)
 		a.max.z >= b.min.z;
 }
 
-void Cars::Update()
+void CarGroup::Update()
 {
-	//std::cout << m_Cars.size() << std::endl;
+	//ultimate full self-driving system (Elon Musk elbujhat)//
+
 	current_time = glfwGetTime();
 	delta_time = current_time - last_time;
 	last_time = current_time;
@@ -387,124 +531,224 @@ void Cars::Update()
 	for (auto it = m_Cars.begin(); it != m_Cars.end(); )
 	{
 		Car* car = *it;
+
 		if (car->ShouldBeDeleted())
 		{
+			for (auto it_pos = m_InUseIntersections.begin(); it_pos != m_InUseIntersections.end();)
+			{
+				if ((*it_pos)->Get_Car() == car)
+				{
+					//std::cout << "1 Intersection liberated when terminated in intersection! " << car << std::endl;
+					delete* it_pos;
+					it_pos = m_InUseIntersections.erase(it_pos);
+				}
+				else
+					++it_pos;
+			}
+			//std::cout << "Car deleted: " << car << std::endl;
 			delete car;
 			it = m_Cars.erase(it);
 		}
 		else
 		{
 			bool noCollison = true;
-
-			for (const auto& carPtr : m_Cars)
+			
+			if (car->Get_CurrentOriginalRouteSection()->Get_IsInterSection())
 			{
-				float dummy;
-				if (carPtr != car)
-				{
-					if (Cars::Intersect(car,carPtr))
-					{
-						//std::cout << "collison" << std::endl;
-						
-						if (car->Get_CurrentRouteSection() != nullptr && carPtr->Get_CurrentRouteSection() != nullptr)
-						{
-							//Ha ugyanazon útszakaszon vagyunk
-							if (car->Get_CurrentRouteSection()->Get_FirstPoint() == carPtr->Get_CurrentRouteSection()->Get_FirstPoint()
-								&& car->Get_CurrentRouteSection()->Get_LastPoint() == carPtr->Get_CurrentRouteSection()->Get_LastPoint()
-							)
-							{
-								//std::cout << "ugyanaz" << std::endl;
-								if (car->Get_LocalParam() < carPtr->Get_LocalParam())
-								{
-									noCollison = false;
-								}
-							}
-							//Ha a mi kocsink van késõbbi útszakaszon
-							else if (car->Get_CurrentRouteSection()->Get_FirstPoint() == carPtr->Get_CurrentRouteSection()->Get_LastPoint()
-							&& car->Get_CurrentRouteSection()->Get_LastPoint() != carPtr->Get_CurrentRouteSection()->Get_FirstPoint()
-							)
-							{
-								//std::cout << "elorebb" << std::endl;
-								//ekkor nincs baj, mi jutunk elõre
-							}
-							//Ha a másik kocsi van késõbbi útszakaszon
-							else if (car->Get_CurrentRouteSection()->Get_LastPoint() == carPtr->Get_CurrentRouteSection()->Get_FirstPoint()
-							&& car->Get_CurrentRouteSection()->Get_FirstPoint() != carPtr->Get_CurrentRouteSection()->Get_LastPoint()
-							)
-							{
-								//ITT A HIBA
-								//std::cout << "hatrebb" << std::endl;
-								//noCollison = false;
-							}
-							// Ha csak az utolsó koordináták eggyeznek, akkor azonos végpontú, különbözõ kanyarokban vagyunk, ekkor a végponthoz közelebbi jut tovább
-							else if (car->Get_CurrentRouteSection()->Get_LastPoint() == carPtr->Get_CurrentRouteSection()->Get_LastPoint()
-							&& car->Get_CurrentRouteSection()->Get_FirstPoint() != carPtr->Get_CurrentRouteSection()->Get_FirstPoint()
-							)
-							{
-								if (glm::distance(car->Get_CurrentPosition(dummy), car->Get_CurrentRouteSection()->Get_LastPoint())
-								> glm::distance(carPtr->Get_CurrentPosition(dummy), carPtr->Get_CurrentRouteSection()->Get_LastPoint())
-								)
-								{
-									noCollison = false;
-								}
-							}
-							//Mint az elõzõ eset, csak elsõ koordinátákkal
-							else if (car->Get_CurrentRouteSection()->Get_FirstPoint() == carPtr->Get_CurrentRouteSection()->Get_FirstPoint()
-							&& car->Get_CurrentRouteSection()->Get_LastPoint() == carPtr->Get_CurrentRouteSection()->Get_LastPoint()
-							)
-							{
-								if (glm::distance(car->Get_CurrentPosition(dummy), car->Get_CurrentRouteSection()->Get_FirstPoint())
-								< glm::distance(carPtr->Get_CurrentPosition(dummy), carPtr->Get_CurrentRouteSection()->Get_FirstPoint())
-								)
-								{
-									noCollison = false;
-								}
-							}
-							else
-							{
-								if (car->Get_LocalParam() < carPtr->Get_LocalParam())
-								{
-									noCollison = false;
-								}
+				bool found = false;
 
+				for (const auto& occupiedIntersection : m_InUseIntersections)
+				{
+					if (occupiedIntersection->Get_Car() == car)
+					{
+						found = true;
+					}
+					else
+					{
+						if (car->Get_CurrentOriginalRouteSection()->Get_IsInterSectionFirstCoord())
+						{
+							if (occupiedIntersection->Get_Coord() == car->Get_CurrentOriginalRouteSection()->Get_FirstPoint() && occupiedIntersection->Get_Car() != car)
+							{
+								found = true;
+								noCollison = false;
 							}
 						}
-						else
+						if (car->Get_CurrentOriginalRouteSection()->Get_IsInterSectionMiddleCoord())
 						{
-							if (car->Get_LocalParam() < carPtr->Get_LocalParam())
+							if (occupiedIntersection->Get_Coord() == car->Get_CurrentOriginalRouteSection()->Get_MiddlePoint() && occupiedIntersection->Get_Car() != car)
 							{
+								found = true;
+								noCollison = false;
+							}
+						}
+						if (car->Get_CurrentOriginalRouteSection()->Get_IsInterSectionLastCoord())
+						{
+							if (occupiedIntersection->Get_Coord() == car->Get_CurrentOriginalRouteSection()->Get_LastPoint() && occupiedIntersection->Get_Car() != car)
+							{
+								found = true;
 								noCollison = false;
 							}
 						}
 						
+						int interval = static_cast<int>(car->Get_Param());
+						bool intersectionEnded = false;
+
+						//if the car's route contains more intersections on after another, than we have to check if those are occupied. If they're occupied, than we havte stop 'car'.
+						for (int i = interval; i < car->Get_NumberOfRouteSections(); ++i)
+						{
+							if (!intersectionEnded)
+							{
+								intersectionEnded = !(car->Get_SpecificCurOrigRouteSection(i)->Get_IsInterSection());
+							}
+							if (!intersectionEnded)
+							{
+								//std::cout << "Additional routeSections found!" << std::endl;
+								if (car->Get_SpecificCurOrigRouteSection(i)->Get_IsInterSectionFirstCoord())
+								{
+									if (car->Get_SpecificCurOrigRouteSection(i)->Get_FirstPoint() == occupiedIntersection->Get_Coord())
+									{
+										found = true;
+										noCollison = false;
+									}
+									if (car->Get_SpecificCurOrigRouteSection(i)->Get_MiddlePoint() == occupiedIntersection->Get_Coord())
+									{
+										found = true;
+										noCollison = false;
+									}
+									if (car->Get_SpecificCurOrigRouteSection(i)->Get_LastPoint() == occupiedIntersection->Get_Coord())
+									{
+										found = true;
+										noCollison = false;
+									}
+								}
+							}
+						}
+						std::cout << std::endl;
+					}
+				}
+				//if we can't find any car in that intersection than 'car' can occupy the intersection (gets inserted to the set)
+				//we have to occupy all the intersections that 'car' will use at the same time, so no other car will disturbe it's way in the intersections
+				if (!found)
+				{
+					int interval = static_cast<int>(car->Get_Param());
+					bool intersectionEnded = false;
+
+					for (int i = interval; i < car->Get_NumberOfRouteSections(); ++i)
+					{
+						if (!intersectionEnded)
+						{
+							intersectionEnded = !(car->Get_SpecificCurOrigRouteSection(i)->Get_IsInterSection());
+							//std::cout << car->Get_SpecificCurOrigRouteSection(i)->Get_IsInterSection() << std::endl;;
+						}
+						if (!intersectionEnded)
+						{
+							if (car->Get_SpecificCurOrigRouteSection(i)->Get_IsInterSectionFirstCoord())
+							{
+								//std::cout << "Intersection occupied! " << car << std::endl;
+								m_InUseIntersections.insert(new CarAndCoord(car->Get_SpecificCurOrigRouteSection(i)->Get_FirstPoint(), car));
+							}
+							if (car->Get_SpecificCurOrigRouteSection(i)->Get_IsInterSectionMiddleCoord())
+							{
+								//std::cout << "Intersection occupied! " << car << std::endl;
+								m_InUseIntersections.insert(new CarAndCoord(car->Get_SpecificCurOrigRouteSection(i)->Get_MiddlePoint(), car));
+							}
+							if (car->Get_SpecificCurOrigRouteSection(i)->Get_IsInterSectionLastCoord())
+							{
+								//std::cout << "Intersection occupied! " << car << std::endl;
+								m_InUseIntersections.insert(new CarAndCoord(car->Get_SpecificCurOrigRouteSection(i)->Get_LastPoint(), car));
+							}
+						}
 					}
 				}
 			}
-
+			//if 'car' isn't in any intersection, than we have to liberate the intersections it once used
+			else if (!car->Get_CurrentOriginalRouteSection()->Get_IsInterSection())
+			{
+				for (auto it_pos = m_InUseIntersections.begin(); it_pos != m_InUseIntersections.end();)
+				{
+					CarAndCoord* pos = *it_pos;
+					if (pos->Get_Car() == car)
+					{
+						//std::cout << "Intersection liberated!" << std::endl;
+						delete pos;
+						it_pos = m_InUseIntersections.erase(it_pos);
+					}
+					++it_pos;
+				}
+			}
+			//if 'car' wasn't stopped at any intersection, than we have to check if it collides with any other car's hitbox
+			if (noCollison)
+			{
+				for (const auto& otherCar : m_Cars)
+				{
+					if (otherCar != car && otherCar != nullptr)
+					{
+						if (CarGroup::Intersect(car, otherCar))
+						{
+							//std::cout << "collison" << std::endl;
+							if (car->Get_CurrentRouteSection() != nullptr && otherCar->Get_CurrentRouteSection() != nullptr)
+							{
+								//'car' and 'otherCar' is on the same RouteSection
+								if (car->Get_CurrentRouteSection()->Get_FirstPoint() == otherCar->Get_CurrentRouteSection()->Get_FirstPoint()
+									&& car->Get_CurrentRouteSection()->Get_LastPoint() == otherCar->Get_CurrentRouteSection()->Get_LastPoint()
+								)
+								{
+									//we stop 'car' if it's closer to it's RouteSection's first point than the 'otherCar' to it's first point
+									if (car->Get_LocalParam() < otherCar->Get_LocalParam())
+									{
+										noCollison = false;
+									}
+								}
+								//'otherCar' is on the RouteSection in front of 'car'
+								else if (car->Get_CurrentRouteSection()->Get_LastPoint() == otherCar->Get_CurrentRouteSection()->Get_FirstPoint()
+										&& car->Get_CurrentRouteSection()->Get_FirstPoint() != otherCar->Get_CurrentRouteSection()->Get_LastPoint()
+								)
+								{
+									noCollison = false;
+								}
+							}
+						}
+					}
+				}
+			}
+			//std::cout << "length: " << m_InUseIntersections.size() << std::endl;
+			//moving 'car' if it doesn't collide with anything
 			if (noCollison)
 			{
 				car->Move(delta_time);
 			}
-			/*
-			else if ((current_time - car->Get_LastMove()) > 3)
-			{
-				car->Move(0.5);
-			}
-			*/
 			++it;
 		}
 	}
 }
 
-void Cars::Add(std::vector<glm::vec3> coords)
+void CarGroup::Set_CarLimit(int limit)
 {
-	m_Cars.insert(new Car(coords));
+	car_limit = limit;
 }
 
-void Cars::Clear()
+void CarGroup::Add(std::vector<CarCoord> coords)
+{
+	if (m_Cars.size() < car_limit)
+	{
+		Car* nc = new Car(coords);
+		std::cout << "New car: " << nc << std::endl;
+		m_Cars.insert(nc);
+	}
+}
+
+void CarGroup::Clear()
 {
 	for (auto it = m_Cars.begin(); it != m_Cars.end(); ++it)
 	{
 		delete* it;
 	}
 	m_Cars.clear();
+
+	for (auto it = m_InUseIntersections.begin(); it != m_InUseIntersections.end(); ++it)
+	{
+		delete* it;
+	}
+	m_InUseIntersections.clear();
+
 }

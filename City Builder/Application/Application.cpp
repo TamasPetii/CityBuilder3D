@@ -39,7 +39,7 @@ Application::~Application()
 void Application::Update()
 {
 	MeteorGrp::Update();
-	Cars::Update();
+	CarGroup::Update();
 	m_Timer->Update();
 	m_FrameCounter->Update();
 	m_Camera->Update();
@@ -80,17 +80,19 @@ void Application::Update()
 		}
 
 		//Cars
+		CarGroup::Set_CarLimit(m_City->Get_CitizenSize() / 4);
+
 		std::vector<std::vector<Point>> cars = m_City->Get_CarPaths();
 		for (int i = 0; i < cars.size(); ++i)
 		{
 			if (cars[i].size() > 1)
 			{
-				std::vector<glm::vec3> coordinates;
+				std::vector<CarCoord> coordinates;
 				for (int j = 0; j < cars[i].size(); ++j)
 				{
-					coordinates.push_back(glm::vec3(cars[i][j].y * 2 + 1, 0, cars[i][j].x * 2 + 1));
+					coordinates.push_back({ glm::vec3(cars[i][j].y * 2 + 1, 0, cars[i][j].x * 2 + 1), cars[i][j].isInterSection });
 				}
-				Cars::Add(coordinates);
+				CarGroup::Add(coordinates);
 			}
 		}
 
@@ -107,7 +109,7 @@ void Application::Update()
 		changed = true;
 
 		MeteorGrp::Clear();
-		Cars::Clear();
+		CarGroup::Clear();
 		RoadNetwork::ResetNetworks();
 		City::Build_Log().clear();
 		City::Build_Log().str("");

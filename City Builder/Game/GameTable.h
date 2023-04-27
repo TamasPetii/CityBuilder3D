@@ -7,6 +7,7 @@
 
 struct Point {
 	int x, y;
+	bool isInterSection;
 };
 
 class GameTable
@@ -26,6 +27,7 @@ public:
 
 	void UpgradeField(int x, int y) {};
 	std::vector<Point> PathFinder(Point start, Point end);
+	bool IsInterSection(Point p);
 
 private:
 	std::vector<std::vector<GameField*>> m_Table;

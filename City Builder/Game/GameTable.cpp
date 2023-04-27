@@ -142,6 +142,36 @@ void GameTable::RebuildRoadNetwork() {
 	}
 }
 
+bool GameTable::IsInterSection(Point p)
+{
+	if (m_Table[p.x][p.y]->IsRoad())
+	{
+		int dx[] = { -1, 0, 1, 0 };
+		int dy[] = { 0, 1, 0, -1 };
+
+		int numberOfNeighbourRoads = 0;
+
+		for (int i = 0; i < 4; ++i)
+		{
+			int nx = p.x + dx[i];
+			int ny = p.y + dy[i];
+
+			if (nx >= 0 && nx < m_TableSize && ny >= 0 && ny < m_TableSize)
+			{
+				if (m_Table[nx][ny]->IsRoad())
+				{
+					++numberOfNeighbourRoads;
+				}
+			}
+		}
+		return numberOfNeighbourRoads > 2;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 
 std::vector<Point> GameTable::PathFinder(Point start, Point end)
 {
@@ -155,6 +185,9 @@ std::vector<Point> GameTable::PathFinder(Point start, Point end)
 	//queue and path for BFS
 	std::queue<Point> q;
 	std::vector<std::vector<Point>> path(m_TableSize, std::vector<Point>(m_TableSize)); //for every point we store where it is reachable from
+
+	//check if start is an intersection
+	start.isInterSection = IsInterSection(start);
 
 	q.push(start);
 	path[start.x][start.y] = start;
@@ -173,7 +206,8 @@ std::vector<Point> GameTable::PathFinder(Point start, Point end)
 				if (curr.x + dx[k] == end.x && curr.y + dy[k] == end.y)
 				{
 					std::vector<Point> shortestPath;
-					Point p = { curr.x, curr.y };
+					Point p = { curr.x, curr.y, IsInterSection({curr.x,curr.y}) };
+
 					while (p.x != start.x || p.y != start.y)
 					{
 						shortestPath.push_back(p); //p is added to the shortes path
@@ -182,11 +216,14 @@ std::vector<Point> GameTable::PathFinder(Point start, Point end)
 					shortestPath.push_back(start);
 					reverse(shortestPath.begin(), shortestPath.end());
 
+					/*
 					for (int i = 0; i < shortestPath.size(); i++)
 					{
-						std::cout << shortestPath[i].x << "," << 0 << "," << shortestPath[i].y << std::endl;
+						std::cout << shortestPath[i].x << "," << 0 << "," << shortestPath[i].y << " "<< shortestPath[i].isInterSection << std::endl;
 					}
 					std::cout << std::endl;
+					*/
+
 					return shortestPath;
 				}
 			}
@@ -201,7 +238,7 @@ std::vector<Point> GameTable::PathFinder(Point start, Point end)
 				int ny = curr.y + dy[j];
 				if (nx >= 0 && nx < m_TableSize && ny >= 0 && ny < m_TableSize && m_Table[nx][ny]->IsRoad() && !visited[nx][ny])
 				{
-					Point p = { nx, ny };
+					Point p = { nx, ny, IsInterSection({nx, ny}) };
 					q.push(p);
 					visited[nx][ny] = true;
 					path[nx][ny] = curr; //the neighbours origin will be the current point

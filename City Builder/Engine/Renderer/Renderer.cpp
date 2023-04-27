@@ -358,7 +358,7 @@ void Renderer::Render_Cars()
 	bool not_changed = !Changed;
 	Changed = true;
 
-	RenderInstanced(m_Car, Cars::Get_Transforms());
+	RenderInstanced(m_Car, CarGroup::Get_Transforms());
 
 	if (not_changed) Changed = false;
 }
