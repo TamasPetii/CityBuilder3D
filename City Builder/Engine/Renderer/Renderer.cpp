@@ -373,19 +373,19 @@ void Renderer::RenderInstancedGround()
 	RenderInstanced(m_Ground, GroundTransforms);
 }
 
-int Renderer::DetermineGroundTextureID(RenderShapeType type)
+int Renderer::DetermineGroundTextureID(RenderShapeType type, int contain)
 {
 	switch (type)
 	{
-	case RENDER_RESIDENTIAL_LVL1: return 8;
-	case RENDER_RESIDENTIAL_LVL2: return 8;
-	case RENDER_RESIDENTIAL_LVL3: return 8;
-	case RENDER_INDUSTRIAL_LVL1: return 12;
-	case RENDER_INDUSTRIAL_LVL2: return 12;
-	case RENDER_INDUSTRIAL_LVL3: return 12;
-	case RENDER_SERVICE_LVL1: return 10;
-	case RENDER_SERVICE_LVL2: return 10;
-	case RENDER_SERVICE_LVL3: return 10;
+	case RENDER_RESIDENTIAL_LVL1: return (contain == 0 ? 65 : 8);
+	case RENDER_RESIDENTIAL_LVL2: return (contain == 0 ? 65 : 8);
+	case RENDER_RESIDENTIAL_LVL3: return (contain == 0 ? 65 : 8);
+	case RENDER_INDUSTRIAL_LVL1: return (contain == 0 ? 66 : 10);
+	case RENDER_INDUSTRIAL_LVL2: return (contain == 0 ? 66 : 10);
+	case RENDER_INDUSTRIAL_LVL3: return (contain == 0 ? 66 : 10);
+	case RENDER_SERVICE_LVL1: return (contain == 0 ? 67 : 12);
+	case RENDER_SERVICE_LVL2: return (contain == 0 ? 67 : 12);
+	case RENDER_SERVICE_LVL3: return (contain == 0 ? 67 : 12);
 	case RENDER_FOREST: return 1;
 	case RENDER_POLICESTATION: return 15;
 	case RENDER_FIRESTATION: return 15;
