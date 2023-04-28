@@ -19,6 +19,7 @@ GameField* GameField::CreateField(FieldType type, int x, int y)
 	case EMPTY: return new Empty(type, x, y, 0.0);
 	case ROAD: return new Road(type, x, y, 50);
 	case FOREST: return new Forest(type, x, y, 5);
+	case LAKE: return new Lake(type, x, y, 5);
 	case POLICESTATION: return new PoliceStation(type, x, y, 125);
 	case FIRESTATION: return new FireStation(type, x, y, 135);
 	case HIGHSCHOOL: return new HighSchool(type, x, y, 175);
@@ -47,6 +48,7 @@ std::string GameField::ConvertTypeToStr(FieldType type)
 	case EMPTY: return "Emtpy";
 	case ROAD: return "Road";
 	case FOREST: return "Forest";
+	case LAKE: return "Lake";
 	case POLICESTATION: return "PoliceStation";
 	case FIRESTATION: return "FireStation";
 	case HIGHSCHOOL: return "HighSchool";

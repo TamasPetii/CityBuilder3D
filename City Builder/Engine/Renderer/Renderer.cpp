@@ -396,6 +396,7 @@ int Renderer::DetermineGroundTextureID(RenderShapeType type, int contain)
 	case RENDER_WINDTURBINE: return 2;
 	case RENDER_EMPTY: return 0;
 	case RENDER_CRATER: return 49;
+	case RENDER_LAKE: return 64;
 	}
 }
 

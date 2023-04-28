@@ -18,6 +18,7 @@ public:
 	virtual bool IsEmpty() const { return false; };
 	virtual bool IsRoad() const { return false; };
 	virtual bool IsForest() const { return false; };
+	virtual bool IsLake() const { return false; };
 	virtual bool IsBuilding() const { return false; };
 
 	inline int Get_X() const { return m_X; }
@@ -61,7 +62,8 @@ enum FieldType
 	POWERSTATION,
 	EMPTY,
 	ROAD,
-	CRATER
+	CRATER,
+	LAKE
 };
 
 enum FieldDirection

@@ -84,6 +84,9 @@
     <ClInclude Include="GameFields\General\Crater.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GameFields\General\Lake.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameTable.cpp">
@@ -141,6 +144,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GameFields\General\Crater.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameFields\General\Lake.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

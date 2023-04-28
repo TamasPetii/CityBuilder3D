@@ -155,6 +155,7 @@
     <ClInclude Include="GameFields\Buildings\FireStation.h" />
     <ClInclude Include="GameFields\General\Forest.h" />
     <ClInclude Include="GameFields\GameField.h" />
+    <ClInclude Include="GameFields\General\Lake.h" />
     <ClInclude Include="GameFields\General\_GeneralHeaders.h" />
     <ClInclude Include="GameFields\Zones\_ZoneHeaders.h" />
     <ClInclude Include="GameFields\_GameFieldHeaders.h" />
@@ -179,6 +180,7 @@
     <ClCompile Include="GameFields\Buildings\FireStation.cpp" />
     <ClCompile Include="GameFields\General\Forest.cpp" />
     <ClCompile Include="GameFields\GameField.cpp" />
+    <ClCompile Include="GameFields\General\Lake.cpp" />
     <ClCompile Include="GameTable.cpp" />
     <ClCompile Include="GameFields\Buildings\PoliceStation.cpp" />
     <ClCompile Include="GameFields\Buildings\PowerStation.cpp" />
