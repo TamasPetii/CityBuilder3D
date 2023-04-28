@@ -39,7 +39,7 @@ public:
 	static void AddShapeTransforms(RenderShapeType type, int x, int y, int direction, int amount);
 	static void AddGroundTransforms(RenderShapeType type, int x, int y, int direction, int texture);
 	static void ClearShapeTransforms();
-	static int  DetermineGroundTextureID(RenderShapeType type);
+	static int  DetermineGroundTextureID(RenderShapeType type, int contain);
 
 	static void PreRender();
 	static void SceneRender(RenderMode mode);

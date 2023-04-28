@@ -321,10 +321,12 @@ void Application::Render()
 			{
 				int type = m_City->Get_GameField(i, j)->Get_Type();
 				int amount = 1;
+				int contain = 0;
 
 				if (m_City->Get_GameField(i, j)->IsZone())
 				{
 					Zone* zone = dynamic_cast<Zone*>(m_City->Get_GameField(i, j));
+					contain = zone->Get_ZoneDetails().contain;
 					if (type == RESIDENTIAL_LVL1) amount = zone->Get_ZoneDetails().contain;
 					if (type == RESIDENTIAL_LVL2) amount = zone->Get_ZoneDetails().contain / 2 + zone->Get_ZoneDetails().contain % 2;
 					if (type == RESIDENTIAL_LVL3) amount = zone->Get_ZoneDetails().contain / 8 + (zone->Get_ZoneDetails().contain % 8 == 0 ? 0 : 1);
@@ -349,7 +351,7 @@ void Application::Render()
 				}
 
 				Renderer::AddShapeTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_FieldDirection(), amount);
-				Renderer::AddGroundTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_FieldDirection(), type == ROAD ? DetermineRoadTextureID(i, j) : Renderer::DetermineGroundTextureID((RenderShapeType)type));
+				Renderer::AddGroundTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_FieldDirection(), type == ROAD ? DetermineRoadTextureID(i, j) : Renderer::DetermineGroundTextureID((RenderShapeType)type, contain));
 			}
 		}
 		Renderer::Changed = true;
