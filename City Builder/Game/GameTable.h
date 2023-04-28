@@ -38,6 +38,6 @@ private:
 	void LoopThroughNeighbors(int, int, Function);
 	void AddIndustrialAreaBonus(GameField*, int);
 	void CheckZoneIndustrialBonus(GameField*);
-	void DeleteField(int, int);
+	void DeleteField(int, int, FieldType);
 	static float distance(GameField*, GameField*);
 };

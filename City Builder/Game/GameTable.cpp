@@ -28,7 +28,7 @@ void GameTable::Set_TableValue(int x, int y, GameField* field)
 void GameTable::Set_TableValue(int x, int y, FieldType type) {
 	if (!m_Table[x][y]->IsEmpty()) { //törlés
 		if (!(type == EMPTY || type == CRATER)) return;
-		DeleteField(x, y);
+		DeleteField(x, y, type);
 		return;
 	}
 	else {
@@ -62,7 +62,7 @@ void GameTable::Set_TableValue(int x, int y, FieldType type) {
 	}
 }
 
-void GameTable::DeleteField(int x, int y) {
+void GameTable::DeleteField(int x, int y, FieldType type) {
 	bool isRoad = dynamic_cast<Road*>(m_Table[x][y]);
 	bool isIndustrial = false;
 	bool type_big = m_Table[x][y]->Get_Type() == STADIUM || m_Table[x][y]->Get_Type() == UNIVERSITY || m_Table[x][y]->Get_Type() == POWERSTATION || m_Table[x][y]->Get_Type() == HIGHSCHOOL;
@@ -89,7 +89,7 @@ void GameTable::DeleteField(int x, int y) {
 					if (ValidateCoordinate(new_x, new_y) && !(i == 0 && j == 0) && m_Table[x][y] == m_Table[new_x][new_y])
 					{
 						RoadNetwork::RemoveFromNetwork(m_Table[new_x][new_y]);
-						m_Table[new_x][new_y] = GameField::CreateField(EMPTY, new_x, new_y);
+						m_Table[new_x][new_y] = GameField::CreateField(type, new_x, new_y);
 					}
 				}
 			}
@@ -99,7 +99,7 @@ void GameTable::DeleteField(int x, int y) {
 	}
 	delete(m_Table[x][y]);
 
-	m_Table[x][y] = GameField::CreateField(EMPTY, x, y);
+	m_Table[x][y] = GameField::CreateField(type, x, y);
 	GameField* newField = m_Table[x][y];
 
 	if (isRoad) RebuildRoadNetwork();
