@@ -28,6 +28,7 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 	m_MyGui->Get_RenderWindowLayout().Lights_Effect = true;
 	m_MyGui->Get_RenderWindowLayout().Lights_Reset = true;
 	changed = true;
+
 }
 
 Application::~Application()
@@ -37,8 +38,17 @@ Application::~Application()
 	delete m_City;
 }
 
+WaterGroup* WaterCurve = new WaterGroup(0, 0, 10, 10);
+
 void Application::Update()
 {
+	if (m_MyGui->Get_EventLayout().curvechange)
+	{
+		WaterCurve->Recalculate(m_MyGui->Get_EventLayout().x, m_MyGui->Get_EventLayout().y);
+	}
+
+	WaterCurve->Update();
+
 	MeteorGrp::Update();
 	m_Timer->Update();
 	m_FrameCounter->Update();
@@ -360,6 +370,7 @@ void Application::Render()
 
 	Renderer::PreRender();
 	Renderer::SceneRender(INSTANCED);
+	Renderer::RenderWaterCurve(WaterCurve->Get_Transforms());
 
 	if (m_MyGui->BuildHover)
 	{

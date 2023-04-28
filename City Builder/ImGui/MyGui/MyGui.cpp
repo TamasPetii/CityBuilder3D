@@ -901,6 +901,11 @@ void MyGui::LogWindow()
     ImGui::Begin("Money-Log");
     ImGui::TextUnformatted(m_LogWindowLayout.money_log.c_str());
     ImGui::End();
+
+    ImGui::Begin("TEST");
+    if(ImGui::SliderInt("X", &m_EventLayout.x, 0, 50)) m_EventLayout.curvechange = true;
+    if(ImGui::SliderInt("Y", &m_EventLayout.y, 0, 50)) m_EventLayout.curvechange = true;
+    ImGui::End();
 }
 
 //|BUILD-WINDOW|---------------------------------------------------------------------------------------------------------------------//

@@ -28,6 +28,8 @@ public:
 	inline float Get_Cost() const { return m_Cost; };
 	inline FieldType Get_Type() const { return m_Type; };
 
+	inline bool OnFire() { return m_OnFire; }
+
 	inline void Set_FieldDirection(FieldDirection dir) { m_Direction = dir; }
 	inline FieldDirection Get_FieldDirection() { return m_Direction; }
 protected:
@@ -39,6 +41,7 @@ protected:
 	float m_Power;
 	FieldType m_Type;
 	FieldDirection m_Direction;
+	bool m_OnFire = false;
 };
 
 enum FieldType
