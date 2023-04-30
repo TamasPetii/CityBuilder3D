@@ -1,8 +1,6 @@
 #pragma once
 #include <string>
-
-enum FieldDirection;
-enum FieldType;
+#include "GameFieldLayout.h"
 
 class GameField
 {
@@ -39,37 +37,4 @@ protected:
 	float m_Power;
 	FieldType m_Type;
 	FieldDirection m_Direction;
-};
-
-enum FieldType
-{
-	RESIDENTIAL_LVL1,
-	RESIDENTIAL_LVL2,
-	RESIDENTIAL_LVL3,
-	INDUSTRIAL_LVL1,
-	INDUSTRIAL_LVL2,
-	INDUSTRIAL_LVL3,
-	SERVICE_LVL1,
-	SERVICE_LVL2,
-	SERVICE_LVL3,
-	FOREST,
-	POLICESTATION,
-	FIRESTATION,
-	HIGHSCHOOL,
-	UNIVERSITY,
-	STADIUM,
-	POWERWIRE,
-	POWERSTATION,
-	EMPTY,
-	ROAD,
-	CRATER,
-	LAKE
-};
-
-enum FieldDirection
-{
-	FRONT,
-	RIGHT,
-	BACK,
-	LEFT
 };

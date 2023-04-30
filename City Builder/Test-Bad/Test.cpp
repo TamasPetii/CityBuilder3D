@@ -5,6 +5,6 @@
 
 TEST_CASE("ASD")
 {
-    City* city = nullptr;
-    CHECK(city == nullptr);
+    City* city = new City(50, 1000000);
+    CHECK(city->Get_GameTableSize() == 50);
 }
