@@ -55,6 +55,10 @@ public:
 
 	int Get_CitizenSize() { return m_Citizens.size(); }
 	float Get_CombinedHappiness() { if (Get_CitizenSize() == 0) return 0; else return m_combinedHappiness * 100; }
+
+private:
+	std::vector<std::pair<int, int>> BresenhamAlgorithm(int x0, int y0, int x1, int y1);
+
 private:
 	std::unordered_set<Citizen*> m_Citizens;
 	GameTable* m_GameTable;
