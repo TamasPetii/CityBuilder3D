@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="GameFields\GameFieldLayout.h" />
     <ClInclude Include="GameFields\General\Crater.h" />
     <ClInclude Include="GameFields\Buildings\Building.h" />
     <ClInclude Include="Citizen.h" />

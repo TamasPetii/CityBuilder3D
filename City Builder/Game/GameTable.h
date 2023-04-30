@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include "GameFields/_GameFieldHeaders.h"
+#include <cmath>
 
 class GameTable
 {
@@ -26,6 +27,9 @@ public:
 	float Get_TotalCost() const;
 	bool recalculate = false;
 
+	void Loop();
+
+	static bool changed;
 private:
 	std::vector<std::vector<GameField*>> m_Table;
 	int m_TableSize;
@@ -40,4 +44,7 @@ private:
 	void CheckZoneIndustrialBonus(GameField*);
 	void DeleteField(int, int, FieldType);
 	static float distance(GameField*, GameField*);
+
+
+	void SimulateFire(GameField*);
 };

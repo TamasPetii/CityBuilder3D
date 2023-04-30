@@ -25,11 +25,11 @@ void WaterGroup::Update()
 {
 	Delete();
 
-	if (time >= 0.05)
+	if (time >= 0.01)
 	{
 		Add();
 		time = 0;
-		std::cout << m_Waters.size() << std::endl;
+		//std::cout << m_Waters.size() << std::endl;
 	}
 
 	current_time = glfwGetTime();

@@ -965,13 +965,13 @@ void MyGui::BuildWindow()
     if (m_BuildWindowLayout.Build_Id == -2) ImGui::PopStyleColor(2);
     ImGui::SameLine();
 
-    id = 91;
+    id = 94;
     if (m_BuildWindowLayout.Build_Id == -3)
     {
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
     }
-    if (ImGui::ImageButton("Degrade-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(30, 30), Get_UV(id, 0), Get_UV(id, 1))) building = -3;
+    if (ImGui::ImageButton("Fire-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(30, 30), Get_UV(id, 0), Get_UV(id, 1))) building = -3;
     if (m_BuildWindowLayout.Build_Id == -3) ImGui::PopStyleColor(2);
 
     ImGui::End();

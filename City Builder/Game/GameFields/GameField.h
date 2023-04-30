@@ -1,8 +1,7 @@
 #pragma once
 #include <string>
+#include "GameFieldLayout.h"
 
-enum FieldDirection;
-enum FieldType;
 
 class GameField
 {
@@ -28,10 +27,16 @@ public:
 	inline float Get_Cost() const { return m_Cost; };
 	inline FieldType Get_Type() const { return m_Type; };
 
-	inline bool OnFire() { return m_OnFire; }
+	inline bool& OnFire() { return m_OnFire; }
 
 	inline void Set_FieldDirection(FieldDirection dir) { m_Direction = dir; }
 	inline FieldDirection Get_FieldDirection() { return m_Direction; }
+
+
+	void RandomFire();
+
+	int FireCounter = 500;
+
 protected:
 	int m_X;
 	int m_Y;
@@ -42,37 +47,4 @@ protected:
 	FieldType m_Type;
 	FieldDirection m_Direction;
 	bool m_OnFire = false;
-};
-
-enum FieldType
-{
-	RESIDENTIAL_LVL1,
-	RESIDENTIAL_LVL2,
-	RESIDENTIAL_LVL3,
-	INDUSTRIAL_LVL1,
-	INDUSTRIAL_LVL2,
-	INDUSTRIAL_LVL3,
-	SERVICE_LVL1,
-	SERVICE_LVL2,
-	SERVICE_LVL3,
-	FOREST,
-	POLICESTATION,
-	FIRESTATION,
-	HIGHSCHOOL,
-	UNIVERSITY,
-	STADIUM,
-	POWERWIRE,
-	POWERSTATION,
-	EMPTY,
-	ROAD,
-	CRATER,
-	LAKE
-};
-
-enum FieldDirection
-{
-	FRONT,
-	RIGHT,
-	BACK,
-	LEFT
 };
