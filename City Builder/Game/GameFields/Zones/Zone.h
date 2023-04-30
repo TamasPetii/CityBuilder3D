@@ -5,6 +5,8 @@
 #include "../../Citizen.h"
 #include <unordered_set>
 #include <sstream>
+#include <random>
+#include <iostream>
 
 enum Level {
 	LEVEL_1,
@@ -48,6 +50,9 @@ public:
 	inline ZoneDetails Get_ZoneDetails() const { return m_details; }
 
 	std::string Get_CitizenDetails();
+
+	//Cars
+	Citizen* GetRandomDriver();
 };
 
 #endif

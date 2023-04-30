@@ -234,7 +234,7 @@ void Car::PrepareRoadSections(std::vector<CarCoord> coordinates)
 				m_RouteSections.push_back(new RouteSection({ coordinate1 }, { coordinate2 }, { coordinate3 }));
 				m_RouteSections.push_back(new RouteSection({ coordinate3 }, { coordinate3 }));
 
-				std::cout << "1 common point" << std::endl;
+				//std::cout << "1 common point" << std::endl;
 				i += 2;
 			}
 			//curve, than straight section which is part of an intersection
