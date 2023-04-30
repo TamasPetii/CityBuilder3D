@@ -13,7 +13,7 @@ float CarGroup::delta_time;
 
 //Static members of Car//
 
-HitBox Car::m_HitBox = { glm::vec3(-0.29, 0.0, -0.29), glm::vec3(0.29,0.14,0.29) };
+HitBox Car::m_HitBox = { glm::vec3(-0.35, 0.0, -0.35), glm::vec3(0.35,0.14,0.35) };
 
 //RouteSection//
 
@@ -925,9 +925,22 @@ void CarGroup::Add(std::vector<CarCoord> coords)
 {
 	if (m_Cars.size() < car_limit)
 	{
-		Car* nc = new Car(coords);
-		//std::cout << "New car: " << nc << std::endl;
-		m_Cars.insert(nc);
+		Car* newCar = new Car(coords);
+		bool noCollison = true;
+
+		for (const auto& otherCar : m_Cars)
+		{
+			if (otherCar != nullptr)
+			{
+				if (CarGroup::Intersect(newCar, otherCar))
+					noCollison = false;
+			}
+		}
+
+		if (noCollison)
+			m_Cars.insert(newCar);
+		else
+			delete newCar;
 	}
 }
 

@@ -269,23 +269,19 @@ void Application::Update()
 		else 
 		{
 			GameField* field = m_City->Get_GameField(HitX, HitY);
-			if (m_City->Get_GameField(HitX, HitY)->Get_Type() == ROAD)
-			{
-				//TODO: Delete only the cars which are affected by the deleted road
-				CarGroup::Clear();
-			}
 
+			FieldType oldType = m_City->Get_GameField(HitX, HitY)->Get_Type();
 			m_City->Set_GameTableValue(HitX, HitY, (FieldType)m_MyGui->Get_BuildWindowLayout().Build_Id, (FieldDirection)(m_MyGui->Get_EventLayout().Rotate % 4));
+			FieldType newType = m_City->Get_GameField(HitX, HitY)->Get_Type();
 
-			if (m_City->Get_GameField(HitX, HitY)->Get_Type() == ROAD)
+			if (oldType != newType && (oldType == ROAD || newType == ROAD))
 			{
 				//TODO: Delete only the cars which are affected by the new road
 				CarGroup::Clear();
 			}
+
 			changed = true;
 		}
-
-
 	}
 
 	//METEOR HITS GROUND
@@ -295,6 +291,11 @@ void Application::Update()
 
 		for (auto field : fields)
 		{
+			if (m_City->Get_GameField(field.first, field.second)->Get_Type() == ROAD)
+			{
+				//TODO: Delete only the cars which are affected by the deleted road
+				CarGroup::Clear();
+			}
 			m_City->Set_GameTableValue(field.first, field.second, CRATER, (FieldDirection)LEFT);
 			changed = true;
 		}
