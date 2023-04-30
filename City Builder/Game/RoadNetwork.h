@@ -7,6 +7,7 @@
 #include "GameFields/Buildings/_BuildingHeaders.h"
 #include <string>
 #include <cmath>
+#include <functional>
 
 class RoadNetwork
 {
@@ -26,6 +27,11 @@ public:
 	static void SetZoneSatisfaction(GameField*);
 	static bool IsConnectedMultiple(GameField*, GameField*);
 	static Zone* FindOptimalResidentialArea(float);
+
+	using ZoneFunction = std::function<void(GameField* const)>;
+	
+	static void ApplyToAllZones(const ZoneFunction& func);
+	static void ApplyToAllBuilding(const ZoneFunction& func);
 
 private:
 	class Network {

@@ -28,6 +28,7 @@ public:
 	float PayTax();
 	float Get_SatisfactionPoints() const;
 	bool inline IsPensioner() const { return m_Age >= 65; }
+	void Increase_EducationLevel(Education maxEducationLevel = Education::ADVANCED);
 
 	inline int Get_Age() const	{ return m_Age;	}
 	inline Zone* Get_Residence() const { return m_Residence; }

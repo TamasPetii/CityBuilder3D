@@ -33,6 +33,7 @@ void City::Simulate()
 	{
 		CollectAnnualCosts();
 		SimulatePopulationAging();
+		GenerateGraduatedCitizens(rand() % 20 + 1);
 	}
 }
 
@@ -285,6 +286,85 @@ void City::GenerateForests(int iterations, double initialRatio)
 void City::GenerateLakes(int iterations, double initialRatio)
 {
 	GenerateCellularFields(iterations, initialRatio, FieldType::LAKE);
+}
+
+void City::GenerateGraduatedCitizens(int randomCitizenCount)
+{
+	std::unordered_set<int> networksWithHighSchool;
+	std::unordered_set<int> networksWithUniversity;
+
+	RoadNetwork::ApplyToAllBuilding([&](GameField* const gameField) {
+		if (!gameField->IsBuilding()) return;
+
+		Building* building = static_cast<Building*>(gameField);
+
+		if (building->IsSchool())
+		{
+			School* school = static_cast<School*>(building);
+
+			if (school->IsHighSchool())
+			{
+				networksWithHighSchool.insert(RoadNetwork::GetNetworkId(gameField));
+			}
+			else if (school->IsUniversity())
+			{
+				networksWithUniversity.insert(RoadNetwork::GetNetworkId(gameField));
+			}
+		}
+	});
+
+	for (const int networkId : networksWithHighSchool)
+	{
+		std::vector<Citizen*> eligibleCitizens;
+
+		RoadNetwork::ApplyToAllZones([&](GameField* const gameField) {
+			if (!gameField->IsZone()) return;
+
+			Zone* zone = static_cast<Zone*>(gameField);
+
+			if (zone->IsResidentalArea() && RoadNetwork::GetNetworkId(gameField) == networkId)
+			{
+				for (Citizen* citizen : zone->Get_Citizens())
+				{
+					eligibleCitizens.push_back(citizen);
+				}
+			}
+		});
+
+		if (eligibleCitizens.size() >= randomCitizenCount)
+		{
+			std::random_device randomDevice;
+			std::mt19937 g(randomDevice());
+
+			std::shuffle(eligibleCitizens.begin(), eligibleCitizens.end(), g);
+
+			for (int i = 0; i < randomCitizenCount; ++i)
+			{
+				if (networksWithUniversity.find(networkId) != networksWithUniversity.end())
+				{
+					eligibleCitizens[i]->Increase_EducationLevel();
+				}
+				else
+				{
+					eligibleCitizens[i]->Increase_EducationLevel(Education::INTERMEDIATE);
+				}
+			}
+		}
+		else
+		{
+			for (Citizen* citizen : eligibleCitizens)
+			{
+				if (networksWithUniversity.find(networkId) != networksWithUniversity.end())
+				{
+					citizen->Increase_EducationLevel();
+				}
+				else
+				{
+					citizen->Increase_EducationLevel(Education::INTERMEDIATE);
+				}
+			}
+		}
+	}
 }
 
 void City::SetTaxRate(FieldType type, float rate)

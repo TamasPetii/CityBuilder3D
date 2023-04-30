@@ -68,6 +68,7 @@ public:
 	void AdjustCapacity();
 
 	std::string Get_CitizenDetails();
+	inline std::unordered_set<Citizen*> Get_Citizens() const { return m_citizens; }
 
 	//Cars
 	Citizen* GetRandomDriver();

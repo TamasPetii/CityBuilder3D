@@ -116,6 +116,18 @@ float Citizen::Get_SatisfactionPoints() const
 	return taxSatisfaction * 0.3 + residenceSatisfaction * 0.5 + workplaceSatisfaction * 0.2;
 }
 
+void Citizen::Increase_EducationLevel(Education maxEducationLevel = Education::ADVANCED)
+{
+	if (m_Education == Education::BASIC && maxEducationLevel != Education::BASIC)
+	{
+		m_Education = Education::INTERMEDIATE;
+	}
+	else if (m_Education == Education::INTERMEDIATE && maxEducationLevel == Education::ADVANCED)
+	{
+		m_Education = Education::ADVANCED;
+	}
+}
+
 float Citizen::PayTax()
 {
 	float educationRate = m_Education == BASIC ? 1.2f : (m_Education == INTERMEDIATE ? 1.5f : 2.0f);
