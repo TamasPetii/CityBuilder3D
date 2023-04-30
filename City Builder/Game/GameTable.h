@@ -4,6 +4,7 @@
 #include <vector>
 #include <cmath>
 #include <queue>
+#include <algorithm>
 #include "GameFields/_GameFieldHeaders.h"
 
 struct Point {

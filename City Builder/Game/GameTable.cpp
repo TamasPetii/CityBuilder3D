@@ -391,7 +391,7 @@ std::vector<Point> GameTable::PathFinder(Point start, Point end)
 						p = path[p.x][p.y]; //p will be the point from which we previously reached (the previous) p
 					}
 					shortestPath.push_back(start);
-					reverse(shortestPath.begin(), shortestPath.end());
+					std::reverse(shortestPath.begin(), shortestPath.end());
 
 					/*
 					for (int i = 0; i < shortestPath.size(); i++)
