@@ -34,6 +34,8 @@ void City::Simulate()
 		CollectAnnualCosts();
 		SimulatePopulationAging();
 	}
+
+	m_GameTable->Loop();
 }
 
 void City::UpdateMoney(float amount)

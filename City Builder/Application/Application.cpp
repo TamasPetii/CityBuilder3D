@@ -27,6 +27,7 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 	m_MyGui->Get_RenderWindowLayout().Lights_Effect = true;
 	m_MyGui->Get_RenderWindowLayout().Lights_Reset = true;
 	changed = true;
+
 }
 
 Application::~Application()
@@ -36,8 +37,17 @@ Application::~Application()
 	delete m_City;
 }
 
+WaterGroup* WaterCurve = new WaterGroup(0, 0, 10, 10);
+
 void Application::Update()
 {
+	if (m_MyGui->Get_EventLayout().curvechange)
+	{
+		WaterCurve->Recalculate(m_MyGui->Get_EventLayout().x, m_MyGui->Get_EventLayout().y);
+	}
+
+	WaterCurve->Update();
+
 	MeteorGrp::Update();
 	CarGroup::Update();
 	m_Timer->Update();
@@ -68,7 +78,7 @@ void Application::Update()
 		m_MyGui->Get_GameWindowLayout().Time_Real += m_Timer->Get_TickTime();
 
 		//Meteor shooting
-		if (rand() % 50 == 23)
+		if (rand() % 500 == 23)
 		{
 			int number = rand() % 5;
 			if (rand() % 100000 == 666) number = 2500;
@@ -274,7 +284,12 @@ void Application::Update()
 
 		else if (m_MyGui->Get_BuildWindowLayout().Build_Id == -3)
 		{
-			//TODO: DEGRADE
+			GameField* field = m_City->Get_GameField(HitX, HitY);
+			if ((field->IsZone() || field->IsBuilding()) && field->Get_Type() != FIRESTATION)
+			{
+				field->OnFire() = true;
+				changed = true;
+			}
 		}
 
 		else 
@@ -297,10 +312,6 @@ void Application::Update()
 				}
 
 				changed = true;
-			}
-			else
-			{
-				std::cout << ">> NOT BUILDABLE" << std::endl;
 			}
 		}
 	}
@@ -345,7 +356,7 @@ void Application::RenderUI()
 
 void Application::Render()
 {
-	if (changed)
+	if (changed || m_City->Changed())
 	{
 		std::unordered_set<GameField*> fields_2x2;
 		for (int i = 0; i < m_City->Get_GameTableSize(); i++)
@@ -384,15 +395,17 @@ void Application::Render()
 				}
 
 				Renderer::AddShapeTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_FieldDirection(), amount);
-				Renderer::AddGroundTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_FieldDirection(), type == ROAD ? DetermineRoadTextureID(i, j) : Renderer::DetermineGroundTextureID((RenderShapeType)type, contain));
+				Renderer::AddGroundTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_FieldDirection(), type == ROAD ? DetermineRoadTextureID(i, j) : m_City->Get_GameField(i, j)->OnFire() ? 68 : Renderer::DetermineGroundTextureID((RenderShapeType)type, contain));
 			}
 		}
 		Renderer::Changed = true;
 		changed = false;
+		m_City->ResetChanged();
 	}
 
 	Renderer::PreRender();
 	Renderer::SceneRender(INSTANCED);
+	Renderer::RenderWaterCurve(WaterCurve->Get_Transforms());
 
 	if (m_MyGui->BuildHover)
 	{

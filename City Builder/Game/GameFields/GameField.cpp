@@ -60,3 +60,10 @@ std::string GameField::ConvertTypeToStr(FieldType type)
 
 	return "";
 }
+
+void GameField::RandomFire()
+{
+	if (m_OnFire) return;
+
+	m_OnFire = (rand() % 10000 == 123);
+}

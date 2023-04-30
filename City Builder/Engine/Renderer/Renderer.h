@@ -15,6 +15,7 @@
 #include "Utilities/Skybox.h"
 #include "Utilities/Meteor.h"
 #include "Utilities/Car.h"
+#include "Utilities/Water.h"
 
 #include <cmath>
 #include <list>
@@ -56,6 +57,8 @@ public:
 	static void RenderInstanced_Wireframe(Shape* shape, const std::vector<glm::mat4>& transforms);
 
 	static Texture2D* Get_Texture() { return m_GameTexture; }
+
+	static void RenderWaterCurve(const std::vector<glm::mat4>& transforms);
 protected:
 	static void RenderInstancedGround();
 	static void Render_Meteors();
@@ -67,6 +70,7 @@ private:
 	static std::vector<glm::mat4> GroundTransforms;
 	static std::vector<GLfloat> GroundTexturesID;
 	static Shape_Meteor* m_Meteor;
+	static Water_SHAPE* m_Water;
 	static Shape_Car* m_Car;
 
 	static Camera* m_Camera;

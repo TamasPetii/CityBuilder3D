@@ -59,6 +59,9 @@ public:
 
 	float Get_CombinedHappiness() { if (Get_CitizenSize() == 0) return 0; else return m_combinedHappiness * 100; }
 
+	bool Changed() { return m_GameTable->changed; }
+	void ResetChanged() { m_GameTable->changed = false; }
+
 private:
 	void GenerateCellularFields(int iterations, double initialRatio, FieldType fieldType);
 

@@ -8,6 +8,7 @@ Camera*        Renderer::m_Camera;
 Skybox*        Renderer::m_Skybox;
 Ground*        Renderer::m_Ground;
 Shape_Meteor*  Renderer::m_Meteor;
+Water_SHAPE*   Renderer::m_Water;
 Shape_Car*	   Renderer::m_Car;
 std::vector<glm::mat4> Renderer::GroundTransforms;
 std::vector<GLfloat> Renderer::GroundTexturesID;
@@ -112,6 +113,7 @@ void Renderer::Init(Camera* camera)
 	m_Skybox = new Skybox();
 	m_Ground = new Ground();
 	m_Meteor = new Shape_Meteor();
+	m_Water = new Water_SHAPE();
 	m_Car = new Shape_Car();
 
 	m_ShapeData[RENDER_RESIDENTIAL_LVL1] = std::make_pair(new ResidenceBuilding1(), std::vector<glm::mat4>());
@@ -498,6 +500,7 @@ void Renderer::InitShapeBuffers()
 	m_Skybox->CreateBuffers();
 	m_Ground->CreateBuffers(1);
 	m_Meteor->CreateBuffers(2500);
+	m_Water->CreateBuffers(2500);
 	m_Car->CreateBuffers(2500);
 }
 
@@ -512,4 +515,14 @@ void Renderer::ResizeShapeBuffers(int buffer_size)
 
 	m_Ground->AttachMatricesDynamic(std::vector<glm::mat4>(buffer_size));
 	m_Ground->AttachNumbersDynamic(std::vector<GLfloat>(buffer_size));
+}
+
+void Renderer::RenderWaterCurve(const std::vector<glm::mat4>& transforms)
+{
+	bool not_changed = !Changed;
+	Changed = true;
+
+	RenderInstanced(m_Water, transforms);
+
+	if (not_changed) Changed = false;
 }
