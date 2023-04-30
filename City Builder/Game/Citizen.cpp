@@ -116,7 +116,7 @@ float Citizen::Get_SatisfactionPoints() const
 	return taxSatisfaction * 0.3 + residenceSatisfaction * 0.5 + workplaceSatisfaction * 0.2;
 }
 
-void Citizen::Increase_EducationLevel(Education maxEducationLevel = Education::ADVANCED)
+void Citizen::Increase_EducationLevel(Education maxEducationLevel)
 {
 	if (m_Education == Education::BASIC && maxEducationLevel != Education::BASIC)
 	{

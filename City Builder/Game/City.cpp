@@ -268,6 +268,16 @@ void City::SimulatePopulationAging() //should be called yearly
 				//std::cout << "A citizen died at the age of: " << citizen->Get_Age() << std::endl;
 				to_remove.push_back(citizen);
 			}
+
+			if (citizen->HasIntermediateEducationLevel())
+			{
+				m_citizensWithIntermediateEducation--;
+			}
+			else if (citizen->HasAdvancedEducationLevel())
+			{
+				m_citizensWithAdvancedEducation--;
+			}
+			citizen->Downgrade_EducationLevel();
 		}
 	}
 
@@ -340,13 +350,15 @@ void City::GenerateGraduatedCitizens(int randomCitizenCount)
 
 			for (int i = 0; i < randomCitizenCount; ++i)
 			{
-				if (networksWithUniversity.find(networkId) != networksWithUniversity.end())
+				if (networksWithUniversity.find(networkId) != networksWithUniversity.end() && m_citizensWithAdvancedEducation < m_maxCitizensWithAdvancedEducation)
 				{
 					eligibleCitizens[i]->Increase_EducationLevel();
+					m_citizensWithAdvancedEducation++;
 				}
-				else
+				else if (m_citizensWithIntermediateEducation < m_maxCitizensWithIntermediateEducation)
 				{
 					eligibleCitizens[i]->Increase_EducationLevel(Education::INTERMEDIATE);
+					m_citizensWithIntermediateEducation++;
 				}
 			}
 		}
@@ -354,13 +366,15 @@ void City::GenerateGraduatedCitizens(int randomCitizenCount)
 		{
 			for (Citizen* citizen : eligibleCitizens)
 			{
-				if (networksWithUniversity.find(networkId) != networksWithUniversity.end())
+				if (networksWithUniversity.find(networkId) != networksWithUniversity.end() && m_citizensWithAdvancedEducation < m_maxCitizensWithAdvancedEducation)
 				{
 					citizen->Increase_EducationLevel();
+					m_citizensWithAdvancedEducation++;
 				}
-				else
+				else if (m_citizensWithIntermediateEducation < m_maxCitizensWithIntermediateEducation)
 				{
 					citizen->Increase_EducationLevel(Education::INTERMEDIATE);
+					m_citizensWithIntermediateEducation++;
 				}
 			}
 		}
