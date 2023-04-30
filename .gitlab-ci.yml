@@ -1,0 +1,31 @@
+image: ubuntu:20.04
+
+stages:
+  - build
+  - test
+
+before_script:
+  - apt-get update -yqq
+  - apt-get install -yqq build-essential
+
+
+build_program:
+  stage: build
+  script:
+    - cd "City Builder/Game"
+    - g++ -c -I -IGameFields -IGameFields/Zones -IGameFields/General -IGameFields/Buildings .cpp GameFields/.cpp GameFields/Zones/.cpp GameFields/General/.cpp GameFields/Buildings/.cpp
+    - ar rcs libgame.a.o
+  artifacts:
+    paths:
+      - "./City Builder/Game"
+
+test_program:
+  stage: test
+  script:
+    - cd "City Builder/Test-Bad"
+    - ls
+    - g++ -o test Test.cpp -L../Game -lgame
+    - ls -la
+    - ./test
+  dependencies:
+    - build_program
