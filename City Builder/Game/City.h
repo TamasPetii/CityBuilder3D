@@ -53,20 +53,20 @@ public:
 	int Get_Year() { return m_DailyTickCounter / 360 + 2000; }
 	int Get_Month() { return m_DailyTickCounter % 360 / 30; }
 	int Get_Day() { return (m_DailyTickCounter % 360) % 30 + 1; }
-
+	std::vector<std::vector<Point>> Get_CarPaths() const;
 	int Get_CitizenSize() { return m_Citizens.size(); }
+	inline int Get_NumberOfResidences() const { return m_NumberOfResidences; }
+
 	float Get_CombinedHappiness() { if (Get_CitizenSize() == 0) return 0; else return m_combinedHappiness * 100; }
 
 private:
 	void GenerateCellularFields(int iterations, double initialRatio, FieldType fieldType);
 
-private:
 	std::unordered_set<Citizen*> m_Citizens;
 	GameTable* m_GameTable;
 
 	float m_Money;
 	float m_Tax = 0;
-
 
 	static bool m_ChangedLog;
 	static std::stringstream m_BuildLog;
@@ -78,4 +78,5 @@ private:
 	int m_industrialWorkers = 0;
 
 	int m_initialCitizens = 0;
+	int m_NumberOfResidences = 0;
 };

@@ -30,3 +30,4 @@
 #include "PowerStation/WindTurbinePropeller.h"
 
 #include "Meteor/Shape_Meteor.h"
+#include "Car/Shape_Car.h"

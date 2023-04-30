@@ -3,7 +3,13 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <queue>
 #include "GameFields/_GameFieldHeaders.h"
+
+struct Point {
+	int x, y;
+	bool isInterSection;
+};
 
 class GameTable
 {
@@ -25,6 +31,9 @@ public:
 	inline GameField* Get_TableValue(int x, int y) const { return m_Table[x][y]; }; //Todo: check for wrong x,y value
 	ZoneDetails Get_ZoneDetails(int x, int y) const { ZoneDetails s;  return s; };
 	float Get_TotalCost() const;
+
+	std::vector<Point> PathFinder(Point start, Point end);
+	bool IsInterSection(Point p);
 	bool recalculate = false;
 
 private:

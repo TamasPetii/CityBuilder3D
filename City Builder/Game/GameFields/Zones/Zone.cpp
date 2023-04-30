@@ -97,3 +97,24 @@ int Zone::Get_UpgradeFee()
 	}
 
 }
+
+Citizen* Zone::GetRandomDriver()
+{
+	double probability = (m_details.contain + 1) * 0.001;
+	double random = (double)rand() / RAND_MAX;
+
+	if (random < probability && m_citizens.size() > 0)
+	{
+		std::random_device rd;
+		std::mt19937 gen(rd());
+
+		std::uniform_int_distribution<int> dis(0, m_citizens.size() - 1);
+		auto random_it = std::next(std::begin(m_citizens), dis(gen));
+
+		return *random_it;
+	}
+	else
+	{
+		return nullptr;
+	}
+}

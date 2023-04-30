@@ -22,7 +22,6 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 	m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
 	m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
 
-
 	MeteorGrp::Init();
 
 	m_MyGui->Get_RenderWindowLayout().Lights_Effect = true;
@@ -40,6 +39,7 @@ Application::~Application()
 void Application::Update()
 {
 	MeteorGrp::Update();
+	CarGroup::Update();
 	m_Timer->Update();
 	m_FrameCounter->Update();
 	m_Camera->Update();
@@ -79,6 +79,23 @@ void Application::Update()
 			}
 		}
 
+		//Cars
+		CarGroup::Set_CarLimit(m_City->Get_NumberOfResidences());
+
+		std::vector<std::vector<Point>> cars = m_City->Get_CarPaths();
+		for (int i = 0; i < cars.size(); ++i)
+		{
+			if (cars[i].size() > 1)
+			{
+				std::vector<CarCoord> coordinates;
+				for (int j = 0; j < cars[i].size(); ++j)
+				{
+					coordinates.push_back({ glm::vec3(cars[i][j].y * 2 + 1, 0, cars[i][j].x * 2 + 1), cars[i][j].isInterSection });
+				}
+				CarGroup::Add(coordinates);
+			}
+		}
+
 		changed = m_City->Get_CitizenSize() != size;
 	}
 
@@ -92,6 +109,7 @@ void Application::Update()
 		changed = true;
 
 		MeteorGrp::Clear();
+		CarGroup::Clear();
 		RoadNetwork::ResetNetworks();
 		City::Build_Log().clear();
 		City::Build_Log().str("");
@@ -267,7 +285,17 @@ void Application::Update()
 			if (m_City->IsBuildable(type, dir, HitX, HitY))
 			{
 				std::cout << ">> BUILDING PLACED" << std::endl;
+
+				FieldType oldType = m_City->Get_GameField(HitX, HitY)->Get_Type();
 				m_City->Set_GameTableValue(HitX, HitY, type, dir);
+				FieldType newType = m_City->Get_GameField(HitX, HitY)->Get_Type();
+
+				if (oldType != newType && (oldType == ROAD || newType == ROAD))
+				{
+					//TODO: Delete only the cars which are affected by the new road
+					CarGroup::Clear();
+				}
+
 				changed = true;
 			}
 			else
@@ -284,6 +312,11 @@ void Application::Update()
 
 		for (auto field : fields)
 		{
+			if (m_City->Get_GameField(field.first, field.second)->Get_Type() == ROAD)
+			{
+				//TODO: Delete only the cars which are affected by the deleted road
+				CarGroup::Clear();
+			}
 			m_City->Set_GameTableValue(field.first, field.second, CRATER, (FieldDirection)LEFT);
 			changed = true;
 		}

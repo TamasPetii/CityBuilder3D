@@ -14,6 +14,7 @@
 #include "../Shapes/Complex Shapes/ComplexShape.h"
 #include "Utilities/Skybox.h"
 #include "Utilities/Meteor.h"
+#include "Utilities/Car.h"
 
 #include <cmath>
 #include <list>
@@ -58,6 +59,7 @@ public:
 protected:
 	static void RenderInstancedGround();
 	static void Render_Meteors();
+	static void Render_Cars();
 	static void Render_Skybox();
 
 private:
@@ -65,6 +67,7 @@ private:
 	static std::vector<glm::mat4> GroundTransforms;
 	static std::vector<GLfloat> GroundTexturesID;
 	static Shape_Meteor* m_Meteor;
+	static Shape_Car* m_Car;
 
 	static Camera* m_Camera;
 	static Skybox* m_Skybox;

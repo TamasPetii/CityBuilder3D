@@ -305,6 +305,8 @@ void City::SetTaxRate(FieldType type, float rate)
 
 void City::Set_GameTableValue(int x, int y, FieldType type, FieldDirection dir)
 { 
+	GameField* PreviousField = m_GameTable->Get_TableValue(x, y);
+
 	if (IsBuildable(type, dir, x, y))
 	{
 		if (type == STADIUM || type == POWERSTATION || type == UNIVERSITY)
@@ -332,6 +334,23 @@ void City::Set_GameTableValue(int x, int y, FieldType type, FieldDirection dir)
 
 		m_BuildLog << GameField::ConvertTypeToStr(type) << ": " << m_GameTable->Get_TableValue(x, y)->Get_Cost() << "$" << std::endl;
 		m_ChangedLog = true;
+	}
+
+	GameField* CurrentField = m_GameTable->Get_TableValue(x, y);
+
+	if (PreviousField != CurrentField
+		&& (PreviousField->Get_Type() == RESIDENTIAL_LVL1 ||
+			PreviousField->Get_Type() == RESIDENTIAL_LVL2 ||
+			PreviousField->Get_Type() == RESIDENTIAL_LVL3))
+	{
+		--m_NumberOfResidences;
+	}
+	else if (PreviousField != CurrentField
+		&& (CurrentField->Get_Type() == RESIDENTIAL_LVL1 ||
+			CurrentField->Get_Type() == RESIDENTIAL_LVL2 ||
+			CurrentField->Get_Type() == RESIDENTIAL_LVL3))
+	{
+		++m_NumberOfResidences;
 	}
 }
 
@@ -388,4 +407,61 @@ void City::GenerateCellularFields(int iterations, double initialRatio, FieldType
 			}
 		}
 	}
+}
+
+std::vector<std::vector<Point>> City::Get_CarPaths() const
+{
+	std::vector<std::vector<Point>> paths;
+	int dx[] = { -1, 0, 1, 0 };
+	int dy[] = { 0, 1, 0, -1 };
+
+	for (int i = 0; i < m_GameTable->Get_TableSize(); ++i)
+	{
+		for (int j = 0; j < m_GameTable->Get_TableSize(); ++j)
+		{
+			Citizen* citizen = nullptr;
+
+			if (Get_GameField(i, j)->IsZone())
+				citizen = (dynamic_cast<Zone*>(Get_GameField(i, j))->GetRandomDriver());
+
+			if (citizen != nullptr)
+			{
+				if (citizen->Get_Residence() != nullptr && citizen->Get_Workplace() != nullptr)
+				{
+					Point start = { 0,0 };
+
+					for (int k = 0; k < 4; ++k)
+					{
+						if (dynamic_cast<Zone*>(Get_GameField(i, j))->IsResidentalArea())
+						{
+							if (citizen->Get_Residence()->Get_X() + dx[k] >= 0 && citizen->Get_Residence()->Get_X() + dx[k] < Get_GameTableSize()
+								&& citizen->Get_Residence()->Get_Y() + dy[k] >= 0 && citizen->Get_Residence()->Get_Y() + dy[k] < Get_GameTableSize())
+							{
+								if (Get_GameField(citizen->Get_Residence()->Get_X() + dx[k], citizen->Get_Residence()->Get_Y() + dy[k])->IsRoad())
+									start = { citizen->Get_Residence()->Get_X() + dx[k], citizen->Get_Residence()->Get_Y() + dy[k] };
+							}
+						}
+						else
+						{
+							if (citizen->Get_Workplace()->Get_X() + dx[k] >= 0 && citizen->Get_Workplace()->Get_X() + dx[k] < Get_GameTableSize()
+								&& citizen->Get_Workplace()->Get_Y() + dy[k] >= 0 && citizen->Get_Workplace()->Get_Y() + dy[k] < Get_GameTableSize())
+							{
+								if (Get_GameField(citizen->Get_Workplace()->Get_X() + dx[k], citizen->Get_Workplace()->Get_Y() + dy[k])->IsRoad())
+									start = { citizen->Get_Workplace()->Get_X() + dx[k], citizen->Get_Workplace()->Get_Y() + dy[k] };
+							}
+						}
+					}
+					std::vector<Point> path;
+
+					if (dynamic_cast<Zone*>(Get_GameField(i, j))->IsResidentalArea())
+						path = m_GameTable->PathFinder(start, { citizen->Get_Workplace()->Get_X(), citizen->Get_Workplace()->Get_Y() });
+					else
+						path = m_GameTable->PathFinder(start, { citizen->Get_Residence()->Get_X(), citizen->Get_Residence()->Get_Y() });
+
+					paths.push_back(path);
+				}
+			}
+		}
+	}
+	return paths;
 }

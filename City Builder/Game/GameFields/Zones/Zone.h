@@ -5,6 +5,7 @@
 #include "../../Citizen.h"
 #include <unordered_set>
 #include <sstream>
+#include <random>
 
 enum Level {
 	LEVEL_1,
@@ -67,6 +68,9 @@ public:
 	void AdjustCapacity();
 
 	std::string Get_CitizenDetails();
+
+	//Cars
+	Citizen* GetRandomDriver();
 };
 
 #endif
