@@ -13,7 +13,7 @@ build_program:
   stage: build
   script:
     - cd "City Builder/Game"
-    - g++ -c -I -IGameFields -IGameFields/Zones -IGameFields/General -IGameFields/Buildings .cpp GameFields/.cpp GameFields/Zones/.cpp GameFields/General/.cpp GameFields/Buildings/.cpp
+    - g++ -c -I -IGameFields -IGameFields/Zones -IGameFields/General -IGameFields/Buildings *.cpp GameFields/*.cpp GameFields/Zones/*.cpp GameFields/General/*.cpp GameFields/Buildings/*.cpp
     - ar rcs libgame.a.o
   artifacts:
     paths:
