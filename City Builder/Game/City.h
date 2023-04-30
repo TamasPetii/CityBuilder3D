@@ -34,6 +34,7 @@ public:
 	void GenerateForests(int iterations, double initialRatio);
 	void SimulatePopulationAging();
 	void CalculateHappiness();
+	void CalculateForestSatisfaction(int radius);
 	void HandleRecalculation();
 
 	void SetTaxRate(FieldType type, float rate);

@@ -23,6 +23,7 @@ public:
 	int capacity;
 	int contain;
 	float satisfaction;
+	float forest_satisfaction;
 	float safety;
 	float industrial_penalty;
 	Level level;
@@ -53,6 +54,9 @@ public:
 	float Get_RawSatisfaction() const;
 	void Add_Satisfaction(float f) { m_details.satisfaction += f; }
 	void Set_Satisfaction(float f) { m_details.satisfaction = f; }
+	float Get_ForestSatisfaction() { return m_details.forest_satisfaction; }
+	void Add_ForestSatisfaction(float f) { m_details.forest_satisfaction += f; }
+	void Set_ForestSatisfaction(float f) { m_details.forest_satisfaction = f; }
 	void Add_Safety(float f) { m_details.safety += f; }
 	void Set_Safety(float f) { m_details.safety = f; }
 	void Add_IndustrialPenalty(float f) { m_details.industrial_penalty += f; }

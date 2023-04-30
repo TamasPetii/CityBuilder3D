@@ -18,6 +18,7 @@ void City::Simulate()
 {
 	HandleRecalculation(); // konfliktusos bontás esetén
 	CalculateHappiness();
+	CalculateForestSatisfaction(3);
 	GenerateCitizens(rand() % 2 == 0 ? rand() % 2 : 0);
 	HandleLooingZone();
 
@@ -121,6 +122,65 @@ void City::CalculateHappiness() {
 	{
 		LeaveCity(citizen);
 	}
+}
+
+void City::CalculateForestSatisfaction(int radius)
+{
+	auto isFieldBlocking = [](const GameField* field) {
+		return !(field->IsEmpty() || field->IsCrater() || field->IsLake() || field->IsRoad());
+	};
+
+	auto isFieldDial = [](const int fieldX, const int fieldY, const int neighborX, const int neighborY) {
+		return std::abs(fieldX - neighborX) == 1 && std::abs(fieldY - neighborY) == 1;
+	};
+
+	RoadNetwork::ApplyToAllZones([&](GameField* const gameField) {
+		if (!gameField->IsZone())
+			return;
+
+		Zone* zone = static_cast<Zone*>(gameField);
+
+		zone->Set_ForestSatisfaction(0);
+
+		for (int dx = -radius; dx <= radius; ++dx)
+		{
+			for (int dy = -radius; dy <= radius; ++dy)
+			{
+				int neighborX = zone->Get_X() + dx;
+				int neighborY = zone->Get_Y() + dy;
+
+				if (m_GameTable->ValidateCoordinate(neighborX, neighborY) && !(neighborX == zone->Get_X() && neighborY == zone->Get_Y()))
+				{
+					GameField* neighborField = m_GameTable->Get_TableValue(neighborX, neighborY);
+
+					if (neighborField->Get_Type() == FieldType::FOREST)
+					{
+						zone->Add_ForestSatisfaction(neighborField->Get_SatisfactionPoints());
+					}
+					else if (isFieldDial(zone->Get_X(), zone->Get_Y(), neighborX, neighborY))
+					{
+						std::vector<std::pair<int, int>> lineCoordinates = BresenhamAlgorithm(zone->Get_X(), zone->Get_Y(), neighborX, neighborY);
+						bool isBlocked = false;
+
+						for (const auto& coord : lineCoordinates)
+						{
+							GameField* field = m_GameTable->Get_TableValue(coord.first, coord.second);
+							if (isFieldBlocking(field))
+							{
+								isBlocked = true;
+								break;
+							}
+						}
+
+						if (!isBlocked)
+						{
+							zone->Add_ForestSatisfaction(neighborField->Get_SatisfactionPoints());
+						}
+					}
+				}
+			}
+		}
+	});
 }
 
 void City::GenerateCitizens(unsigned int x)
