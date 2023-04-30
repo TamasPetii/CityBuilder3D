@@ -80,7 +80,7 @@ void Application::Update()
 		}
 
 		//Cars
-		CarGroup::Set_CarLimit(m_City->Get_CitizenSize() / 4);
+		CarGroup::Set_CarLimit(m_City->Get_NumberOfResidences());
 
 		std::vector<std::vector<Point>> cars = m_City->Get_CarPaths();
 		for (int i = 0; i < cars.size(); ++i)

@@ -6,7 +6,6 @@
 #include <unordered_set>
 #include <sstream>
 #include <random>
-#include <iostream>
 
 enum Level {
 	LEVEL_1,

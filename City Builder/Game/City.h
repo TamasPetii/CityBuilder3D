@@ -48,13 +48,10 @@ public:
 	int Get_Year() { return m_DailyTickCounter / 360 + 2000; }
 	int Get_Month() { return m_DailyTickCounter % 360 / 30; }
 	int Get_Day() { return (m_DailyTickCounter % 360) % 30 + 1; }
-
-	//TO BE DELETED
-	GameTable* Get_GameTable() { return m_GameTable; }
-
-	std::vector<std::vector<Point>> Get_CarPaths();
-
+	std::vector<std::vector<Point>> Get_CarPaths() const;
 	int Get_CitizenSize() { return m_Citizens.size(); }
+	inline int Get_NumberOfResidences() const { return m_NumberOfResidences; }
+
 private:
 	std::unordered_set<Citizen*> m_Citizens;
 	GameTable* m_GameTable;
@@ -62,9 +59,9 @@ private:
 	float m_Money;
 	float m_Tax = 0;
 
-
 	static bool m_ChangedLog;
 	static std::stringstream m_BuildLog;
 	static std::stringstream m_MoneyLog;
 	int m_DailyTickCounter = 0;
+	int m_NumberOfResidences = 0;
 };

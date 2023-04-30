@@ -296,9 +296,24 @@ void City::Set_GameTableValue(int x, int y, FieldType type, FieldDirection dir)
     	m_BuildLog << GameField::ConvertTypeToStr(type) << ": " << CurrentField->Get_Cost() << "$" << std::endl;
 		m_ChangedLog = true;
 	}
+
+	if (PreviousField != CurrentField
+		&& (PreviousField->Get_Type() == RESIDENTIAL_LVL1 ||
+			PreviousField->Get_Type() == RESIDENTIAL_LVL2 ||
+			PreviousField->Get_Type() == RESIDENTIAL_LVL3))
+	{
+		--m_NumberOfResidences;
+	}
+	else if (PreviousField != CurrentField
+		&& (CurrentField->Get_Type() == RESIDENTIAL_LVL1 ||
+			CurrentField->Get_Type() == RESIDENTIAL_LVL2 ||
+			CurrentField->Get_Type() == RESIDENTIAL_LVL3))
+	{
+		++m_NumberOfResidences;
+	}
 }
 
-std::vector<std::vector<Point>> City::Get_CarPaths()
+std::vector<std::vector<Point>> City::Get_CarPaths() const
 {
 	std::vector<std::vector<Point>> paths;
 	int dx[] = { -1, 0, 1, 0 };
