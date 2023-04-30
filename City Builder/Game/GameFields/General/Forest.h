@@ -10,8 +10,14 @@ public:
     ~Forest() {}
 
     bool inline IsForest() const override { return true; }
+    int inline Get_Age() const { return m_Age; }
+    void inline Set_Age(int age) { m_Age = age; }
+    void inline Increase_Age() { ++m_Age; }
+    void inline Increase_SatisfactionPoints() { m_SatisfactionPoints += 0.5; }
+    void inline Set_Cost(float cost) { m_Cost = cost; }
 
-    int age = 9;
+private:
+    int m_Age = 0;
 };
 
 #endif

@@ -339,7 +339,7 @@ void Application::Render()
 				if (m_City->Get_GameField(i, j)->IsForest())
 				{
 					Forest* zone = dynamic_cast<Forest*>(m_City->Get_GameField(i, j));
-					amount = zone->age;
+					amount = zone->Get_Age();
 				}
 
 				if (type == UNIVERSITY || type == STADIUM || type == HIGHSCHOOL)

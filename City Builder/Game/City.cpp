@@ -33,6 +33,7 @@ void City::Simulate()
 	{
 		CollectAnnualCosts();
 		SimulatePopulationAging();
+		SimulateForestAging();
 	}
 }
 
@@ -127,7 +128,7 @@ void City::CalculateHappiness() {
 void City::CalculateForestSatisfaction(int radius)
 {
 	auto isFieldBlocking = [](const GameField* field) {
-		return !(field->IsEmpty() || field->IsCrater() || field->IsLake() || field->IsRoad());
+		return !(field->IsEmpty() || field->IsCrater() || /*field->IsLake() ||*/ field->IsRoad());
 	};
 
 	auto isFieldDial = [](const int fieldX, const int fieldY, const int neighborX, const int neighborY) {
@@ -336,6 +337,29 @@ void City::SimulatePopulationAging() //should be called yearly
 	}
 }
 
+void City::SimulateForestAging()
+{
+	for (int i = 0; i < m_GameTable->Get_TableSize(); ++i)
+	{
+		for (int j = 0; j < m_GameTable->Get_TableSize(); ++j)
+		{
+			if (m_GameTable->Get_TableValue(i, j)->IsForest())
+			{
+				Forest* forest = dynamic_cast<Forest*>(m_GameTable->Get_TableValue(i, j));
+				if (forest->Get_Age() < 10)
+				{
+					forest->Increase_Age();
+					forest->Increase_SatisfactionPoints();
+				}
+				else if (forest->Get_Age() == 10)
+				{
+					forest->Set_Cost(0);
+				}
+			}
+		}
+	}
+}
+
 void City::GenerateForests(int iterations, double initialRatio)
 {
 	// simple cellular automata algorithm
@@ -386,6 +410,8 @@ void City::GenerateForests(int iterations, double initialRatio)
 		for (int y = 0; y < tableSize; ++y) {
 			if (forestMatrix[x][y]) {
 				m_GameTable->Set_TableValue(x, y, FieldType::FOREST);
+				Forest* forest = dynamic_cast<Forest*>(m_GameTable->Get_TableValue(x, y));
+				forest->Set_Age(10);
 			}
 		}
 	}

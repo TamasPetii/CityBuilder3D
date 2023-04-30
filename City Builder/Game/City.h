@@ -33,6 +33,7 @@ public:
 	void UpdateMoney(float amount);
 	void GenerateForests(int iterations, double initialRatio);
 	void SimulatePopulationAging();
+	void SimulateForestAging();
 	void CalculateHappiness();
 	void CalculateForestSatisfaction(int radius);
 	void HandleRecalculation();
