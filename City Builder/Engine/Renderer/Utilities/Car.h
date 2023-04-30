@@ -50,12 +50,15 @@ public:
 	inline bool Get_IsInterSectionMiddleCoord() { return m_MiddlePoint.isInterSection; }
 	inline bool Get_IsInterSectionLastCoord() { return m_LastPoint.isInterSection; }
 
+	//Setters
+	inline void Set_FirstPoint(glm::vec3 point) { m_FirstPoint = { point }; }
+	inline void Set_MiddlePoint(glm::vec3 point) { m_MiddlePoint = { point }; }
+	inline void Set_LastPoint(glm::vec3 point) { m_LastPoint = { point }; }
+
 private:
 	CarCoord m_FirstPoint;
 	CarCoord m_MiddlePoint;
 	CarCoord m_LastPoint;
-
-	//glm::vec3 m_InterSectionCoord = glm::vec3(0);
 
 	int m_NumberOfCooordinates;
 	float m_Length = 0;
@@ -81,7 +84,7 @@ public:
 
 	RouteSection* Get_CurrentRouteSection();
 	RouteSection* Get_CurrentOriginalRouteSection();
-	inline int Get_NumberOfRouteSections() { return m_RouteSections.size(); }
+	inline int Get_NumberOfRouteSections() { return static_cast<int>(m_RouteSections.size()); }
 	inline RouteSection* Get_SpecificCurOrigRouteSection(int i) { return m_OriginalRouteSections[i]; }
 
 	inline glm::mat4 Get_HitBoxTransform() { return glm::translate(Get_CurrentPosition(m_Rotation)); }
@@ -93,6 +96,18 @@ private:
 	float m_Param = 0.0f;
 	float m_Rotation = 0.0f;
 	float m_LastMove = 0.0f;
+
+	void AdjustCurveCoordinates(glm::vec3& coordinate1, glm::vec3& coordinate2, glm::vec3& coordinate3, float roadCompensation);
+	void AdjustStraightCoordinates(glm::vec3& coordinate1, glm::vec3& coordinate2, float roadCompensation);
+
+	void PrepareRoadSections(std::vector<CarCoord> coordinates);
+	void CompensateCurves();
+	void AdjustAdditionalSegments();
+
+	void AddStraightSection(CarCoord coordinate1, CarCoord coordinate2, float roadCompensation);
+	void AddCurveSection(CarCoord coord1, CarCoord coord2, CarCoord coord3, float roadCompensation);
+	void AddSegmBetwIntersAndCurve(CarCoord coord1, CarCoord coord2, float roadCompensation);
+	void AddSegmBetwCurveAndInters(CarCoord coord1, CarCoord coord2, CarCoord coord3, CarCoord coord4, CarCoord coord5, float roadCompensation);
 
 	std::vector<RouteSection*> m_RouteSections;
 	std::vector<RouteSection*> m_OriginalRouteSections;
@@ -123,7 +138,7 @@ public:
 	static bool Intersect(Car* car1, Car* car2);
 
 	//Setters
-	static void Set_CarLimit(int limit);
+	static void Set_CarLimit(int limit) { car_limit = limit; }
 private:
 	static std::unordered_set<Car*> m_Cars;
 	static std::unordered_set<CarAndCoord*> m_InUseIntersections;

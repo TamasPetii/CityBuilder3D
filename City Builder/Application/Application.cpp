@@ -269,7 +269,19 @@ void Application::Update()
 		else 
 		{
 			GameField* field = m_City->Get_GameField(HitX, HitY);
+			if (m_City->Get_GameField(HitX, HitY)->Get_Type() == ROAD)
+			{
+				//TODO: Delete only the cars which are affected by the deleted road
+				CarGroup::Clear();
+			}
+
 			m_City->Set_GameTableValue(HitX, HitY, (FieldType)m_MyGui->Get_BuildWindowLayout().Build_Id, (FieldDirection)(m_MyGui->Get_EventLayout().Rotate % 4));
+
+			if (m_City->Get_GameField(HitX, HitY)->Get_Type() == ROAD)
+			{
+				//TODO: Delete only the cars which are affected by the new road
+				CarGroup::Clear();
+			}
 			changed = true;
 		}
 
