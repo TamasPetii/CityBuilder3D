@@ -130,7 +130,7 @@ void City::CalculateHappiness() {
 void City::CalculateForestSatisfaction(int radius)
 {
 	auto isFieldBlocking = [](const GameField* field) {
-		return !(field->IsEmpty() || field->IsCrater() || /*field->IsLake() ||*/ field->IsRoad());
+		return !(field->IsEmpty() || field->IsCrater() || field->IsLake() || field->IsRoad());
 	};
 
 	auto isFieldDial = [](const int fieldX, const int fieldY, const int neighborX, const int neighborY) {
@@ -573,6 +573,12 @@ void City::GenerateCellularFields(int iterations, double initialRatio, FieldType
 		for (int y = 0; y < tableSize; ++y) {
 			if (cellularMatrix[x][y] && m_GameTable->Get_TableValue(x, y)->IsEmpty()) {
 				m_GameTable->Set_TableValue(x, y, fieldType);
+
+				if (fieldType == FieldType::FOREST)
+				{
+					Forest* forest = dynamic_cast<Forest*>(m_GameTable->Get_TableValue(x, y));
+					forest->Set_Age(10);
+				}
 			}
 		}
 	}
@@ -633,4 +639,39 @@ std::vector<std::vector<Point>> City::Get_CarPaths() const
 		}
 	}
 	return paths;
+}
+
+std::vector<std::pair<int, int>> City::BresenhamAlgorithm(int x0, int y0, int x1, int y1)
+{
+	std::vector<std::pair<int, int>> linePoints;
+	int dx = abs(x1 - x0);
+	int dy = abs(y1 - y0);
+	int sx = (x0 < x1) ? 1 : -1;
+	int sy = (y0 < y1) ? 1 : -1;
+	int err = dx - dy;
+
+	while (true)
+	{
+		linePoints.emplace_back(x0, y0);
+
+		if (x0 == x1 && y0 == y1)
+		{
+			break;
+		}
+
+		int e2 = 2 * err;
+
+		if (e2 > -dy)
+		{
+			err -= dy;
+			x0 += sx;
+		}
+		if (e2 < dx)
+		{
+			err += dx;
+			y0 += sy;
+		}
+	}
+
+	return linePoints;
 }
