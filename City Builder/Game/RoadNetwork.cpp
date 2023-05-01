@@ -294,5 +294,24 @@ Zone* RoadNetwork::FindOptimalResidentialArea(float happiness) {
 	return nullptr;
 }
 
+void RoadNetwork::ApplyToAllZones(const ZoneFunction& func)
+{
+	for (auto& network : m_networks)
+	{
+		for (auto& zone : network.zoneSet)
+		{
+			func(zone);
+		}
+	}
+}
 
-
+void RoadNetwork::ApplyToAllBuilding(const ZoneFunction& func)
+{
+	for (auto& network : m_networks)
+	{
+		for (auto& building : network.buildingSet)
+		{
+			func(building);
+		}
+	}
+}

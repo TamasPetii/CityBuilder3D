@@ -33,6 +33,7 @@ public:
 	void UpdateMoney(float amount);
 	void GenerateForests(int iterations, double initialRatio);
 	void GenerateLakes(int iterations, double initialRatio);
+	void GenerateGraduatedCitizens(int randomCitizenCount);
 	void SimulatePopulationAging();
 	void CalculateHappiness();
 	void HandleRecalculation();
@@ -79,4 +80,8 @@ private:
 
 	int m_initialCitizens = 0;
 	int m_NumberOfResidences = 0;
+	int m_citizensWithIntermediateEducation = 0;
+	int m_citizensWithAdvancedEducation = 0;
+	int m_maxCitizensWithIntermediateEducation = 200;
+	int m_maxCitizensWithAdvancedEducation = 200;
 };

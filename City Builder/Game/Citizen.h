@@ -27,7 +27,11 @@ public:
 	inline void Age() { ++m_Age; }
 	float PayTax();
 	float Get_SatisfactionPoints() const;
-	bool inline IsPensioner() const { return m_Age >= 65; }
+	inline bool IsPensioner() const { return m_Age >= 65; }
+	void Increase_EducationLevel(Education maxEducationLevel = Education::ADVANCED);
+	void Downgrade_EducationLevel() { m_Education = Education::BASIC; }
+	inline bool HasIntermediateEducationLevel() const { return m_Education == Education::INTERMEDIATE; }
+	inline bool HasAdvancedEducationLevel() const { return m_Education == Education::ADVANCED; }
 
 	inline int Get_Age() const	{ return m_Age;	}
 	inline Zone* Get_Residence() const { return m_Residence; }
