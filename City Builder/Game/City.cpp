@@ -156,26 +156,18 @@ void City::CalculateForestSatisfaction(int radius)
 
 					if (neighborField->Get_Type() == FieldType::FOREST)
 					{
-						zone->Add_ForestSatisfaction(neighborField->Get_SatisfactionPoints());
-					}
-					else if (isFieldDial(zone->Get_X(), zone->Get_Y(), neighborX, neighborY))
-					{
 						std::vector<std::pair<int, int>> lineCoordinates = BresenhamAlgorithm(zone->Get_X(), zone->Get_Y(), neighborX, neighborY);
-						bool isBlocked = false;
 
-						for (const auto& coord : lineCoordinates)
+						bool l = false;
+						for (int i = 1; i <= lineCoordinates.size() - 2 && !l; i++)
 						{
-							GameField* field = m_GameTable->Get_TableValue(coord.first, coord.second);
-							if (isFieldBlocking(field))
-							{
-								isBlocked = true;
-								break;
-							}
+							GameField* field = m_GameTable->Get_TableValue(lineCoordinates[i].first, lineCoordinates[i].second);
+							l = l || isFieldBlocking(field);
 						}
 
-						if (!isBlocked)
+						if (!l)
 						{
-							zone->Add_ForestSatisfaction(neighborField->Get_SatisfactionPoints());
+							zone->Add_ForestSatisfaction(0.1);
 						}
 					}
 				}
@@ -313,7 +305,6 @@ void City::SimulatePopulationAging() //should be called yearly
 		{
 			if (citizen->Get_Workplace() != nullptr)
 			{
-				//std::cout << "A retired from work!" << std::endl;
 				citizen->LeaveWorkplace();
 			}
 
