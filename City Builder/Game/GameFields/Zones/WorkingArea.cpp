@@ -1,50 +1,70 @@
 #include "WorkingArea.h"
 
-float WorkingArea::Get_Satisfaction() const {
-	if (m_details.safety < 1) return m_details.safety;
-	else return 1;
+float WorkingArea::Calculate_NormalSatisfaction() const {
+	float Satisfaction = m_Satisfaction;
+	float Safety = m_Safety;
+
+	if (Satisfaction > 5) Satisfaction = 5;
+	if (Safety > 1) Safety = 1;
+
+	return Satisfaction / 5 * 0.7 + Safety * 0.3;
 }
 
 //Industrial area
 
-float IndustrialArea::m_Lvl1TaxRate = 20;
-float IndustrialArea::m_Lvl2TaxRate = 20;
-float IndustrialArea::m_Lvl3TaxRate = 20;
-float IndustrialArea::m_LVL1Payment = 1550;
-float IndustrialArea::m_LVL2Payment = 1750;
-float IndustrialArea::m_LVL3Payment = 2000;
+float IndustrialArea::m_Lvl1TaxRate = 40;
+float IndustrialArea::m_Lvl2TaxRate = 40;
+float IndustrialArea::m_Lvl3TaxRate = 40;
+float IndustrialArea::m_LVL1Payment = 1875;
+float IndustrialArea::m_LVL2Payment = 2875;
+float IndustrialArea::m_LVL3Payment = 4125;
 
-float IndustrialArea::GetTaxRate() const
+float IndustrialArea::Calculate_TaxRate() const
 {
-	if (m_details.level == LEVEL_1) { return m_LVL1Payment * (1 - m_Lvl1TaxRate / 100); }
-	if (m_details.level == LEVEL_2) { return m_LVL2Payment * (1 - m_Lvl2TaxRate / 100); }
-	else { return m_LVL3Payment * (1 - m_Lvl3TaxRate / 100); }
+	switch (m_Level)
+	{
+	case LEVEL_1: return m_LVL1Payment * (m_Lvl1TaxRate / 100);
+	case LEVEL_2: return m_LVL2Payment * (m_Lvl2TaxRate / 100);
+	case LEVEL_3: return m_LVL3Payment * (m_Lvl3TaxRate / 100);
+	}
 }
 
-float IndustrialArea::GetTaxRatePercentage() const {
-	if (m_details.level == LEVEL_1) return m_Lvl1TaxRate;
-	if (m_details.level == LEVEL_2) return m_Lvl2TaxRate;
-	else return m_Lvl3TaxRate;
+float IndustrialArea::Calculate_TaxRatePercentage() const
+{
+	switch (m_Level)
+	{
+	case LEVEL_1: return m_Lvl1TaxRate;
+	case LEVEL_2: return m_Lvl2TaxRate;
+	case LEVEL_3: return m_Lvl3TaxRate;
+	}
 }
 
 //Service area
+float ServiceArea::m_Lvl1TaxRate = 40;
+float ServiceArea::m_Lvl2TaxRate = 40;
+float ServiceArea::m_Lvl3TaxRate = 40;
+float ServiceArea::m_LVL1Payment = 2500;
+float ServiceArea::m_LVL2Payment = 3750;
+float ServiceArea::m_LVL3Payment = 5000;
 
-float ServiceArea::m_Lvl1TaxRate = 20;
-float ServiceArea::m_Lvl2TaxRate = 20;
-float ServiceArea::m_Lvl3TaxRate = 20;
-float ServiceArea::m_LVL1Payment = 2550;
-float ServiceArea::m_LVL2Payment = 2750;
-float ServiceArea::m_LVL3Payment = 3000;
 
-float ServiceArea::GetTaxRate() const
+float ServiceArea::Calculate_TaxRate() const
 {
-	if (m_details.level == LEVEL_1) { return m_LVL1Payment * (1 - m_Lvl1TaxRate / 100); }
-	if (m_details.level == LEVEL_2) { return m_LVL2Payment * (1 - m_Lvl2TaxRate / 100); }
-	else { return m_LVL3Payment * (1 - m_Lvl3TaxRate / 100); }
+	switch (m_Level)
+	{
+	case LEVEL_1: return m_LVL1Payment * (m_Lvl1TaxRate / 100);
+	case LEVEL_2: return m_LVL2Payment * (m_Lvl2TaxRate / 100);
+	case LEVEL_3: return m_LVL3Payment * (m_Lvl3TaxRate / 100);
+	}
+
 }
 
-float ServiceArea::GetTaxRatePercentage() const {
-	if (m_details.level == LEVEL_1) return m_Lvl1TaxRate;
-	if (m_details.level == LEVEL_2) return m_Lvl2TaxRate;
-	else return m_Lvl3TaxRate;
+float ServiceArea::Calculate_TaxRatePercentage() const
+{
+	switch (m_Level)
+	{
+	case LEVEL_1: return m_Lvl1TaxRate;
+	case LEVEL_2: return m_Lvl2TaxRate;
+	case LEVEL_3: return m_Lvl3TaxRate;
+	}
 }

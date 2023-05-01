@@ -1,35 +1,38 @@
 #include "ResidentalArea.h"
 
-float ResidentalArea::m_Lvl1TaxRate = 20;
-float ResidentalArea::m_Lvl2TaxRate = 20;
-float ResidentalArea::m_Lvl3TaxRate = 20;
-float ResidentalArea::m_LVL1Payment = 350;
-float ResidentalArea::m_LVL2Payment = 450;
-float ResidentalArea::m_LVL3Payment = 550;
+float ResidentalArea::m_Lvl1TaxRate = 40;
+float ResidentalArea::m_Lvl2TaxRate = 40;
+float ResidentalArea::m_Lvl3TaxRate = 40;
+float ResidentalArea::m_LVL1Payment = 1250;
+float ResidentalArea::m_LVL2Payment = 1812;
+float ResidentalArea::m_LVL3Payment = 2625;
 
-float ResidentalArea::GetTaxRate() const
+float ResidentalArea::Calculate_TaxRate() const
 {
-	if (m_details.level == LEVEL_1) { return m_LVL1Payment * (1 - m_Lvl1TaxRate / 100); }
-	if (m_details.level == LEVEL_2) { return m_LVL2Payment * (1 - m_Lvl2TaxRate / 100); }
-	else { return m_LVL3Payment * (1 - m_Lvl3TaxRate / 100); }
+	switch(m_Level)
+	{
+	case LEVEL_1: return m_LVL1Payment * (m_Lvl1TaxRate / 100);
+	case LEVEL_2: return m_LVL2Payment * (m_Lvl2TaxRate / 100);
+	case LEVEL_3: return m_LVL3Payment * (m_Lvl3TaxRate / 100);
+	}
 }
 
-float ResidentalArea::GetTaxRatePercentage() const {
-	if (m_details.level == LEVEL_1) return m_Lvl1TaxRate;
-	if (m_details.level == LEVEL_2) return m_Lvl2TaxRate;
-	else return m_Lvl3TaxRate;
+float ResidentalArea::Calculate_TaxRatePercentage() const
+{
+	switch (m_Level)
+	{
+	case LEVEL_1: return m_Lvl1TaxRate;
+	case LEVEL_2: return m_Lvl2TaxRate;
+	case LEVEL_3: return m_Lvl3TaxRate;
+	}
 }
 
-float ResidentalArea::Get_Satisfaction() const {
-	float satisfaction = 0;
-	float safety = 0;
-	if (m_details.satisfaction + m_details.industrial_penalty < 5) satisfaction += m_details.satisfaction + m_details.industrial_penalty;
-	else satisfaction += 5;
+float ResidentalArea::Calculate_NormalSatisfaction() const {
+	float Satisfaction = m_Satisfaction + m_IndustrialPenalty;
+	float Safety = m_Safety;
 
-	if (m_details.safety < 1) safety += m_details.safety;
-	else safety += 1;
+	if (Satisfaction > 5) Satisfaction = 5;
+	if (Safety > 1) Safety = 1;
 
-	//végsõ elégedettségbe a kiszolgáló épületek 0.7-t számítanak max,
-	//a közbiztonság pedig 0.3-at, így 0-tól 1-ig ad ez a függvény vissza
-	return satisfaction / 5 * 0.7 + safety * 0.3;
+	return Satisfaction / 5 * 0.7 + Safety * 0.3;
 }

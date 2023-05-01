@@ -24,14 +24,13 @@ public:
 	bool IsBuildable(FieldType type, FieldDirection dir, int x, int y);
 
 	//Setter
-	void Set_TableValue(int x, int y, FieldType type);// TODO: Delete previous field (We are using heap to store objects -> need to delete)
+	void Set_TableValue(int x, int y, FieldType type, FieldDirection direction);
 	void Set_TableValue(int x, int y, GameField* field);
 
 	//Getter
 	inline int Get_TableSize() const { return m_TableSize; }
 	inline GameField* Get_TableValue(int x, int y) const { return m_Table[x][y]; }; //Todo: check for wrong x,y value
-	ZoneDetails Get_ZoneDetails(int x, int y) const { ZoneDetails s;  return s; };
-	float Get_TotalCost() const;
+	float Get_TotalAnnualCost() const;
 
 	std::vector<Point> PathFinder(Point start, Point end);
 	bool IsInterSection(Point p);
@@ -40,6 +39,7 @@ public:
 private:
 	std::vector<std::vector<GameField*>> m_Table;
 	int m_TableSize;
+
 	void SetRoadNetwork(int x, int y);
 	void SetBuildingNetwork(int x, int y);
 	void SetZoneNetwork(int x, int y);

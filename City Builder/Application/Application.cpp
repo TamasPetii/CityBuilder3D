@@ -8,7 +8,7 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 {
 
 	m_Camera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
-	m_City = new City(50, 10000);
+	m_City = new City(50);
 
 	Renderer::Init(m_Camera);
 	Renderer::ResizeShapeBuffers(m_City->Get_GameTableSize() * m_City->Get_GameTableSize());
@@ -64,11 +64,11 @@ void Application::Update()
 
 		m_MyGui->Get_GameWindowLayout().City_Money = m_City->Get_Money();
 		m_MyGui->Get_GameWindowLayout().City_Satisfaction = m_City -> Get_CombinedHappiness();
-		m_MyGui->Get_GameWindowLayout().Time_Game = m_City->Get_Time_Str();
+		m_MyGui->Get_GameWindowLayout().Time_Game = m_City->Get_TimeStr();
 		m_MyGui->Get_GameWindowLayout().Time_Real += m_Timer->Get_TickTime();
 
 		//Meteor shooting
-		if (rand() % 50 == 23)
+		if (rand() % 500 == 23)
 		{
 			int number = rand() % 5;
 			if (rand() % 100000 == 666) number = 2500;
@@ -102,6 +102,7 @@ void Application::Update()
 	//NEW-GAME
 	if (m_MyGui->Get_MenuBarLayout().NewGame_Effect)
 	{
+		m_MyGui->Get_GameWindowLayout().Time_Real = 0;
 		m_MyGui->Get_MenuBarLayout().NewGame_Effect = false;
 		m_MyGui->Get_GameWindowLayout().Time_Tick = m_MyGui->Get_MenuBarLayout().City_Time;
 		m_Timer->Reset();
@@ -111,18 +112,16 @@ void Application::Update()
 		MeteorGrp::Clear();
 		CarGroup::Clear();
 		RoadNetwork::ResetNetworks();
-		City::Build_Log().clear();
-		City::Build_Log().str("");
-		City::Money_Log().clear();
-		City::Money_Log().str("");
-		City::Log_Changed() = true;
-		Citizen::Log().clear();
-		Citizen::Log().str("");
-		Citizen::Log_Changed() = true;
+		City::BUILD_LOG.clear();
+		City::BUILD_LOG.str("");
+		City::MONEY_LOG.clear();
+		City::MONEY_LOG.str("");
+		Citizen::LOG.clear();
+		Citizen::LOG.str("");
 		Renderer::ResizeShapeBuffers(m_MyGui->Get_MenuBarLayout().City_Size * m_MyGui->Get_MenuBarLayout().City_Size);
 
 		delete m_City;
-		m_City = new City(m_MyGui->Get_MenuBarLayout().City_Size, 800000);
+		m_City = new City(m_MyGui->Get_MenuBarLayout().City_Size);
 
 		m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
 		m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
@@ -172,17 +171,18 @@ void Application::Update()
 	{
 		m_MyGui->Get_GameWindowLayout().Tax_Effect = false;
 
-		m_City->SetTaxRate(RESIDENTIAL_LVL1, m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl1);
-		m_City->SetTaxRate(RESIDENTIAL_LVL2, m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl2);
-		m_City->SetTaxRate(RESIDENTIAL_LVL3, m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl3);
+		m_City->Set_TaxRate(RESIDENTIAL_LVL1, m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl1);
+		m_City->Set_TaxRate(RESIDENTIAL_LVL2, m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl2);
+		m_City->Set_TaxRate(RESIDENTIAL_LVL3, m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl3);
 
-		m_City->SetTaxRate(SERVICE_LVL1, m_MyGui->Get_GameWindowLayout().ServiceTaxLvl1);
-		m_City->SetTaxRate(SERVICE_LVL2, m_MyGui->Get_GameWindowLayout().ServiceTaxLvl2);
-		m_City->SetTaxRate(SERVICE_LVL3, m_MyGui->Get_GameWindowLayout().ServiceTaxLvl3);
+		m_City->Set_TaxRate(SERVICE_LVL1, m_MyGui->Get_GameWindowLayout().ServiceTaxLvl1);
+		m_City->Set_TaxRate(SERVICE_LVL2, m_MyGui->Get_GameWindowLayout().ServiceTaxLvl2);
+		m_City->Set_TaxRate(SERVICE_LVL3, m_MyGui->Get_GameWindowLayout().ServiceTaxLvl3);
 
-		m_City->SetTaxRate(INDUSTRIAL_LVL1, m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl1);
-		m_City->SetTaxRate(INDUSTRIAL_LVL2, m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl2);
-		m_City->SetTaxRate(INDUSTRIAL_LVL3, m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl3);
+		m_City->Set_TaxRate(INDUSTRIAL_LVL1, m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl1);
+		m_City->Set_TaxRate(INDUSTRIAL_LVL2, m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl2);
+		m_City->Set_TaxRate(INDUSTRIAL_LVL3, m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl3);
+
 	}
 	
 	//RENDER-FRAME
@@ -221,13 +221,28 @@ void Application::Update()
 	}
 
 	//LOG
-	if (City::Log_Changed() || Citizen::Log_Changed())
+	if (true)
 	{
-		m_MyGui->Get_LogWindowLayout().build_log   = City::Build_Log().str();
-		m_MyGui->Get_LogWindowLayout().citizen_log = Citizen::Log().str();
-		m_MyGui->Get_LogWindowLayout().money_log   = City::Money_Log().str();
-		Citizen::Log_Changed() = false;
-		City::Log_Changed() = false;
+		m_MyGui->Get_LogWindowLayout().build_log   = City::BUILD_LOG.str();
+		m_MyGui->Get_LogWindowLayout().citizen_log = Citizen::LOG.str();
+		m_MyGui->Get_LogWindowLayout().money_log   = City::MONEY_LOG.str();
+	}
+
+	//Detials
+	if (m_City->Get_GameField(m_MyGui->Get_DetailsWindowLayout().Details_X, m_MyGui->Get_DetailsWindowLayout().Details_Y)->IsZone())
+	{
+		Zone* zone = dynamic_cast<Zone*>(m_City->Get_GameField(m_MyGui->Get_DetailsWindowLayout().Details_X, m_MyGui->Get_DetailsWindowLayout().Details_Y));
+		m_MyGui->Get_DetailsWindowLayout().Details = Zone::ToString(zone);
+	}
+	else if (m_City->Get_GameField(m_MyGui->Get_DetailsWindowLayout().Details_X, m_MyGui->Get_DetailsWindowLayout().Details_Y)->IsBuilding())
+	{
+		Building* building = dynamic_cast<Building*>(m_City->Get_GameField(m_MyGui->Get_DetailsWindowLayout().Details_X, m_MyGui->Get_DetailsWindowLayout().Details_Y));
+		m_MyGui->Get_DetailsWindowLayout().Details = Building::ToString(building);
+	}
+	else
+	{
+		GameField* field = m_City->Get_GameField(m_MyGui->Get_DetailsWindowLayout().Details_X, m_MyGui->Get_DetailsWindowLayout().Details_Y);
+		m_MyGui->Get_DetailsWindowLayout().Details = GameField::ToString(field);
 	}
 
 	//BUILD - OR MOUSE EVENT
@@ -235,24 +250,11 @@ void Application::Update()
 	{
 		m_MyGui->Get_EventLayout().Hit = false;
 		ConvertMouseInputTo3D(m_MyGui->Get_EventLayout().Mouse_X, m_MyGui->Get_EventLayout().Mouse_Y, Renderer::Get_FrameBuffer()->Get_FrameWidth(), Renderer::Get_FrameBuffer()->Get_FrameHeight());
-		
+
 		if (m_MyGui->Get_BuildWindowLayout().Build_Id == -1) //CHECK DETAILS
 		{
-			m_MyGui->Get_DetailsWindowLayout().Field_IsZone = false;
-			m_MyGui->Get_DetailsWindowLayout().Field_Type = m_City->Get_GameField(HitX, HitY)->Get_Type();
-			m_MyGui->Get_DetailsWindowLayout().Field_Coord_x = HitX;
-			m_MyGui->Get_DetailsWindowLayout().Field_Coord_y = HitY;
-
-			if (m_City->Get_GameField(HitX, HitY)->IsZone())
-			{
-				Zone* zone = dynamic_cast<Zone*>(m_City->Get_GameField(HitX, HitY));
-				m_MyGui->Get_DetailsWindowLayout().Field_IsZone = true;
-				m_MyGui->Get_DetailsWindowLayout().Field_Satisfaction = zone->Get_RawSatisfaction();
-				m_MyGui->Get_DetailsWindowLayout().Field_Level = zone->Get_ZoneDetails().level + 1;
-				m_MyGui->Get_DetailsWindowLayout().Field_Contain = zone->Get_ZoneDetails().contain;
-				m_MyGui->Get_DetailsWindowLayout().Field_Capacity = zone->Get_ZoneDetails().capacity;
-				m_MyGui->Get_DetailsWindowLayout().Citizens_details = zone->Get_CitizenDetails();
-			}
+			m_MyGui->Get_DetailsWindowLayout().Details_X = HitX;
+			m_MyGui->Get_DetailsWindowLayout().Details_Y = HitY;
 		}
 
 		else if (m_MyGui->Get_BuildWindowLayout().Build_Id == -2)
@@ -261,14 +263,13 @@ void Application::Update()
 			{
 				Zone* zone = dynamic_cast<Zone*>(m_City->Get_GameField(HitX, HitY));
 
-				m_MyGui->Get_DetailsWindowLayout().Field_Type = m_City->Get_GameField(HitX, HitY)->Get_Type();
-				m_MyGui->Get_DetailsWindowLayout().Field_Coord_x = HitX;
-				m_MyGui->Get_DetailsWindowLayout().Field_Coord_y = HitY;
+				m_MyGui->Get_DetailsWindowLayout().Field_Type = zone->Get_Type();
+				m_MyGui->Get_DetailsWindowLayout().Field_X = HitX;
+				m_MyGui->Get_DetailsWindowLayout().Field_Y = HitY;
+				m_MyGui->Get_DetailsWindowLayout().Upgrade_Cost = GameField::CalculateBuildCost((FieldType)((int)zone->Get_Type() + 1));
 
 				m_MyGui->Get_DetailsWindowLayout().Upgrade_Show = true;
 				m_MyGui->Get_DetailsWindowLayout().level = zone->Get_Level();
-
-				std::cout << "LEVEL: " << m_MyGui->Get_DetailsWindowLayout().level << std::endl;
 			}
 		}
 
@@ -284,7 +285,6 @@ void Application::Update()
 
 			if (m_City->IsBuildable(type, dir, HitX, HitY))
 			{
-				std::cout << ">> BUILDING PLACED" << std::endl;
 
 				FieldType oldType = m_City->Get_GameField(HitX, HitY)->Get_Type();
 				m_City->Set_GameTableValue(HitX, HitY, type, dir);
@@ -297,10 +297,6 @@ void Application::Update()
 				}
 
 				changed = true;
-			}
-			else
-			{
-				std::cout << ">> NOT BUILDABLE" << std::endl;
 			}
 		}
 	}
@@ -326,11 +322,9 @@ void Application::Update()
 
 	if (m_MyGui->Get_DetailsWindowLayout().Upgrade_Effect)
 	{
-		m_City->UpgradeField(m_MyGui->Get_DetailsWindowLayout().Field_Coord_x, m_MyGui->Get_DetailsWindowLayout().Field_Coord_y);
+		m_City->UpgradeField(m_MyGui->Get_DetailsWindowLayout().Field_X, m_MyGui->Get_DetailsWindowLayout().Field_Y);
 		m_MyGui->Get_DetailsWindowLayout().Upgrade_Effect = false;
 		changed = true;
-
-		std::cout << "UPGRADED" << std::endl;
 	}
 }
 
@@ -345,7 +339,7 @@ void Application::RenderUI()
 
 void Application::Render()
 {
-	if (changed)
+	if (changed || Zone::CHANGED)
 	{
 		std::unordered_set<GameField*> fields_2x2;
 		for (int i = 0; i < m_City->Get_GameTableSize(); i++)
@@ -359,16 +353,16 @@ void Application::Render()
 				if (m_City->Get_GameField(i, j)->IsZone())
 				{
 					Zone* zone = dynamic_cast<Zone*>(m_City->Get_GameField(i, j));
-					contain = zone->Get_ZoneDetails().contain;
-					if (type == RESIDENTIAL_LVL1) amount = zone->Get_ZoneDetails().contain;
-					if (type == RESIDENTIAL_LVL2) amount = zone->Get_ZoneDetails().contain / 2 + zone->Get_ZoneDetails().contain % 2;
-					if (type == RESIDENTIAL_LVL3) amount = zone->Get_ZoneDetails().contain / 8 + (zone->Get_ZoneDetails().contain % 8 == 0 ? 0 : 1);
-					if (type == INDUSTRIAL_LVL1) amount = zone->Get_ZoneDetails().contain;
-					if (type == INDUSTRIAL_LVL2) amount = zone->Get_ZoneDetails().contain;
-					if (type == INDUSTRIAL_LVL3) amount = zone->Get_ZoneDetails().contain;
-					if (type == SERVICE_LVL1) amount = zone->Get_ZoneDetails().contain;
-					if (type == SERVICE_LVL2) amount = zone->Get_ZoneDetails().contain / 2 + zone->Get_ZoneDetails().contain % 2;
-					if (type == SERVICE_LVL3) amount = zone->Get_ZoneDetails().contain / 4 + (zone->Get_ZoneDetails().contain % 4 == 0 ? 0 : 1);
+					contain = zone->Get_Contain();
+					if (type == RESIDENTIAL_LVL1) amount = zone->Get_Contain();
+					if (type == RESIDENTIAL_LVL2) amount = zone->Get_Contain() / 2 + zone->Get_Contain() % 2;
+					if (type == RESIDENTIAL_LVL3) amount = zone->Get_Contain() / 8 + (zone->Get_Contain() % 8 == 0 ? 0 : 1);
+					if (type == INDUSTRIAL_LVL1) amount = zone->Get_Contain();
+					if (type == INDUSTRIAL_LVL2) amount = zone->Get_Contain();
+					if (type == INDUSTRIAL_LVL3) amount = zone->Get_Contain();
+					if (type == SERVICE_LVL1) amount = zone->Get_Contain();
+					if (type == SERVICE_LVL2) amount = zone->Get_Contain() / 2 + zone->Get_Contain() % 2;
+					if (type == SERVICE_LVL3) amount = zone->Get_Contain() / 4 + (zone->Get_Contain() % 4 == 0 ? 0 : 1);
 				}
 
 				if (m_City->Get_GameField(i, j)->IsForest())
@@ -383,11 +377,12 @@ void Application::Render()
 					fields_2x2.insert(m_City->Get_GameField(i, j));
 				}
 
-				Renderer::AddShapeTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_FieldDirection(), amount);
-				Renderer::AddGroundTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_FieldDirection(), type == ROAD ? DetermineRoadTextureID(i, j) : Renderer::DetermineGroundTextureID((RenderShapeType)type, contain));
+				Renderer::AddShapeTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_Direction(), amount);
+				Renderer::AddGroundTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_Direction(), type == ROAD ? DetermineRoadTextureID(i, j) : Renderer::DetermineGroundTextureID((RenderShapeType)type, contain));
 			}
 		}
 		Renderer::Changed = true;
+		Zone::CHANGED = false;
 		changed = false;
 	}
 

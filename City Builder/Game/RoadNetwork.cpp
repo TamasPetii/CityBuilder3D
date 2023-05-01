@@ -142,7 +142,7 @@ Zone* RoadNetwork::FindEmptyWorkingArea(Zone* field, float ratio) {
 
 		for (auto& otherField : network.zoneSet) {
 			if (WorkingArea* workingArea = dynamic_cast<WorkingArea*>(otherField)) {
-				if (workingArea->Get_ZoneDetails().contain < workingArea->Get_ZoneDetails().capacity) {
+				if (workingArea->IsThereEmptySpace()) {
 					float d = distance(workingArea, field);
 					if (workingArea->IsIndustrialArea()) {
 						if (d < minDistanceI) {
@@ -202,7 +202,7 @@ Zone* RoadNetwork::FindEmptyResidentialArea() {
 	for (auto& network : m_networks) {
 		for (auto& z : network.zoneSet) {
 			Zone* zone = dynamic_cast<Zone*>(z);
-			if (zone->IsResidentalArea() && zone->Get_ZoneDetails().contain < zone->Get_ZoneDetails().capacity)
+			if (zone->IsResidentalArea() && zone->IsThereEmptySpace())
 				return zone;
 		}
 	}
@@ -268,15 +268,15 @@ Zone* RoadNetwork::FindOptimalResidentialArea(float happiness) {
 	for (auto& network : m_networks) {
 		for (auto& z : network.zoneSet) {
 			Zone* zone = dynamic_cast<Zone*>(z);
-			if (!(zone->IsResidentalArea() && zone->Get_ZoneDetails().contain < zone->Get_ZoneDetails().capacity))
+			if (!(zone->IsResidentalArea() && zone->IsThereEmptySpace()))
 				continue;
 
 			//industrialPenalty: közvetlenül melletted lévõ ipari zóna -0.9, 9 blokkra lévõ -0.1;
-			industrialPenalty = zone->Get_ZoneDetails().industrial_penalty;
+			industrialPenalty = zone->Get_IndustrialPenalty();
 
 			for (auto& w : network.zoneSet) {
 				Zone* wZone = dynamic_cast<Zone*>(w);
-				if (!(wZone->IsWorkingArea() && wZone->Get_ZoneDetails().contain < wZone->Get_ZoneDetails().capacity))
+				if (!(wZone->IsWorkingArea() && wZone->IsThereEmptySpace()))
 					continue;
 				float d = distance(wZone, zone);
 				float workDistancePenalty = -(d / 20 - 0.05); //ha mellette van 0 penalty, különben 0.05esével nõ

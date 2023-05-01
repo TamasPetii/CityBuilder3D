@@ -3,24 +3,36 @@
 #include <time.h>
 #include <random>
 
-bool City::m_ChangedLog = false;
-std::stringstream City::m_BuildLog;
-std::stringstream City::m_MoneyLog;
+std::stringstream City::BUILD_LOG;
+std::stringstream City::MONEY_LOG;
 
-City::City(int size, float money): m_Money(money)
+City::City(int size)
 {
 	m_GameTable = new GameTable(size);
-
+	m_Money = 0;
+	UpdateMoney(5000000); //This will set money satisfaction in citizen
 	GenerateForests(5, 0.4);
 	GenerateLakes(5, 0.4);
 }
 
+std::string City::Get_TimeStr() const
+{
+	return std::to_string(Get_Year()) + "." + std::to_string(Get_Month()) + "." + std::to_string(Get_Day());
+}
+
+GameField* City::Get_GameField(int x, int y) const
+{
+	if (!m_GameTable->ValidateCoordinate(x, y)) return nullptr;
+
+	return m_GameTable->Get_TableValue(x, y);
+}
+
 void City::Simulate()
 {
-	HandleRecalculation(); // konfliktusos bontás esetén
+	HandleRecalculation();
 	CalculateHappiness();
-	GenerateCitizens(rand() % 2 == 0 ? rand() % 2 : 0);
-	HandleLooingZone();
+	GenerateCitizens(rand() % 2 == 0 ? rand() % 3 : 0);
+	HandleLosingZone();
 
 	++m_DailyTickCounter;
 
@@ -39,6 +51,8 @@ void City::Simulate()
 void City::UpdateMoney(float amount)
 {
 	m_Money += amount;
+
+	Citizen::MONEY_SATISFACTION = m_Money;
 }
 
 float City::CalculateMonthlyTax()
@@ -55,19 +69,16 @@ void City::CollectMonthlyTax()
 {
 	float tax = CalculateMonthlyTax();
 	UpdateMoney(tax);
-	
-	m_MoneyLog << ((tax >= 0) ? "+ " : "- ") << tax << "$ >> Monthly Tax {" << Get_Time_Str() << "}" << std::endl;
-	m_ChangedLog = true;
 
+	MONEY_LOG << ((tax >= 0) ? "+ " : "- ") << tax << "$ >> Monthly Tax {" << Get_TimeStr() << "}" << std::endl;
 }
 
 void City::CollectAnnualCosts()
 {
-	float cost = m_GameTable->Get_TotalCost();
+	float cost = m_GameTable->Get_TotalAnnualCost();
 	UpdateMoney(-cost);
 
-	m_MoneyLog << "- " << cost << "$ >> Annual Cost {" << Get_Time_Str() << "}" << std::endl;
-	m_ChangedLog = true;
+	MONEY_LOG << "- " << cost << "$ >> Annual Cost {" << Get_TimeStr() << "}" << std::endl;
 }
 
 void City::HandleRecalculation() {
@@ -104,7 +115,7 @@ void City::CalculateHappiness() {
 	int i = 0;
 	for (auto& citizen : m_Citizens) {
 		float happiness = 0;
-		happiness += citizen->Get_SatisfactionPoints();
+		happiness += citizen->Calculate_Satisfaction();
 		if (m_Money < 0) happiness -= 0.1;
 		if (ratio < 0.5 || ratio > 2) happiness -= 0.1;
 		if (happiness <= 0 && m_initialCitizens >= 50 && i>=49) { //első 50 lakos nem költözik el
@@ -127,6 +138,7 @@ void City::CalculateHappiness() {
 void City::GenerateCitizens(unsigned int x)
 {
 	if (RoadNetwork::FindEmptyResidentialArea() == nullptr) return;
+	
 
 	for (unsigned int i = 0; i < x; i++)
 	{
@@ -139,7 +151,7 @@ void City::GenerateCitizens(unsigned int x)
 	}
 }
 
-void City::HandleLooingZone()
+void City::HandleLosingZone()
 {
 	std::vector<Citizen*> to_remove;
 
@@ -159,7 +171,7 @@ void City::HandleLooingZone()
 			}
 			else
 			{
-				//DO NOT CALL LEAVECITY HERE!!! It will delete citizen from unodered_set. And you will get error bc we are looping on it
+				//DO NOT CALL LEAVECITY HERE!!!
 				to_remove.push_back(citizen);
 			}
 		}
@@ -220,11 +232,6 @@ void City::LeaveCity(Citizen* citizen)
 	delete citizen;
 }
 
-void City::DeleteField(int x, int y)
-{
-
-}
-
 void City::UpgradeField(int x, int y)
 {
 	if (m_GameTable->Get_TableValue(x, y)->IsZone())
@@ -233,10 +240,9 @@ void City::UpgradeField(int x, int y)
 
 		if (zone->UpgradeZone())
 		{
-			float cost = zone->Get_UpgradeFee();
+			float cost = zone->Get_BuildCost();
 			UpdateMoney(-cost);
-			m_MoneyLog << "- " << cost << "$ >> Upgrading zone {" << Get_Time_Str() << "}" << std::endl;
-			m_ChangedLog = true;
+			MONEY_LOG << "- " << cost << "$ >> Upgrading zone {" << Get_TimeStr() << "}" << std::endl;
 		}
 	}
 }
@@ -247,13 +253,12 @@ void City::SimulatePopulationAging() //should be called yearly
 
 	for (auto citizen : m_Citizens)
 	{
-		citizen->Age();
+		citizen->Increase_Age();
 
 		if (citizen->IsPensioner())
 		{
 			if (citizen->Get_Workplace() != nullptr)
 			{
-				//std::cout << "A retired from work!" << std::endl;
 				citizen->LeaveWorkplace();
 			}
 
@@ -264,7 +269,6 @@ void City::SimulatePopulationAging() //should be called yearly
 
 			if (random < probabilityOfRIP)
 			{
-				//std::cout << "A citizen died at the age of: " << citizen->Get_Age() << std::endl;
 				to_remove.push_back(citizen);
 			}
 		}
@@ -273,7 +277,7 @@ void City::SimulatePopulationAging() //should be called yearly
 	for (auto citizen : to_remove)
 	{
 		LeaveCity(citizen);
-		JoinCity(new Citizen(18));
+		JoinCity(new Citizen());
 	}
 }
 
@@ -287,19 +291,19 @@ void City::GenerateLakes(int iterations, double initialRatio)
 	GenerateCellularFields(iterations, initialRatio, FieldType::LAKE);
 }
 
-void City::SetTaxRate(FieldType type, float rate)
+void City::Set_TaxRate(FieldType type, float rate)
 {
 	switch (type)
 	{
-		case RESIDENTIAL_LVL1: ResidentalArea::SetLvl1TaxRate(rate);
-		case RESIDENTIAL_LVL2: ResidentalArea::SetLvl2TaxRate(rate);
-		case RESIDENTIAL_LVL3: ResidentalArea::SetLvl3TaxRate(rate);
-		case INDUSTRIAL_LVL1: IndustrialArea::SetLvl1TaxRate(rate);
-		case INDUSTRIAL_LVL2: IndustrialArea::SetLvl2TaxRate(rate);
-		case INDUSTRIAL_LVL3: IndustrialArea::SetLvl3TaxRate(rate);
-		case SERVICE_LVL1: ServiceArea::SetLvl1TaxRate(rate);
-		case SERVICE_LVL2: ServiceArea::SetLvl2TaxRate(rate);
-		case SERVICE_LVL3: ServiceArea::SetLvl3TaxRate(rate);
+		case RESIDENTIAL_LVL1: ResidentalArea::SetLvl1TaxRate(rate); break;
+		case RESIDENTIAL_LVL2: ResidentalArea::SetLvl2TaxRate(rate); break;
+		case RESIDENTIAL_LVL3: ResidentalArea::SetLvl3TaxRate(rate); break;
+		case INDUSTRIAL_LVL1: IndustrialArea::SetLvl1TaxRate(rate); break;
+		case INDUSTRIAL_LVL2: IndustrialArea::SetLvl2TaxRate(rate); break;
+		case INDUSTRIAL_LVL3: IndustrialArea::SetLvl3TaxRate(rate); break;
+		case SERVICE_LVL1: ServiceArea::SetLvl1TaxRate(rate); break;
+		case SERVICE_LVL2: ServiceArea::SetLvl2TaxRate(rate); break;
+		case SERVICE_LVL3: ServiceArea::SetLvl3TaxRate(rate); break;
 	}
 }
 
@@ -311,29 +315,25 @@ void City::Set_GameTableValue(int x, int y, FieldType type, FieldDirection dir)
 	{
 		if (type == STADIUM || type == POWERSTATION || type == UNIVERSITY)
 		{
-			m_GameTable->Set_TableValue(x, y, type);
+			m_GameTable->Set_TableValue(x, y, type, dir);
 			m_GameTable->Set_TableValue(x + 1, y, m_GameTable->Get_TableValue(x, y));
 			m_GameTable->Set_TableValue(x, y + 1, m_GameTable->Get_TableValue(x, y));
 			m_GameTable->Set_TableValue(x + 1, y + 1, m_GameTable->Get_TableValue(x, y));
-
-			m_GameTable->Get_TableValue(x, y)->Set_FieldDirection(dir);
 		}
 		else if (type == HIGHSCHOOL)
 		{
-			m_GameTable->Set_TableValue(x, y, type);
+			m_GameTable->Set_TableValue(x, y, type, dir);
 			if (dir == FRONT || dir == BACK)  m_GameTable->Set_TableValue(x, y + 1, m_GameTable->Get_TableValue(x, y));
 			if (dir == RIGHT || dir == LEFT)  m_GameTable->Set_TableValue(x + 1, y, m_GameTable->Get_TableValue(x, y));
-
-			m_GameTable->Get_TableValue(x, y)->Set_FieldDirection(dir);
 		}
 		else
 		{
-			m_GameTable->Set_TableValue(x, y, type);
-			m_GameTable->Get_TableValue(x, y)->Set_FieldDirection(dir);
+			m_GameTable->Set_TableValue(x, y, type, dir);
 		}
 
-		m_BuildLog << GameField::ConvertTypeToStr(type) << ": " << m_GameTable->Get_TableValue(x, y)->Get_Cost() << "$" << std::endl;
-		m_ChangedLog = true;
+		UpdateMoney(-1 * GameField::CalculateBuildCost(type));
+
+		BUILD_LOG << GameField::ConvertTypeToStr(type) << ": " << GameField::CalculateBuildCost(type) << "$" << std::endl;
 	}
 
 	GameField* CurrentField = m_GameTable->Get_TableValue(x, y);
@@ -403,7 +403,7 @@ void City::GenerateCellularFields(int iterations, double initialRatio, FieldType
 	for (int x = 0; x < tableSize; ++x) {
 		for (int y = 0; y < tableSize; ++y) {
 			if (cellularMatrix[x][y] && m_GameTable->Get_TableValue(x, y)->IsEmpty()) {
-				m_GameTable->Set_TableValue(x, y, fieldType);
+				m_GameTable->Set_TableValue(x, y, fieldType, FRONT);
 			}
 		}
 	}

@@ -6,7 +6,7 @@
 class Lake : public GameField
 {
 public:
-    Lake(FieldType type, int x, int y, float cost) : GameField(type, x, y, cost) {};
+    Lake(FieldType type, FieldDirection direction, int x, int y) : GameField(type, direction, x, y) {};
     ~Lake() {}
 
     bool inline IsLake() const override { return true; }
