@@ -6,7 +6,7 @@
 class Crater : public GameField
 {
 public:
-    Crater(FieldType type, int x, int y, float cost) : GameField(type, x, y, cost) {};
+    Crater(FieldType type, FieldDirection direction, int x, int y) : GameField(type, direction, x, y) {};
     ~Crater() {}
 
     bool inline IsCrater() const override { return true; }

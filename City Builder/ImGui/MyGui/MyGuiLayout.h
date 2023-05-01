@@ -57,15 +57,15 @@ struct GameWindowLayout
 
 	//Tax
 	bool Tax_Effect = false;
-	float ResidenceTaxLvl1 = 20;
-	float ResidenceTaxLvl2 = 20;
-	float ResidenceTaxLvl3 = 20;
-	float IndustrialTaxLvl1 = 20;
-	float IndustrialTaxLvl2 = 20;
-	float IndustrialTaxLvl3 = 20;
-	float ServiceTaxLvl1 = 20;
-	float ServiceTaxLvl2 = 20;
-	float ServiceTaxLvl3 = 20;
+	float ResidenceTaxLvl1 = 40;
+	float ResidenceTaxLvl2 = 40;
+	float ResidenceTaxLvl3 = 40;
+	float IndustrialTaxLvl1 = 40;
+	float IndustrialTaxLvl2 = 40;
+	float IndustrialTaxLvl3 = 40;
+	float ServiceTaxLvl1 = 40;
+	float ServiceTaxLvl2 = 40;
+	float ServiceTaxLvl3 = 40;
 };
 
 struct RenderWindowLayout
@@ -117,16 +117,13 @@ struct BuildWindowLayout
 
 struct DetailsWindowLayout
 {
-	//Field Details
-	bool Field_IsZone;
-	int Field_Type;
-	int Field_Coord_x;
-	int Field_Coord_y;
-	int Field_Level;
-	int Field_Contain;
-	int Field_Capacity;
-	float Field_Satisfaction;
-	std::string Citizens_details;
+	int Details_X = 0;
+	int Details_Y = 0;
+	std::string Details;
+
+	int Field_X = 0;
+	int Field_Y = 0;
+	int Field_Type = 0;
 
 	//NetWork Details
 	std::string Network_details;
@@ -134,6 +131,7 @@ struct DetailsWindowLayout
 	//Upgrade details
 	bool Upgrade_Effect = false;
 	bool Upgrade_Show = false;
+	int Upgrade_Cost = 0;
 	int level = 0;
 };
 

@@ -1169,16 +1169,12 @@ void MyGui::Upgrade_Popup()
 
         if (m_DetailsWindowLayout.level < 2)
         {
-            ImGui::Text("The upgrade will cost: ");
+            ImGui::Text("The upgrade will cost:", m_DetailsWindowLayout.Upgrade_Cost);
             ImGui::SameLine();
-
-            if (m_DetailsWindowLayout.level == 0)
-                ImGui::Text("100");
-            else if (m_DetailsWindowLayout.level == 1)
-                ImGui::Text("300");
-
+            ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d", m_DetailsWindowLayout.Upgrade_Cost);
             ImGui::SameLine();
-            ImGui::Text(" $");
+            ImGui::Text("$");
+
             ImGui::Text("Are you sure?");
 
             //Yes Button
@@ -1245,17 +1241,7 @@ void MyGui::DetailsWindow()
 
     if (ImGui::CollapsingHeader("Field Details", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        ImGui::Text("Position: (%d,%d)", m_DetailsWindowLayout.Field_Coord_x, m_DetailsWindowLayout.Field_Coord_y);
-        ImGui::Text("Type: %d", m_DetailsWindowLayout.Field_Type);
-
-        if (m_DetailsWindowLayout.Field_IsZone)
-        {
-            ImGui::Text("Satisfaction: %f", m_DetailsWindowLayout.Field_Satisfaction);
-            ImGui::Text("Level: %d", m_DetailsWindowLayout.Field_Level);
-            ImGui::Text("Contain: %d", m_DetailsWindowLayout.Field_Contain);
-            ImGui::Text("Capacity: %d", m_DetailsWindowLayout.Field_Capacity);
-            ImGui::Text(m_DetailsWindowLayout.Citizens_details.c_str());
-        }
+        ImGui::TextUnformatted(m_DetailsWindowLayout.Details.c_str());
     }
 
     if (ImGui::CollapsingHeader("Field Details", ImGuiTreeNodeFlags_DefaultOpen))

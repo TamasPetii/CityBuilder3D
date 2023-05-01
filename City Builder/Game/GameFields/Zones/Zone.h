@@ -7,75 +7,85 @@
 #include <sstream>
 #include <random>
 
-enum Level {
+enum Level
+{
 	LEVEL_1,
 	LEVEL_2,
 	LEVEL_3
 };
 
-enum ZoneType {
+enum ZoneType
+{
 	RESIDENTIAL,
 	INDUSTRIAL,
 	SERVICE
 };
 
-struct ZoneDetails {
-public:
-	int capacity;
-	int contain;
-	float satisfaction;
-	float forest_satisfaction;
-	float safety;
-	float industrial_penalty;
-	Level level;
-};
-
 class Zone : public GameField
 {
-protected: 
-	Zone(Level level, FieldType type, int x, int y, float cost);
-
-	ZoneDetails m_details;
-	std::unordered_set<Citizen*> m_citizens;
 
 public:
+	Zone(Level level, FieldType type, FieldDirection direction, int x, int y);
 	~Zone() {}
 
-	bool inline IsZone() const override { return true; }
-	virtual inline bool IsResidentalArea() const { return false; }
-	virtual inline bool IsWorkingArea() const { return false; }
-	inline bool IsThereEmptySpace() const { return m_details.contain < m_details.capacity ? true : false; }
+	//Identification Methodes
+	inline bool IsZone() const override { return true; }
+	inline virtual bool IsResidentalArea() const { return false; }
+	inline virtual bool IsWorkingArea() const { return false; }
+	inline bool IsThereEmptySpace() const { return m_Contain < m_Capacity ? true : false; }
 
+	//Simulation Methodes
 	void JoinZone(Citizen* citizen);
 	void LeaveZone(Citizen* citizen);
 	void DeleteZone();
+	bool UpgradeZone();
+	static bool CHANGED;
 
-	Level Get_Level() { return m_details.level; }
-	virtual float Get_Satisfaction() const;
-	float Get_RawSatisfaction() const;
-	void Add_Satisfaction(float f) { m_details.satisfaction += f; }
-	void Set_Satisfaction(float f) { m_details.satisfaction = f; }
+	//Getter Methodes
+	inline int Get_Capacity() const { return m_Capacity; }
+	inline int Get_Contain() const { return m_Contain; }
+	inline float Get_Satisfaction() const { return m_Satisfaction; }
+	inline float Get_Safety() const { return m_Safety; }
+	inline float Get_IndustrialPenalty() const { return m_IndustrialPenalty; }
+	inline Level Get_Level() const { return m_Level; }
+	inline std::unordered_set<Citizen*>& Get_Citizens() { return m_citizens; }
+
+	//Setter Methodes
+	inline void Set_Capacity(int Capacity) { m_Capacity = Capacity; }
+	inline void Set_Contain(int Contain) { m_Contain = Contain; }
+	inline void Set_Satisfaction(float Satisfaction) { m_Satisfaction = Satisfaction; }
+	inline void Set_Safety(float Safety) { m_Safety = Safety; }
+	inline void Set_IndustrialPenalty(float IndustrialPenalty) { m_IndustrialPenalty = IndustrialPenalty; }
+	inline void Set_Level(Level Level) { m_Level = Level; }
 	float Get_ForestSatisfaction() { return m_details.forest_satisfaction; }
 	void Add_ForestSatisfaction(float f) { m_details.forest_satisfaction += f; }
 	void Set_ForestSatisfaction(float f) { m_details.forest_satisfaction = f; }
-	void Add_Safety(float f) { m_details.safety += f; }
-	void Set_Safety(float f) { m_details.safety = f; }
-	void Add_IndustrialPenalty(float f) { m_details.industrial_penalty += f; }
-	void Set_IndustrialPenalty(float f) { m_details.industrial_penalty = f; }
-	virtual float GetTaxRate() const = 0;
-	virtual float GetTaxRatePercentage() const = 0;
 
-	inline ZoneDetails Get_ZoneDetails() const { return m_details; }
+	//Add Methodes
+	inline void Add_Satisfaction(float Satisfaction) { m_Satisfaction += Satisfaction; }
+	inline void Add_Safety(float Safety) { m_Safety += Safety; }
+	inline void Add_IndustrialPenalty(float IndustrialPenalty) { m_IndustrialPenalty += IndustrialPenalty; }
 
-	int Get_UpgradeFee();
-	bool UpgradeZone();
+	//Other Methodes
+	virtual float Calculate_TaxRate() const = 0;
+	virtual float Calculate_TaxRatePercentage() const = 0;
+	virtual float Calculate_NormalSatisfaction() const = 0;
+	float Calculate_RealSatisfaction() const;
+	float Calculate_RawSatisfaction() const;
 	void AdjustCapacity();
-
-	std::string Get_CitizenDetails();
-	inline std::unordered_set<Citizen*> Get_Citizens() const { return m_citizens; }
-
-	//Cars
 	Citizen* GetRandomDriver();
+
+	static std::string ToString(Zone* zone);
+
+protected: 
+	std::unordered_set<Citizen*> m_citizens;
+
+	int m_Capacity;
+	int m_Contain;
+	float m_Satisfaction;
+	float m_Safety;
+	float m_IndustrialPenalty;
+	Level m_Level;
 };
 
 #endif

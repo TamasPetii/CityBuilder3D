@@ -20,7 +20,6 @@ public:
 	static bool IsConnected(GameField*, GameField*);
 	static Zone* FindEmptyWorkingArea(Zone*, float);
 	static void ResetNetworks();
-	static double GetSatisfaction(Zone* field);
 	static Zone* FindEmptyResidentialArea();
 	static std::string NetworksToString();
 	static void AddToNetworkSatisfaction(GameField*, int);

@@ -13,7 +13,7 @@ GameTable::GameTable(int TableSize) : m_TableSize(TableSize)
 
 		for (int j = 0; j < m_TableSize; j++)
 		{
-			m_Table[i][j] = GameField::CreateField(EMPTY, i, j);
+			m_Table[i][j] = GameField::CreateField(EMPTY, FRONT, i, j);
 		}
 	}
 }
@@ -25,15 +25,14 @@ void GameTable::Set_TableValue(int x, int y, GameField* field)
 	SetBuildingNetwork(x, y);
 }
 
-void GameTable::Set_TableValue(int x, int y, FieldType type) {
+void GameTable::Set_TableValue(int x, int y, FieldType type, FieldDirection direction) {
 	if (!m_Table[x][y]->IsEmpty()) { //törlés
 		if (!(type == EMPTY || type == CRATER)) return;
 		DeleteField(x, y, type);
 		return;
 	}
 	else {
-		m_Table[x][y] = GameField::CreateField(type, x, y);
-		GameField* newField = m_Table[x][y];
+		m_Table[x][y] = GameField::CreateField(type, direction, x, y);
 	}
 
 	if (type == ROAD) {
@@ -63,6 +62,8 @@ void GameTable::Set_TableValue(int x, int y, FieldType type) {
 }
 
 void GameTable::DeleteField(int x, int y, FieldType type) {
+	if (m_Table[x][y]->Get_Type() == LAKE) return;
+
 	bool isRoad = dynamic_cast<Road*>(m_Table[x][y]);
 	bool isIndustrial = false;
 	bool type_big = m_Table[x][y]->Get_Type() == STADIUM || m_Table[x][y]->Get_Type() == UNIVERSITY || m_Table[x][y]->Get_Type() == POWERSTATION || m_Table[x][y]->Get_Type() == HIGHSCHOOL;
@@ -89,7 +90,7 @@ void GameTable::DeleteField(int x, int y, FieldType type) {
 					if (ValidateCoordinate(new_x, new_y) && !(i == 0 && j == 0) && m_Table[x][y] == m_Table[new_x][new_y])
 					{
 						RoadNetwork::RemoveFromNetwork(m_Table[new_x][new_y]);
-						m_Table[new_x][new_y] = GameField::CreateField(type, new_x, new_y);
+						m_Table[new_x][new_y] = GameField::CreateField(type, FRONT, new_x, new_y);
 					}
 				}
 			}
@@ -99,19 +100,19 @@ void GameTable::DeleteField(int x, int y, FieldType type) {
 	}
 	delete(m_Table[x][y]);
 
-	m_Table[x][y] = GameField::CreateField(type, x, y);
+	m_Table[x][y] = GameField::CreateField(type, FRONT, x, y);
 	GameField* newField = m_Table[x][y];
 
 	if (isRoad) RebuildRoadNetwork();
 }
 
-float GameTable::Get_TotalCost() const
+float GameTable::Get_TotalAnnualCost() const
 {
-	float totalCost = 0.0f;
+	int totalCost = 0;
 
 	for (int i = 0; i < m_TableSize; ++i) {
 		for (int j = 0; j < m_TableSize; ++j) {
-			totalCost += m_Table[i][j]->Get_Cost();
+			totalCost += m_Table[i][j]->Get_AnnualCost();
 		}
 	}
 

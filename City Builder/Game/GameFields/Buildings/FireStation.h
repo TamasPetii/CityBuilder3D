@@ -6,7 +6,7 @@
 class FireStation : public Building
 {
 public:
-    FireStation(FieldType type, int x, int y, float cost) : Building(type, x, y, cost) {};
+    FireStation(FieldType type, FieldDirection direction, int x, int y) : Building(type, direction, x, y) {};
     ~FireStation() {}
 
     bool inline IsFireStation() const override { return true; }
