@@ -35,7 +35,9 @@ public:
 	void GenerateLakes(int iterations, double initialRatio);
 	void GenerateGraduatedCitizens(int randomCitizenCount);
 	void SimulatePopulationAging();
+	void SimulateForestAging();
 	void CalculateHappiness();
+	void CalculateForestSatisfaction(int radius);
 	void HandleRecalculation();
 
 	void SetTaxRate(FieldType type, float rate);
@@ -59,6 +61,9 @@ public:
 	inline int Get_NumberOfResidences() const { return m_NumberOfResidences; }
 
 	float Get_CombinedHappiness() { if (Get_CitizenSize() == 0) return 0; else return m_combinedHappiness * 100; }
+
+private:
+	std::vector<std::pair<int, int>> BresenhamAlgorithm(int x0, int y0, int x1, int y1);
 
 private:
 	void GenerateCellularFields(int iterations, double initialRatio, FieldType fieldType);

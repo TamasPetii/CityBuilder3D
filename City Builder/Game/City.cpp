@@ -19,6 +19,7 @@ void City::Simulate()
 {
 	HandleRecalculation(); // konfliktusos bontás esetén
 	CalculateHappiness();
+	CalculateForestSatisfaction(3);
 	GenerateCitizens(rand() % 2 == 0 ? rand() % 2 : 0);
 	HandleLooingZone();
 
@@ -33,6 +34,7 @@ void City::Simulate()
 	{
 		CollectAnnualCosts();
 		SimulatePopulationAging();
+		SimulateForestAging();
 		GenerateGraduatedCitizens(rand() % 20 + 1);
 	}
 }
@@ -123,6 +125,57 @@ void City::CalculateHappiness() {
 	{
 		LeaveCity(citizen);
 	}
+}
+
+void City::CalculateForestSatisfaction(int radius)
+{
+	auto isFieldBlocking = [](const GameField* field) {
+		return !(field->IsEmpty() || field->IsCrater() || /*field->IsLake() ||*/ field->IsRoad());
+	};
+
+	auto isFieldDial = [](const int fieldX, const int fieldY, const int neighborX, const int neighborY) {
+		return std::abs(fieldX - neighborX) == 1 && std::abs(fieldY - neighborY) == 1;
+	};
+
+	RoadNetwork::ApplyToAllZones([&](GameField* const gameField) {
+		if (!gameField->IsZone())
+			return;
+
+		Zone* zone = static_cast<Zone*>(gameField);
+
+		zone->Set_ForestSatisfaction(0);
+
+		for (int dx = -radius; dx <= radius; ++dx)
+		{
+			for (int dy = -radius; dy <= radius; ++dy)
+			{
+				int neighborX = zone->Get_X() + dx;
+				int neighborY = zone->Get_Y() + dy;
+
+				if (m_GameTable->ValidateCoordinate(neighborX, neighborY) && !(neighborX == zone->Get_X() && neighborY == zone->Get_Y()))
+				{
+					GameField* neighborField = m_GameTable->Get_TableValue(neighborX, neighborY);
+
+					if (neighborField->Get_Type() == FieldType::FOREST)
+					{
+						std::vector<std::pair<int, int>> lineCoordinates = BresenhamAlgorithm(zone->Get_X(), zone->Get_Y(), neighborX, neighborY);
+
+						bool l = false;
+						for (int i = 1; i <= lineCoordinates.size() - 2 && !l; i++)
+						{
+							GameField* field = m_GameTable->Get_TableValue(lineCoordinates[i].first, lineCoordinates[i].second);
+							l = l || isFieldBlocking(field);
+						}
+
+						if (!l)
+						{
+							zone->Add_ForestSatisfaction(0.1);
+						}
+					}
+				}
+			}
+		}
+	});
 }
 
 void City::GenerateCitizens(unsigned int x)
@@ -254,7 +307,6 @@ void City::SimulatePopulationAging() //should be called yearly
 		{
 			if (citizen->Get_Workplace() != nullptr)
 			{
-				//std::cout << "A retired from work!" << std::endl;
 				citizen->LeaveWorkplace();
 			}
 
@@ -285,6 +337,29 @@ void City::SimulatePopulationAging() //should be called yearly
 	{
 		LeaveCity(citizen);
 		JoinCity(new Citizen(18));
+	}
+}
+
+void City::SimulateForestAging()
+{
+	for (int i = 0; i < m_GameTable->Get_TableSize(); ++i)
+	{
+		for (int j = 0; j < m_GameTable->Get_TableSize(); ++j)
+		{
+			if (m_GameTable->Get_TableValue(i, j)->IsForest())
+			{
+				Forest* forest = dynamic_cast<Forest*>(m_GameTable->Get_TableValue(i, j));
+				if (forest->Get_Age() < 10)
+				{
+					forest->Increase_Age();
+					forest->Increase_SatisfactionPoints();
+				}
+				else if (forest->Get_Age() == 10)
+				{
+					forest->Set_Cost(0);
+				}
+			}
+		}
 	}
 }
 
