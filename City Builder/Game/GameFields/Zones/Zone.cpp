@@ -7,6 +7,7 @@ Zone::Zone(Level level, FieldType type, FieldDirection direction, int x, int y) 
 {
 	m_Level = level;
 	m_Contain = 0;
+	m_ForestSatisfaction = 0;
 	m_Satisfaction = 0;
 	m_Safety = 0;
 	m_IndustrialPenalty = 0;
@@ -44,7 +45,7 @@ void Zone::DeleteZone()
 //teszteléshez metódus
 float Zone::Calculate_RawSatisfaction() const {
 	//TODO FOREST
-	return m_Satisfaction + m_Safety + m_IndustrialPenalty;
+	return m_Satisfaction + m_Safety + m_IndustrialPenalty + m_ForestSatisfaction;
 }
 
 float Zone::Calculate_RealSatisfaction() const
@@ -121,6 +122,9 @@ std::string Zone::ToString(Zone* zone)
 	ss << "Capacity: " << zone->m_Capacity << std::endl;
 	ss << "Tax: " << zone->Calculate_TaxRate() << std::endl;
 	ss << "Tax %: " << zone->Calculate_TaxRatePercentage() << std::endl;
+	ss << "Forest Boost: " << zone->Get_ForestSatisfaction() << std::endl;
+	ss << "Safety: " << zone->Get_Safety() << std::endl;
+	ss << "Industrial Penalty: " << zone->Get_IndustrialPenalty() << std::endl;
 	ss << "Normal Satisfaction: " << zone->Calculate_NormalSatisfaction() * 100 << std::endl;
 	ss << "Real Satisfaction: " << zone->Calculate_RealSatisfaction() * 100 << std::endl;
 	

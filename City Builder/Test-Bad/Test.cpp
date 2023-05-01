@@ -5,6 +5,6 @@
 
 TEST_CASE("ASD")
 {
-    City* city = new City(50, 1000000);
+    City* city = new City(50);
     CHECK(city->Get_GameTableSize() == 50);
 }

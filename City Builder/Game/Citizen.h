@@ -43,11 +43,6 @@ public:
 	inline Zone* Get_Residence() { return m_Residence; }
 	inline Zone* Get_Workplace() { return m_Workplace; }
 
-	void Increase_EducationLevel(Education maxEducationLevel = Education::ADVANCED);
-	void Downgrade_EducationLevel() { m_Education = Education::BASIC; }
-	inline bool HasIntermediateEducationLevel() const { return m_Education == Education::INTERMEDIATE; }
-	inline bool HasAdvancedEducationLevel() const { return m_Education == Education::ADVANCED; }
-
 	//Setter Methodes
 	inline void Set_Age(int Age) { m_Age = Age; }
 	inline void Set_Pension(float Pension) { m_Pension = Pension; }
@@ -62,6 +57,11 @@ public:
 	float Calculate_Satisfaction();
 	float Calculate_ZoneSatisfaction(Zone* zone);
 	float Calculate_Distance(Zone* zone1, Zone* zone2);
+
+	void Increase_EducationLevel(Education maxEducationLevel = Education::ADVANCED);
+	void Downgrade_EducationLevel() { m_Education = Education::BASIC; }
+	inline bool HasIntermediateEducationLevel() const { return m_Education == Education::INTERMEDIATE; }
+	inline bool HasAdvancedEducationLevel() const { return m_Education == Education::ADVANCED; }
 
 private:
 	int m_Age;

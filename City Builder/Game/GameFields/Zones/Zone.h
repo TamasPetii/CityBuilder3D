@@ -47,6 +47,7 @@ public:
 	inline float Get_Satisfaction() const { return m_Satisfaction; }
 	inline float Get_Safety() const { return m_Safety; }
 	inline float Get_IndustrialPenalty() const { return m_IndustrialPenalty; }
+	inline float Get_ForestSatisfaction() { return m_ForestSatisfaction; }
 	inline Level Get_Level() const { return m_Level; }
 	inline std::unordered_set<Citizen*>& Get_Citizens() { return m_citizens; }
 
@@ -57,14 +58,13 @@ public:
 	inline void Set_Safety(float Safety) { m_Safety = Safety; }
 	inline void Set_IndustrialPenalty(float IndustrialPenalty) { m_IndustrialPenalty = IndustrialPenalty; }
 	inline void Set_Level(Level Level) { m_Level = Level; }
-	float Get_ForestSatisfaction() { return m_details.forest_satisfaction; }
-	void Add_ForestSatisfaction(float f) { m_details.forest_satisfaction += f; }
-	void Set_ForestSatisfaction(float f) { m_details.forest_satisfaction = f; }
+	inline void Set_ForestSatisfaction(float f) { m_ForestSatisfaction = f; }
 
 	//Add Methodes
 	inline void Add_Satisfaction(float Satisfaction) { m_Satisfaction += Satisfaction; }
 	inline void Add_Safety(float Safety) { m_Safety += Safety; }
 	inline void Add_IndustrialPenalty(float IndustrialPenalty) { m_IndustrialPenalty += IndustrialPenalty; }
+	inline void Add_ForestSatisfaction(float f) { m_ForestSatisfaction += f; }
 
 	//Other Methodes
 	virtual float Calculate_TaxRate() const = 0;
@@ -82,6 +82,7 @@ protected:
 
 	int m_Capacity;
 	int m_Contain;
+	float m_ForestSatisfaction;
 	float m_Satisfaction;
 	float m_Safety;
 	float m_IndustrialPenalty;

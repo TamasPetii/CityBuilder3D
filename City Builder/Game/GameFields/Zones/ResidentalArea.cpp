@@ -27,12 +27,16 @@ float ResidentalArea::Calculate_TaxRatePercentage() const
 	}
 }
 
-float ResidentalArea::Calculate_NormalSatisfaction() const {
+float ResidentalArea::Calculate_NormalSatisfaction() const
+{
+
 	float Satisfaction = m_Satisfaction + m_IndustrialPenalty;
 	float Safety = m_Safety;
+	float Forest = m_ForestSatisfaction;
 
 	if (Satisfaction > 5) Satisfaction = 5;
 	if (Safety > 1) Safety = 1;
+	if (Forest > 1) Forest = 1;
 
-	return Satisfaction / 5 * 0.7 + Safety * 0.3;
+	return Satisfaction / 5 * 0.65 + Safety * 0.2 + Forest * 0.15;
 }

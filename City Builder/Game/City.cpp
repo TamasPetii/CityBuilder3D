@@ -180,7 +180,8 @@ void City::CalculateForestSatisfaction(int radius)
 
 						if (!l)
 						{
-							zone->Add_ForestSatisfaction(0.1);
+							Forest* forest = dynamic_cast<Forest*>(neighborField);
+							zone->Add_ForestSatisfaction(forest->Get_SatisfactionPoints());
 						}
 					}
 				}
@@ -357,11 +358,10 @@ void City::SimulateForestAging()
 				if (forest->Get_Age() < 10)
 				{
 					forest->Increase_Age();
-					forest->Increase_SatisfactionPoints();
 				}
 				else if (forest->Get_Age() == 10)
 				{
-					forest->Set_Cost(0);
+					forest->Set_AnnualCost(0);
 				}
 			}
 		}
@@ -573,7 +573,8 @@ void City::GenerateCellularFields(int iterations, double initialRatio, FieldType
 	for (int x = 0; x < tableSize; ++x) {
 		for (int y = 0; y < tableSize; ++y) {
 			if (cellularMatrix[x][y] && m_GameTable->Get_TableValue(x, y)->IsEmpty()) {
-				m_GameTable->Set_TableValue(x, y, fieldType);
+
+				m_GameTable->Set_TableValue(x, y, fieldType, FRONT);
 
 				if (fieldType == FieldType::FOREST)
 				{
