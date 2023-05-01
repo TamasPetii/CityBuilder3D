@@ -49,14 +49,15 @@ public:
 	static std::stringstream& Build_Log() { return m_BuildLog; }
 	static std::stringstream& Money_Log() { return m_MoneyLog; }
 	static bool& Log_Changed() { return m_ChangedLog; }
-
+	
 	int Get_Year() { return m_DailyTickCounter / 360 + 2000; }
 	int Get_Month() { return m_DailyTickCounter % 360 / 30; }
 	int Get_Day() { return (m_DailyTickCounter % 360) % 30 + 1; }
 	std::vector<std::vector<Point>> Get_CarPaths() const;
+	std::vector<Point> Get_FireTruckPath(int startX, int startY) const;
 	int Get_CitizenSize() { return m_Citizens.size(); }
 	inline int Get_NumberOfResidences() const { return m_NumberOfResidences; }
-
+	
 	float Get_CombinedHappiness() { if (Get_CitizenSize() == 0) return 0; else return m_combinedHappiness * 100; }
 
 	bool Changed() { return m_GameTable->changed; }

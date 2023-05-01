@@ -973,6 +973,16 @@ void MyGui::BuildWindow()
     }
     if (ImGui::ImageButton("Fire-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(30, 30), Get_UV(id, 0), Get_UV(id, 1))) building = -3;
     if (m_BuildWindowLayout.Build_Id == -3) ImGui::PopStyleColor(2);
+    ImGui::SameLine();
+
+    id = 94;
+    if (m_BuildWindowLayout.Build_Id == -4)
+    {
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
+    }
+    if (ImGui::ImageButton("FireTruck-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(30, 30), Get_UV(id, 0), Get_UV(id, 1))) building = -4;
+    if (m_BuildWindowLayout.Build_Id == -4) ImGui::PopStyleColor(2);
 
     ImGui::End();
 

@@ -68,7 +68,7 @@ private:
 class Car
 {
 public:
-	Car(std::vector<CarCoord> coordinates);
+	Car(std::vector<CarCoord> coordinates, bool isFireTruck);
 	~Car();
 
 	void Move(float t);
@@ -100,7 +100,7 @@ private:
 	void AdjustCurveCoordinates(glm::vec3& coordinate1, glm::vec3& coordinate2, glm::vec3& coordinate3, float roadCompensation);
 	void AdjustStraightCoordinates(glm::vec3& coordinate1, glm::vec3& coordinate2, float roadCompensation);
 
-	void PrepareRoadSections(std::vector<CarCoord> coordinates);
+	void PrepareRoadSections(std::vector<CarCoord> coordinates, float roadCompensation);
 	void CompensateCurves();
 	void AdjustAdditionalSegments();
 
@@ -132,15 +132,19 @@ class CarGroup
 {
 public:
 	static std::vector<glm::mat4> Get_Transforms();
+	static std::vector<glm::mat4> Get_FireTruckTransforms();
 	static void Update();
 	static void Add(std::vector<CarCoord>);
+	static void AddFireTruck(std::vector<CarCoord> coords);
 	static void Clear();
+	static void ClearFireTrucks();
 	static bool Intersect(Car* car1, Car* car2);
 
 	//Setters
 	static void Set_CarLimit(int limit) { car_limit = limit; }
 private:
 	static std::unordered_set<Car*> m_Cars;
+	static std::unordered_set<Car*> m_FireTrucks;
 	static std::unordered_set<CarAndCoord*> m_InUseIntersections;
 
 	static float last_time;

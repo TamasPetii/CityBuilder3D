@@ -72,6 +72,7 @@ private:
 	static Shape_Meteor* m_Meteor;
 	static Water_SHAPE* m_Water;
 	static Shape_Car* m_Car;
+	static Shape_FireTruck* m_FireTruck;
 
 	static Camera* m_Camera;
 	static Skybox* m_Skybox;

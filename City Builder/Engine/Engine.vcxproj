@@ -185,6 +185,7 @@
     <ClCompile Include="Abstractions\BufferObject.cpp" />
     <ClCompile Include="Renderer\Utilities\Car.cpp" />
     <ClCompile Include="Renderer\Utilities\Meteor.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\FireTruck\Shape_FireTruck.cpp" />
     <ClCompile Include="Shapes\Complex Shapes\Meteor\Shape_Meteor.cpp" />
     <ClCompile Include="Shapes\Complex Shapes\Car\Shape_Car.cpp" />
     <ClCompile Include="Utilities\FrameCounter.cpp" />
@@ -241,6 +242,7 @@
     <ClInclude Include="Abstractions\BufferObject.h" />
     <ClInclude Include="Renderer\Utilities\Car.h" />
     <ClInclude Include="Renderer\Utilities\Meteor.h" />
+    <ClInclude Include="Shapes\Complex Shapes\FireTruck\Shape_FireTruck.h" />
     <ClInclude Include="Shapes\Complex Shapes\Meteor\Shape_Meteor.h" />
     <ClInclude Include="Shapes\Complex Shapes\Car\Shape_Car.h" />
     <ClInclude Include="Utilities\FrameCounter.h" />

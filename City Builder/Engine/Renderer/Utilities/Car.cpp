@@ -3,6 +3,7 @@
 //Static members of CarGroup//
 
 std::unordered_set<Car*> CarGroup::m_Cars;
+std::unordered_set<Car*> CarGroup::m_FireTrucks;
 std::unordered_set<CarAndCoord*> CarGroup::m_InUseIntersections;
 
 int CarGroup::car_limit = 0;
@@ -208,10 +209,8 @@ void Car::AddSegmBetwCurveAndInters(CarCoord coord1, CarCoord coord2, CarCoord c
 	m_RouteSections.push_back(new RouteSection({ coordinate4 }, { coordinate5 }));
 }
 
-void Car::PrepareRoadSections(std::vector<CarCoord> coordinates)
+void Car::PrepareRoadSections(std::vector<CarCoord> coordinates, float roadCompensation)
 {
-	float roadCompensation = 0.3f;
-
 	int i = 0;
 
 	while (i < coordinates.size())
@@ -583,30 +582,43 @@ void Car::AdjustAdditionalSegments()
 	}
 }
 
-Car::Car(std::vector<CarCoord> coordinates)
+Car::Car(std::vector<CarCoord> coordinates, bool isFireTruck)
 {
 	m_LastMove = static_cast<float>(glfwGetTime());
 
-	PrepareRoadSections(coordinates);
-	CompensateCurves();
-	AdjustAdditionalSegments();
-
-	//Calculating the length of each RouteSection
-	for (int i = 0; i < m_RouteSections.size(); ++i)
-		m_RouteSections[i]->CalculateSegmentLength();
-
-	//We push the car until it isn't in an intersection
-	bool foundNonIntersection = false;
-
-	for (int i = 0; i < m_OriginalRouteSections.size(); ++i)
+	if (!isFireTruck)
 	{
-		if (!foundNonIntersection)
+		PrepareRoadSections(coordinates, 0.3f);
+		CompensateCurves();
+		AdjustAdditionalSegments();
+
+		//Calculating the length of each RouteSection
+		for (int i = 0; i < m_RouteSections.size(); ++i)
+			m_RouteSections[i]->CalculateSegmentLength();
+
+		//We push the car until it isn't in an intersection
+		bool foundNonIntersection = false;
+
+		for (int i = 0; i < m_OriginalRouteSections.size(); ++i)
 		{
-			if (m_OriginalRouteSections[i]->Get_IsInterSection())
-				m_Param += 1.05f;
-			else
-				foundNonIntersection = true;
+			if (!foundNonIntersection)
+			{
+				if (m_OriginalRouteSections[i]->Get_IsInterSection())
+					m_Param += 1.05f;
+				else
+					foundNonIntersection = true;
+			}
 		}
+	}
+	else
+	{
+		PrepareRoadSections(coordinates, 0.0f);
+		CompensateCurves();
+		AdjustAdditionalSegments();
+
+		//Calculating the length of each RouteSection
+		for (int i = 0; i < m_RouteSections.size(); ++i)
+			m_RouteSections[i]->CalculateSegmentLength();
 	}
 }
 
@@ -707,6 +719,16 @@ std::vector<glm::mat4> CarGroup::Get_Transforms()
 	return transforms;
 }
 
+std::vector<glm::mat4> CarGroup::Get_FireTruckTransforms()
+{
+	std::vector<glm::mat4> transforms;
+
+	for (Car* fireTruck : m_FireTrucks)
+		transforms.push_back(fireTruck->Get_Transform());
+
+	return transforms;
+}
+
 bool CarGroup::Intersect(Car* car1, Car* car2)
 {
 	HitBox a = car1->Get_HitBox();
@@ -723,6 +745,8 @@ bool CarGroup::Intersect(Car* car1, Car* car2)
 void CarGroup::Update()
 {
 	//ultimate full self-driving system (Elon Musk elbujhat)//
+
+	//UPDATING CARS
 
 	current_time = static_cast<float>(glfwGetTime());
 	delta_time = current_time - last_time;
@@ -919,13 +943,23 @@ void CarGroup::Update()
 			++it;
 		}
 	}
+
+	//UPDATING FIRETRUCKS
+
+	for (auto it = m_FireTrucks.begin(); it != m_FireTrucks.end(); )
+	{
+		Car* fireTruck = *it;
+		fireTruck->Move(delta_time);
+		++it;
+	}
+
 }
 
 void CarGroup::Add(std::vector<CarCoord> coords)
 {
 	if (m_Cars.size() < car_limit)
 	{
-		Car* newCar = new Car(coords);
+		Car* newCar = new Car(coords, false);
 		bool noCollison = true;
 
 		for (const auto& otherCar : m_Cars)
@@ -944,6 +978,12 @@ void CarGroup::Add(std::vector<CarCoord> coords)
 	}
 }
 
+void CarGroup::AddFireTruck(std::vector<CarCoord> coords)
+{
+	Car* newFireTruck = new Car(coords, true);
+	m_FireTrucks.insert(newFireTruck);
+}
+
 void CarGroup::Clear()
 {
 	for (auto it = m_Cars.begin(); it != m_Cars.end(); ++it)
@@ -955,4 +995,12 @@ void CarGroup::Clear()
 		delete* it;
 
 	m_InUseIntersections.clear();
+}
+
+void CarGroup::ClearFireTrucks()
+{
+	for (auto it = m_FireTrucks.begin(); it != m_FireTrucks.end(); ++it)
+		delete* it;
+
+	m_FireTrucks.clear();
 }

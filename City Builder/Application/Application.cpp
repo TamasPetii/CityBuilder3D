@@ -120,6 +120,7 @@ void Application::Update()
 
 		MeteorGrp::Clear();
 		CarGroup::Clear();
+		CarGroup::ClearFireTrucks();
 		RoadNetwork::ResetNetworks();
 		City::Build_Log().clear();
 		City::Build_Log().str("");
@@ -289,6 +290,23 @@ void Application::Update()
 			{
 				field->OnFire() = true;
 				changed = true;
+			}
+		}
+
+		else if (m_MyGui->Get_BuildWindowLayout().Build_Id == -4)
+		{
+			if (m_City->Get_GameField(HitX, HitY)->Get_Type() == FIRESTATION)
+			{
+				std::vector<Point> fireTrucks = m_City->Get_FireTruckPath(HitX, HitY);
+				std::vector<CarCoord> coordinates;
+
+				for (int i = 0; i < fireTrucks.size(); ++i)
+				{
+					coordinates.push_back({ glm::vec3(fireTrucks[i].y * 2 + 1, 0, fireTrucks[i].x * 2 + 1) });
+				}
+
+				if (coordinates.size() > 1)
+					CarGroup::AddFireTruck(coordinates);
 			}
 		}
 
