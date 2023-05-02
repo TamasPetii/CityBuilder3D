@@ -484,3 +484,68 @@ std::vector<Point> GameTable::PathFinder(Point start, Point end)
 	//end point is unreachable
 	return {};
 }
+
+std::unordered_set<GameField*> GameTable::PathFinder_Fire(Point start)
+{
+	//directions
+	int dx[] = { -1, 0, 1, 0 };
+	int dy[] = { 0, 1, 0, -1 };
+
+	//initialize visited matrix
+	std::vector<std::vector<bool>> visited(m_TableSize, std::vector<bool>(m_TableSize, false));
+
+	//queue and path for BFS
+	std::queue<Point> q;
+	std::unordered_set<GameField*> fieldsOnFire;
+
+	for (int i = 0; i < 4; ++i)
+	{
+		int x = start.x + dx[i];
+		int y = start.y + dy[i];
+
+		if (Get_TableValue(x,y)->IsRoad())
+		{
+			q.push({x, y});
+		}
+	}
+
+	//start
+	while (!q.empty())
+	{
+		int size = q.size();
+		for (int i = 0; i < size; i++)
+		{
+			Point curr = q.front();
+			q.pop();
+
+			for (int k = 0; k < 4; k++)
+			{
+				int x = curr.x + dx[k];
+				int y = curr.y + dy[k];
+
+				if (Get_TableValue(x,y)->OnFire())
+				{
+					fieldsOnFire.insert(Get_TableValue(x, y));
+				}
+			}
+
+			//mark current point as visited
+			visited[curr.x][curr.y] = true;
+
+			//explore the neighbors
+			for (int j = 0; j < 4; j++)
+			{
+				int nx = curr.x + dx[j];
+				int ny = curr.y + dy[j];
+				if (nx >= 0 && nx < m_TableSize && ny >= 0 && ny < m_TableSize && m_Table[nx][ny]->IsRoad() && !visited[nx][ny])
+				{
+					Point p = { nx, ny };
+					q.push(p);
+					visited[nx][ny] = true;
+				}
+			}
+		}
+	}
+
+	return fieldsOnFire;
+}

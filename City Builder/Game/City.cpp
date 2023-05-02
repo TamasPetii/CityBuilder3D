@@ -471,37 +471,31 @@ std::vector<std::vector<Point>> City::Get_CarPaths() const
 std::vector<Point> City::Get_FireTruckPath(int startX, int startY) const
 {
 	std::vector<Point> path;
-	Point realStart = { 0,0 };
-	Point end = { 0,0 };
-
-	bool anyFire = false;
 
 	int dx[] = { -1, 0, 1, 0 };
 	int dy[] = { 0, 1, 0, -1 };
 
-	for (int x = 0; x < Get_GameTableSize(); x++)
-	{
-		for (int y = 0; y < Get_GameTableSize(); y++)
-		{
-			if (Get_GameField(x, y)->OnFire())
-			{
-				anyFire = true;
-				end = { x,y };
-			}
-		}
-	}
+	std::unordered_set<GameField*> onFireFields = m_GameTable->PathFinder_Fire({startX, startY});
 
-	if (anyFire)
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> distr(0, onFireFields.size() - 1);
+
+	auto it = onFireFields.begin();
+	std::advance(it, distr(gen));
+
+	GameField* randomField = *it;
+
+	if (randomField != nullptr)
 	{
 		for (int i = 0; i < 4; ++i)
 		{
-			int j = startX + dx[i];
-			int k = startY + dy[i];
+			int x = startX + dx[i];
+			int y = startY + dy[i];
 
-			if (Get_GameField(j, k)->IsRoad())
+			if (path.size() == 0)
 			{
-				Point start = { j,k };
-				path = m_GameTable->PathFinder(start, end);
+				path = m_GameTable->PathFinder({startX, startY}, {randomField->Get_X(), randomField->Get_Y()});
 			}
 		}
 	}
