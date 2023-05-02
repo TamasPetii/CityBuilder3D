@@ -106,8 +106,6 @@ void Application::Update()
 				m_City->Get_GameField(it->second->endY / 2, it->second->endX / 2)->FireCounter = 500;
 				m_City->Get_GameField(it->second->endY / 2, it->second->endX / 2)->OnFire() = false;
 			}
-
-			std::cout << m_City->Get_GameField(it->second->endY / 2, it->second->endX / 2)->FireCounter << std::endl;
 		}
 
 		changed = m_City->Get_CitizenSize() != size;
@@ -607,8 +605,6 @@ void Application::FireTruckSimulation()
 {
 	for (auto truck : CarGroup::m_FireTrucks)
 	{
-		std::cout << cos(truck->Get_Rotation()) << std::endl;
-
 		if (truck->ShouldBeDeleted() && truck_map.find(truck) == truck_map.end())
 		{
 
@@ -658,9 +654,33 @@ void Application::FireTruckSimulation()
 	{
 		it->second->Update();
 
-		if (!m_City->Get_GameField(it->second->endY / 2, it->second->endX / 2)->OnFire())
+
+		int x = it->second->endY / 2;
+		int y = it->second->endX / 2;
+
+		if (!m_City->Get_GameField(x, y)->OnFire())
 		{
-			to_Delete.push_back(it->first);
+			float start_x = it->second->startX;
+			float start_y = it->second->startY;
+
+			delete it->second;
+			it->second = nullptr;
+
+			for (int i = -1; i <= 1; i++)
+			{
+				for (int j = -1; j <= 1; j++)
+				{
+					if (m_City->Validate(x + i, y + j) && !(i == 0 && j == 0) && m_City->Get_GameField(x + i, y + j)->OnFire() && it->second == nullptr)
+					{
+						it->second = new WaterGroup(start_x, start_y, 2 * (y + j) + 1, 2 * (x + i) + 1);
+					}
+				}
+			}
+
+			if (it->second == nullptr)
+			{
+				to_Delete.push_back(it->first);
+			}
 		}
 	}
 
