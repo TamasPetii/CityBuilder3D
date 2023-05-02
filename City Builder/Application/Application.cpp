@@ -156,7 +156,7 @@ void Application::Update()
 					FieldDirection dir = static_cast<FieldDirection>(tmp);
 					m_City->Set_GameTableValue(i, j, type, dir);
 				}
-				else {
+				else if (type != EMPTY) {
 					m_City->Set_GameTableValue(i, j, type, FRONT);
 				}
 			}
