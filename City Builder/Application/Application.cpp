@@ -156,6 +156,12 @@ void Application::Update()
 					FieldDirection dir = static_cast<FieldDirection>(tmp);
 					m_City->Set_GameTableValue(i, j, type, dir);
 				}
+				else if (type == FOREST) {
+					saveFile >> tmp;
+					m_City->Set_GameTableValue(i, j, type, FRONT);
+					GameField* f = m_City->Get_GameField(i, j);
+					dynamic_cast<Forest*>(f)->Set_Age(tmp);
+				}
 				else if (type != EMPTY) {
 					m_City->Set_GameTableValue(i, j, type, FRONT);
 				}
@@ -188,12 +194,16 @@ void Application::Update()
 						if (type == HIGHSCHOOL) {
 							saveFile << type << " " << field->Get_Direction() << " ";
 							continue;
-						} 
+						}
 					}
 					else {
 						saveFile << EMPTY << " ";
 						continue;
 					}
+				}
+				else if (type == FOREST) {
+					saveFile << type << " " << dynamic_cast<Forest*>(field)->Get_Age() << " ";
+					continue;
 				}
 				saveFile << type << " ";
 			}
