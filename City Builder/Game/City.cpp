@@ -15,6 +15,12 @@ City::City(int size)
 	GenerateLakes(5, 0.4);
 }
 
+City::City(int size, bool b)
+{
+	m_GameTable = new GameTable(size);
+	m_Money = 0;
+}
+
 std::string City::Get_TimeStr() const
 {
 	return std::to_string(Get_Year()) + "." + std::to_string(Get_Month()) + "." + std::to_string(Get_Day());

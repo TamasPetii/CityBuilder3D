@@ -36,6 +36,33 @@ Application::~Application()
 	delete m_City;
 }
 
+void Application::NewGame(int size, bool empty = false) {
+	m_MyGui->Get_GameWindowLayout().Time_Real = 0;
+	m_MyGui->Get_GameWindowLayout().Time_Tick = m_MyGui->Get_MenuBarLayout().City_Time;
+	m_Timer->Reset();
+	m_Timer->SetTickTime(m_MyGui->Get_MenuBarLayout().City_Time);
+	changed = true;
+
+	MeteorGrp::Clear();
+	CarGroup::Clear();
+	RoadNetwork::ResetNetworks();
+	City::BUILD_LOG.clear();
+	City::BUILD_LOG.str("");
+	City::MONEY_LOG.clear();
+	City::MONEY_LOG.str("");
+	Citizen::LOG.clear();
+	Citizen::LOG.str("");
+	Renderer::ResizeShapeBuffers(m_MyGui->Get_MenuBarLayout().City_Size * m_MyGui->Get_MenuBarLayout().City_Size);
+
+	delete m_City;
+	if (empty) m_City = new City(size, true);
+	else m_City = new City(size);
+	
+
+	m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
+	m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
+}
+
 void Application::Update()
 {
 	MeteorGrp::Update();
@@ -102,29 +129,8 @@ void Application::Update()
 	//NEW-GAME
 	if (m_MyGui->Get_MenuBarLayout().NewGame_Effect)
 	{
-		m_MyGui->Get_GameWindowLayout().Time_Real = 0;
 		m_MyGui->Get_MenuBarLayout().NewGame_Effect = false;
-		m_MyGui->Get_GameWindowLayout().Time_Tick = m_MyGui->Get_MenuBarLayout().City_Time;
-		m_Timer->Reset();
-		m_Timer->SetTickTime(m_MyGui->Get_MenuBarLayout().City_Time);
-		changed = true;
-
-		MeteorGrp::Clear();
-		CarGroup::Clear();
-		RoadNetwork::ResetNetworks();
-		City::BUILD_LOG.clear();
-		City::BUILD_LOG.str("");
-		City::MONEY_LOG.clear();
-		City::MONEY_LOG.str("");
-		Citizen::LOG.clear();
-		Citizen::LOG.str("");
-		Renderer::ResizeShapeBuffers(m_MyGui->Get_MenuBarLayout().City_Size * m_MyGui->Get_MenuBarLayout().City_Size);
-
-		delete m_City;
-		m_City = new City(m_MyGui->Get_MenuBarLayout().City_Size);
-
-		m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
-		m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
+		Application::NewGame(m_MyGui->Get_MenuBarLayout().City_Size);
 	}
 
 	//LOAD-GAME
@@ -135,9 +141,29 @@ void Application::Update()
 		std::cout << "Load-Game" << std::endl;
 		std::cout << "PATH: " << m_MyGui->Get_MenuBarLayout().LoadFile_Path << std::endl;
 		std::cout << "NAME: " << m_MyGui->Get_MenuBarLayout().LoadFile_Name << std::endl;
+
+		std::ifstream saveFile(m_MyGui->Get_MenuBarLayout().LoadFile_Path);
+		int size;
+		saveFile >> size;
+		Application::NewGame(size, true);
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				int tmp;
+				saveFile >> tmp;
+				FieldType type = static_cast<FieldType>(tmp);
+				if (type == HIGHSCHOOL) {
+					saveFile >> tmp;
+					FieldDirection dir = static_cast<FieldDirection>(tmp);
+					m_City->Set_GameTableValue(i, j, type, dir);
+				}
+				else {
+					m_City->Set_GameTableValue(i, j, type, FRONT);
+				}
+			}
+		}
 	}
 
-	//LOAD-GAME
+	//SAVE-GAME
 	if (m_MyGui->Get_MenuBarLayout().SaveGame_Effect)
 	{
 		m_MyGui->Get_MenuBarLayout().SaveGame_Effect = false;
@@ -145,6 +171,38 @@ void Application::Update()
 		std::cout << "Save-Game" << std::endl;
 		std::cout << "PATH: " << m_MyGui->Get_MenuBarLayout().SaveFile_Path << std::endl;
 		std::cout << "NAME: " << m_MyGui->Get_MenuBarLayout().SaveFile_Name << std::endl;
+
+		std::ofstream saveFile(m_MyGui->Get_MenuBarLayout().SaveFile_Path + ".txt");
+		int size = m_City->Get_GameTableSize();
+		saveFile << size << std::endl;
+
+		//Mezõk
+		std::unordered_set<GameField*> bigBuildings;
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				GameField* field = m_City->Get_GameField(i, j);
+				FieldType type = field->Get_Type();
+				if (type == UNIVERSITY || type == HIGHSCHOOL || type == POWERSTATION || type == STADIUM) {
+					if (bigBuildings.find(field) == bigBuildings.end()) {
+						bigBuildings.emplace(field);
+						if (type == HIGHSCHOOL) {
+							saveFile << type << " " << field->Get_Direction() << " ";
+							continue;
+						} 
+					}
+					else {
+						saveFile << EMPTY << " ";
+						continue;
+					}
+				}
+				saveFile << type << " ";
+			}
+			saveFile << std::endl;
+		}
+
+		//Polgárok
+
+		//Város adatai
 	}
 
 	//GAME-TIME

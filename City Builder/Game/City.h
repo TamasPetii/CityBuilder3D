@@ -12,6 +12,7 @@ class City
 {
 public:
 	City(int size);
+	City(int size, bool b);
 	~City() = default;
 
 	//Static Methodes / Members

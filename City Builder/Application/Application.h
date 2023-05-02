@@ -21,6 +21,7 @@
 #include <string>
 #include <vector>
 #include <cmath>
+#include <fstream>
 
 class Application
 {
@@ -28,6 +29,7 @@ public:
 	Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT);
 	~Application();
 
+	void NewGame(int, bool);
 	void Update();
 	void Render();
 	void RenderUI();
