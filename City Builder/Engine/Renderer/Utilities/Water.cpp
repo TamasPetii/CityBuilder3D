@@ -1,8 +1,13 @@
 #include "Water.h"
 
-WaterGroup::WaterGroup(int startX, int startY, int endX, int endY)
+WaterGroup::WaterGroup(float startX, float startY, float endX, float endY)
 {
 	curve = new ProjectileMotion(glm::vec3(startX, 0, startY), glm::vec3(endX, 0, endY));
+
+	this->startX = startX;
+	this->startY = startY;
+	this->endX = endX;
+	this->endY = endY;
 }
 
 void WaterGroup::Init()

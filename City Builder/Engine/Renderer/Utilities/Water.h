@@ -19,7 +19,7 @@ class Water;
 class WaterGroup
 {
 public:
-	WaterGroup(int startX, int startY, int endX, int endY);
+	WaterGroup(float startX, float startY, float endX, float endY);
 	void Init();
 	void Clear();
 	void Update();
@@ -27,7 +27,13 @@ public:
 	void Delete();
 	void Add();
 	std::vector<glm::mat4> Get_Transforms();
+
+	float startX;
+	float startY;
+	float endX;
+	float endY;
 private:
+
 	std::vector<Water*> m_ToDelete;
 	std::unordered_set<Water*> m_Waters;
 	ProjectileMotion* curve;

@@ -63,6 +63,8 @@ public:
 	bool Changed() { return m_GameTable->changed; }
 	void ResetChanged() { m_GameTable->changed = false; }
 
+
+	bool Validate(int c1, int c2) { return m_GameTable->ValidateCoordinate(c1, c2); }
 private:
 	void GenerateCellularFields(int iterations, double initialRatio, FieldType fieldType);
 

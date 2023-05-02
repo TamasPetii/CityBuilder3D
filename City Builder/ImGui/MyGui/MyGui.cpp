@@ -975,7 +975,7 @@ void MyGui::BuildWindow()
     if (m_BuildWindowLayout.Build_Id == -3) ImGui::PopStyleColor(2);
     ImGui::SameLine();
 
-    id = 94;
+    id = 95;
     if (m_BuildWindowLayout.Build_Id == -4)
     {
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));

@@ -37,17 +37,8 @@ Application::~Application()
 	delete m_City;
 }
 
-WaterGroup* WaterCurve = new WaterGroup(0, 0, 10, 10);
-
 void Application::Update()
 {
-	if (m_MyGui->Get_EventLayout().curvechange)
-	{
-		WaterCurve->Recalculate(m_MyGui->Get_EventLayout().x, m_MyGui->Get_EventLayout().y);
-	}
-
-	WaterCurve->Update();
-
 	MeteorGrp::Update();
 	CarGroup::Update();
 	m_Timer->Update();
@@ -104,6 +95,19 @@ void Application::Update()
 				}
 				CarGroup::Add(coordinates);
 			}
+		}
+
+		for (auto it = truck_map.begin(); it != truck_map.end(); it++)
+		{
+			m_City->Get_GameField(it->second->endY / 2, it->second->endX / 2)->FireCounter += 2;
+
+			if (m_City->Get_GameField(it->second->endY / 2, it->second->endX / 2)->FireCounter >= 500)
+			{
+				m_City->Get_GameField(it->second->endY / 2, it->second->endX / 2)->FireCounter = 500;
+				m_City->Get_GameField(it->second->endY / 2, it->second->endX / 2)->OnFire() = false;
+			}
+
+			std::cout << m_City->Get_GameField(it->second->endY / 2, it->second->endX / 2)->FireCounter << std::endl;
 		}
 
 		changed = m_City->Get_CitizenSize() != size;
@@ -361,6 +365,8 @@ void Application::Update()
 
 		std::cout << "UPGRADED" << std::endl;
 	}
+
+	FireTruckSimulation();
 }
 
 void Application::RenderUI()
@@ -423,7 +429,11 @@ void Application::Render()
 
 	Renderer::PreRender();
 	Renderer::SceneRender(INSTANCED);
-	Renderer::RenderWaterCurve(WaterCurve->Get_Transforms());
+
+	for (auto it = truck_map.begin(); it != truck_map.end(); it++)
+	{
+		Renderer::RenderWaterCurve(it->second->Get_Transforms());
+	}
 
 	if (m_MyGui->BuildHover)
 	{
@@ -590,5 +600,73 @@ int Application::DetermineRoadTextureID(int x, int y)
 	else
 	{
 		return 7;
+	}
+}
+
+void Application::FireTruckSimulation()
+{
+	for (auto truck : CarGroup::m_FireTrucks)
+	{
+		std::cout << cos(truck->Get_Rotation()) << std::endl;
+
+		if (truck->ShouldBeDeleted() && truck_map.find(truck) == truck_map.end())
+		{
+
+			float dir = 0.02 * cos(truck->Get_Rotation());
+
+			float rotation = 0;
+			float start_x = truck->Get_CurrentPosition(rotation).x + dir;
+			float start_y = truck->Get_CurrentPosition(rotation).z + dir;
+
+			int table_x = start_y / 2.f;
+			int table_y = start_x / 2.f;
+
+			float end_x = -1;
+			float end_y = -1;
+
+			if (m_City->Validate(table_x + 1, table_y) && m_City->Get_GameField(table_x + 1, table_y)->OnFire())
+			{
+				end_x = table_y * 2.f + 1;
+				end_y = (table_x + 1) * 2.f + 1;
+			}
+			else if (m_City->Validate(table_x - 1, table_y) && m_City->Get_GameField(table_x - 1, table_y)->OnFire())
+			{
+				end_x = table_y * 2.f + 1;
+				end_y = (table_x - 1) * 2.f + 1;
+			}
+			else if (m_City->Validate(table_x, table_y + 1) && m_City->Get_GameField(table_x, table_y + 1)->OnFire())
+			{
+				end_x = (table_y + 1) * 2.f + 1;
+				end_y = table_x * 2.f + 1;
+			}
+			else if (m_City->Validate(table_x, table_y - 1) && m_City->Get_GameField(table_x, table_y - 1)->OnFire())
+			{
+				end_x = (table_y - 1) * 2.f + 1;
+				end_y = table_x * 2.f + 1;
+			}
+
+			if (end_x != -1)
+			{
+				truck_map[truck] = new WaterGroup(start_x, start_y, end_x, end_y);
+			}
+		}
+	}
+
+	std::vector<Car*> to_Delete;
+
+	for (auto it = truck_map.begin(); it != truck_map.end(); it++)
+	{
+		it->second->Update();
+
+		if (!m_City->Get_GameField(it->second->endY / 2, it->second->endX / 2)->OnFire())
+		{
+			to_Delete.push_back(it->first);
+		}
+	}
+
+	for (auto truck : to_Delete)
+	{
+		truck_map.erase(truck);
+		CarGroup::m_FireTrucks.erase(truck);
 	}
 }

@@ -37,6 +37,7 @@ public:
 	void ConvertMouseInputTo3D(int xpos, int ypos, int width, int height);
 
 	int DetermineRoadTextureID(int x, int y);
+	void FireTruckSimulation();
 
 private:
 	GLFWwindow* m_Window = nullptr;
@@ -57,5 +58,7 @@ private:
 
 	int HitX;
 	int HitY;
+
+	std::unordered_map<Car*, WaterGroup*> truck_map;
 };
 

@@ -91,7 +91,7 @@ public:
 	HitBox Get_HitBox();
 
 	inline float Get_LastMove() { return m_LastMove; }
-
+	inline float Get_Rotation() { return m_Rotation; }
 private:
 	float m_Param = 0.0f;
 	float m_Rotation = 0.0f;
@@ -142,9 +142,9 @@ public:
 
 	//Setters
 	static void Set_CarLimit(int limit) { car_limit = limit; }
+	static std::unordered_set<Car*> m_FireTrucks;
 private:
 	static std::unordered_set<Car*> m_Cars;
-	static std::unordered_set<Car*> m_FireTrucks;
 	static std::unordered_set<CarAndCoord*> m_InUseIntersections;
 
 	static float last_time;
