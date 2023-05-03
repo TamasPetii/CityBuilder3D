@@ -35,7 +35,7 @@ public:
 	float Get_TotalCost() const;
 
 	std::vector<Point> PathFinder(Point start, Point end);
-	std::unordered_set<GameField*> PathFinder_Fire(Point start);
+	std::unordered_set<int> PathFinder_Fire(Point start);
 	bool IsInterSection(Point p);
 	bool recalculate = false;
 

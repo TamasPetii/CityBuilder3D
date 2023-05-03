@@ -65,6 +65,8 @@ public:
 
 
 	bool Validate(int c1, int c2) { return m_GameTable->ValidateCoordinate(c1, c2); }
+
+	GameTable* Get_GameTable() { return m_GameTable; }
 private:
 	void GenerateCellularFields(int iterations, double initialRatio, FieldType fieldType);
 
@@ -85,4 +87,6 @@ private:
 
 	int m_initialCitizens = 0;
 	int m_NumberOfResidences = 0;
+
+
 };

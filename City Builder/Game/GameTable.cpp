@@ -485,7 +485,7 @@ std::vector<Point> GameTable::PathFinder(Point start, Point end)
 	return {};
 }
 
-std::unordered_set<GameField*> GameTable::PathFinder_Fire(Point start)
+std::unordered_set<int> GameTable::PathFinder_Fire(Point start)
 {
 	//directions
 	int dx[] = { -1, 0, 1, 0 };
@@ -496,7 +496,7 @@ std::unordered_set<GameField*> GameTable::PathFinder_Fire(Point start)
 
 	//queue and path for BFS
 	std::queue<Point> q;
-	std::unordered_set<GameField*> fieldsOnFire;
+	std::unordered_set<int> fieldsOnFire;
 
 	for (int i = 0; i < 4; ++i)
 	{
@@ -525,7 +525,7 @@ std::unordered_set<GameField*> GameTable::PathFinder_Fire(Point start)
 
 				if (Get_TableValue(x,y)->OnFire())
 				{
-					fieldsOnFire.insert(Get_TableValue(x, y));
+					fieldsOnFire.insert(x * m_TableSize + y);
 				}
 			}
 

@@ -1,5 +1,8 @@
 #pragma once
 #define _USE_MATH_DEFINES
+#define WRITE(x) std::cout << x << std::endl;
+#define WRITE_MAP(map) for(auto it = map.begin(); it != map.end(); it++) {std::cout << it->first << " " << it->second << std::endl;}
+
 
 //OpenGL Headers
 #include <GLEW/glew.h>

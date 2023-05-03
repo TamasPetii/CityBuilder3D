@@ -44,6 +44,7 @@ void Application::Update()
 	m_Timer->Update();
 	m_FrameCounter->Update();
 	m_Camera->Update();
+	FireTruckSimulation();
 
 	m_MyGui->Get_ViewPortLayout().ViewPort_TextureID = Renderer::Get_FrameBuffer()->Get_TextureId();
 	m_MyGui->Get_RenderWindowLayout().Camera_Position = m_Camera->Get_CameraEye();
@@ -363,8 +364,6 @@ void Application::Update()
 
 		std::cout << "UPGRADED" << std::endl;
 	}
-
-	FireTruckSimulation();
 }
 
 void Application::RenderUI()
@@ -532,7 +531,6 @@ void Application::ConvertMouseInputTo3D(int xpos, int ypos, int width, int heigh
 		HitX = (int)rayz;
 		HitY = (int)rayx;
 	}
-
 }
 
 int Application::DetermineRoadTextureID(int x, int y)
@@ -605,9 +603,31 @@ void Application::FireTruckSimulation()
 {
 	for (auto truck : CarGroup::m_FireTrucks)
 	{
+		float dir = 0.02 * cos(truck->Get_Rotation());
+
+		float rotation = 0;
+		float start_x = truck->Get_CurrentPosition(rotation).x + dir;
+		float start_y = truck->Get_CurrentPosition(rotation).z + dir;
+
+		int table_x = start_y / 2.f;
+		int table_y = start_x / 2.f;
+
+		FieldType type = m_City->Get_GameField(table_x, table_y)->Get_Type();
+
+		if (type == EMPTY || type == CRATER)
+		{
+			if (truck_map.find(truck) != truck_map.end())
+			{
+				truck_map.erase(truck);
+			}
+			CarGroup::m_FireTrucks.erase(truck);
+		}
+	}
+
+	for (auto truck : CarGroup::m_FireTrucks)
+	{
 		if (truck->ShouldBeDeleted() && truck_map.find(truck) == truck_map.end())
 		{
-
 			float dir = 0.02 * cos(truck->Get_Rotation());
 
 			float rotation = 0;
@@ -643,7 +663,11 @@ void Application::FireTruckSimulation()
 
 			if (end_x != -1)
 			{
-				truck_map[truck] = new WaterGroup(start_x, start_y, end_x, end_y);
+				truck_map.insert(std::pair<Car*, WaterGroup*>(truck, new WaterGroup(start_x, start_y, end_x, end_y)));
+			}
+			else 
+			{
+				CarGroup::m_FireTrucks.erase(truck);
 			}
 		}
 	}
@@ -654,15 +678,15 @@ void Application::FireTruckSimulation()
 	{
 		it->second->Update();
 
-
-		int x = it->second->endY / 2;
-		int y = it->second->endX / 2;
+		int x = (int)it->second->endY / 2;
+		int y = (int)it->second->endX / 2;
 
 		if (!m_City->Get_GameField(x, y)->OnFire())
 		{
 			float start_x = it->second->startX;
 			float start_y = it->second->startY;
 
+			it->second->Clear();
 			delete it->second;
 			it->second = nullptr;
 
@@ -670,13 +694,32 @@ void Application::FireTruckSimulation()
 			{
 				for (int j = -1; j <= 1; j++)
 				{
-					if (m_City->Validate(x + i, y + j) && !(i == 0 && j == 0) && m_City->Get_GameField(x + i, y + j)->OnFire() && it->second == nullptr)
+					if (m_City->Validate(x + i, y + j) && !(i == 0 && j == 0) && m_City->Get_GameField(x + i, y + j)->OnFire())
 					{
 						it->second = new WaterGroup(start_x, start_y, 2 * (y + j) + 1, 2 * (x + i) + 1);
 					}
 				}
 			}
+			
+			if (it->second == nullptr)
+			{
+				std::unordered_set<int> onFireFields = m_City->Get_GameTable()->PathFinder_Fire({ (int)start_y / 2, (int)start_x / 2 });
 
+				if (onFireFields.size() > 0)
+				{
+					std::random_device rd;
+					std::mt19937 gen(rd());
+					std::uniform_int_distribution<> distr(0, onFireFields.size() - 1);
+
+					auto beginIT = onFireFields.begin();
+					std::advance(beginIT, distr(gen));
+
+					int randomField = *beginIT;
+					
+					it->second = new WaterGroup(start_x, start_y, 2 * (randomField % m_City->Get_GameTableSize()) + 1, 2 * (randomField / m_City->Get_GameTableSize()) + 1);
+				}
+			}
+			
 			if (it->second == nullptr)
 			{
 				to_Delete.push_back(it->first);
