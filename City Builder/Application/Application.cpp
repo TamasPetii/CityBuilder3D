@@ -310,9 +310,21 @@ void Application::Update()
 				{
 					coordinates.push_back({ glm::vec3(fireTrucks[i].y * 2 + 1, 0, fireTrucks[i].x * 2 + 1) });
 				}
+				
+				WRITE_MAP(station_map);
 
-				if (coordinates.size() > 1)
-					CarGroup::AddFireTruck(coordinates);
+				bool l = false;
+				for (auto it = station_map.begin(); it != station_map.end() && !l; it++)
+				{
+					l = l || it->second == m_City->Get_GameField(HitX, HitY);
+				}
+
+				if (coordinates.size() > 1 && !l)
+				{
+					Car* new_car = CarGroup::AddFireTruck(coordinates);
+					station_map.insert(std::pair<Car*, GameField*>(new_car, m_City->Get_GameField(HitX, HitY)));
+				}
+					
 			}
 		}
 
@@ -604,6 +616,9 @@ int Application::DetermineRoadTextureID(int x, int y)
 
 void Application::FireTruckSimulation()
 {
+	std::vector<Car*> to_delete_CARGROUP;
+	std::vector<Car*> to_delete_MAP;
+
 	for (auto truck : CarGroup::m_FireTrucks)
 	{
 		float dir = 0.02 * cos(truck->Get_Rotation());
@@ -619,12 +634,29 @@ void Application::FireTruckSimulation()
 
 		if (type == EMPTY || type == CRATER)
 		{
-			if (truck_map.find(truck) != truck_map.end())
+			WRITE_MAP(truck_map);
+			WRITE("ALMOS KUKI: ");
+			WRITE(truck);
+
+			if (station_map.find(truck) != station_map.end())
 			{
-				truck_map.erase(truck);
+				std::cout << "DELETED - CAR" << std::endl;
+				to_delete_MAP.push_back(truck);
 			}
-			CarGroup::m_FireTrucks.erase(truck);
+
+			to_delete_CARGROUP.push_back(truck);
 		}
+	}
+
+	for (auto car : to_delete_MAP)
+	{
+		station_map.erase(car);
+		truck_map.erase(car);
+	}
+
+	for (auto car : to_delete_CARGROUP)
+	{
+		CarGroup::m_FireTrucks.erase(car);
 	}
 
 	for (auto truck : CarGroup::m_FireTrucks)
@@ -733,6 +765,7 @@ void Application::FireTruckSimulation()
 	for (auto truck : to_Delete)
 	{
 		truck_map.erase(truck);
+		station_map.erase(truck);
 		CarGroup::m_FireTrucks.erase(truck);
 	}
 }

@@ -978,10 +978,12 @@ void CarGroup::Add(std::vector<CarCoord> coords)
 	}
 }
 
-void CarGroup::AddFireTruck(std::vector<CarCoord> coords)
+Car* CarGroup::AddFireTruck(std::vector<CarCoord> coords)
 {
+
 	Car* newFireTruck = new Car(coords, true);
 	m_FireTrucks.insert(newFireTruck);
+	return newFireTruck;
 }
 
 void CarGroup::Clear()

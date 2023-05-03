@@ -115,7 +115,7 @@ ProjectileMotion::ProjectileMotion(glm::vec3 start, glm::vec3 end) :
 	distanceZ = m_MotionEndPosition.z - m_MotionStartPosition.z;
 	distanceY = m_MotionEndPosition.y - m_MotionStartPosition.y;
 	distance = sqrtf(powf(distanceX, 2) + powf(distanceZ, 2));
-	angle = fmin(35 + (distance > 6.2 ? 0 : abs(distance - 5.2 - 2) * 5), 55) * (M_PI / 180.f);
+	angle = fmin(45 + (distance > 6.2 ? 0 : abs(distance - 5.2 - 2) * 5), 60) * (M_PI / 180.f);
 	speed = sqrtf((-1 * m_Gravity * powf(distance, 2)) / (2 * powf(cosf(angle), 2) * (distanceY - distance * tanf(angle))));
 }
 

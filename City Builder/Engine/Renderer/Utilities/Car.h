@@ -135,7 +135,7 @@ public:
 	static std::vector<glm::mat4> Get_FireTruckTransforms();
 	static void Update();
 	static void Add(std::vector<CarCoord>);
-	static void AddFireTruck(std::vector<CarCoord> coords);
+	static Car* AddFireTruck(std::vector<CarCoord> coords);
 	static void Clear();
 	static void ClearFireTrucks();
 	static bool Intersect(Car* car1, Car* car2);
