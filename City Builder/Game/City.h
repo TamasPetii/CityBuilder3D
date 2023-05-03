@@ -12,7 +12,7 @@ class City
 {
 public:
 	City(int size);
-	City(int size, bool b);
+	City(int size, int money, int time);
 	~City() = default;
 
 	//Static Methodes / Members

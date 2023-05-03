@@ -36,7 +36,7 @@ Application::~Application()
 	delete m_City;
 }
 
-void Application::NewGame(int size, bool empty = false) {
+void Application::NewGame(int size, int money = -1, int time = -1) {
 	m_MyGui->Get_GameWindowLayout().Time_Real = 0;
 	m_MyGui->Get_GameWindowLayout().Time_Tick = m_MyGui->Get_MenuBarLayout().City_Time;
 	m_Timer->Reset();
@@ -55,12 +55,117 @@ void Application::NewGame(int size, bool empty = false) {
 	Renderer::ResizeShapeBuffers(m_MyGui->Get_MenuBarLayout().City_Size * m_MyGui->Get_MenuBarLayout().City_Size);
 
 	delete m_City;
-	if (empty) m_City = new City(size, true);
-	else m_City = new City(size);
+	if (money == -1 || time == -1) m_City = new City(size);
+	else m_City = new City(size, money, time);
 	
+	auto taxRates = Application::Get_TaxRates();
+	for (auto& it : taxRates) {
+		*it.second = 40;
+	}
+	m_MyGui->Get_GameWindowLayout().Tax_Effect = true;
 
 	m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
 	m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
+}
+
+void Application::LoadGame() {
+	std::ifstream saveFile(m_MyGui->Get_MenuBarLayout().LoadFile_Path);
+	int size, tmp, money, time;
+	saveFile >> size >> money >> time;
+	Application::NewGame(size, money, time);
+
+	auto taxRates = Application::Get_TaxRates();
+	for (auto& it : taxRates) {
+		int type;
+		float taxRate;
+		saveFile >> type >> taxRate;
+		m_City->Set_TaxRate(static_cast<FieldType>(type), taxRate);
+		*it.second = taxRate;
+	}
+
+	for (int i = 0; i < size; i++) {
+		for (int j = 0; j < size; j++) {
+			int tmp;
+			saveFile >> tmp;
+			FieldType type = static_cast<FieldType>(tmp);
+			if (type == HIGHSCHOOL) {
+				saveFile >> tmp;
+				FieldDirection dir = static_cast<FieldDirection>(tmp);
+				m_City->Set_GameTableValue(i, j, type, dir);
+			}
+			else if (type == FOREST) {
+				saveFile >> tmp;
+				m_City->Set_GameTableValue(i, j, type, FRONT);
+				GameField* f = m_City->Get_GameField(i, j);
+				dynamic_cast<Forest*>(f)->Set_Age(tmp);
+			}
+			else if (type != EMPTY) {
+				m_City->Set_GameTableValue(i, j, type, FRONT);
+			}
+		}
+	}
+}
+
+void Application::SaveGame() {
+	std::ofstream saveFile(m_MyGui->Get_MenuBarLayout().SaveFile_Path + ".txt");
+
+	//Város adatai
+	int size = m_City->Get_GameTableSize();
+	saveFile << size << std::endl;
+	saveFile << m_City->Get_Money() << std::endl;
+	saveFile << m_City->Get_Time() << std::endl;
+
+	auto taxRates = Application::Get_TaxRates();
+	for (auto& it : taxRates) {
+		saveFile << it.first << " " << *it.second << " ";
+	}
+	saveFile << std::endl;
+
+	//Mezõk
+	std::unordered_set<GameField*> bigBuildings;
+	for (int i = 0; i < size; i++) {
+		for (int j = 0; j < size; j++) {
+			GameField* field = m_City->Get_GameField(i, j);
+			FieldType type = field->Get_Type();
+			if (type == UNIVERSITY || type == HIGHSCHOOL || type == POWERSTATION || type == STADIUM) {
+				if (bigBuildings.find(field) == bigBuildings.end()) {
+					bigBuildings.emplace(field);
+					if (type == HIGHSCHOOL) {
+						saveFile << type << " " << field->Get_Direction() << " ";
+						continue;
+					}
+				}
+				else {
+					saveFile << EMPTY << " ";
+					continue;
+				}
+			}
+			else if (type == FOREST) {
+				saveFile << type << " " << dynamic_cast<Forest*>(field)->Get_Age() << " ";
+				continue;
+			}
+			saveFile << type << " ";
+		}
+		saveFile << std::endl;
+	}
+
+	//Polgárok
+}
+
+std::vector<std::pair<FieldType, float*>> Application::Get_TaxRates() {
+	std::vector<std::pair<FieldType, float*>> taxRates = {
+	{RESIDENTIAL_LVL1, &m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl1},
+	{RESIDENTIAL_LVL2, &m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl2},
+	{RESIDENTIAL_LVL3, &m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl3},
+	{SERVICE_LVL1, &m_MyGui->Get_GameWindowLayout().ServiceTaxLvl1},
+	{SERVICE_LVL2, &m_MyGui->Get_GameWindowLayout().ServiceTaxLvl2},
+	{SERVICE_LVL3, &m_MyGui->Get_GameWindowLayout().ServiceTaxLvl3},
+	{INDUSTRIAL_LVL1, &m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl1},
+	{INDUSTRIAL_LVL2, &m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl2},
+	{INDUSTRIAL_LVL3, &m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl3}
+	};
+
+	return taxRates;
 }
 
 void Application::Update()
@@ -137,82 +242,14 @@ void Application::Update()
 	if (m_MyGui->Get_MenuBarLayout().LoadGame_Effect)
 	{
 		m_MyGui->Get_MenuBarLayout().LoadGame_Effect = false;
-
-		std::cout << "Load-Game" << std::endl;
-		std::cout << "PATH: " << m_MyGui->Get_MenuBarLayout().LoadFile_Path << std::endl;
-		std::cout << "NAME: " << m_MyGui->Get_MenuBarLayout().LoadFile_Name << std::endl;
-
-		std::ifstream saveFile(m_MyGui->Get_MenuBarLayout().LoadFile_Path);
-		int size;
-		saveFile >> size;
-		Application::NewGame(size, true);
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				int tmp;
-				saveFile >> tmp;
-				FieldType type = static_cast<FieldType>(tmp);
-				if (type == HIGHSCHOOL) {
-					saveFile >> tmp;
-					FieldDirection dir = static_cast<FieldDirection>(tmp);
-					m_City->Set_GameTableValue(i, j, type, dir);
-				}
-				else if (type == FOREST) {
-					saveFile >> tmp;
-					m_City->Set_GameTableValue(i, j, type, FRONT);
-					GameField* f = m_City->Get_GameField(i, j);
-					dynamic_cast<Forest*>(f)->Set_Age(tmp);
-				}
-				else if (type != EMPTY) {
-					m_City->Set_GameTableValue(i, j, type, FRONT);
-				}
-			}
-		}
+		Application::LoadGame();
 	}
 
 	//SAVE-GAME
 	if (m_MyGui->Get_MenuBarLayout().SaveGame_Effect)
 	{
 		m_MyGui->Get_MenuBarLayout().SaveGame_Effect = false;
-
-		std::cout << "Save-Game" << std::endl;
-		std::cout << "PATH: " << m_MyGui->Get_MenuBarLayout().SaveFile_Path << std::endl;
-		std::cout << "NAME: " << m_MyGui->Get_MenuBarLayout().SaveFile_Name << std::endl;
-
-		std::ofstream saveFile(m_MyGui->Get_MenuBarLayout().SaveFile_Path + ".txt");
-		int size = m_City->Get_GameTableSize();
-		saveFile << size << std::endl;
-
-		//Mezõk
-		std::unordered_set<GameField*> bigBuildings;
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				GameField* field = m_City->Get_GameField(i, j);
-				FieldType type = field->Get_Type();
-				if (type == UNIVERSITY || type == HIGHSCHOOL || type == POWERSTATION || type == STADIUM) {
-					if (bigBuildings.find(field) == bigBuildings.end()) {
-						bigBuildings.emplace(field);
-						if (type == HIGHSCHOOL) {
-							saveFile << type << " " << field->Get_Direction() << " ";
-							continue;
-						}
-					}
-					else {
-						saveFile << EMPTY << " ";
-						continue;
-					}
-				}
-				else if (type == FOREST) {
-					saveFile << type << " " << dynamic_cast<Forest*>(field)->Get_Age() << " ";
-					continue;
-				}
-				saveFile << type << " ";
-			}
-			saveFile << std::endl;
-		}
-
-		//Polgárok
-
-		//Város adatai
+		Application::SaveGame();
 	}
 
 	//GAME-TIME
@@ -238,19 +275,11 @@ void Application::Update()
 	if (m_MyGui->Get_GameWindowLayout().Tax_Effect)
 	{
 		m_MyGui->Get_GameWindowLayout().Tax_Effect = false;
+		std::vector<std::pair<FieldType, float*>> taxRates = Application::Get_TaxRates();
 
-		m_City->Set_TaxRate(RESIDENTIAL_LVL1, m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl1);
-		m_City->Set_TaxRate(RESIDENTIAL_LVL2, m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl2);
-		m_City->Set_TaxRate(RESIDENTIAL_LVL3, m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl3);
-
-		m_City->Set_TaxRate(SERVICE_LVL1, m_MyGui->Get_GameWindowLayout().ServiceTaxLvl1);
-		m_City->Set_TaxRate(SERVICE_LVL2, m_MyGui->Get_GameWindowLayout().ServiceTaxLvl2);
-		m_City->Set_TaxRate(SERVICE_LVL3, m_MyGui->Get_GameWindowLayout().ServiceTaxLvl3);
-
-		m_City->Set_TaxRate(INDUSTRIAL_LVL1, m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl1);
-		m_City->Set_TaxRate(INDUSTRIAL_LVL2, m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl2);
-		m_City->Set_TaxRate(INDUSTRIAL_LVL3, m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl3);
-
+		for (auto& it : taxRates) {
+			m_City->Set_TaxRate(it.first, *it.second);
+		}
 	}
 	
 	//RENDER-FRAME
