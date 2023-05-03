@@ -80,7 +80,7 @@ void Renderer::Init(Camera* camera)
 			ShaderObject(GL_FRAGMENT_SHADER, "Engine/Shaders/SkyBox.frag")
 		},
 		{
-			ShaderObjectLayout(0, "vert_position"),
+			ShaderObjectLayout(0, "vert_position")
 		}
 	);
 

@@ -20,7 +20,7 @@ public:
 	void Bind() const;
 	void UnBind() const;
 
-	void Initialize(const std::initializer_list<ShaderObject>& shaders, const std::initializer_list<ShaderObjectLayout>& attribs);
+	void Initialize(const std::vector<ShaderObject>& shaders, const std::vector<ShaderObjectLayout>& attribs);
 
 	template<typename T>
 	inline void SetUniform(const std::string& name, const T& value);
