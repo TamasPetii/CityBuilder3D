@@ -634,13 +634,8 @@ void Application::FireTruckSimulation()
 
 		if (type == EMPTY || type == CRATER)
 		{
-			WRITE_MAP(truck_map);
-			WRITE("ALMOS KUKI: ");
-			WRITE(truck);
-
 			if (station_map.find(truck) != station_map.end())
 			{
-				std::cout << "DELETED - CAR" << std::endl;
 				to_delete_MAP.push_back(truck);
 			}
 
