@@ -85,22 +85,19 @@ void Application::LoadGame() {
 
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
-			int tmp;
-			saveFile >> tmp;
-			FieldType type = static_cast<FieldType>(tmp);
-			if (type == HIGHSCHOOL) {
+			int type_i, dir_i;
+			saveFile >> type_i >> dir_i;
+			FieldType type = static_cast<FieldType>(type_i);
+			FieldDirection dir = static_cast<FieldDirection>(dir_i);
+			if (type == FOREST) {
+				int tmp;
 				saveFile >> tmp;
-				FieldDirection dir = static_cast<FieldDirection>(tmp);
 				m_City->Set_GameTableValue(i, j, type, dir);
-			}
-			else if (type == FOREST) {
-				saveFile >> tmp;
-				m_City->Set_GameTableValue(i, j, type, FRONT);
 				GameField* f = m_City->Get_GameField(i, j);
 				dynamic_cast<Forest*>(f)->Set_Age(tmp);
 			}
 			else if (type != EMPTY) {
-				m_City->Set_GameTableValue(i, j, type, FRONT);
+				m_City->Set_GameTableValue(i, j, type, dir);
 			}
 		}
 	}
@@ -136,15 +133,15 @@ void Application::SaveGame() {
 					}
 				}
 				else {
-					saveFile << EMPTY << " ";
+					saveFile << EMPTY << " " << 0 << " ";
 					continue;
 				}
 			}
 			else if (type == FOREST) {
-				saveFile << type << " " << dynamic_cast<Forest*>(field)->Get_Age() << " ";
+				saveFile << type << " " << field->Get_Direction() << " " << dynamic_cast<Forest*>(field)->Get_Age() << " ";
 				continue;
 			}
-			saveFile << type << " ";
+			saveFile << type << " " << field->Get_Direction() << " ";
 		}
 		saveFile << std::endl;
 	}
