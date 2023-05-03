@@ -41,6 +41,9 @@ void Application::Update()
 {
 	MeteorGrp::Update();
 	CarGroup::Update();
+
+	CheckCarPos();
+
 	m_Timer->Update();
 	m_FrameCounter->Update();
 	m_Camera->Update();
@@ -329,7 +332,7 @@ void Application::Update()
 				if (oldType != newType && (oldType == ROAD || newType == ROAD))
 				{
 					//TODO: Delete only the cars which are affected by the new road
-					CarGroup::Clear();
+					//CarGroup::Clear();
 				}
 
 				changed = true;
@@ -731,5 +734,43 @@ void Application::FireTruckSimulation()
 	{
 		truck_map.erase(truck);
 		CarGroup::m_FireTrucks.erase(truck);
+	}
+}
+
+void Application::CheckCarPos()
+{
+	for (auto car : CarGroup::m_Cars)
+	{
+		float rotation = 0;
+		float start_x = car->Get_CurrentPosition(rotation).x;
+		float start_y = car->Get_CurrentPosition(rotation).z;
+
+		int table_x = start_y / 2.f;
+		int table_y = start_x / 2.f;
+
+		FieldType type = m_City->Get_GameField(table_x, table_y)->Get_Type();
+
+		if (type == EMPTY || type == CRATER)
+		{
+
+			CarGroup::m_Cars.erase(car);
+
+			std::vector<CarAndCoord*> to_delete;
+
+			for (auto it = CarGroup::m_InUseIntersections.begin(); it != CarGroup::m_InUseIntersections.end(); it++)
+			{
+				if ((*it)->Get_Car() == car)
+				{
+					std::cout << "CAR" << std::endl;
+					to_delete.push_back(*it);
+				}
+			}
+
+			for (auto car : to_delete)
+			{
+				CarGroup::m_InUseIntersections.erase(car);
+			}
+
+		}
 	}
 }

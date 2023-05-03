@@ -143,9 +143,9 @@ public:
 	//Setters
 	static void Set_CarLimit(int limit) { car_limit = limit; }
 	static std::unordered_set<Car*> m_FireTrucks;
-private:
 	static std::unordered_set<Car*> m_Cars;
 	static std::unordered_set<CarAndCoord*> m_InUseIntersections;
+private:
 
 	static float last_time;
 	static float current_time;

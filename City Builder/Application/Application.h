@@ -63,5 +63,7 @@ private:
 	int HitY;
 
 	std::unordered_map<Car*, WaterGroup*> truck_map;
+
+	void CheckCarPos();
 };
 
