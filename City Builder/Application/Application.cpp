@@ -52,7 +52,7 @@ void Application::NewGame(int size, int money = -1, int time = -1) {
 	City::MONEY_LOG.str("");
 	Citizen::LOG.clear();
 	Citizen::LOG.str("");
-	Renderer::ResizeShapeBuffers(m_MyGui->Get_MenuBarLayout().City_Size * m_MyGui->Get_MenuBarLayout().City_Size);
+	Renderer::ResizeShapeBuffers(size * size);
 
 	delete m_City;
 	if (money == -1 || time == -1) m_City = new City(size);
@@ -83,6 +83,7 @@ void Application::LoadGame() {
 		*it.second = taxRate;
 	}
 
+	//mezõk
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
 			int type_i, dir_i;
@@ -100,6 +101,25 @@ void Application::LoadGame() {
 				m_City->Set_GameTableValue(i, j, type, dir);
 			}
 		}
+	}
+
+	//polgárok
+	int citizenSize, x, y;
+	saveFile >> citizenSize;
+	for (int i = 0; i < citizenSize; i++) {
+		Citizen* citizen = new Citizen();
+		saveFile >> x >> y;
+		citizen->JoinZone(dynamic_cast<Zone*>(m_City->Get_GameField(x, y)));//lakóhely
+		saveFile >> x >> y;
+		if (x != -1 && y != -1) {
+			citizen->JoinZone(dynamic_cast<Zone*>(m_City->Get_GameField(x, y)));//munkahely
+		}
+		saveFile >> x >> y;
+		citizen->Set_Age(x);
+		citizen->Set_Education(static_cast<Education>(y));
+		saveFile >> x >> y;
+		citizen->Set_MonthsBeforePension(x);
+		citizen->Set_Pension(y);
 	}
 }
 
@@ -147,6 +167,18 @@ void Application::SaveGame() {
 	}
 
 	//Polgárok
+	saveFile << m_City->Get_CitizenSize() << std::endl;
+	for (auto& citizen : m_City->Get_Citizens()) {
+		saveFile << citizen->Get_Residence()->Get_X() << " " << citizen->Get_Residence()->Get_Y() << " ";
+		if (citizen->Get_Workplace() == nullptr) {
+			saveFile << -1 << " " << -1 << " ";
+		}
+		else {
+			saveFile << citizen->Get_Workplace()->Get_X() << " " << citizen->Get_Workplace()->Get_Y() << " ";
+		}
+		saveFile << citizen->Get_Age() << " " << citizen->Get_Education() << " ";
+		saveFile << citizen->Get_MonthsBeforePension() << " " << citizen->Get_Pension() << std::endl;
+	}
 }
 
 std::vector<std::pair<FieldType, float*>> Application::Get_TaxRates() {
