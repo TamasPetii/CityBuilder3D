@@ -132,6 +132,11 @@
   <ItemGroup>
     <ClInclude Include="catch.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Game\Game.vcxproj">
+      <Project>{c8446a8f-2b3b-4da8-8f36-7fd66a7bb014}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
