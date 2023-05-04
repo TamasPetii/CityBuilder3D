@@ -70,6 +70,13 @@ void Application::NewGame(int size, int money = -1, int time = -1) {
 
 void Application::LoadGame() {
 	std::ifstream saveFile(m_MyGui->Get_MenuBarLayout().LoadFile_Path);
+
+	if (!saveFile.is_open())
+	{
+		std::cout << "Could not open [" << m_MyGui->Get_MenuBarLayout().LoadFile_Path << "]" << std::endl;
+		return;
+	}
+
 	int size, tmp, money, time;
 	saveFile >> size >> money >> time;
 	Application::NewGame(size, money, time);
@@ -125,6 +132,12 @@ void Application::LoadGame() {
 
 void Application::SaveGame() {
 	std::ofstream saveFile(m_MyGui->Get_MenuBarLayout().SaveFile_Path + ".txt");
+
+	if (!saveFile.is_open())
+	{
+		std::cout << "Could not open [" << m_MyGui->Get_MenuBarLayout().SaveFile_Path + ".txt" << "]" << std::endl;
+		return;
+	}
 
 	//Város adatai
 	int size = m_City->Get_GameTableSize();
