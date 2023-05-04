@@ -382,6 +382,8 @@ void Application::FireTruckSimulation()
 		CarGroup::m_FireTrucks.erase(car);
 	}
 
+
+	std::vector<Car*> no_start;
 	for (auto truck : CarGroup::m_FireTrucks)
 	{
 		if (truck->ShouldBeDeleted() && truck_map.find(truck) == truck_map.end())
@@ -426,9 +428,14 @@ void Application::FireTruckSimulation()
 			else 
 			{
 				station_map.erase(truck);
-				CarGroup::m_FireTrucks.erase(truck);
+				no_start.push_back(truck);
 			}
 		}
+	}
+
+	for (auto car : no_start)
+	{
+		CarGroup::m_FireTrucks.erase(car);
 	}
 
 	std::vector<Car*> to_Delete;
