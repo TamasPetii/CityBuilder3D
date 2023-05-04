@@ -26,6 +26,7 @@ public:
 	void LeaveCity(Citizen* citizen);
 	void HandleLosingZone();
 	void GenerateCitizens(unsigned int x);
+	void  CollectMonthlyTax();
 
 	//Getter Methodes
 	inline int Get_Money() const { return m_Money; }
@@ -58,7 +59,6 @@ protected:
 	void GenerateForests(int iterations, double initialRatio);
 	void GenerateLakes(int iterations, double initialRatio);
 	float CalculateMonthlyTax();
-	void  CollectMonthlyTax();
 	void  CollectAnnualCosts();
 	void  UpdateMoney(float amount);
 	void SimulatePopulationAging();
