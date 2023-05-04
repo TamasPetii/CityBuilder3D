@@ -170,6 +170,7 @@ void MyGui::GAME_UI()
     BuildWindow();
     DetailsWindow();
     Upgrade_Popup();
+    EndGame_Popup();
 
     ImGui::End();
 }
@@ -1518,4 +1519,34 @@ void MyGui::Lobby_Buttons()
     LoadGame_Popup();
 
     ImGui::End(); 
+}
+
+void MyGui::EndGame_Popup()
+{
+    if (m_DetailsWindowLayout.End_Show)
+    {
+        ImGui::OpenPopup("End Game");
+    }
+
+    if (ImGui::BeginPopupModal("End Game", nullptr, ImGuiWindowFlags_NoResize))
+    {
+        ImGui::SetWindowSize(ImVec2(300, 130));
+        ImGui::Text("GAMED ENDED :-D");
+        ImGui::Text("City Time: %s", m_GameWindowLayout.Time_Game);
+        ImGui::Text("City Money: %d", m_GameWindowLayout.City_Money);
+        ImGui::Text("City Satisfaction: %d", m_GameWindowLayout.City_Satisfaction);
+
+        ImGui::Separator();
+
+        //[Lobby Button]
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0.75, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0.5, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0.25, 1));
+        ImGui::SetCursorPos(ImVec2(90, 100));
+        if (ImGui::Button("Return To Lobby", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); m_DetailsWindowLayout.End_Show = false; this->UI_MODE = LOBBY; }
+        ImGui::SetItemDefaultFocus();
+        ImGui::PopStyleColor(3);
+
+        ImGui::EndPopup();
+    }
 }

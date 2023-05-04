@@ -127,5 +127,5 @@ void GameField::RandomFire()
 {
 	if (m_OnFire) return;
 
-	m_OnFire = (rand() % (int)(15000 + 2250 * m_FireRate) == 12345);
+	m_OnFire = (rand() % (int)(35000 + 2250 * m_FireRate) == 12345);
 }

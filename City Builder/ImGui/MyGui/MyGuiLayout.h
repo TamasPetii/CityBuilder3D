@@ -67,6 +67,8 @@ struct GameWindowLayout
 	float ServiceTaxLvl1 = 40;
 	float ServiceTaxLvl2 = 40;
 	float ServiceTaxLvl3 = 40;
+
+
 };
 
 struct RenderWindowLayout
@@ -146,6 +148,11 @@ struct DetailsWindowLayout
 	bool Upgrade_Show = false;
 	int Upgrade_Cost = 0;
 	int level = 0;
+
+	//End Game
+	bool End = false;
+	bool End_Show = false;
+
 };
 
 struct EventLayout
