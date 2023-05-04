@@ -1,4 +1,4 @@
-#include "RoadNetwork.h"
+Ôªø#include "RoadNetwork.h"
 
 std::unordered_set<int> RoadNetwork::m_id_set;
 std::vector<RoadNetwork::Network> RoadNetwork::m_networks;
@@ -14,7 +14,7 @@ int RoadNetwork::GetNetworkId(GameField* field) {
 
 int RoadNetwork::CreateNetwork() {
 	int i = 1;
-	while (m_id_set.find(i) != m_id_set.end()) i++; //keres¸nk egy 0-n·l nagyobb id-t, ami mÈg nem foglalt
+	while (m_id_set.find(i) != m_id_set.end()) i++; //keres√ºnk egy 0-n√°l nagyobb id-t, ami m√©g nem foglalt
 	m_id_set.emplace(i);
 	m_networks.emplace_back(i);
 	return i;
@@ -98,8 +98,8 @@ bool RoadNetwork::IsConnected(GameField* field1, GameField* field2) {
 			if (network.buildingSet.find(field1) == network.buildingSet.end()) continue;
 			if (network.zoneSet.find(field2) == network.zoneSet.end()) continue;
 		}
-		//Tˆbbi esetre nem l·tom hogy miÈrt lenne sz¸ksÈg(pl ˙t-zÛna), 
-		//de kˆnny˚ hozz·adni
+		//T√∂bbi esetre nem l√°tom hogy mi√©rt lenne sz√ºks√©g(pl √∫t-z√≥na), 
+		//de k√∂nny√ª hozz√°adni
 		return true;
 	}
 
@@ -161,7 +161,7 @@ Zone* RoadNetwork::FindEmptyWorkingArea(Zone* field, float ratio) {
 
 		}
 	}
-	if (ratio > 1.5) { //tˆbb service van ezÈrt industrial kell
+	if (ratio > 1.5) { //t√∂bb service van ez√©rt industrial kell
 		if (closestZoneI == nullptr) return closestZoneS;
 		else return closestZoneI;
 	}
@@ -220,7 +220,7 @@ void RoadNetwork::AddToNetworkSatisfaction(GameField* field, int id) {
 			if (Building* building = dynamic_cast<Building*>(field)) {
 				Zone* zone = dynamic_cast<Zone*>(z);
 				int d = distance(building, zone);
-				if (d < 10 && !IsConnectedMultiple(zone, building)) {//csak akkor adjuk hozz·, ha nincsenek tˆbbszˆr ˆsszekˆtve
+				if (d < 10 && !IsConnectedMultiple(zone, building)) {//csak akkor adjuk hozz√°, ha nincsenek t√∂bbsz√∂r √∂sszek√∂tve
 					if (building->IsPoliceStation()) {
 						zone->Add_Safety((10 - d) / 10.0);
 					}
@@ -230,11 +230,29 @@ void RoadNetwork::AddToNetworkSatisfaction(GameField* field, int id) {
 
 					if (building->IsFireStation())
 					{
-						//TODO
+						zone->Add_FireRate((10 - d) / 10.0);
 					}
 				}
 			}
 		}
+		/*
+		//T≈±z es√©lye a kiszolg√°l√≥ √©p√ºleteket is befoly√°solja nem csak a z√≥n√°kat
+		for (auto& b : network.buildingSet)
+		{
+			if (Building* building = dynamic_cast<Building*>(field))
+			{
+				Building* current_building = dynamic_cast<Building*>(b);
+				int d = distance(building, current_building);
+				if (d < 10 && !IsConnectedMultiple(current_building, building))
+				{
+					if (building->IsFireStation())
+					{
+						current_building->Add_FireRate((10 - d) / 10.0);
+					}
+				}
+			}
+		}
+		*/
 	}
 }
 
@@ -243,6 +261,7 @@ void RoadNetwork::SetZoneSatisfaction(GameField* field) {
 	if (zone == nullptr) return;
 	float satisfaction = 0;
 	float safety = 0;
+	float firerate = 0;
 	std::unordered_set<Building*> visitedBuilding;
 
 	for (auto& network : m_networks) {
@@ -262,7 +281,7 @@ void RoadNetwork::SetZoneSatisfaction(GameField* field) {
 
 				if (building->IsFireStation())
 				{
-					//TODO
+					firerate += (10 - d) / 10.0;
 				}
 			}
 		}
@@ -270,6 +289,7 @@ void RoadNetwork::SetZoneSatisfaction(GameField* field) {
 
 	zone->Set_Satisfaction(satisfaction);
 	zone->Set_Safety(safety);
+	zone->Set_FireRate(firerate);
 }
 
 Zone* RoadNetwork::FindOptimalResidentialArea(float happiness) {
@@ -281,7 +301,7 @@ Zone* RoadNetwork::FindOptimalResidentialArea(float happiness) {
 			if (!(zone->IsResidentalArea() && zone->IsThereEmptySpace()))
 				continue;
 
-			//industrialPenalty: kˆzvetlen¸l melletted lÈvı ipari zÛna -0.9, 9 blokkra lÈvı -0.1;
+			//industrialPenalty: k√∂zvetlen√ºl melletted l√©v√µ ipari z√≥na -0.9, 9 blokkra l√©v√µ -0.1;
 			industrialPenalty = zone->Get_IndustrialPenalty();
 
 			for (auto& w : network.zoneSet) {
@@ -289,11 +309,11 @@ Zone* RoadNetwork::FindOptimalResidentialArea(float happiness) {
 				if (!(wZone->IsWorkingArea() && wZone->IsThereEmptySpace()))
 					continue;
 				float d = distance(wZone, zone);
-				float workDistancePenalty = -(d / 20 - 0.05); //ha mellette van 0 penalty, k¸lˆnben 0.05esÈvel nı
+				float workDistancePenalty = -(d / 20 - 0.05); //ha mellette van 0 penalty, k√ºl√∂nben 0.05es√©vel n√µ
 				if (industrialPenalty < -0.5) industrialPenalty = -0.5;
-				//szÛval ha happiness 30%, akkor a threshold 0.9 lesz,
-				//ami megengedi a bekˆltˆzÈst, ha: van 5 blokkon bel¸l ipari de van ¸res munkahely 8 blokkon bel¸l,
-				//vagy nincs a kˆzelben ipari Ès van ¸res munkahely 18 blokkon bel¸l(vagy valami kˆztes)
+				//sz√≥val ha happiness 30%, akkor a threshold 0.9 lesz,
+				//ami megengedi a bek√∂lt√∂z√©st, ha: van 5 blokkon bel√ºl ipari de van √ºres munkahely 8 blokkon bel√ºl,
+				//vagy nincs a k√∂zelben ipari √©s van √ºres munkahely 18 blokkon bel√ºl(vagy valami k√∂ztes)
 				if (moveInThreshold + industrialPenalty + workDistancePenalty > 0) {
 					return zone;
 				}

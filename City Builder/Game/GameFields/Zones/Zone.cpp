@@ -127,6 +127,7 @@ std::string Zone::ToString(Zone* zone)
 	ss << "Industrial Penalty: " << zone->Get_IndustrialPenalty() << std::endl;
 	ss << "Normal Satisfaction: " << zone->Calculate_NormalSatisfaction() * 100 << std::endl;
 	ss << "Real Satisfaction: " << zone->Calculate_RealSatisfaction() * 100 << std::endl;
+	ss << "Fire Rate: " << zone->Get_FireRate() << std::endl;
 	
 	int i = 0;
 	for (auto citizen : zone->Get_Citizens())

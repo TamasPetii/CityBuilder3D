@@ -26,6 +26,7 @@ public:
 	virtual bool IsBuilding() const { return false; }
 
 	//Getter Methodes
+	inline float Get_FireRate() const { return m_FireRate; }
 	inline int Get_X() const { return m_X; }
 	inline int Get_Y() const { return m_Y; }
 	inline int Get_BuildCost() const { return m_BuildCost; }
@@ -35,6 +36,7 @@ public:
 	inline FieldDirection Get_Direction() const { return m_Direction; }
 
 	//Setter Methodes
+	inline void Set_FireRate(float FireRate) { m_FireRate = FireRate; }
 	inline void Set_X(int X) { m_X = X; }
 	inline void Set_Y(int Y) { m_Y = Y; }
 	inline void Set_BuildCost(int BuildCost) { m_BuildCost = BuildCost; }
@@ -42,6 +44,8 @@ public:
 	inline void Set_SatisfactionPoints(float SatisfactionPoints) { m_SatisfactionPoints = SatisfactionPoints; }
 	inline void Set_Type(FieldType Type) { m_Type = Type; }
 	inline void Set_Direction(FieldDirection Direction) { m_Direction = Direction; }
+
+	inline void Add_FireRate(float FireRate) { m_FireRate += FireRate; }
 
 	int FireCounter = 500;
 	void RandomFire();
@@ -54,5 +58,6 @@ protected:
 	float m_SatisfactionPoints;
 	FieldType m_Type;
 	FieldDirection m_Direction;
+	float m_FireRate;
 	bool m_OnFire = false;
 };

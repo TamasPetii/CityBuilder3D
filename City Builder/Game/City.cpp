@@ -494,6 +494,12 @@ void City::Set_GameTableValue(int x, int y, FieldType type, FieldDirection dir)
 
 	if (IsBuildable(type, dir, x, y))
 	{
+		//Ha még inaktív zónát törlünk visszakapjuk a költésg 65%-át
+		if (type == EMPTY && m_GameTable->Get_TableValue(x, y)->IsZone() && dynamic_cast<Zone*>(m_GameTable->Get_TableValue(x, y))->Get_Contain() == 0)
+		{
+			UpdateMoney(GameField::CalculateBuildCost(m_GameTable->Get_TableValue(x, y)->Get_Type()) * 0.65f);
+		}
+
 		if (type == STADIUM || type == POWERSTATION || type == UNIVERSITY)
 		{
 			m_GameTable->Set_TableValue(x, y, type, dir);

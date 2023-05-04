@@ -11,6 +11,7 @@ GameField::GameField(FieldType type, FieldDirection direction, int x, int y) :
 	m_X(x),
 	m_Y(y)
 {
+	m_FireRate = 0;
 	m_BuildCost = CalculateBuildCost(type);
 	m_AnnualCost = CalculateAnnualCost(type);
 	m_SatisfactionPoints = 0;
@@ -126,5 +127,5 @@ void GameField::RandomFire()
 {
 	if (m_OnFire) return;
 
-	m_OnFire = (rand() % 10000 == 123);
+	m_OnFire = (rand() % (int)(15000 + 2250 * m_FireRate) == 12345);
 }
