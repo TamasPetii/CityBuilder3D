@@ -3,6 +3,8 @@
 #include "General/_GeneralHeaders.h"
 #include "Zones/_ZoneHeaders.h"
 
+static bool CHANGED = false;
+
 GameField::GameField(FieldType type, FieldDirection direction, int x, int y) :
 	m_Type(type),
 	m_Direction(direction),

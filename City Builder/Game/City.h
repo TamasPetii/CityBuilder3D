@@ -16,6 +16,7 @@ public:
 	~City() = default;
 
 	//Static Methodes / Members
+	static bool CHANGED;
 	static std::stringstream BUILD_LOG;
 	static std::stringstream MONEY_LOG;
 

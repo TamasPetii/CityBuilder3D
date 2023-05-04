@@ -14,6 +14,7 @@ public:
 	static int CalculateBuildCost(FieldType type);
 	static int CalculateAnnualCost(FieldType type);
 	static std::string ToString(GameField* field);
+	static bool CHANGED;
 
 	//Identification Methodes
 	virtual bool IsCrater()   const { return false; }

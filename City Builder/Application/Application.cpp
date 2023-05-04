@@ -38,6 +38,8 @@ Application::~Application()
 }
 
 void Application::NewGame(int size, int money = -1, int time = -1) {
+	m_MyGui->Get_DetailsWindowLayout().Details_X = 0;
+	m_MyGui->Get_DetailsWindowLayout().Details_Y = 0;
 	m_MyGui->Get_GameWindowLayout().Time_Real = 0;
 	m_MyGui->Get_GameWindowLayout().Time_Tick = m_MyGui->Get_MenuBarLayout().City_Time;
 	m_Timer->Reset();
@@ -528,7 +530,7 @@ void Application::RenderUI()
 
 void Application::Render()
 {
-	if (changed || Zone::CHANGED)
+	if (changed || Zone::CHANGED || City::CHANGED)
 	{
 		std::unordered_set<GameField*> fields_2x2;
 		for (int i = 0; i < m_City->Get_GameTableSize(); i++)
@@ -557,7 +559,7 @@ void Application::Render()
 				if (m_City->Get_GameField(i, j)->IsForest())
 				{
 					Forest* zone = dynamic_cast<Forest*>(m_City->Get_GameField(i, j));
-					amount = zone->Get_Age();
+					amount = zone->Get_Age() + 1;
 				}
 
 				if (type == UNIVERSITY || type == STADIUM || type == HIGHSCHOOL)
@@ -573,6 +575,7 @@ void Application::Render()
 
 		Renderer::Changed = true;
 		Zone::CHANGED = false;
+		City::CHANGED = false;
 		changed = false;
 	}
 

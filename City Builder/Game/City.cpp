@@ -3,6 +3,7 @@
 #include <time.h>
 #include <random>
 
+bool City::CHANGED = false;
 std::stringstream City::BUILD_LOG;
 std::stringstream City::MONEY_LOG;
 
@@ -55,6 +56,7 @@ void City::Simulate()
 		SimulatePopulationAging();
 		SimulateForestAging();
 		GenerateGraduatedCitizens(rand() % 20 + 1);
+		CHANGED = true;
 	}
 
 	m_GameTable->Loop();
