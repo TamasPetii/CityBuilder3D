@@ -26,6 +26,7 @@ public:
 	void Recalculate(int endX, int endY);
 	void Delete();
 	void Add();
+	void ResetTimer();
 	std::vector<glm::mat4> Get_Transforms();
 
 	float startX;

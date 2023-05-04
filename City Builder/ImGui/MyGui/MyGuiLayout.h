@@ -50,6 +50,7 @@ struct GameWindowLayout
 	float Time_Tick = 0.1f;
 	std::string Time_Game;
 	float Time_Real;
+	bool PauseTime = false;
 
 	//Catastrophe
 	bool Catastrophe_Effect;

@@ -395,6 +395,14 @@ void MyGui::GameWindow_Time()
             ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
             ImGui::Text("%f", m_GameWindowLayout.Time_Real);
 
+            //4 RAW: PAUSE
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("Pause:");
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
+            ImGui::Checkbox("##pause-time", &m_GameWindowLayout.PauseTime);
+
             ImGui::EndTable();
         }
     }
@@ -1265,7 +1273,7 @@ void MyGui::ViewPortWindow()
 
     ImVec2 size = ImGui::GetContentRegionAvail();
 
-    ImGui::Image((void*)m_ViewPortLayout.ViewPort_TextureID, size, ImVec2(0, 1), ImVec2(1, 0));
+    ImGui::Image((void*)m_ViewPortLayout.ViewPort_TextureID, size, ImVec2(0, 1), ImVec2(1, 0), ImVec4(1,1,1, m_GameWindowLayout.PauseTime ? 0.25 : 1));
 
     if (size.x != m_ViewPortLayout.ViewPort_Width || size.y != m_ViewPortLayout.ViewPort_Height)
     {
@@ -1319,6 +1327,8 @@ void MyGui::Build_MouseClickEvent()
 
 void MyGui::Build_KeyboardKeyEvent()
 {
+    if (m_GameWindowLayout.PauseTime) return;
+
     if (ImGui::IsKeyPressed(ImGuiKey_R))
     {
         m_EventLayout.Rotate++;
@@ -1327,6 +1337,8 @@ void MyGui::Build_KeyboardKeyEvent()
 
 void MyGui::Camera_MouseClickEvent()
 {
+    if (m_GameWindowLayout.PauseTime) return;
+
     if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && m_RenderWindowLayout.Camera_Mode == 2)
     {
         m_Camera->Mouse_ClickEvent(GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
@@ -1343,6 +1355,8 @@ void MyGui::Camera_MouseClickEvent()
 
 void MyGui::Camera_KeyboardKeyEvent()
 {
+    if (m_GameWindowLayout.PauseTime) return;
+
     //W
     if (ImGui::IsKeyPressed(ImGuiKey_W))
     {

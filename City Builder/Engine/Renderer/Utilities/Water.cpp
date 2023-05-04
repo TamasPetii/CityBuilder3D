@@ -15,6 +15,11 @@ void WaterGroup::Init()
 	last_time = glfwGetTime();
 }
 
+void WaterGroup::ResetTimer()
+{
+	last_time = glfwGetTime();
+}
+
 void WaterGroup::Clear()
 {
 	for (auto it = m_Waters.begin(); it != m_Waters.end(); ++it)

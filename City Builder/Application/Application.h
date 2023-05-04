@@ -50,6 +50,38 @@ public:
 
 
 	void SetUI_BuildCosts();
+
+	void ViewPortEvent();
+	void SaveGameEvent();
+	void LoadGameEvent();
+	void NewGameEvent();
+	void TimeTickChangedEvent();
+	void MeteorStartEvent();
+	void TaxChangedEvent();
+	void FpsChangedEvent();
+	void CameraChangedEvent();
+	void LightsChangedEvent();
+	void LogChagendEvent();
+	void DetailsCheckEvent();
+	void MeteorHitEvent();
+	void UpgradeEvent();
+
+	void UpdateAnimationAndMembers();
+
+	void BuildEvent();
+	void BuildEvent_CheckField();
+	void BuildEvent_Upgrade();
+	void BuildEvent_SetFire();
+	void BuildEvent_SendTruck();
+	void BuildEvent_BuildField();
+
+	void GameTickEvent();
+	void GameTickEvent_SetGameUiMembers();
+	void GameTickEvent_RandomMeteors();
+	void GameTickEvent_RandomCars();
+	void GameTickEvent_Fire();
+
+
 private:
 	GLFWwindow* m_Window = nullptr;
 	Camera* m_Camera = nullptr;
