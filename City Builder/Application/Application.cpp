@@ -49,12 +49,9 @@ void Application::Update()
 		m_Camera->Set_Eye(glm::vec3(50.f * cosf(glfwGetTime() * 2 * M_PI / 250) + m_City->Get_GameTableSize(), 25.f, 50.f * sinf(glfwGetTime() * 2 * M_PI / 250) + m_City->Get_GameTableSize()));
 		m_MyGui->Get_ViewPortLayout().ViewPort_TextureID = Renderer::Get_FrameBuffer()->Get_TextureId();
 
-		//Application::ViewPortEvent();
-		//Application::LightsChangedEvent();
 		Application::UpdateAnimationAndMembers();
 		Application::ViewPortEvent();
 		Application::GameTickEvent();
-		Application::TimeTickChangedEvent();
 		Application::LightsChangedEvent();
 	}
 	else 
@@ -958,7 +955,7 @@ void Application::LoadGame(bool b)
 		saveFile.open(m_MyGui->Get_MenuBarLayout().LoadFile_Path);
 	}
 	else {
-		saveFile.open("lobbyfinal.txt");
+		saveFile.open("Application/lobbyfinal.txt");
 	}
 	
 
