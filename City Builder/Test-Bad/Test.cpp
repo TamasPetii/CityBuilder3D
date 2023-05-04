@@ -9,9 +9,43 @@ TEST_CASE("ASD")
     CHECK(city->Get_GameTableSize() == 50);
 }
 
+TEST_CASE("JOIN-DELETE-CHANGE")
+{
+    City* city2 = new City(5, 100000, 1);
+    city2->Set_GameTableValue(1, 1, RESIDENTIAL_LVL1, FRONT);
+    city2->Set_GameTableValue(2, 1, ROAD, FRONT);
+    city2->Set_GameTableValue(3, 1, ROAD, FRONT);
+    city2->Set_GameTableValue(4, 1, SERVICE_LVL1, FRONT);
+
+    CHECK(city2->Get_CitizenSize() == 0);
+
+    Citizen* citizen2 = new Citizen();
+
+    CHECK(dynamic_cast<Zone*>(city2->Get_GameField(1, 1))->Get_Contain() == 0);
+
+    city2->JoinCity(citizen2);
+
+    CHECK(city2->Get_CitizenSize() == 1);
+
+    CHECK(citizen2->Get_Residence()->Get_Contain() == 1);
+    CHECK(citizen2->Get_Residence() == dynamic_cast<Zone*>(city2->Get_GameField(1, 1)));
+
+    CHECK(citizen2->Get_Workplace()->Get_Contain() == 1);
+    CHECK(citizen2->Get_Workplace() == dynamic_cast<Zone*>(city2->Get_GameField(4, 1)));
+
+    city2->LeaveCity(citizen2);
+
+    CHECK((dynamic_cast<Zone*>(city2->Get_GameField(1, 1)))->Get_Contain() == 0);
+    CHECK((dynamic_cast<Zone*>(city2->Get_GameField(4, 1)))->Get_Contain() == 0);
+
+    CHECK(city2->Get_CitizenSize() == 0);
+
+    delete city2;
+}
+
 TEST_CASE("TAX RATE - PAYTAX")
 {
-    City* city = new City(50);
+    City* city = new City(5,100000,1);
 
     city->Set_GameTableValue(1, 1, RESIDENTIAL_LVL1, FRONT);
     city->Set_GameTableValue(2, 2, INDUSTRIAL_LVL1, FRONT);
@@ -192,7 +226,7 @@ TEST_CASE("TAX RATE - PAYTAX")
 
 TEST_CASE("COLLECT MONTHLY TAX")
 {
-    City* city = new City(50);
+    City* city = new City(5, 100000, 1);
 
     city->Set_GameTableValue(1, 1, RESIDENTIAL_LVL1, FRONT);
     city->Set_GameTableValue(1, 2, ROAD, FRONT);
@@ -216,7 +250,7 @@ TEST_CASE("COLLECT MONTHLY TAX")
 
     CHECK(balanceWithPension < balanceWithTax);
 
-    delete citizen;
+    //delete citizen;
     delete city;
 }
 

@@ -44,7 +44,7 @@ std::string Citizen::ConvertEducationToString(enum Education e)
 
 Citizen::Citizen()
 {
-	m_Age = rand() % (MAX_AGE - MIN_AGE) + MIN_AGE + 1;
+	m_Age = rand() % (MAX_AGE - MIN_AGE + 1) + MIN_AGE;
 	m_Pension = 0;
 	m_MonthsBeforePension = 0;
 	m_Education = BASIC;
