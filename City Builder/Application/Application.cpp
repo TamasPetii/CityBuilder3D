@@ -434,6 +434,7 @@ void Application::Update()
 			GameField* field = m_City->Get_GameField(HitX, HitY);
 			if ((field->IsZone() || field->IsBuilding()) && field->Get_Type() != FIRESTATION)
 			{
+				std::cout << "On Fire" << std::endl;
 				field->OnFire() = true;
 				changed = true;
 			}
@@ -568,13 +569,13 @@ void Application::Render()
 				}
 
 				Renderer::AddShapeTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_Direction(), amount);
-				Renderer::AddGroundTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_Direction(), type == ROAD ? DetermineRoadTextureID(i, j) : Renderer::DetermineGroundTextureID((RenderShapeType)type, contain));
+				Renderer::AddGroundTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_Direction(), type == ROAD ? DetermineRoadTextureID(i, j) : m_City->Get_GameField(i, j)->OnFire() ? 68 : Renderer::DetermineGroundTextureID((RenderShapeType)type, contain));
 			}
 		}
+
 		Renderer::Changed = true;
 		Zone::CHANGED = false;
 		changed = false;
-		m_City->ResetChanged();
 	}
 
 	Renderer::PreRender();

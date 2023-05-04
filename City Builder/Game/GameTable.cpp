@@ -334,7 +334,7 @@ void GameTable::SimulateFire(GameField* field)
 	if (field->OnFire())
 	{
 		field->FireCounter--;
-
+		std::cout << field->FireCounter << std::endl;
 		//Spread
 		if (field->FireCounter == 250)
 		{
@@ -361,7 +361,7 @@ void GameTable::SimulateFire(GameField* field)
 
 	if (field->FireCounter == 0)
 	{
-		this->Set_TableValue(field->Get_X(), field->Get_Y(), EMPTY);
+		this->Set_TableValue(field->Get_X(), field->Get_Y(), EMPTY, FRONT);
 		changed = true;
 	}
 }

@@ -143,8 +143,4 @@ struct EventLayout
 	int Content_X;
 	int Content_Y;
 	int Rotate = 0;
-
-	bool curvechange = false;
-	int x = 7;
-	int y = 7;
 };
