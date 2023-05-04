@@ -767,7 +767,7 @@ void CarGroup::Update()
 					it_pos = m_InUseIntersections.erase(it_pos);
 				}
 				else
-					++it_pos;
+					if (it_pos != m_InUseIntersections.end()) ++it_pos;
 			}
 			//std::cout << "Car deleted: " << car << std::endl;
 			delete car;
@@ -896,7 +896,7 @@ void CarGroup::Update()
 						delete pos;
 						it_pos = m_InUseIntersections.erase(it_pos);
 					}
-					++it_pos;
+					if (it_pos != m_InUseIntersections.end()) ++it_pos;
 				}
 			}
 			//if 'car' wasn't stopped at any intersection, than we have to check if it collides with any other car's hitbox
@@ -940,7 +940,8 @@ void CarGroup::Update()
 			{
 				car->Move(delta_time);
 			}
-			++it;
+			
+			if (it != m_Cars.end()) ++it;
 		}
 	}
 
@@ -950,7 +951,8 @@ void CarGroup::Update()
 	{
 		Car* fireTruck = *it;
 		fireTruck->Move(delta_time);
-		++it;
+
+		if (it != m_FireTrucks.end()) ++it;
 	}
 
 }
