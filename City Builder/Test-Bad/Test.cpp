@@ -274,3 +274,32 @@ TEST_CASE("PENSION")
     delete citizen;
     delete city;
 }
+
+TEST_CASE("PATH FINDER")
+{
+    GameTable* gameTable = new GameTable(50);
+
+    gameTable->Set_TableValue(1, 1, RESIDENTIAL_LVL1, FRONT);
+    gameTable->Set_TableValue(2, 1, ROAD, FRONT);
+    gameTable->Set_TableValue(3, 1, ROAD, FRONT);
+    gameTable->Set_TableValue(3, 2, ROAD, FRONT);
+    gameTable->Set_TableValue(3, 3, ROAD, FRONT);
+    gameTable->Set_TableValue(3, 4, RESIDENTIAL_LVL2, FRONT);
+    gameTable->Set_TableValue(4, 1, ROAD, FRONT);
+    gameTable->Set_TableValue(5, 1, INDUSTRIAL_LVL1, FRONT);
+
+    std::vector<Point> pathShouldBe1 = { {2,1}, {3,1}, {4,1} };
+    std::vector<Point> path1 = gameTable->PathFinder({ 2,1 }, { 5,1 });
+
+    std::vector<Point> pathShouldBe2 = { {2,1}, {3,1}, {3,2}, {3,3} };
+    std::vector<Point> path2 = gameTable->PathFinder({ 2,1 }, { 3,4 });
+
+    CHECK(pathShouldBe1.size() == path1.size());
+    CHECK(pathShouldBe2.size() == path2.size());
+
+    CHECK(!path2[0].isInterSection);
+    CHECK(path2[1].isInterSection);
+    CHECK(!path2[2].isInterSection);
+
+    delete gameTable;
+}
