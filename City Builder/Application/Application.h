@@ -1,5 +1,8 @@
 #pragma once
 #define _USE_MATH_DEFINES
+#define WRITE(x) std::cout << x << std::endl;
+#define WRITE_MAP(map) for(auto it = map.begin(); it != map.end(); it++) {std::cout << it->first << " " << it->second << std::endl;}
+
 
 //OpenGL Headers
 #include <GLEW/glew.h>
@@ -21,6 +24,8 @@
 #include <string>
 #include <vector>
 #include <cmath>
+#include <fstream>
+#include <utility>
 
 class Application
 {
@@ -28,50 +33,62 @@ public:
 	Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT);
 	~Application();
 
+	void NewGame(int, int, int);
+	void SaveGame();
+	void LoadGame(bool b = false);
+	std::vector<std::pair<FieldType, float*>> Get_TaxRates();
 	void Update();
 	void Render();
 	void RenderUI();
 
 	void Window_ResizedEvent(int width, int height);
 	void FrameBuffer_ResizedEvent(int width, int height);
-
 	void ConvertMouseInputTo3D(int xpos, int ypos, int width, int height);
+
+	int DetermineRoadTextureID(int x, int y);
+	void FireTruckSimulation();
+
+
+	void SetUI_BuildCosts();
+
+	void ViewPortEvent();
+	void SaveGameEvent();
+	void LoadGameEvent();
+	void NewGameEvent();
+	void TimeTickChangedEvent();
+	void MeteorStartEvent();
+	void TaxChangedEvent();
+	void FpsChangedEvent();
+	void CameraChangedEvent();
+	void LightsChangedEvent();
+	void LogChagendEvent();
+	void DetailsCheckEvent();
+	void MeteorHitEvent();
+	void UpgradeEvent();
+
+	void UpdateAnimationAndMembers();
+
+	void BuildEvent();
+	void BuildEvent_CheckField();
+	void BuildEvent_Upgrade();
+	void BuildEvent_SetFire();
+	void BuildEvent_SendTruck();
+	void BuildEvent_BuildField();
+
+	void GameTickEvent();
+	void GameTickEvent_SetGameUiMembers();
+	void GameTickEvent_RandomMeteors();
+	void GameTickEvent_RandomCars();
+	void GameTickEvent_Fire();
+
+
 private:
 	GLFWwindow* m_Window = nullptr;
 	Camera* m_Camera = nullptr;
-	Renderer* m_Renderer = nullptr;
 	MyGui* m_MyGui = nullptr;
 	City* m_City = nullptr;
 	Timer* m_Timer = nullptr;
 	FrameCounter* m_FrameCounter = nullptr;
-private:
-	std::vector<glm::mat4> transforms_CUBE;
-	std::vector<glm::mat4> transforms_CONE;
-	std::vector<glm::mat4> transforms_CYLINDER;
-	std::vector<glm::mat4> transforms_PYRAMID;
-	std::vector<glm::mat4> transforms_SPHERE;
-	std::vector<glm::mat4> transforms_RESIDENCE1;
-	std::vector<glm::mat4> transforms_RESIDENCE2;
-	std::vector<glm::mat4> transforms_RESIDENCE3;
-	std::vector<glm::mat4> transforms_INDUSTRY1;
-	std::vector<glm::mat4> transforms_INDUSTRY2;
-	std::vector<glm::mat4> transforms_INDUSTRY3;
-	std::vector<glm::mat4> transforms_SERVICE1;
-	std::vector<glm::mat4> transforms_SERVICE2;
-	std::vector<glm::mat4> transforms_SERVICE3;
-	std::vector<glm::mat4> transforms_FIRESTATION;
-	std::vector<glm::mat4> transforms_POLICESTATION;
-	std::vector<glm::mat4> transforms_POWERSTATION;
-	std::vector<glm::mat4> transforms_POWERWIRE;
-	std::vector<glm::mat4> transforms_STADION;
-	std::vector<glm::mat4> transforms_SCHOOL1;
-	std::vector<glm::mat4> transforms_SCHOOL2;
-	std::vector<glm::mat4> transforms_CHARACTER;
-	std::vector<glm::mat4> transforms_FOREST;
-
-	std::vector<glm::mat4> transforms_GROUND;
-	std::vector<GLfloat> numbers_GROUND;
-
 private:
 	glm::vec3 RayOrigin = glm::vec3(0);
 	glm::vec3 RayEnd = glm::vec3(0);
@@ -84,5 +101,12 @@ private:
 
 	int HitX;
 	int HitY;
+
+	std::unordered_map<Car*, WaterGroup*> truck_map;
+	std::unordered_map<Car*, GameField*>  station_map;
+
+	void CheckCarPos();
+
+	bool InitLobby = true;
 };
 

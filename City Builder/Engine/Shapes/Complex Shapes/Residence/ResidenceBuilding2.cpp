@@ -15,7 +15,7 @@ ResidenceBuilding2::ResidenceBuilding2()
 	}
 }
 
-void ResidenceBuilding2::CreateBuffers()
+void ResidenceBuilding2::CreateBuffers(GLuint buffer_size)
 {
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
@@ -45,5 +45,5 @@ void ResidenceBuilding2::CreateBuffers()
 	Shape::ConcatenateIndices(indices, Cone::GenerateIndices(cone_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cone::GenerateVertices(cone_layout));
 
-	AttachToGPU(vertices, indices);
+	AttachToGPU(vertices, indices, buffer_size);
 }

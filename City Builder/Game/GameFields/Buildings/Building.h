@@ -1,15 +1,16 @@
 #ifndef BUILDING_H
 #define BUILDING_H
 
+#include <sstream>
 #include "../GameField.h"
 
 class Building : public GameField
 {
-protected:
-    Building(FieldType type, int x, int y, float cost) : GameField(type, x, y, cost) {};
-
 public:
+    Building(FieldType type, FieldDirection direction, int x, int y) : GameField(type, direction, x, y) {};
     ~Building() {}
+
+    static std::string ToString(Building* building);
 
     bool inline IsBuilding() const override { return true; }
     virtual inline bool IsPoliceStation() const { return false; }
@@ -18,6 +19,7 @@ public:
     virtual inline bool IsPowerStation() const { return false; }
     virtual inline bool IsSchool() const { return false; }
     virtual inline bool IsStadium() const { return false; }
+    virtual inline float GetBuildingSatisfaction() const { return 0; }
 };
 
 #endif

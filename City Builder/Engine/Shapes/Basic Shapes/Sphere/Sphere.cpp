@@ -1,6 +1,6 @@
 #include "Sphere.h"
 
-void Sphere::CreateBuffers()
+void Sphere::CreateBuffers(GLuint buffer_size)
 {
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
@@ -10,7 +10,7 @@ void Sphere::CreateBuffers()
 	Shape::ConcatenateIndices(indices, Sphere::GenerateIndices(layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Sphere::GenerateVertices(layout));
 
-	AttachToGPU(vertices, indices);
+	AttachToGPU(vertices, indices, buffer_size);
 }
 
 std::vector<Vertex> Sphere::GenerateVertices(const SphereLayout& layout)

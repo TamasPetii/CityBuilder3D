@@ -18,7 +18,7 @@ Tree::Tree()
 	}
 }
 
-void Tree::CreateBuffers()
+void Tree::CreateBuffers(GLuint buffer_size)
 {
 	
 	std::vector<Vertex> vertices;
@@ -59,5 +59,5 @@ void Tree::CreateBuffers()
 	Shape::ConcatenateIndices(indices, Cone::GenerateIndices(layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cone::GenerateVertices(layout));
 
-	AttachToGPU(vertices, indices);
+	AttachToGPU(vertices, indices, buffer_size);
 }

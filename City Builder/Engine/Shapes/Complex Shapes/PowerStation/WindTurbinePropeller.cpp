@@ -11,7 +11,7 @@ WindTurbinePropeller::WindTurbinePropeller()
 	shape_transform.push_back(transform);
 }
 
-void WindTurbinePropeller::CreateBuffers()
+void WindTurbinePropeller::CreateBuffers(GLuint buffer_size)
 {
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
@@ -50,5 +50,5 @@ void WindTurbinePropeller::CreateBuffers()
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));
 
-	AttachToGPU(vertices, indices);
+	AttachToGPU(vertices, indices, buffer_size);
 }

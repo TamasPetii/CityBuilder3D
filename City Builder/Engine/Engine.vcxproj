@@ -183,6 +183,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Abstractions\BufferObject.cpp" />
+    <ClCompile Include="Renderer\Utilities\Car.cpp" />
+    <ClCompile Include="Renderer\Utilities\Meteor.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\FireTruck\Shape_FireTruck.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\Meteor\Shape_Meteor.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\Car\Shape_Car.cpp" />
     <ClCompile Include="Utilities\FrameCounter.cpp" />
     <ClCompile Include="Utilities\Timer.cpp" />
     <ClCompile Include="Utilities\Camera.cpp" />
@@ -229,10 +234,17 @@
     <ClCompile Include="Shapes\Complex Shapes\PowerStation\WindTurbine.cpp" />
     <ClCompile Include="Shapes\Complex Shapes\PowerStation\WindTurbinePropeller.cpp" />
     <ClCompile Include="Abstractions\Transform.cpp" />
-    <ClCompile Include="Renderer\Skybox\Skybox.cpp" />
+    <ClCompile Include="Renderer\Utilities\Skybox.cpp" />
+    <ClCompile Include="Renderer\Utilities\Water.cpp" />
+    <ClCompile Include="Shapes\Complex Shapes\FireStation\Water_SHAPE.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Abstractions\BufferObject.h" />
+    <ClInclude Include="Renderer\Utilities\Car.h" />
+    <ClInclude Include="Renderer\Utilities\Meteor.h" />
+    <ClInclude Include="Shapes\Complex Shapes\FireTruck\Shape_FireTruck.h" />
+    <ClInclude Include="Shapes\Complex Shapes\Meteor\Shape_Meteor.h" />
+    <ClInclude Include="Shapes\Complex Shapes\Car\Shape_Car.h" />
     <ClInclude Include="Utilities\FrameCounter.h" />
     <ClInclude Include="Utilities\Timer.h" />
     <ClInclude Include="Utilities\Camera.h" />
@@ -245,7 +257,6 @@
     <ClInclude Include="Abstractions\Texture.h" />
     <ClInclude Include="Abstractions\Vertex.h" />
     <ClInclude Include="Abstractions\VertexArrayObject.h" />
-    <ClInclude Include="Renderer\RendererLayout.h" />
     <ClInclude Include="Shapes\Complex Shapes\Ground\Ground.h" />
     <ClInclude Include="Renderer\Renderer.h" />
     <ClInclude Include="Shapes\Basic Shapes\BasicShapes.h" />
@@ -282,7 +293,9 @@
     <ClInclude Include="Shapes\Complex Shapes\PowerStation\WindTurbine.h" />
     <ClInclude Include="Shapes\Complex Shapes\PowerStation\WindTurbinePropeller.h" />
     <ClInclude Include="Abstractions\Transform.h" />
-    <ClInclude Include="Renderer\Skybox\Skybox.h" />
+    <ClInclude Include="Renderer\Utilities\Skybox.h" />
+    <ClInclude Include="Renderer\Utilities\Water.h" />
+    <ClInclude Include="Shapes\Complex Shapes\FireStation\Water_SHAPE.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Base.frag" />

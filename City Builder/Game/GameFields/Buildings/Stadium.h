@@ -6,10 +6,11 @@
 class Stadium : public Building
 {
 public:
-    Stadium(FieldType type, int x, int y, float cost) : Building(type, x, y, cost) {};
+    Stadium(FieldType type, FieldDirection direction, int x, int y) : Building(type, direction, x, y) {};
     ~Stadium() {}
 
     bool inline IsStadium() const override { return true; }
+    float inline GetBuildingSatisfaction() const override { return 2; }
 };
 
 #endif

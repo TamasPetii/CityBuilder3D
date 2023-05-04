@@ -8,7 +8,7 @@ Ground::Ground()
 	shape_transform.push_back(transform);
 }
 
-void Ground::CreateBuffers()
+void Ground::CreateBuffers(GLuint buffer_size)
 {
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
@@ -18,5 +18,5 @@ void Ground::CreateBuffers()
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));
 
-	AttachToGPU(vertices, indices);
+	AttachToGPU(vertices, indices, buffer_size);
 }

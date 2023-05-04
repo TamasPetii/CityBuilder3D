@@ -14,7 +14,12 @@ public:
 	void Update();
 	bool Tick();
 
+	bool IsPaused() { return pause; }
+
 	inline void SetTickTime(GLfloat sec) { m_Tick = sec; }
+
+	GLfloat Get_DeltaTime() { return m_DeltaTime; }
+	GLfloat Get_TickTime() { return m_Tick; }
 private:
 	GLfloat m_LastTime = 0.f;
 	GLfloat m_DeltaTime = 0.f;

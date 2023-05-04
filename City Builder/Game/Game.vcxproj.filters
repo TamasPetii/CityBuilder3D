@@ -66,9 +66,6 @@
     <ClInclude Include="GameFields\Zones\Zone.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameFields\GameFieldType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GameFields\Zones\_ZoneHeaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -82,6 +79,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RoadNetwork.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameFields\General\Crater.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameFields\General\Lake.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameFields\GameFieldLayout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -138,6 +144,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RoadNetwork.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameFields\General\Crater.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameFields\General\Lake.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

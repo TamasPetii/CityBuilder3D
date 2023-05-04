@@ -146,15 +146,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="GameFields\GameFieldLayout.h" />
+    <ClInclude Include="GameFields\General\Crater.h" />
     <ClInclude Include="GameFields\Buildings\Building.h" />
     <ClInclude Include="Citizen.h" />
     <ClInclude Include="City.h" />
     <ClInclude Include="GameFields\Buildings\_BuildingHeaders.h" />
-    <ClInclude Include="GameFields\GameFieldType.h" />
     <ClInclude Include="GameFields\General\Empty.h" />
     <ClInclude Include="GameFields\Buildings\FireStation.h" />
     <ClInclude Include="GameFields\General\Forest.h" />
     <ClInclude Include="GameFields\GameField.h" />
+    <ClInclude Include="GameFields\General\Lake.h" />
     <ClInclude Include="GameFields\General\_GeneralHeaders.h" />
     <ClInclude Include="GameFields\Zones\_ZoneHeaders.h" />
     <ClInclude Include="GameFields\_GameFieldHeaders.h" />
@@ -171,6 +173,7 @@
     <ClInclude Include="RoadNetwork.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameFields\General\Crater.cpp" />
     <ClCompile Include="GameFields\Buildings\Building.cpp" />
     <ClCompile Include="Citizen.cpp" />
     <ClCompile Include="City.cpp" />
@@ -178,6 +181,7 @@
     <ClCompile Include="GameFields\Buildings\FireStation.cpp" />
     <ClCompile Include="GameFields\General\Forest.cpp" />
     <ClCompile Include="GameFields\GameField.cpp" />
+    <ClCompile Include="GameFields\General\Lake.cpp" />
     <ClCompile Include="GameTable.cpp" />
     <ClCompile Include="GameFields\Buildings\PoliceStation.cpp" />
     <ClCompile Include="GameFields\Buildings\PowerStation.cpp" />

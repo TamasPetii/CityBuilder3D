@@ -5,5 +5,5 @@ class IndustryBuilding2 : public Shape
 {
 public:
 	IndustryBuilding2();
-	void CreateBuffers() override;
+	void CreateBuffers(GLuint buffer_size) override;
 };

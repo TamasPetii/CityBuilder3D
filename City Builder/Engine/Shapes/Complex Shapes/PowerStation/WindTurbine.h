@@ -5,5 +5,5 @@ class WindTurbine : public Shape
 {
 public:
 	WindTurbine();
-	void CreateBuffers() override;
+	void CreateBuffers(GLuint buffer_size) override;
 };

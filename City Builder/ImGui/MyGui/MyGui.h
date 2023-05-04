@@ -5,13 +5,19 @@
 
 #include "Utilities/Camera.h"
 #include "Abstractions/FrameBuffer.h"
+#include "Abstractions/Texture.h"
 
 #include "../ImGui/imgui.h"
 #include "../ImGui/imgui_impl_glfw.h"
 #include "../ImGui/imgui_impl_opengl3.h"
+#include "../ImGui/ImGuiFileBrowser.h"
 #include "MyGuiLayout.h"
 
-#include "../ImGui/ImGuiFileBrowser.h"
+enum WINDOW
+{
+	LOBBY,
+	GAME
+};
 
 class MyGui
 {
@@ -25,60 +31,67 @@ public:
 	void Pre_Render();
 	void Post_Render();
 
-	void DockSpace();
-	void Demo_Window();
-	void Build_Window();
-	void GameDetails_Window();
-	void GameOptions_Window();
-	void FieldDetails_Window();
-	void Log_Window();
-	void RenderOptions_Window();
-	void ViewPort_Render(FrameBuffer* fbo);
-
-
-
-	inline NewGameLayout& Get_NewGameLayout() { return m_NewGameLayout; }
-	inline LoadGameLayout& Get_LoadGameLayout() { return m_LoadGameLayout; }
-	inline SaveGameLayout& Get_SaveGameLayout() { return m_SaveGameLayout; }
-	inline TaxLayout& Get_TaxLayout() { return m_TaxLayout; }
-	inline BuildLayout Get_BuildLayout() { return m_BuildLayout; }
-	inline LightsLayout& Get_LightsLayout() { return m_LightsLayout; }
-	inline FieldDetailsLayout& Get_FieldDetailsLayout() { return m_FieldDetailsLayout; }
-	inline LogLayout& Get_LogLayout() { return m_LogLayout; }
-
+	inline ViewPortLayout& Get_ViewPortLayout() { return m_ViewPortLayout; }
+	inline MenuBarLayout& Get_MenuBarLayout() { return m_MenuBarLayout; }
+	inline GameWindowLayout& Get_GameWindowLayout() { return m_GameWindowLayout; }
+	inline RenderWindowLayout& Get_RenderWindowLayout() { return m_RenderWindowLayout; }
+	inline LogWindowLayout& Get_LogWindowLayout() { return m_LogWindowLayout; }
+	inline BuildWindowLayout& Get_BuildWindowLayout() { return m_BuildWindowLayout; }
+	inline DetailsWindowLayout& Get_DetailsWindowLayout() { return m_DetailsWindowLayout; }
+	inline EventLayout& Get_EventLayout() { return m_EventLayout; }
 	bool BuildHover = false;
-	int r = 0;
-	bool hit;
-	int mouse_x;
-	int mouse_y;
-	ImVec2 content_size;
+
+	void GAME_UI();
+	void LOBBY_UI();
+	WINDOW UI_MODE = LOBBY;
+
 protected:
 	static void Custom_Style();
-
 	void Build_MouseClickEvent();
 	void Build_KeyboardKeyEvent();
 	void Camera_MouseClickEvent();
 	void Camera_KeyboardKeyEvent();
 
-	void NewGame_Window();
-	void LoadGame_Window();
-	void SaveGame_Window();
 	void DockSpace_MenuBar();
+	void NewGame_Popup();
+	void LoadGame_Popup();
+	void SaveGame_Popup();
+	void InfoGame_Popup();
+	void ViewPortWindow();
+	void GameWindow();
+	void GameWindow_General();
+	void GameWindow_Time();
+	void GameWindow_Tax();
+	void GameWindow_Catastrophe();
+	void RenderWindow();
+	void RenderWindow_Frame();
+	void RenderWindow_Camera();
+	void RenderWindow_CameraPopup2D();
+	void RenderWindow_CameraPopup3D();
+	void RenderWindow_Objects();
+	void RenderWindow_Lights();
+	void LogWindow();
+	void BuildWindow();
+	void DetailsWindow();
+	void Upgrade_Popup();
+	void EndGame_Popup();
+
+	void Lobby_Buttons();
+	void LobbyViewPort_Window();
+
+
+	ImVec2 Get_UV(int index, int type);
 private:
 	Camera* m_Camera = nullptr;
-	int m_ViewPort_Width = 0;
-	int m_ViewPort_Height = 0;
 
-
-	NewGameLayout m_NewGameLayout;
-	LoadGameLayout m_LoadGameLayout;
-	SaveGameLayout m_SaveGameLayout;
-	BuildLayout m_BuildLayout;
-	TaxLayout m_TaxLayout;
-	FieldDetailsLayout m_FieldDetailsLayout;
-	LogLayout m_LogLayout;
-
-	LightsLayout m_LightsLayout;
+	ViewPortLayout m_ViewPortLayout;
+	MenuBarLayout m_MenuBarLayout;
+	GameWindowLayout m_GameWindowLayout;
+	RenderWindowLayout m_RenderWindowLayout;
+	LogWindowLayout m_LogWindowLayout;
+	BuildWindowLayout m_BuildWindowLayout;
+	DetailsWindowLayout m_DetailsWindowLayout;
+	EventLayout m_EventLayout;
 
 	imgui_addons::ImGuiFileBrowser file_dialog;
 };

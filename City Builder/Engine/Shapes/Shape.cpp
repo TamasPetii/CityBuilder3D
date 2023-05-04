@@ -59,7 +59,7 @@ void Shape::AttachNumbersSubData(const std::vector<GLfloat>& numbers)
 	m_NBO.AttachSubData(numbers);
 }
 
-void Shape::AttachToGPU(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices)
+void Shape::AttachToGPU(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, GLuint buffer_size)
 {
 	m_IndicesCount = static_cast<GLuint>(indices.size());
 
@@ -67,8 +67,8 @@ void Shape::AttachToGPU(const std::vector<Vertex>& vertices, const std::vector<G
 
 	m_VBO.AttachDataStatic(vertices);
 	m_IBO.AttachDataStatic(indices);
-	m_MBO.AttachDataDynamic(std::vector<glm::mat4>(2500)); //Allocate a buffer with max size (50x50) table, and then copying data to this buffer
-	m_NBO.AttachDataDynamic(std::vector<GLfloat>(2500));
+	m_MBO.AttachDataDynamic(std::vector<glm::mat4>(buffer_size));
+	m_NBO.AttachDataDynamic(std::vector<GLfloat>(buffer_size));
 
 	m_VAO.LinkAttribute(m_VBO, 0, 3, GL_FLOAT, sizeof(Vertex), nullptr);
 	m_VAO.LinkAttribute(m_VBO, 1, 3, GL_FLOAT, sizeof(Vertex), (const void*)(1 * sizeof(glm::vec3)));

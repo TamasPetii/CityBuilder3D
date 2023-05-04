@@ -6,21 +6,31 @@
 #include "GameFields/Zones/_ZoneHeaders.h"
 #include "GameFields/Buildings/_BuildingHeaders.h"
 #include <string>
+#include <cmath>
+#include <functional>
 
 class RoadNetwork
 {
 public:
 	static int GetNetworkId(GameField*);
 	static int CreateNetwork();
-	static void AddToNetwork(GameField*, int);
+	static bool AddToNetwork(GameField*, int);
 	static void RemoveFromNetwork(GameField*);
 	static void MergeNetworks(int, int);
 	static bool IsConnected(GameField*, GameField*);
-	static Zone* FindEmptyWorkingArea(Zone*);
+	static Zone* FindEmptyWorkingArea(Zone*, float);
 	static void ResetNetworks();
-	static double GetSatisfaction(Zone* field);
 	static Zone* FindEmptyResidentialArea();
 	static std::string NetworksToString();
+	static void AddToNetworkSatisfaction(GameField*, int);
+	static void SetZoneSatisfaction(GameField*);
+	static bool IsConnectedMultiple(GameField*, GameField*);
+	static Zone* FindOptimalResidentialArea(float);
+
+	using ZoneFunction = std::function<void(GameField* const)>;
+	
+	static void ApplyToAllZones(const ZoneFunction& func);
+	static void ApplyToAllBuilding(const ZoneFunction& func);
 
 private:
 	class Network {

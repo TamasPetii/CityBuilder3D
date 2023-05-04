@@ -5,5 +5,5 @@ class PoliceBuilding : public Shape
 {
 public:
 	PoliceBuilding();
-	void CreateBuffers() override;
+	void CreateBuffers(GLuint buffer_size) override;
 };
