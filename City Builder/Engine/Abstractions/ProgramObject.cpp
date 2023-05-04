@@ -26,7 +26,7 @@ void ProgramObject::UnBind() const
 	glUseProgram(0);
 }
 
-void ProgramObject::Initialize(const std::initializer_list<ShaderObject>& shaders, const std::initializer_list<ShaderObjectLayout>& attribs)
+void ProgramObject::Initialize(const std::vector<ShaderObject>& shaders, const std::vector<ShaderObjectLayout>& attribs)
 {
 	//At his point {Initializer list <ShaderObjects>} has been already loaded shader files
 

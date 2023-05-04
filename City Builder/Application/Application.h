@@ -21,6 +21,8 @@
 #include <string>
 #include <vector>
 #include <cmath>
+#include <fstream>
+#include <utility>
 
 class Application
 {
@@ -28,6 +30,10 @@ public:
 	Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT);
 	~Application();
 
+	void NewGame(int, int, int);
+	void SaveGame();
+	void LoadGame();
+	std::vector<std::pair<FieldType, float*>> Get_TaxRates();
 	void Update();
 	void Render();
 	void RenderUI();

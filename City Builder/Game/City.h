@@ -12,6 +12,7 @@ class City
 {
 public:
 	City(int size);
+	City(int size, int money, int time);
 	~City() = default;
 
 	//Static Methodes / Members
@@ -33,6 +34,7 @@ public:
 	inline int Get_Time() const { return m_DailyTickCounter; }
 	inline int Get_GameTableSize() const { return m_GameTable->Get_TableSize(); }
 	inline int Get_CitizenSize() { return m_Citizens.size(); }
+	inline std::unordered_set<Citizen*>& Get_Citizens() { return m_Citizens; }
 	inline int Get_NumberOfResidences() const { return m_NumberOfResidences; }
 	inline float Get_CombinedHappiness() { return Get_CitizenSize() == 0 ? 0 : m_combinedHappiness * 100; }
 	std::string Get_TimeStr() const;

@@ -36,6 +36,180 @@ Application::~Application()
 	delete m_City;
 }
 
+void Application::NewGame(int size, int money = -1, int time = -1) {
+	m_MyGui->Get_GameWindowLayout().Time_Real = 0;
+	m_MyGui->Get_GameWindowLayout().Time_Tick = m_MyGui->Get_MenuBarLayout().City_Time;
+	m_Timer->Reset();
+	m_Timer->SetTickTime(m_MyGui->Get_MenuBarLayout().City_Time);
+	changed = true;
+
+	MeteorGrp::Clear();
+	CarGroup::Clear();
+	RoadNetwork::ResetNetworks();
+	City::BUILD_LOG.clear();
+	City::BUILD_LOG.str("");
+	City::MONEY_LOG.clear();
+	City::MONEY_LOG.str("");
+	Citizen::LOG.clear();
+	Citizen::LOG.str("");
+	Renderer::ResizeShapeBuffers(size * size);
+
+	delete m_City;
+	if (money == -1 || time == -1) m_City = new City(size);
+	else m_City = new City(size, money, time);
+	
+	auto taxRates = Application::Get_TaxRates();
+	for (auto& it : taxRates) {
+		*it.second = 40;
+	}
+	m_MyGui->Get_GameWindowLayout().Tax_Effect = true;
+
+	m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
+	m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
+}
+
+void Application::LoadGame() {
+	std::ifstream saveFile(m_MyGui->Get_MenuBarLayout().LoadFile_Path);
+
+	if (!saveFile.is_open())
+	{
+		std::cout << "Could not open [" << m_MyGui->Get_MenuBarLayout().LoadFile_Path << "]" << std::endl;
+		return;
+	}
+
+	int size, tmp, money, time;
+	saveFile >> size >> money >> time;
+	Application::NewGame(size, money, time);
+
+	auto taxRates = Application::Get_TaxRates();
+	for (auto& it : taxRates) {
+		int type;
+		float taxRate;
+		saveFile >> type >> taxRate;
+		m_City->Set_TaxRate(static_cast<FieldType>(type), taxRate);
+		*it.second = taxRate;
+	}
+
+	//mezõk
+	for (int i = 0; i < size; i++) {
+		for (int j = 0; j < size; j++) {
+			int type_i, dir_i;
+			saveFile >> type_i >> dir_i;
+			FieldType type = static_cast<FieldType>(type_i);
+			FieldDirection dir = static_cast<FieldDirection>(dir_i);
+			if (type == FOREST) {
+				int tmp;
+				saveFile >> tmp;
+				m_City->Set_GameTableValue(i, j, type, dir);
+				GameField* f = m_City->Get_GameField(i, j);
+				dynamic_cast<Forest*>(f)->Set_Age(tmp);
+			}
+			else if (type != EMPTY) {
+				m_City->Set_GameTableValue(i, j, type, dir);
+			}
+		}
+	}
+
+	//polgárok
+	int citizenSize, x, y;
+	saveFile >> citizenSize;
+	for (int i = 0; i < citizenSize; i++) {
+		Citizen* citizen = new Citizen();
+		saveFile >> x >> y;
+		citizen->JoinZone(dynamic_cast<Zone*>(m_City->Get_GameField(x, y)));//lakóhely
+		saveFile >> x >> y;
+		if (x != -1 && y != -1) {
+			citizen->JoinZone(dynamic_cast<Zone*>(m_City->Get_GameField(x, y)));//munkahely
+		}
+		saveFile >> x >> y;
+		citizen->Set_Age(x);
+		citizen->Set_Education(static_cast<Education>(y));
+		saveFile >> x >> y;
+		citizen->Set_MonthsBeforePension(x);
+		citizen->Set_Pension(y);
+	}
+}
+
+void Application::SaveGame() {
+	std::ofstream saveFile(m_MyGui->Get_MenuBarLayout().SaveFile_Path + ".txt");
+
+	if (!saveFile.is_open())
+	{
+		std::cout << "Could not open [" << m_MyGui->Get_MenuBarLayout().SaveFile_Path + ".txt" << "]" << std::endl;
+		return;
+	}
+
+	//Város adatai
+	int size = m_City->Get_GameTableSize();
+	saveFile << size << std::endl;
+	saveFile << m_City->Get_Money() << std::endl;
+	saveFile << m_City->Get_Time() << std::endl;
+
+	auto taxRates = Application::Get_TaxRates();
+	for (auto& it : taxRates) {
+		saveFile << it.first << " " << *it.second << " ";
+	}
+	saveFile << std::endl;
+
+	//Mezõk
+	std::unordered_set<GameField*> bigBuildings;
+	for (int i = 0; i < size; i++) {
+		for (int j = 0; j < size; j++) {
+			GameField* field = m_City->Get_GameField(i, j);
+			FieldType type = field->Get_Type();
+			if (type == UNIVERSITY || type == HIGHSCHOOL || type == POWERSTATION || type == STADIUM) {
+				if (bigBuildings.find(field) == bigBuildings.end()) {
+					bigBuildings.emplace(field);
+					if (type == HIGHSCHOOL) {
+						saveFile << type << " " << field->Get_Direction() << " ";
+						continue;
+					}
+				}
+				else {
+					saveFile << EMPTY << " " << 0 << " ";
+					continue;
+				}
+			}
+			else if (type == FOREST) {
+				saveFile << type << " " << field->Get_Direction() << " " << dynamic_cast<Forest*>(field)->Get_Age() << " ";
+				continue;
+			}
+			saveFile << type << " " << field->Get_Direction() << " ";
+		}
+		saveFile << std::endl;
+	}
+
+	//Polgárok
+	saveFile << m_City->Get_CitizenSize() << std::endl;
+	for (auto& citizen : m_City->Get_Citizens()) {
+		saveFile << citizen->Get_Residence()->Get_X() << " " << citizen->Get_Residence()->Get_Y() << " ";
+		if (citizen->Get_Workplace() == nullptr) {
+			saveFile << -1 << " " << -1 << " ";
+		}
+		else {
+			saveFile << citizen->Get_Workplace()->Get_X() << " " << citizen->Get_Workplace()->Get_Y() << " ";
+		}
+		saveFile << citizen->Get_Age() << " " << citizen->Get_Education() << " ";
+		saveFile << citizen->Get_MonthsBeforePension() << " " << citizen->Get_Pension() << std::endl;
+	}
+}
+
+std::vector<std::pair<FieldType, float*>> Application::Get_TaxRates() {
+	std::vector<std::pair<FieldType, float*>> taxRates = {
+	{RESIDENTIAL_LVL1, &m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl1},
+	{RESIDENTIAL_LVL2, &m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl2},
+	{RESIDENTIAL_LVL3, &m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl3},
+	{SERVICE_LVL1, &m_MyGui->Get_GameWindowLayout().ServiceTaxLvl1},
+	{SERVICE_LVL2, &m_MyGui->Get_GameWindowLayout().ServiceTaxLvl2},
+	{SERVICE_LVL3, &m_MyGui->Get_GameWindowLayout().ServiceTaxLvl3},
+	{INDUSTRIAL_LVL1, &m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl1},
+	{INDUSTRIAL_LVL2, &m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl2},
+	{INDUSTRIAL_LVL3, &m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl3}
+	};
+
+	return taxRates;
+}
+
 void Application::Update()
 {
 	MeteorGrp::Update();
@@ -102,49 +276,22 @@ void Application::Update()
 	//NEW-GAME
 	if (m_MyGui->Get_MenuBarLayout().NewGame_Effect)
 	{
-		m_MyGui->Get_GameWindowLayout().Time_Real = 0;
 		m_MyGui->Get_MenuBarLayout().NewGame_Effect = false;
-		m_MyGui->Get_GameWindowLayout().Time_Tick = m_MyGui->Get_MenuBarLayout().City_Time;
-		m_Timer->Reset();
-		m_Timer->SetTickTime(m_MyGui->Get_MenuBarLayout().City_Time);
-		changed = true;
-
-		MeteorGrp::Clear();
-		CarGroup::Clear();
-		RoadNetwork::ResetNetworks();
-		City::BUILD_LOG.clear();
-		City::BUILD_LOG.str("");
-		City::MONEY_LOG.clear();
-		City::MONEY_LOG.str("");
-		Citizen::LOG.clear();
-		Citizen::LOG.str("");
-		Renderer::ResizeShapeBuffers(m_MyGui->Get_MenuBarLayout().City_Size * m_MyGui->Get_MenuBarLayout().City_Size);
-
-		delete m_City;
-		m_City = new City(m_MyGui->Get_MenuBarLayout().City_Size);
-
-		m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
-		m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
+		Application::NewGame(m_MyGui->Get_MenuBarLayout().City_Size);
 	}
 
 	//LOAD-GAME
 	if (m_MyGui->Get_MenuBarLayout().LoadGame_Effect)
 	{
 		m_MyGui->Get_MenuBarLayout().LoadGame_Effect = false;
-
-		std::cout << "Load-Game" << std::endl;
-		std::cout << "PATH: " << m_MyGui->Get_MenuBarLayout().LoadFile_Path << std::endl;
-		std::cout << "NAME: " << m_MyGui->Get_MenuBarLayout().LoadFile_Name << std::endl;
+		Application::LoadGame();
 	}
 
-	//LOAD-GAME
+	//SAVE-GAME
 	if (m_MyGui->Get_MenuBarLayout().SaveGame_Effect)
 	{
 		m_MyGui->Get_MenuBarLayout().SaveGame_Effect = false;
-
-		std::cout << "Save-Game" << std::endl;
-		std::cout << "PATH: " << m_MyGui->Get_MenuBarLayout().SaveFile_Path << std::endl;
-		std::cout << "NAME: " << m_MyGui->Get_MenuBarLayout().SaveFile_Name << std::endl;
+		Application::SaveGame();
 	}
 
 	//GAME-TIME
@@ -170,19 +317,11 @@ void Application::Update()
 	if (m_MyGui->Get_GameWindowLayout().Tax_Effect)
 	{
 		m_MyGui->Get_GameWindowLayout().Tax_Effect = false;
+		std::vector<std::pair<FieldType, float*>> taxRates = Application::Get_TaxRates();
 
-		m_City->Set_TaxRate(RESIDENTIAL_LVL1, m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl1);
-		m_City->Set_TaxRate(RESIDENTIAL_LVL2, m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl2);
-		m_City->Set_TaxRate(RESIDENTIAL_LVL3, m_MyGui->Get_GameWindowLayout().ResidenceTaxLvl3);
-
-		m_City->Set_TaxRate(SERVICE_LVL1, m_MyGui->Get_GameWindowLayout().ServiceTaxLvl1);
-		m_City->Set_TaxRate(SERVICE_LVL2, m_MyGui->Get_GameWindowLayout().ServiceTaxLvl2);
-		m_City->Set_TaxRate(SERVICE_LVL3, m_MyGui->Get_GameWindowLayout().ServiceTaxLvl3);
-
-		m_City->Set_TaxRate(INDUSTRIAL_LVL1, m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl1);
-		m_City->Set_TaxRate(INDUSTRIAL_LVL2, m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl2);
-		m_City->Set_TaxRate(INDUSTRIAL_LVL3, m_MyGui->Get_GameWindowLayout().IndustrialTaxLvl3);
-
+		for (auto& it : taxRates) {
+			m_City->Set_TaxRate(it.first, *it.second);
+		}
 	}
 	
 	//RENDER-FRAME
