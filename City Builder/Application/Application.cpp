@@ -616,6 +616,7 @@ void Application::Render()
 		Renderer::Changed = true;
 		Zone::CHANGED = false;
 		City::CHANGED = false;
+		GameTable::CHANGED = false;
 		changed = false;
 	}
 
