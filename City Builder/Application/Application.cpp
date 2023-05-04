@@ -28,6 +28,7 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 	m_MyGui->Get_RenderWindowLayout().Lights_Reset = true;
 	changed = true;
 
+	SetUI_BuildCosts();
 }
 
 Application::~Application()
@@ -569,7 +570,7 @@ void Application::RenderUI()
 
 void Application::Render()
 {
-	if (changed || Zone::CHANGED || City::CHANGED)
+	if (changed || Zone::CHANGED || City::CHANGED || GameTable::CHANGED)
 	{
 		std::unordered_set<GameField*> fields_2x2;
 		for (int i = 0; i < m_City->Get_GameTableSize(); i++)
@@ -582,17 +583,17 @@ void Application::Render()
 
 				if (m_City->Get_GameField(i, j)->IsZone())
 				{
-					Zone* zone = dynamic_cast<Zone*>(m_City->Get_GameField(i, j));
+					Zone* zone = dynamic_cast<Zone*>(m_City->Get_GameField(i, j));			
 					contain = zone->Get_Contain();
-					if (type == RESIDENTIAL_LVL1) amount = zone->Get_Contain();
-					if (type == RESIDENTIAL_LVL2) amount = zone->Get_Contain() / 2 + zone->Get_Contain() % 2;
-					if (type == RESIDENTIAL_LVL3) amount = zone->Get_Contain() / 8 + (zone->Get_Contain() % 8 == 0 ? 0 : 1);
-					if (type == INDUSTRIAL_LVL1) amount = zone->Get_Contain();
-					if (type == INDUSTRIAL_LVL2) amount = zone->Get_Contain();
-					if (type == INDUSTRIAL_LVL3) amount = zone->Get_Contain();
-					if (type == SERVICE_LVL1) amount = zone->Get_Contain();
-					if (type == SERVICE_LVL2) amount = zone->Get_Contain() / 2 + zone->Get_Contain() % 2;
-					if (type == SERVICE_LVL3) amount = zone->Get_Contain() / 4 + (zone->Get_Contain() % 4 == 0 ? 0 : 1);
+					if (type == RESIDENTIAL_LVL1) amount = contain;
+					if (type == RESIDENTIAL_LVL2) amount = contain / 2 + contain % 2;
+					if (type == RESIDENTIAL_LVL3) amount = contain / 8 + (contain % 8 == 0 ? 0 : 1);
+					if (type == INDUSTRIAL_LVL1) amount = contain;
+					if (type == INDUSTRIAL_LVL2) amount = contain;
+					if (type == INDUSTRIAL_LVL3) amount = contain;
+					if (type == SERVICE_LVL1) amount = contain;
+					if (type == SERVICE_LVL2) amount = contain / 2 + contain % 2;
+					if (type == SERVICE_LVL3) amount = contain / 4 + (contain % 4 == 0 ? 0 : 1);			
 				}
 
 				if (m_City->Get_GameField(i, j)->IsForest())
@@ -980,4 +981,19 @@ void Application::CheckCarPos()
 
 		}
 	}
+}
+
+void Application::SetUI_BuildCosts()
+{
+	m_MyGui->Get_BuildWindowLayout().RoadCost = GameField::CalculateBuildCost(ROAD);
+	m_MyGui->Get_BuildWindowLayout().ForestCost = GameField::CalculateBuildCost(FOREST);
+	m_MyGui->Get_BuildWindowLayout().ResidenceCost = GameField::CalculateBuildCost(RESIDENTIAL_LVL1);
+	m_MyGui->Get_BuildWindowLayout().IndustryCost = GameField::CalculateBuildCost(INDUSTRIAL_LVL1);
+	m_MyGui->Get_BuildWindowLayout().ServiceCost = GameField::CalculateBuildCost(SERVICE_LVL1);
+	m_MyGui->Get_BuildWindowLayout().FireStationCost = GameField::CalculateBuildCost(FIRESTATION);
+	m_MyGui->Get_BuildWindowLayout().PoliceStationCost = GameField::CalculateBuildCost(POLICESTATION);
+	m_MyGui->Get_BuildWindowLayout().StadionCost = GameField::CalculateBuildCost(STADIUM);
+	m_MyGui->Get_BuildWindowLayout().HighSchoolCost = GameField::CalculateBuildCost(HIGHSCHOOL);
+	m_MyGui->Get_BuildWindowLayout().UniversityCost = GameField::CalculateBuildCost(UNIVERSITY);
+	m_MyGui->Get_BuildWindowLayout().PowerStationCost = GameField::CalculateBuildCost(POWERSTATION);
 }

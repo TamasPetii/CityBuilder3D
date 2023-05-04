@@ -113,6 +113,18 @@ struct BuildWindowLayout
 {
 	int  Build_Id = 0;
 	int  TextureID;
+
+	int RoadCost;
+	int ForestCost;
+	int ResidenceCost;
+	int IndustryCost;
+	int ServiceCost;
+	int FireStationCost;
+	int PoliceStationCost;
+	int StadionCost;
+	int HighSchoolCost;
+	int UniversityCost;
+	int PowerStationCost;
 };
 
 struct DetailsWindowLayout

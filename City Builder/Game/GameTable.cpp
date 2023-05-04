@@ -1,7 +1,7 @@
 #include "GameTable.h"
 #include "RoadNetwork.h"
 
-bool GameTable::changed = false;
+bool GameTable::CHANGED = false;
 
 GameTable::GameTable(int TableSize) : m_TableSize(TableSize)
 {
@@ -327,7 +327,7 @@ void GameTable::SimulateFire(GameField* field)
 	if ((field->IsZone() || field->IsBuilding()) && field->Get_Type() != FIRESTATION)
 	{
 		field->RandomFire();
-		changed = changed || field->OnFire();
+		CHANGED = CHANGED || field->OnFire();
 	}
 
 	//Updateing fire state + Fire spread
@@ -345,14 +345,16 @@ void GameTable::SimulateFire(GameField* field)
 				{
 					int nbX = x + field->Get_X();
 					int nbY = y + field->Get_Y();
+					if (!ValidateCoordinate(nbX, nbY)) continue;
+
 					bool type = (m_Table[nbX][nbY]->IsZone() || m_Table[nbX][nbY]->IsBuilding()) && m_Table[nbX][nbY]->Get_Type() != FIRESTATION;
 
-					if (type && ValidateCoordinate(nbX, nbY) && !m_Table[nbX][nbY]->OnFire())
+					if (type && !m_Table[nbX][nbY]->OnFire())
 					{
 						bool fire = (rand() % 3 == 0);
 						m_Table[nbX][nbY]->OnFire() = fire;
 
-						changed = changed || fire;
+						CHANGED = CHANGED || fire;
 					}
 				}
 			}
@@ -362,7 +364,7 @@ void GameTable::SimulateFire(GameField* field)
 	if (field->FireCounter == 0)
 	{
 		this->Set_TableValue(field->Get_X(), field->Get_Y(), EMPTY, FRONT);
-		changed = true;
+		CHANGED = true;
 	}
 }
 
