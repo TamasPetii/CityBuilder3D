@@ -106,5 +106,7 @@ private:
 	std::unordered_map<Car*, GameField*>  station_map;
 
 	void CheckCarPos();
+
+	bool InitLobby = true;
 };
 

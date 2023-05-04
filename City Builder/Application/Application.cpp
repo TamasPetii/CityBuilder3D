@@ -41,6 +41,12 @@ void Application::Update()
 {
 	if (m_MyGui->UI_MODE == LOBBY)
 	{
+		if (InitLobby)
+		{
+			Application::NewGame(50, -1, -1);
+			InitLobby = false;
+		}
+
 		m_Camera->Set_Eye(glm::vec3(50.f * cosf(glfwGetTime() * 2 * M_PI / 250) + m_City->Get_GameTableSize(), 25.f, 50.f * sinf(glfwGetTime() * 2 * M_PI / 250) + m_City->Get_GameTableSize()));
 		m_MyGui->Get_ViewPortLayout().ViewPort_TextureID = Renderer::Get_FrameBuffer()->Get_TextureId();
 
@@ -49,11 +55,11 @@ void Application::Update()
 	}
 	else 
 	{
+		InitLobby = true;
 		if (m_MyGui->Get_GameWindowLayout().PauseTime)
 		{
 			if (!m_Timer->IsPaused())
 			{
-				std::cout << "PAUSE" << std::endl;
 				m_Timer->Pause();
 			}
 
@@ -69,6 +75,7 @@ void Application::Update()
 			if (m_Timer->IsPaused())
 			{
 				m_Timer->Reset();
+				m_Camera->ResetTimer();
 				MeteorGrp::ResetTimer();
 				CarGroup::ResetTimer();
 				//Reset WaterCurves
@@ -76,6 +83,12 @@ void Application::Update()
 				{
 					it->second->ResetTimer();
 				}
+			}
+
+			if (m_City->Get_CombinedHappiness() <= -80 || m_City->Get_Money() <= -50000000)
+			{
+				m_MyGui->Get_DetailsWindowLayout().End_Show = true;
+				m_MyGui->Get_GameWindowLayout().PauseTime = true;
 			}
 
 			Application::UpdateAnimationAndMembers();
@@ -503,6 +516,9 @@ void Application::FireTruckSimulation()
 
 void Application::CheckCarPos()
 {
+	std::vector<Car*> delete_cars;
+	std::vector<CarAndCoord*> to_delete;
+
 	for (auto car : CarGroup::m_Cars)
 	{
 		float rotation = 0;
@@ -516,10 +532,7 @@ void Application::CheckCarPos()
 
 		if (type == EMPTY || type == CRATER)
 		{
-
-			CarGroup::m_Cars.erase(car);
-
-			std::vector<CarAndCoord*> to_delete;
+			delete_cars.push_back(car);
 
 			for (auto it = CarGroup::m_InUseIntersections.begin(); it != CarGroup::m_InUseIntersections.end(); it++)
 			{
@@ -533,9 +546,15 @@ void Application::CheckCarPos()
 			{
 				CarGroup::m_InUseIntersections.erase(car);
 			}
-
 		}
 	}
+
+	for (auto car : delete_cars)
+	{
+		CarGroup::m_Cars.erase(car);
+	}
+
+
 }
 
 void Application::SetUI_BuildCosts()
@@ -1015,6 +1034,8 @@ void Application::LoadGame()
 		saveFile >> x >> y;
 		citizen->Set_MonthsBeforePension(x);
 		citizen->Set_Pension(y);
+
+		m_City->Get_Citizens().insert(citizen);
 	}
 }
 

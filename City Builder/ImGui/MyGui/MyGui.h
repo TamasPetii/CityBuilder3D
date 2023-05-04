@@ -74,6 +74,7 @@ protected:
 	void BuildWindow();
 	void DetailsWindow();
 	void Upgrade_Popup();
+	void EndGame_Popup();
 
 	void Lobby_Buttons();
 	void LobbyViewPort_Window();
