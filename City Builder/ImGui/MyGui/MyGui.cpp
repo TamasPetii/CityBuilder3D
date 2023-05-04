@@ -117,7 +117,7 @@ void MyGui::Post_Render()
     }
 }
 
-void MyGui::DockSpace()
+void MyGui::GAME_UI()
 {
     static bool opt_fullscreen = true;
     static bool opt_padding = false;
@@ -254,7 +254,7 @@ void MyGui::NewGame_Popup()
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0.75, 0, 1));
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0.7, 0, 1));
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0.65, 0, 1));
-        if (ImGui::Button("Okay", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); m_MenuBarLayout.NewGame_Show = false; m_MenuBarLayout.NewGame_Effect = true; }
+        if (ImGui::Button("Okay", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); m_MenuBarLayout.NewGame_Show = false; m_MenuBarLayout.NewGame_Effect = true; this->UI_MODE = GAME; }
         ImGui::SetItemDefaultFocus();
         ImGui::PopStyleColor(3);
 
@@ -284,6 +284,7 @@ void MyGui::LoadGame_Popup()
         m_MenuBarLayout.LoadFile_Name = file_dialog.selected_fn;
         m_MenuBarLayout.LoadFile_Path = file_dialog.selected_path;
         m_MenuBarLayout.LoadGame_Effect = true;
+        this->UI_MODE = GAME;
     }
 
     if (file_dialog.close) 
@@ -1414,4 +1415,106 @@ void MyGui::Camera_KeyboardKeyEvent()
     {
         m_Camera->Keyboard_ButtonEvent(GLFW_KEY_LEFT_SHIFT, 0, GLFW_RELEASE, 0);
     }
+}
+
+void MyGui::LobbyViewPort_Window()
+{
+    ImGui::Begin("Lobby", nullptr, ImGuiWindowFlags_NoCollapse);
+
+    ImVec2 size = ImGui::GetContentRegionAvail();
+
+    ImGui::Image((void*)m_ViewPortLayout.ViewPort_TextureID, size, ImVec2(0, 1), ImVec2(1, 0), ImVec4(1, 1, 1, 0.15));
+
+    if (size.x != m_ViewPortLayout.ViewPort_Width || size.y != m_ViewPortLayout.ViewPort_Height)
+    {
+        m_ViewPortLayout.ViewPort_Effect = true;
+    }
+
+    m_ViewPortLayout.ViewPort_Width = (int)size.x;
+    m_ViewPortLayout.ViewPort_Height = (int)size.y;
+    
+    ImGui::End();
+}
+
+void MyGui::LOBBY_UI()
+{
+    static bool opt_fullscreen = true;
+    static bool opt_padding = false;
+    static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
+    if (opt_fullscreen)
+    {
+        const ImGuiViewport* viewport = ImGui::GetMainViewport();
+        ImGui::SetNextWindowPos(viewport->WorkPos);
+        ImGui::SetNextWindowSize(viewport->WorkSize);
+        ImGui::SetNextWindowViewport(viewport->ID);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+        window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+    }
+    else
+    {
+        dockspace_flags &= ~ImGuiDockNodeFlags_PassthruCentralNode;
+    }
+
+    if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+        window_flags |= ImGuiWindowFlags_NoBackground;
+
+    if (!opt_padding)
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+    ImGui::Begin("DockSpace-Lobby", nullptr, window_flags);
+
+    if (!opt_padding)
+        ImGui::PopStyleVar();
+
+    if (opt_fullscreen)
+        ImGui::PopStyleVar(2);
+
+    // Submit the DockSpace
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+    {
+        ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+        ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+    }
+
+    LobbyViewPort_Window();
+    Lobby_Buttons();
+
+    ImGui::End();
+}
+
+void MyGui::Lobby_Buttons()
+{
+    ImVec2 button_window_width;
+    button_window_width.x = 300;
+    button_window_width.y = 195;
+
+    ImVec2 pos;
+    pos.x = (ImGui::GetWindowContentRegionMax().x - ImGui::GetWindowContentRegionMin().x) / 2 + ImGui::GetWindowPos().x - button_window_width.x / 2;
+    pos.y = (ImGui::GetWindowContentRegionMax().y - ImGui::GetWindowContentRegionMin().y) / 2 + ImGui::GetWindowPos().y - button_window_width.y / 2;
+
+
+    ImGui::SetNextWindowPos(pos);
+    ImGui::SetNextWindowSize(button_window_width);
+
+    ImGui::Begin("LOBBY", nullptr, ImGuiWindowFlags_NoCollapse);
+
+    ImGui::SetCursorPos(ImVec2(25, 25));
+    if (ImGui::Button("START", ImVec2(250, 50))) { m_MenuBarLayout.NewGame_Show = true; }
+
+    ImGui::SetCursorPos(ImVec2(25, 80));
+    if (ImGui::Button("LOAD", ImVec2(250, 50))) { m_MenuBarLayout.LoadGame_Show = true; }
+
+    ImGui::SetCursorPos(ImVec2(25, 135));
+    ImGui::Button("INFO", ImVec2(250, 50));
+
+
+    NewGame_Popup();
+    LoadGame_Popup();
+
+    ImGui::End(); 
 }

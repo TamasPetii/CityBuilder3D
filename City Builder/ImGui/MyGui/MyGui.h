@@ -11,9 +11,14 @@
 #include "../ImGui/imgui_impl_glfw.h"
 #include "../ImGui/imgui_impl_opengl3.h"
 #include "../ImGui/ImGuiFileBrowser.h"
-
-
 #include "MyGuiLayout.h"
+
+enum WINDOW
+{
+	LOBBY,
+	GAME
+};
+
 class MyGui
 {
 public:
@@ -25,7 +30,6 @@ public:
 
 	void Pre_Render();
 	void Post_Render();
-	void DockSpace();
 
 	inline ViewPortLayout& Get_ViewPortLayout() { return m_ViewPortLayout; }
 	inline MenuBarLayout& Get_MenuBarLayout() { return m_MenuBarLayout; }
@@ -36,6 +40,11 @@ public:
 	inline DetailsWindowLayout& Get_DetailsWindowLayout() { return m_DetailsWindowLayout; }
 	inline EventLayout& Get_EventLayout() { return m_EventLayout; }
 	bool BuildHover = false;
+
+	void GAME_UI();
+	void LOBBY_UI();
+	WINDOW UI_MODE = LOBBY;
+
 protected:
 	static void Custom_Style();
 	void Build_MouseClickEvent();
@@ -65,6 +74,10 @@ protected:
 	void BuildWindow();
 	void DetailsWindow();
 	void Upgrade_Popup();
+
+	void Lobby_Buttons();
+	void LobbyViewPort_Window();
+
 
 	ImVec2 Get_UV(int index, int type);
 private:
