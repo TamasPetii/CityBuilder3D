@@ -1,6 +1,7 @@
 #include "GameTable.h"
 #include "RoadNetwork.h"
-#include <stdio.h>
+
+bool GameTable::changed = false;
 
 GameTable::GameTable(int TableSize) : m_TableSize(TableSize)
 {
@@ -320,6 +321,62 @@ bool GameTable::IsBuildable(FieldType type, FieldDirection dir, int x, int y)
 	return true;
 }
 
+void GameTable::SimulateFire(GameField* field)
+{
+	//Fire appears randomly
+	if ((field->IsZone() || field->IsBuilding()) && field->Get_Type() != FIRESTATION)
+	{
+		field->RandomFire();
+		changed = changed || field->OnFire();
+	}
+
+	//Updateing fire state + Fire spread
+	if (field->OnFire())
+	{
+		field->FireCounter--;
+
+		//Spread
+		if (field->FireCounter == 250)
+		{
+			//Loop through the neighbours and set them fire :)
+			for (int x = -1; x <= 1; x++)
+			{
+				for (int y = -1; y <= 1; y++)
+				{
+					int nbX = x + field->Get_X();
+					int nbY = y + field->Get_Y();
+					bool type = (m_Table[nbX][nbY]->IsZone() || m_Table[nbX][nbY]->IsBuilding()) && m_Table[nbX][nbY]->Get_Type() != FIRESTATION;
+
+					if (type && ValidateCoordinate(nbX, nbY) && !m_Table[nbX][nbY]->OnFire())
+					{
+						bool fire = (rand() % 3 == 0);
+						m_Table[nbX][nbY]->OnFire() = fire;
+
+						changed = changed || fire;
+					}
+				}
+			}
+		}
+	}
+
+	if (field->FireCounter == 0)
+	{
+		this->Set_TableValue(field->Get_X(), field->Get_Y(), EMPTY);
+		changed = true;
+	}
+}
+
+void GameTable::Loop()
+{
+	for (int x = 0; x < m_Table.size(); x++)
+	{
+		for (int y = 0; y < m_Table.size(); y++)
+		{
+			SimulateFire(m_Table[x][y]);
+		}
+	}
+}
+
 bool GameTable::IsInterSection(Point p)
 {
 	if (m_Table[p.x][p.y]->IsRoad())
@@ -427,4 +484,69 @@ std::vector<Point> GameTable::PathFinder(Point start, Point end)
 
 	//end point is unreachable
 	return {};
+}
+
+std::unordered_set<int> GameTable::PathFinder_Fire(Point start)
+{
+	//directions
+	int dx[] = { -1, 0, 1, 0 };
+	int dy[] = { 0, 1, 0, -1 };
+
+	//initialize visited matrix
+	std::vector<std::vector<bool>> visited(m_TableSize, std::vector<bool>(m_TableSize, false));
+
+	//queue and path for BFS
+	std::queue<Point> q;
+	std::unordered_set<int> fieldsOnFire;
+
+	for (int i = 0; i < 4; ++i)
+	{
+		int x = start.x + dx[i];
+		int y = start.y + dy[i];
+
+		if (Get_TableValue(x,y)->IsRoad())
+		{
+			q.push({x, y});
+		}
+	}
+
+	//start
+	while (!q.empty())
+	{
+		int size = q.size();
+		for (int i = 0; i < size; i++)
+		{
+			Point curr = q.front();
+			q.pop();
+
+			for (int k = 0; k < 4; k++)
+			{
+				int x = curr.x + dx[k];
+				int y = curr.y + dy[k];
+
+				if (Get_TableValue(x,y)->OnFire())
+				{
+					fieldsOnFire.insert(x * m_TableSize + y);
+				}
+			}
+
+			//mark current point as visited
+			visited[curr.x][curr.y] = true;
+
+			//explore the neighbors
+			for (int j = 0; j < 4; j++)
+			{
+				int nx = curr.x + dx[j];
+				int ny = curr.y + dy[j];
+				if (nx >= 0 && nx < m_TableSize && ny >= 0 && ny < m_TableSize && m_Table[nx][ny]->IsRoad() && !visited[nx][ny])
+				{
+					Point p = { nx, ny };
+					q.push(p);
+					visited[nx][ny] = true;
+				}
+			}
+		}
+	}
+
+	return fieldsOnFire;
 }

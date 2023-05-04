@@ -27,6 +27,7 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 	m_MyGui->Get_RenderWindowLayout().Lights_Effect = true;
 	m_MyGui->Get_RenderWindowLayout().Lights_Reset = true;
 	changed = true;
+
 }
 
 Application::~Application()
@@ -43,6 +44,7 @@ void Application::NewGame(int size, int money = -1, int time = -1) {
 	m_Timer->SetTickTime(m_MyGui->Get_MenuBarLayout().City_Time);
 	changed = true;
 
+	CarGroup::ClearFireTrucks();
 	MeteorGrp::Clear();
 	CarGroup::Clear();
 	RoadNetwork::ResetNetworks();
@@ -214,9 +216,13 @@ void Application::Update()
 {
 	MeteorGrp::Update();
 	CarGroup::Update();
+
+	CheckCarPos();
+
 	m_Timer->Update();
 	m_FrameCounter->Update();
 	m_Camera->Update();
+	FireTruckSimulation();
 
 	m_MyGui->Get_ViewPortLayout().ViewPort_TextureID = Renderer::Get_FrameBuffer()->Get_TextureId();
 	m_MyGui->Get_RenderWindowLayout().Camera_Position = m_Camera->Get_CameraEye();
@@ -267,6 +273,17 @@ void Application::Update()
 					coordinates.push_back({ glm::vec3(cars[i][j].y * 2 + 1, 0, cars[i][j].x * 2 + 1), cars[i][j].isInterSection });
 				}
 				CarGroup::Add(coordinates);
+			}
+		}
+
+		for (auto it = truck_map.begin(); it != truck_map.end(); it++)
+		{
+			m_City->Get_GameField(it->second->endY / 2, it->second->endX / 2)->FireCounter += 2;
+
+			if (m_City->Get_GameField(it->second->endY / 2, it->second->endX / 2)->FireCounter >= 500)
+			{
+				m_City->Get_GameField(it->second->endY / 2, it->second->endX / 2)->FireCounter = 500;
+				m_City->Get_GameField(it->second->endY / 2, it->second->endX / 2)->OnFire() = false;
 			}
 		}
 
@@ -414,7 +431,41 @@ void Application::Update()
 
 		else if (m_MyGui->Get_BuildWindowLayout().Build_Id == -3)
 		{
-			//TODO: DEGRADE
+			GameField* field = m_City->Get_GameField(HitX, HitY);
+			if ((field->IsZone() || field->IsBuilding()) && field->Get_Type() != FIRESTATION)
+			{
+				field->OnFire() = true;
+				changed = true;
+			}
+		}
+
+		else if (m_MyGui->Get_BuildWindowLayout().Build_Id == -4)
+		{
+			if (m_City->Get_GameField(HitX, HitY)->Get_Type() == FIRESTATION)
+			{
+				std::vector<Point> fireTrucks = m_City->Get_FireTruckPath(HitX, HitY);
+				std::vector<CarCoord> coordinates;
+
+				for (int i = 0; i < fireTrucks.size(); ++i)
+				{
+					coordinates.push_back({ glm::vec3(fireTrucks[i].y * 2 + 1, 0, fireTrucks[i].x * 2 + 1) });
+				}
+				
+				WRITE_MAP(station_map);
+
+				bool l = false;
+				for (auto it = station_map.begin(); it != station_map.end() && !l; it++)
+				{
+					l = l || it->second == m_City->Get_GameField(HitX, HitY);
+				}
+
+				if (coordinates.size() > 1 && !l)
+				{
+					Car* new_car = CarGroup::AddFireTruck(coordinates);
+					station_map.insert(std::pair<Car*, GameField*>(new_car, m_City->Get_GameField(HitX, HitY)));
+				}
+					
+			}
 		}
 
 		else 
@@ -432,7 +483,7 @@ void Application::Update()
 				if (oldType != newType && (oldType == ROAD || newType == ROAD))
 				{
 					//TODO: Delete only the cars which are affected by the new road
-					CarGroup::Clear();
+					//CarGroup::Clear();
 				}
 
 				changed = true;
@@ -523,10 +574,16 @@ void Application::Render()
 		Renderer::Changed = true;
 		Zone::CHANGED = false;
 		changed = false;
+		m_City->ResetChanged();
 	}
 
 	Renderer::PreRender();
 	Renderer::SceneRender(INSTANCED);
+
+	for (auto it = truck_map.begin(); it != truck_map.end(); it++)
+	{
+		Renderer::RenderWaterCurve(it->second->Get_Transforms());
+	}
 
 	if (m_MyGui->BuildHover)
 	{
@@ -627,7 +684,6 @@ void Application::ConvertMouseInputTo3D(int xpos, int ypos, int width, int heigh
 		HitX = (int)rayz;
 		HitY = (int)rayx;
 	}
-
 }
 
 int Application::DetermineRoadTextureID(int x, int y)
@@ -693,5 +749,194 @@ int Application::DetermineRoadTextureID(int x, int y)
 	else
 	{
 		return 7;
+	}
+}
+
+void Application::FireTruckSimulation()
+{
+	std::vector<Car*> to_delete_CARGROUP;
+	std::vector<Car*> to_delete_MAP;
+
+	for (auto truck : CarGroup::m_FireTrucks)
+	{
+		float dir = 0.02 * cos(truck->Get_Rotation());
+
+		float rotation = 0;
+		float start_x = truck->Get_CurrentPosition(rotation).x + dir;
+		float start_y = truck->Get_CurrentPosition(rotation).z + dir;
+
+		int table_x = start_y / 2.f;
+		int table_y = start_x / 2.f;
+
+		FieldType type = m_City->Get_GameField(table_x, table_y)->Get_Type();
+
+		if (type == EMPTY || type == CRATER)
+		{
+			if (station_map.find(truck) != station_map.end())
+			{
+				to_delete_MAP.push_back(truck);
+			}
+
+			to_delete_CARGROUP.push_back(truck);
+		}
+	}
+
+	for (auto car : to_delete_MAP)
+	{
+		station_map.erase(car);
+		truck_map.erase(car);
+	}
+
+	for (auto car : to_delete_CARGROUP)
+	{
+		CarGroup::m_FireTrucks.erase(car);
+	}
+
+	for (auto truck : CarGroup::m_FireTrucks)
+	{
+		if (truck->ShouldBeDeleted() && truck_map.find(truck) == truck_map.end())
+		{
+			float dir = 0.02 * cos(truck->Get_Rotation());
+
+			float rotation = 0;
+			float start_x = truck->Get_CurrentPosition(rotation).x + dir;
+			float start_y = truck->Get_CurrentPosition(rotation).z + dir;
+
+			int table_x = start_y / 2.f;
+			int table_y = start_x / 2.f;
+
+			float end_x = -1;
+			float end_y = -1;
+
+			if (m_City->Validate(table_x + 1, table_y) && m_City->Get_GameField(table_x + 1, table_y)->OnFire())
+			{
+				end_x = table_y * 2.f + 1;
+				end_y = (table_x + 1) * 2.f + 1;
+			}
+			else if (m_City->Validate(table_x - 1, table_y) && m_City->Get_GameField(table_x - 1, table_y)->OnFire())
+			{
+				end_x = table_y * 2.f + 1;
+				end_y = (table_x - 1) * 2.f + 1;
+			}
+			else if (m_City->Validate(table_x, table_y + 1) && m_City->Get_GameField(table_x, table_y + 1)->OnFire())
+			{
+				end_x = (table_y + 1) * 2.f + 1;
+				end_y = table_x * 2.f + 1;
+			}
+			else if (m_City->Validate(table_x, table_y - 1) && m_City->Get_GameField(table_x, table_y - 1)->OnFire())
+			{
+				end_x = (table_y - 1) * 2.f + 1;
+				end_y = table_x * 2.f + 1;
+			}
+
+			if (end_x != -1)
+			{
+				truck_map.insert(std::pair<Car*, WaterGroup*>(truck, new WaterGroup(start_x, start_y, end_x, end_y)));
+			}
+			else 
+			{
+				CarGroup::m_FireTrucks.erase(truck);
+			}
+		}
+	}
+
+	std::vector<Car*> to_Delete;
+
+	for (auto it = truck_map.begin(); it != truck_map.end(); it++)
+	{
+		it->second->Update();
+
+		int x = (int)it->second->endY / 2;
+		int y = (int)it->second->endX / 2;
+
+		if (!m_City->Get_GameField(x, y)->OnFire())
+		{
+			float start_x = it->second->startX;
+			float start_y = it->second->startY;
+
+			it->second->Clear();
+			delete it->second;
+			it->second = nullptr;
+
+			for (int i = -1; i <= 1; i++)
+			{
+				for (int j = -1; j <= 1; j++)
+				{
+					if (m_City->Validate(x + i, y + j) && !(i == 0 && j == 0) && m_City->Get_GameField(x + i, y + j)->OnFire())
+					{
+						it->second = new WaterGroup(start_x, start_y, 2 * (y + j) + 1, 2 * (x + i) + 1);
+					}
+				}
+			}
+			
+			if (it->second == nullptr)
+			{
+				std::unordered_set<int> onFireFields = m_City->Get_GameTable()->PathFinder_Fire({ (int)start_y / 2, (int)start_x / 2 });
+
+				if (onFireFields.size() > 0)
+				{
+					std::random_device rd;
+					std::mt19937 gen(rd());
+					std::uniform_int_distribution<> distr(0, onFireFields.size() - 1);
+
+					auto beginIT = onFireFields.begin();
+					std::advance(beginIT, distr(gen));
+
+					int randomField = *beginIT;
+					
+					it->second = new WaterGroup(start_x, start_y, 2 * (randomField % m_City->Get_GameTableSize()) + 1, 2 * (randomField / m_City->Get_GameTableSize()) + 1);
+				}
+			}
+			
+			if (it->second == nullptr)
+			{
+				to_Delete.push_back(it->first);
+			}
+		}
+	}
+
+	for (auto truck : to_Delete)
+	{
+		truck_map.erase(truck);
+		station_map.erase(truck);
+		CarGroup::m_FireTrucks.erase(truck);
+	}
+}
+
+void Application::CheckCarPos()
+{
+	for (auto car : CarGroup::m_Cars)
+	{
+		float rotation = 0;
+		float start_x = car->Get_CurrentPosition(rotation).x;
+		float start_y = car->Get_CurrentPosition(rotation).z;
+
+		int table_x = start_y / 2.f;
+		int table_y = start_x / 2.f;
+
+		FieldType type = m_City->Get_GameField(table_x, table_y)->Get_Type();
+
+		if (type == EMPTY || type == CRATER)
+		{
+
+			CarGroup::m_Cars.erase(car);
+
+			std::vector<CarAndCoord*> to_delete;
+
+			for (auto it = CarGroup::m_InUseIntersections.begin(); it != CarGroup::m_InUseIntersections.end(); it++)
+			{
+				if ((*it)->Get_Car() == car)
+				{
+					std::cout << "CAR" << std::endl;
+					to_delete.push_back(*it);
+				}
+			}
+
+			for (auto car : to_delete)
+			{
+				CarGroup::m_InUseIntersections.erase(car);
+			}
+
+		}
 	}
 }

@@ -1,5 +1,8 @@
 #pragma once
 #define _USE_MATH_DEFINES
+#define WRITE(x) std::cout << x << std::endl;
+#define WRITE_MAP(map) for(auto it = map.begin(); it != map.end(); it++) {std::cout << it->first << " " << it->second << std::endl;}
+
 
 //OpenGL Headers
 #include <GLEW/glew.h>
@@ -43,6 +46,7 @@ public:
 	void ConvertMouseInputTo3D(int xpos, int ypos, int width, int height);
 
 	int DetermineRoadTextureID(int x, int y);
+	void FireTruckSimulation();
 
 private:
 	GLFWwindow* m_Window = nullptr;
@@ -63,5 +67,10 @@ private:
 
 	int HitX;
 	int HitY;
+
+	std::unordered_map<Car*, WaterGroup*> truck_map;
+	std::unordered_map<Car*, GameField*>  station_map;
+
+	void CheckCarPos();
 };
 

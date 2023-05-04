@@ -42,6 +42,9 @@ public:
 	inline void Set_Type(FieldType Type) { m_Type = Type; }
 	inline void Set_Direction(FieldDirection Direction) { m_Direction = Direction; }
 
+	int FireCounter = 500;
+	void RandomFire();
+	inline bool& OnFire() { return m_OnFire; }
 protected:
 	int m_X;
 	int m_Y;
@@ -50,4 +53,5 @@ protected:
 	float m_SatisfactionPoints;
 	FieldType m_Type;
 	FieldDirection m_Direction;
+	bool m_OnFire = false;
 };

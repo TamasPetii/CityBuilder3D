@@ -227,6 +227,11 @@ void RoadNetwork::AddToNetworkSatisfaction(GameField* field, int id) {
 					else {
 						zone->Add_Satisfaction((10 - d) / 10.0 * building->GetBuildingSatisfaction());
 					}
+
+					if (building->IsFireStation())
+					{
+						//TODO
+					}
 				}
 			}
 		}
@@ -253,6 +258,11 @@ void RoadNetwork::SetZoneSatisfaction(GameField* field) {
 				else {
 					satisfaction += (10 - d) / 10.0 * building->GetBuildingSatisfaction();
 					visitedBuilding.emplace(building);
+				}
+
+				if (building->IsFireStation())
+				{
+					//TODO
 				}
 			}
 		}

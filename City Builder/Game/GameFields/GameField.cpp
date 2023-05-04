@@ -119,3 +119,10 @@ std::string GameField::ToString(GameField* field)
 
 	return ss.str();
 }
+
+void GameField::RandomFire()
+{
+	if (m_OnFire) return;
+
+	m_OnFire = (rand() % 10000 == 123);
+}

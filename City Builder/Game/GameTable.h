@@ -6,6 +6,7 @@
 #include <queue>
 #include <algorithm>
 #include "GameFields/_GameFieldHeaders.h"
+#include <cmath>
 
 struct Point {
 	int x, y;
@@ -33,9 +34,13 @@ public:
 	float Get_TotalAnnualCost() const;
 
 	std::vector<Point> PathFinder(Point start, Point end);
+	std::unordered_set<int> PathFinder_Fire(Point start);
 	bool IsInterSection(Point p);
 	bool recalculate = false;
 
+	void Loop();
+
+	static bool changed;
 private:
 	std::vector<std::vector<GameField*>> m_Table;
 	int m_TableSize;
@@ -51,4 +56,7 @@ private:
 	void CheckZoneIndustrialBonus(GameField*);
 	void DeleteField(int, int, FieldType);
 	static float distance(GameField*, GameField*);
+
+
+	void SimulateFire(GameField*);
 };

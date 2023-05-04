@@ -56,6 +56,8 @@ void City::Simulate()
 		SimulateForestAging();
 		GenerateGraduatedCitizens(rand() % 20 + 1);
 	}
+
+	m_GameTable->Loop();
 }
 
 void City::UpdateMoney(float amount)
@@ -683,4 +685,37 @@ std::vector<std::pair<int, int>> City::BresenhamAlgorithm(int x0, int y0, int x1
 	}
 
 	return linePoints;
+}
+
+std::vector<Point> City::Get_FireTruckPath(int startX, int startY) const
+{
+	std::vector<Point> path;
+
+	int dx[] = { -1, 0, 1, 0 };
+	int dy[] = { 0, 1, 0, -1 };
+
+	std::unordered_set<int> onFireFields = m_GameTable->PathFinder_Fire({ startX, startY });
+	if (onFireFields.size() == 0) return std::vector<Point>();
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> distr(0, onFireFields.size() - 1);
+
+	auto it = onFireFields.begin();
+	std::advance(it, distr(gen));
+
+	int randomField = *it;
+
+	for (int i = 0; i < 4; ++i)
+	{
+		int x = startX + dx[i];
+		int y = startY + dy[i];
+
+		if (path.size() == 0)
+		{
+			path = m_GameTable->PathFinder({ startX, startY }, { randomField / Get_GameTableSize(), randomField % Get_GameTableSize() });
+		}
+	}
+
+	return path;
 }
