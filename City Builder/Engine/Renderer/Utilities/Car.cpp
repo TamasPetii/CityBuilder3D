@@ -1008,3 +1008,8 @@ void CarGroup::ClearFireTrucks()
 
 	m_FireTrucks.clear();
 }
+
+void CarGroup::ResetTimer()
+{
+	last_time = static_cast<float>(glfwGetTime());
+}

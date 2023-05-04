@@ -40,6 +40,7 @@ public:
 	static void Update();
 	static bool Effect();
 	static void Delete();
+	static void ResetTimer();
 	static void Add(int x, int y);
 	static std::vector<std::pair<int,int>> Change();
 	static std::vector<glm::mat4> Get_Transforms();

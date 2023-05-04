@@ -134,6 +134,7 @@ public:
 	static std::vector<glm::mat4> Get_Transforms();
 	static std::vector<glm::mat4> Get_FireTruckTransforms();
 	static void Update();
+	static void ResetTimer();
 	static void Add(std::vector<CarCoord>);
 	static Car* AddFireTruck(std::vector<CarCoord> coords);
 	static void Clear();

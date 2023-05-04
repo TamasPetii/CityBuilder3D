@@ -11,6 +11,11 @@ void MeteorGrp::Init()
 	last_time = glfwGetTime();
 }
 
+void MeteorGrp::ResetTimer()
+{
+	last_time = glfwGetTime();
+}
+
 //This will callculate the delta time between 2 render cycle
 //We will use this value to update every meteors positon
 void MeteorGrp::Update()
