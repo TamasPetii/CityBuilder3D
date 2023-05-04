@@ -41,10 +41,20 @@ void Application::Update()
 {
 	if (m_MyGui->UI_MODE == LOBBY)
 	{
+		static bool loaded = false;
+		if (!loaded) {
+			loaded = true;
+			Application::LoadGame(true);
+		}
 		m_Camera->Set_Eye(glm::vec3(50.f * cosf(glfwGetTime() * 2 * M_PI / 250) + m_City->Get_GameTableSize(), 25.f, 50.f * sinf(glfwGetTime() * 2 * M_PI / 250) + m_City->Get_GameTableSize()));
 		m_MyGui->Get_ViewPortLayout().ViewPort_TextureID = Renderer::Get_FrameBuffer()->Get_TextureId();
 
+		//Application::ViewPortEvent();
+		//Application::LightsChangedEvent();
+		Application::UpdateAnimationAndMembers();
 		Application::ViewPortEvent();
+		Application::GameTickEvent();
+		Application::TimeTickChangedEvent();
 		Application::LightsChangedEvent();
 	}
 	else 
@@ -941,9 +951,16 @@ void Application::NewGame(int size, int money = -1, int time = -1)
 	m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
 }
 
-void Application::LoadGame()
+void Application::LoadGame(bool b)
 {
-	std::ifstream saveFile(m_MyGui->Get_MenuBarLayout().LoadFile_Path);
+	std::ifstream saveFile;
+	if (b == false) {
+		saveFile.open(m_MyGui->Get_MenuBarLayout().LoadFile_Path);
+	}
+	else {
+		saveFile.open("lobbyfinal.txt");
+	}
+	
 
 	if (!saveFile.is_open())
 	{
@@ -978,13 +995,13 @@ void Application::LoadGame()
 			{
 				int tmp;
 				saveFile >> tmp;
-				m_City->Set_GameTableValue(i, j, type, dir);
+				m_City->Set_GameTableValue(i, j, type, dir, true);
 				GameField* f = m_City->Get_GameField(i, j);
 				dynamic_cast<Forest*>(f)->Set_Age(tmp);
 			}
 			else if (type != EMPTY)
 			{
-				m_City->Set_GameTableValue(i, j, type, dir);
+				m_City->Set_GameTableValue(i, j, type, dir, true);
 			}
 		}
 	}
@@ -1008,6 +1025,7 @@ void Application::LoadGame()
 		saveFile >> x >> y;
 		citizen->Set_MonthsBeforePension(x);
 		citizen->Set_Pension(y);
+		m_City->Get_Citizens().emplace(citizen);
 	}
 }
 
