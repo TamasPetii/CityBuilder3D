@@ -35,7 +35,7 @@ public:
 
 	void NewGame(int, int, int);
 	void SaveGame();
-	void LoadGame();
+	void LoadGame(bool b = false);
 	std::vector<std::pair<FieldType, float*>> Get_TaxRates();
 	void Update();
 	void Render();

@@ -134,7 +134,7 @@ void City::CalculateHappiness() {
 		if (ratio < 0.5 || ratio > 2) happiness -= 0.1;
 		if (happiness <= 0 && m_initialCitizens >= 50 && i>=49) { //első 50 lakos nem költözik el
 			happiness = 0;
-			to_remove.push_back(citizen);
+			if (rand() % 500 == 13) to_remove.push_back(citizen);
 		}
 		totalHappiness += happiness;
 		i++;
@@ -488,7 +488,7 @@ void City::Set_TaxRate(FieldType type, float rate)
 	}
 }
 
-void City::Set_GameTableValue(int x, int y, FieldType type, FieldDirection dir)
+void City::Set_GameTableValue(int x, int y, FieldType type, FieldDirection dir, bool free)
 { 
 	GameField* PreviousField = m_GameTable->Get_TableValue(x, y);
 
@@ -518,7 +518,7 @@ void City::Set_GameTableValue(int x, int y, FieldType type, FieldDirection dir)
 			m_GameTable->Set_TableValue(x, y, type, dir);
 		}
 
-		UpdateMoney(-1 * GameField::CalculateBuildCost(type));
+		if (!free) UpdateMoney(-1 * GameField::CalculateBuildCost(type));
 
 		BUILD_LOG << GameField::ConvertTypeToStr(type) << ": " << GameField::CalculateBuildCost(type) << "$" << std::endl;
 	}

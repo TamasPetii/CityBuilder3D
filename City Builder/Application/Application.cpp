@@ -43,14 +43,17 @@ void Application::Update()
 	{
 		if (InitLobby)
 		{
-			Application::NewGame(50, -1, -1);
+			//Application::NewGame(50, -1, -1);
+			Application::LoadGame(true);
 			InitLobby = false;
 		}
 
 		m_Camera->Set_Eye(glm::vec3(50.f * cosf(glfwGetTime() * 2 * M_PI / 250) + m_City->Get_GameTableSize(), 25.f, 50.f * sinf(glfwGetTime() * 2 * M_PI / 250) + m_City->Get_GameTableSize()));
 		m_MyGui->Get_ViewPortLayout().ViewPort_TextureID = Renderer::Get_FrameBuffer()->Get_TextureId();
 
+		Application::UpdateAnimationAndMembers();
 		Application::ViewPortEvent();
+		Application::GameTickEvent();
 		Application::LightsChangedEvent();
 	}
 	else 
@@ -967,9 +970,16 @@ void Application::NewGame(int size, int money = -1, int time = -1)
 	m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
 }
 
-void Application::LoadGame()
+void Application::LoadGame(bool b)
 {
-	std::ifstream saveFile(m_MyGui->Get_MenuBarLayout().LoadFile_Path);
+	std::ifstream saveFile;
+	if (b == false) {
+		saveFile.open(m_MyGui->Get_MenuBarLayout().LoadFile_Path);
+	}
+	else {
+		saveFile.open("Application/lobbyfinal.txt");
+	}
+	
 
 	if (!saveFile.is_open())
 	{
@@ -1004,13 +1014,13 @@ void Application::LoadGame()
 			{
 				int tmp;
 				saveFile >> tmp;
-				m_City->Set_GameTableValue(i, j, type, dir);
+				m_City->Set_GameTableValue(i, j, type, dir, true);
 				GameField* f = m_City->Get_GameField(i, j);
 				dynamic_cast<Forest*>(f)->Set_Age(tmp);
 			}
 			else if (type != EMPTY)
 			{
-				m_City->Set_GameTableValue(i, j, type, dir);
+				m_City->Set_GameTableValue(i, j, type, dir, true);
 			}
 		}
 	}
