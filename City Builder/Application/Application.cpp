@@ -284,10 +284,11 @@ void Application::Update()
 			{
 				m_City->Get_GameField(it->second->endY / 2, it->second->endX / 2)->FireCounter = 500;
 				m_City->Get_GameField(it->second->endY / 2, it->second->endX / 2)->OnFire() = false;
+				changed = true;
 			}
 		}
 
-		changed = m_City->Get_CitizenSize() != size;
+		changed = changed || m_City->Get_CitizenSize() != size;
 	}
 
 	//NEW-GAME
@@ -434,7 +435,6 @@ void Application::Update()
 			GameField* field = m_City->Get_GameField(HitX, HitY);
 			if ((field->IsZone() || field->IsBuilding()) && field->Get_Type() != FIRESTATION)
 			{
-				std::cout << "On Fire" << std::endl;
 				field->OnFire() = true;
 				changed = true;
 			}
@@ -451,8 +451,6 @@ void Application::Update()
 				{
 					coordinates.push_back({ glm::vec3(fireTrucks[i].y * 2 + 1, 0, fireTrucks[i].x * 2 + 1) });
 				}
-				
-				WRITE_MAP(station_map);
 
 				bool l = false;
 				for (auto it = station_map.begin(); it != station_map.end() && !l; it++)
@@ -774,7 +772,7 @@ void Application::FireTruckSimulation()
 		if (type == EMPTY || type == CRATER)
 		{
 			if (station_map.find(truck) != station_map.end())
-			{
+			{			
 				to_delete_MAP.push_back(truck);
 			}
 
@@ -836,6 +834,7 @@ void Application::FireTruckSimulation()
 			}
 			else 
 			{
+				station_map.erase(truck);
 				CarGroup::m_FireTrucks.erase(truck);
 			}
 		}
@@ -928,7 +927,6 @@ void Application::CheckCarPos()
 			{
 				if ((*it)->Get_Car() == car)
 				{
-					std::cout << "CAR" << std::endl;
 					to_delete.push_back(*it);
 				}
 			}
