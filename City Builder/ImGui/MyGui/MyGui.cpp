@@ -231,7 +231,7 @@ void MyGui::NewGame_Popup()
 
     if (ImGui::BeginPopupModal("New Game", nullptr, ImGuiWindowFlags_NoResize))
     {
-        ImGui::SetWindowSize(ImVec2(300, 127));
+        ImGui::SetWindowSize(ImVec2(300, 120));
 
         //[New Game] : City Name Text Input
         ImGui::Text("City Name: ");
@@ -927,7 +927,8 @@ void MyGui::BuildWindow()
 {
     int id;
     int building = m_BuildWindowLayout.Build_Id;
-
+    int TextureSizeX = 185;
+    int TextureSizeY = 185;
     ImGui::Begin("Edit");
 
     //Delete
@@ -989,176 +990,162 @@ void MyGui::BuildWindow()
         ImGui::Separator();
 
         //ROAD
-        id = 7;
+        id = 84;
         ImGui::Text("ROAD -> ");
         ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1, 0, 0, 1), "150$");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.RoadCost);
         if (m_BuildWindowLayout.Build_Id == 18)
         {
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("Road-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 18;
+        if (ImGui::ImageButton("Road-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 18;
         if (m_BuildWindowLayout.Build_Id == 18) ImGui::PopStyleColor(2);
 
         ImGui::Separator();
 
         //FOREST
-        id = 42;
+        id = 82;
         ImGui::Text("FOREST -> ");
         ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1, 0, 0, 1), "750$");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.ForestCost);
         if (m_BuildWindowLayout.Build_Id == 9)
         {
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("Forest-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 9;
+        if (ImGui::ImageButton("Forest-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 9;
         if (m_BuildWindowLayout.Build_Id == 9) ImGui::PopStyleColor(2);
     }
 
     if (ImGui::CollapsingHeader("Zone Fields", ImGuiTreeNodeFlags_DefaultOpen))
     {
         //RESIDENCE
-        id = 16;
+        id = 83;
         ImGui::Text("RESIDENCE -> ");
         ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1, 0, 0, 1), "6650$");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.ResidenceCost);
         if (m_BuildWindowLayout.Build_Id == 0)
         {
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("Residence-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 0;
+        if (ImGui::ImageButton("Residence-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 0;
         if (m_BuildWindowLayout.Build_Id == 0) ImGui::PopStyleColor(2);
         ImGui::Separator();
 
         //INDUSTRY
-        id = 30;
+        id = 85;
         ImGui::Text("INDUSTRY -> ");
         ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1, 0, 0, 1), "16650$");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.IndustryCost);
         if (m_BuildWindowLayout.Build_Id == 3)
         {
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("Industry-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 3;
+        if (ImGui::ImageButton("Industry-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 3;
         if (m_BuildWindowLayout.Build_Id == 3) ImGui::PopStyleColor(2);
         ImGui::Separator();
 
         //SERVICE
-        id = 20;
+        id = 86;
         ImGui::Text("SERVICE -> ");
         ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1, 0, 0, 1), "13650$");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.ServiceCost);
         if (m_BuildWindowLayout.Build_Id == 6)
         {
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("Service-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 6;
+        if (ImGui::ImageButton("Service-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 6;
         if (m_BuildWindowLayout.Build_Id == 6) ImGui::PopStyleColor(2);
     }
 
     if (ImGui::CollapsingHeader("Building Fields", ImGuiTreeNodeFlags_DefaultOpen))
     {
         //Firestation
-        id = 50;
+        id = 87;
         ImGui::Text("FIRESTATION -> ");
         ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1, 0, 0, 1), "6650$");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.FireStationCost);
         if (m_BuildWindowLayout.Build_Id == 11)
         {
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("Firestation-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 11;
+        if (ImGui::ImageButton("Firestation-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 11;
         if (m_BuildWindowLayout.Build_Id == 11) ImGui::PopStyleColor(2);
         ImGui::Separator();
 
-        //Firestation
-        id = 52;
+        //PoliceStation
+        id = 88;
         ImGui::Text("POLICESTATION -> ");
         ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1, 0, 0, 1), "6650$");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.PoliceStationCost);
         if (m_BuildWindowLayout.Build_Id == 10)
         {
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("Policestation-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 10;
+        if (ImGui::ImageButton("Policestation-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 10;
         if (m_BuildWindowLayout.Build_Id == 10) ImGui::PopStyleColor(2);
         ImGui::Separator();
 
         //Stadion
-        id = 45;
+        id = 89;
         ImGui::Text("STADION -> ");
         ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1, 0, 0, 1), "6650$");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.StadionCost);
         if (m_BuildWindowLayout.Build_Id == 14)
         {
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("Stadion-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 14;
+        if (ImGui::ImageButton("Stadion-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 14;
         if (m_BuildWindowLayout.Build_Id == 14) ImGui::PopStyleColor(2);
         ImGui::Separator();
 
         //Highschool
-        id = 55;
+        id = 96;
         ImGui::Text("HIGHSCHOOL -> ");
         ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1, 0, 0, 1), "6650$");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.HighSchoolCost);
         if (m_BuildWindowLayout.Build_Id == 12)
         {
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("Highschool-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 12;
+        if (ImGui::ImageButton("Highschool-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 12;
         if (m_BuildWindowLayout.Build_Id == 12) ImGui::PopStyleColor(2);
         ImGui::Separator();
 
         //University
-        id = 57;
+        id = 97;
         ImGui::Text("UNIVERSITY -> ");
         ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1, 0, 0, 1), "6650$");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.UniversityCost);
         if (m_BuildWindowLayout.Build_Id == 13)
         {
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("University-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 13;
+        if (ImGui::ImageButton("University-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 13;
         if (m_BuildWindowLayout.Build_Id == 13) ImGui::PopStyleColor(2);
         ImGui::Separator();
 
         //Powerstation
-        id = 47;
+        id = 98;
         ImGui::Text("POWERSTATION -> ");
         ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1, 0, 0, 1), "6650$");
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.PowerStationCost);
         if (m_BuildWindowLayout.Build_Id == 16)
         {
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("Powerstation-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 16;
+        if (ImGui::ImageButton("Powerstation-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 16;
         if (m_BuildWindowLayout.Build_Id == 16) ImGui::PopStyleColor(2);
-        ImGui::Separator();
-
-        //Powerwire
-        id = 63;
-        ImGui::Text("POWERWIRE -> ");
-        ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1, 0, 0, 1), "6650$");
-        if (m_BuildWindowLayout.Build_Id == 15)
-        {
-            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
-        }
-        if (ImGui::ImageButton("Powerwire-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(150, 150), Get_UV(id, 0), Get_UV(id, 1))) building = 15;
-        if (m_BuildWindowLayout.Build_Id == 15) ImGui::PopStyleColor(2);
         ImGui::Separator();
     }
 

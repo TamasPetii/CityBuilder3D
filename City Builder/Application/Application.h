@@ -48,6 +48,8 @@ public:
 	int DetermineRoadTextureID(int x, int y);
 	void FireTruckSimulation();
 
+
+	void SetUI_BuildCosts();
 private:
 	GLFWwindow* m_Window = nullptr;
 	Camera* m_Camera = nullptr;

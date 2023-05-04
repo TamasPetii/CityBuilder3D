@@ -19,6 +19,8 @@ public:
 	GameTable(int TableSize);
 	~GameTable() = default;
 
+	static bool CHANGED;
+
 	bool ValidateCoordinate(int c);
 	bool ValidateCoordinate(int c1, int c2);
 	bool IsBuildableField(int x, int y);
@@ -39,8 +41,6 @@ public:
 	bool recalculate = false;
 
 	void Loop();
-
-	static bool changed;
 private:
 	std::vector<std::vector<GameField*>> m_Table;
 	int m_TableSize;
