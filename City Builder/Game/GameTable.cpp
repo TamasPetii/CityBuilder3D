@@ -505,7 +505,7 @@ std::unordered_set<int> GameTable::PathFinder_Fire(Point start)
 		int x = start.x + dx[i];
 		int y = start.y + dy[i];
 
-		if (Get_TableValue(x,y)->IsRoad())
+		if (ValidateCoordinate(x,y) && Get_TableValue(x,y)->IsRoad())
 		{
 			q.push({x, y});
 		}
@@ -525,7 +525,7 @@ std::unordered_set<int> GameTable::PathFinder_Fire(Point start)
 				int x = curr.x + dx[k];
 				int y = curr.y + dy[k];
 
-				if (Get_TableValue(x,y)->OnFire())
+				if (ValidateCoordinate(x, y) && Get_TableValue(x,y)->OnFire())
 				{
 					fieldsOnFire.insert(x * m_TableSize + y);
 				}
@@ -539,7 +539,7 @@ std::unordered_set<int> GameTable::PathFinder_Fire(Point start)
 			{
 				int nx = curr.x + dx[j];
 				int ny = curr.y + dy[j];
-				if (nx >= 0 && nx < m_TableSize && ny >= 0 && ny < m_TableSize && m_Table[nx][ny]->IsRoad() && !visited[nx][ny])
+				if (ValidateCoordinate(nx, ny) && m_Table[nx][ny]->IsRoad() && !visited[nx][ny])
 				{
 					Point p = { nx, ny };
 					q.push(p);
