@@ -33,7 +33,7 @@ test:
 coverage:
   stage: coverage
   script:
-    - g++ -fprofile-arcs -ftest-coverage -o test $game_cpp_files CityBuilder/Test-Bad/Test.cpp
+    - g++ -fprofile-arcs -ftest-coverage -o test $game_cpp_files CityBuilder/Test/Test.cpp
     - ./test
     - gcovr -r . --html-details -o coverage_report.html
     - mkdir gcovr_coverage
