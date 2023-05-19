@@ -46,6 +46,7 @@ public:
 	//Setter Methodes
 	void Set_TaxRate(FieldType type, float rate);
 	void Set_GameTableValue(int x, int y, FieldType type, FieldDirection dir, bool free = false);
+	void Set_InitialCitizens(int n) { m_initialCitizens = n; }
 
 	void UpgradeField(int x, int y);
 	bool IsBuildable(FieldType type, FieldDirection dir, int x, int y) { return m_GameTable->IsBuildable(type, dir, x, y) || type == EMPTY || type == CRATER; }

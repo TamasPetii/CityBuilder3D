@@ -132,8 +132,8 @@ void City::CalculateHappiness() {
 		happiness += citizen->Calculate_Satisfaction();
 		if (m_Money < 0) happiness -= 0.1;
 		if (ratio < 0.5 || ratio > 2) happiness -= 0.1;
-		if (happiness <= 0 && m_initialCitizens >= 50 && i>=49) { //első 50 lakos nem költözik el
-			happiness = 0;
+		if ((happiness <= 0 || citizen->Get_Workplace() == nullptr) && m_initialCitizens >= 50 && i >= 49) { //első 50 lakos nem költözik el
+			//happiness = 0;
 			if (rand() % 500 == 13) to_remove.push_back(citizen);
 		}
 		totalHappiness += happiness;

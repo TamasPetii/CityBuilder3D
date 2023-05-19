@@ -1047,6 +1047,7 @@ void Application::LoadGame(bool b)
 
 		m_City->Get_Citizens().insert(citizen);
 	}
+	m_City->Set_InitialCitizens(m_City->Get_CitizenSize());
 }
 
 void Application::SaveGame()
