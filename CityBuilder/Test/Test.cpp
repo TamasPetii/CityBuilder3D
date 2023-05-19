@@ -236,17 +236,17 @@ TEST_CASE("COLLECT MONTHLY TAX")
     city->JoinCity(citizen);
 
     //If citizen isn't a pensioner
-    float balanceBeforeTax = city->Get_Money();
+    int balanceBeforeTax = city->Get_Money();
     city->CollectMonthlyTax();
-    float balanceWithTax = city->Get_Money();
+    int balanceWithTax = city->Get_Money();
 
     CHECK(balanceBeforeTax < balanceWithTax);
 
     //If citizen is a pensioner
-    citizen->Set_Age(65);
+    citizen->Set_Age(70);
     city->CollectMonthlyTax();
 
-    float balanceWithPension = city->Get_Money();
+    int balanceWithPension = city->Get_Money();
 
     CHECK(balanceWithPension < balanceWithTax);
 
@@ -336,4 +336,87 @@ TEST_CASE("PATH FINDER")
     CHECK(!path2[2].isInterSection);
 
     delete gameTable;
+}
+
+TEST_CASE("BUILDINGS")
+{
+    Stadium* field = dynamic_cast<Stadium*>(GameField::CreateField(STADIUM, LEFT, 0, 0));
+    CHECK(field->IsBuilding());
+    CHECK(field->IsStadium());
+    CHECK(field->GetBuildingSatisfaction() == 2);
+    delete field;
+
+    HighSchool* highschool = dynamic_cast<HighSchool*>(GameField::CreateField(HIGHSCHOOL, LEFT, 0, 0));
+    CHECK(highschool->IsBuilding());
+    CHECK(highschool->IsSchool());
+    CHECK(highschool->IsHighSchool());
+    CHECK(!highschool->IsUniversity());
+    CHECK(highschool->GetBuildingSatisfaction() == 1);
+    delete highschool;
+
+    University* university = dynamic_cast<University*>(GameField::CreateField(UNIVERSITY, LEFT, 0, 0));
+    CHECK(university->IsBuilding());
+    CHECK(university->IsSchool());
+    CHECK(!university->IsHighSchool());
+    CHECK(university->IsUniversity());
+    CHECK(university->GetBuildingSatisfaction() == 1);
+    delete university;
+
+    PowerWire* powerWire = dynamic_cast<PowerWire*>(GameField::CreateField(POWERWIRE, LEFT, 0, 0));
+    CHECK(powerWire->IsBuilding());
+    CHECK(powerWire->IsPowerWire());
+    CHECK(powerWire->GetBuildingSatisfaction() == 0);
+    delete powerWire;
+
+    PowerStation* powerStation = dynamic_cast<PowerStation*>(GameField::CreateField(POWERSTATION, LEFT, 0, 0));
+    CHECK(powerStation->IsBuilding());
+    CHECK(powerStation->IsPowerStation());
+    CHECK(powerStation->GetBuildingSatisfaction() == 1);
+    delete powerStation;
+
+    FireStation* fireStation = dynamic_cast<FireStation*>(GameField::CreateField(FIRESTATION, LEFT, 0, 0));
+    CHECK(fireStation->IsBuilding());
+    CHECK(fireStation->IsFireStation());
+    CHECK(fireStation->GetBuildingSatisfaction() == 1);
+    delete fireStation;
+
+    Building* building = new Building(FIRESTATION, LEFT, 0, 0);
+    CHECK(building->IsBuilding());
+    CHECK(!building->IsPoliceStation());
+    CHECK(!building->IsFireStation());
+    CHECK(!building->IsPowerWire());
+    CHECK(!building->IsPowerStation());
+    CHECK(!building->IsSchool());
+    CHECK(!building->IsStadium());
+    CHECK(building->GetBuildingSatisfaction() == 0);
+    delete building;
+}
+
+TEST_CASE("GENERAL")
+{
+    Road* road = dynamic_cast<Road*>(GameField::CreateField(ROAD, LEFT, 0, 0));
+    CHECK(road->IsRoad());
+    delete road;
+
+    Lake* lake = dynamic_cast<Lake*>(GameField::CreateField(LAKE, LEFT, 0, 0));
+    CHECK(lake->IsLake());
+    delete lake;
+
+    Empty* empty = dynamic_cast<Empty*>(GameField::CreateField(EMPTY, LEFT, 0, 0));
+    CHECK(empty->IsEmpty());
+    delete empty;
+
+    Crater* crater = dynamic_cast<Crater*>(GameField::CreateField(CRATER, LEFT, 0, 0));
+    CHECK(crater->IsCrater());
+    delete crater;
+
+    Forest* forest = dynamic_cast<Forest*>(GameField::CreateField(FOREST, LEFT, 0, 0));
+    CHECK(forest->IsForest());
+    CHECK(forest->Get_Age() == 0);
+    forest->Set_Age(10);
+    CHECK(forest->Get_Age() == 10);
+    forest->Increase_Age();
+    CHECK(forest->Get_Age() == 11);
+    CHECK(forest->Get_SatisfactionPoints() == forest->Get_Booster() * forest->Get_Age());
+    delete forest;
 }

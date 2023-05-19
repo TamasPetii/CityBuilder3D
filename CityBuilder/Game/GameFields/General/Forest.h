@@ -13,6 +13,7 @@ public:
     inline int  Get_Age() const { return m_Age; }
     inline void Set_Age(int age) { m_Age = age; }
     inline void Increase_Age() { ++m_Age; }
+    inline float Get_Booster() { return m_Booster; }
     inline float Get_SatisfactionPoints() { return m_Booster * m_Age; }
 
 private:
