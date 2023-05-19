@@ -1,31 +1,93 @@
 image: ubuntu:20.04
 
+variables:
+  game_path: 'CityBuilder/Game/'
+  game_cpp_files: '$game_path/*.cpp $game_path/GameFields/*.cpp $game_path/GameFields/Zones/*.cpp $game_path/GameFields/General/*.cpp $game_path/GameFields/Buildings/*.cpp'
+
 stages:
   - build
   - test
+  - coverage
+  - analysis
+  - document
+  - deploy
 
 before_script:
   - apt-get update -yqq
   - apt-get install -yqq build-essential
+  - apt-get install -yqq cppcheck
+  - apt-get install -yqq python3-pip
+  - pip install gcovr
 
-
-build_program:
+build:
   stage: build
   script:
-    - cd "City Builder/Game"
-    - g++ -c -I -IGameFields -IGameFields/Zones -IGameFields/General -IGameFields/Buildings *.cpp GameFields/*.cpp GameFields/Zones/*.cpp GameFields/General/*.cpp GameFields/Buildings/*.cpp
-    - ar rcs libgame.a *.o
-  artifacts:
-    paths:
-      - "./City Builder/Game"
+    - g++ -c $game_cpp_files -W -Wall -Wextra
 
-test_program:
+test:
   stage: test
   script:
-    - cd "City Builder/Test-Bad"
-    - ls
-    - g++ -o test Test.cpp -L../Game -lgame
-    - ls -la
+    - g++ -o test $game_cpp_files CityBuilder/Test/Test.cpp
     - ./test
-  dependencies:
-    - build_program
+
+coverage:
+  stage: coverage
+  script:
+    - g++ -fprofile-arcs -ftest-coverage -o test $game_cpp_files CityBuilder/Test-Bad/Test.cpp
+    - ./test
+    - gcovr -r . --html-details -o coverage_report.html
+    - mkdir gcovr_coverage
+    - cp -r *.html *.css gcovr_coverage/
+    - mv gcovr_coverage/ public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 day
+  only:
+    - develop
+    - master
+
+analysis:
+  stage: analysis
+  script:
+    - cppcheck --enable=all --xml --xml-version=2  $game_cpp_files 2> cppcheck_report.xml
+    - cppcheck-htmlreport --file=cppcheck_report.xml --report-dir=cppcheck_analysis
+    - mv cppcheck_analysis/ public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 day
+  only:
+    - develop
+    - master
+
+document:
+  stage: document
+  before_script:
+    - apt-get update -yqq
+    - apt-get install -yqq doxygen graphviz
+  script:
+    - doxygen
+    - mkdir doxygen_documentation
+    - cp -r doc/html/. doxygen_documentation/
+    - mv doxygen_documentation/ public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 day
+  only:
+    - develop
+    - master
+
+pages:
+  stage: deploy
+  script:
+    - ls public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 day
+  only:
+    - develop
+    - master
+
