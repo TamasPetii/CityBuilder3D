@@ -125,7 +125,13 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>curl -o "$(ProjectDir)Renderer/Assets/Textures/Texture.png" "https://people.inf.elte.hu/gr1zh1/Szofttech-Textures/Texture.png"</Command>
+      <Command>curl -L "https://drive.google.com/uc?export=download&amp;id=1_Yg8Ad2Mcjo7hGWArbX6DniMJnMkGerY" -o "$(ProjectDir)Renderer/Assets/Texture.png"
+curl -L "https://drive.google.com/uc?export=download&amp;id=1OwcPKcl6utAC8y8nsQGnoZoq6VVGTpNR" -o "$(ProjectDir)Renderer/Assets/back.jpg"
+curl -L "https://drive.google.com/uc?export=download&amp;id=1IGssyY3YQ4lRt7mLCWGKvqlPUjshsLSa" -o "$(ProjectDir)Renderer/Assets/bottom.jpg"
+curl -L "https://drive.google.com/uc?export=download&amp;id=1CtszNvTozPLHQPuYVs89iBEdEsFeWRwa" -o "$(ProjectDir)Renderer/Assets/front.jpg"
+curl -L "https://drive.google.com/uc?export=download&amp;id=1MH2xuaduBvWPkZTcKDuCMG_tjdxaBNbY" -o "$(ProjectDir)Renderer/Assets/left.jpg"
+curl -L "https://drive.google.com/uc?export=download&amp;id=1qqGiZ5-vdyE1ssQgUHT-uBDFH4bhbqLa" -o "$(ProjectDir)Renderer/Assets/right.jpg"
+curl -L "https://drive.google.com/uc?export=download&amp;id=16hmgybcREYHH8KaZfvO9lgDGmVnc_f1V" -o "$(ProjectDir)Renderer/Assets/top.jpg"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -144,7 +150,13 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>curl -o "$(ProjectDir)Renderer/Assets/Textures/Texture.png" "https://people.inf.elte.hu/gr1zh1/Szofttech-Textures/Texture.png"</Command>
+      <Command>curl -L "https://drive.google.com/uc?export=download&amp;id=1_Yg8Ad2Mcjo7hGWArbX6DniMJnMkGerY" -o "$(ProjectDir)Renderer/Assets/Texture.png"
+curl -L "https://drive.google.com/uc?export=download&amp;id=1OwcPKcl6utAC8y8nsQGnoZoq6VVGTpNR" -o "$(ProjectDir)Renderer/Assets/back.jpg"
+curl -L "https://drive.google.com/uc?export=download&amp;id=1IGssyY3YQ4lRt7mLCWGKvqlPUjshsLSa" -o "$(ProjectDir)Renderer/Assets/bottom.jpg"
+curl -L "https://drive.google.com/uc?export=download&amp;id=1CtszNvTozPLHQPuYVs89iBEdEsFeWRwa" -o "$(ProjectDir)Renderer/Assets/front.jpg"
+curl -L "https://drive.google.com/uc?export=download&amp;id=1MH2xuaduBvWPkZTcKDuCMG_tjdxaBNbY" -o "$(ProjectDir)Renderer/Assets/left.jpg"
+curl -L "https://drive.google.com/uc?export=download&amp;id=1qqGiZ5-vdyE1ssQgUHT-uBDFH4bhbqLa" -o "$(ProjectDir)Renderer/Assets/right.jpg"
+curl -L "https://drive.google.com/uc?export=download&amp;id=16hmgybcREYHH8KaZfvO9lgDGmVnc_f1V" -o "$(ProjectDir)Renderer/Assets/top.jpg"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -159,7 +171,13 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>curl -o "$(ProjectDir)Renderer/Assets/Textures/Texture.png" "https://people.inf.elte.hu/gr1zh1/Szofttech-Textures/Texture.png"</Command>
+      <Command>curl -L "https://drive.google.com/uc?export=download&amp;id=1_Yg8Ad2Mcjo7hGWArbX6DniMJnMkGerY" -o "$(ProjectDir)Renderer/Assets/Texture.png"
+curl -L "https://drive.google.com/uc?export=download&amp;id=1OwcPKcl6utAC8y8nsQGnoZoq6VVGTpNR" -o "$(ProjectDir)Renderer/Assets/back.jpg"
+curl -L "https://drive.google.com/uc?export=download&amp;id=1IGssyY3YQ4lRt7mLCWGKvqlPUjshsLSa" -o "$(ProjectDir)Renderer/Assets/bottom.jpg"
+curl -L "https://drive.google.com/uc?export=download&amp;id=1CtszNvTozPLHQPuYVs89iBEdEsFeWRwa" -o "$(ProjectDir)Renderer/Assets/front.jpg"
+curl -L "https://drive.google.com/uc?export=download&amp;id=1MH2xuaduBvWPkZTcKDuCMG_tjdxaBNbY" -o "$(ProjectDir)Renderer/Assets/left.jpg"
+curl -L "https://drive.google.com/uc?export=download&amp;id=1qqGiZ5-vdyE1ssQgUHT-uBDFH4bhbqLa" -o "$(ProjectDir)Renderer/Assets/right.jpg"
+curl -L "https://drive.google.com/uc?export=download&amp;id=16hmgybcREYHH8KaZfvO9lgDGmVnc_f1V" -o "$(ProjectDir)Renderer/Assets/top.jpg"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -178,7 +196,13 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>curl -o "$(ProjectDir)Renderer/Assets/Textures/Texture.png" "https://people.inf.elte.hu/gr1zh1/Szofttech-Textures/Texture.png"</Command>
+      <Command>curl -L "https://drive.google.com/uc?export=download&amp;id=1_Yg8Ad2Mcjo7hGWArbX6DniMJnMkGerY" -o "$(ProjectDir)Renderer/Assets/Texture.png"
+curl -L "https://drive.google.com/uc?export=download&amp;id=1OwcPKcl6utAC8y8nsQGnoZoq6VVGTpNR" -o "$(ProjectDir)Renderer/Assets/back.jpg"
+curl -L "https://drive.google.com/uc?export=download&amp;id=1IGssyY3YQ4lRt7mLCWGKvqlPUjshsLSa" -o "$(ProjectDir)Renderer/Assets/bottom.jpg"
+curl -L "https://drive.google.com/uc?export=download&amp;id=1CtszNvTozPLHQPuYVs89iBEdEsFeWRwa" -o "$(ProjectDir)Renderer/Assets/front.jpg"
+curl -L "https://drive.google.com/uc?export=download&amp;id=1MH2xuaduBvWPkZTcKDuCMG_tjdxaBNbY" -o "$(ProjectDir)Renderer/Assets/left.jpg"
+curl -L "https://drive.google.com/uc?export=download&amp;id=1qqGiZ5-vdyE1ssQgUHT-uBDFH4bhbqLa" -o "$(ProjectDir)Renderer/Assets/right.jpg"
+curl -L "https://drive.google.com/uc?export=download&amp;id=16hmgybcREYHH8KaZfvO9lgDGmVnc_f1V" -o "$(ProjectDir)Renderer/Assets/top.jpg"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

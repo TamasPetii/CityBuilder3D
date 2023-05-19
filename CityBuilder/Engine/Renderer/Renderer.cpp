@@ -89,18 +89,18 @@ void Renderer::Init(Camera* camera)
 	//[TEXTURES]---------------------------------------------------------------------------//
 
 	m_GameTexture = new Texture2D();
-	m_GameTexture->LoadTexture("Engine/Renderer/Assets/Textures/Texture.png");
+	m_GameTexture->LoadTexture("Engine/Renderer/Assets/Texture.png");
 
 	m_SkyboxTexture = new TextureMap();
 	m_SkyboxTexture->LoadTexture
 	(
 		{
-		"Engine/Renderer/Assets/Textures/Skybox/right.jpg",
-		"Engine/Renderer/Assets/Textures/Skybox/left.jpg",
-		"Engine/Renderer/Assets/Textures/Skybox/top.jpg",
-		"Engine/Renderer/Assets/Textures/Skybox/bottom.jpg",
-		"Engine/Renderer/Assets/Textures/Skybox/front.jpg",
-		"Engine/Renderer/Assets/Textures/Skybox/back.jpg"
+		"Engine/Renderer/Assets/right.jpg",
+		"Engine/Renderer/Assets/left.jpg",
+		"Engine/Renderer/Assets/top.jpg",
+		"Engine/Renderer/Assets/bottom.jpg",
+		"Engine/Renderer/Assets/front.jpg",
+		"Engine/Renderer/Assets/back.jpg"
 		}
 	);
 
