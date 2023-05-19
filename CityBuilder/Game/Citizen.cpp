@@ -38,6 +38,7 @@ std::string Citizen::ConvertEducationToString(enum Education e)
 	case INTERMEDIATE: return "INTERMEDIATE";
 	case ADVANCED: return "ADVANCED";
 	}
+	return "";
 }
 
 //--------------------------------------------------------NORMAL--------------------------------------------------------//
@@ -129,7 +130,7 @@ float Citizen::Calculate_Distance(Zone* zone1, Zone* zone2)
 {
 	if (zone1 == nullptr || zone2 == nullptr) return 0;
 
-	return sqrt(pow(zone1->Get_X() - zone2->Get_X(), 2) + pow(zone1->Get_Y() - zone2->Get_Y(), 2));
+	return sqrtf(pow(zone1->Get_X() - zone2->Get_X(), 2) + pow(zone1->Get_Y() - zone2->Get_Y(), 2));
 }
 
 float Citizen::Calculate_ZoneSatisfaction(Zone* zone)
@@ -139,8 +140,8 @@ float Citizen::Calculate_ZoneSatisfaction(Zone* zone)
 	float Satisfaction_Tax = 1 - zone->Calculate_TaxRatePercentage() / 100;
 	float Satisfaction = zone->Calculate_NormalSatisfaction();
 
-	float Ratio_Tax = zone->IsResidentalArea() ? 0.25 : 0.45;
-	float Ratio = zone->IsResidentalArea() ? 0.75 : 0.55;
+	float Ratio_Tax = zone->IsResidentalArea() ? 0.25f : 0.45f;
+	float Ratio = zone->IsResidentalArea() ? 0.75f : 0.55f;
 
 	return Satisfaction_Tax * Ratio_Tax + Satisfaction * Ratio;
 }
@@ -150,10 +151,10 @@ float Citizen::Calculate_Satisfaction()
 	float Satisfaction_Residence = Calculate_ZoneSatisfaction(m_Residence);
 	float Satisfaction_Workplace = Calculate_ZoneSatisfaction(m_Workplace);
 	float Satisfaction_Disctance = Calculate_Distance(m_Residence, m_Workplace);
-	float Satisfaction_Money = MONEY_SATISFACTION < 0 ? (MONEY_SATISFACTION / 1000000.f * 0.1) - 0.15 : 0;
+	float Satisfaction_Money = MONEY_SATISFACTION < 0 ? (MONEY_SATISFACTION / 1000000.f * 0.1f) - 0.15f : 0.f;
 	Satisfaction_Disctance = Satisfaction_Disctance < 20 ? Satisfaction_Disctance : 20;
 	
-	float Satisfaction = (Satisfaction_Residence + Satisfaction_Workplace) / 2 * 0.9 + 0.1 * Satisfaction_Disctance / 20 + Satisfaction_Money;
+	float Satisfaction = (Satisfaction_Residence + Satisfaction_Workplace) / 2 * 0.9f + 0.1f * Satisfaction_Disctance / 20 + Satisfaction_Money;
 	Satisfaction = Satisfaction < -1 ? -1 : Satisfaction;
 
 	return Satisfaction;

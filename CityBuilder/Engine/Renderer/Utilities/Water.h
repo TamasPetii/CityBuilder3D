@@ -65,7 +65,7 @@ public:
 private:
 	glm::vec3 m_MotionStartPosition;
 	glm::vec3 m_MotionEndPosition;
-	float m_Gravity = 9.81;
+	float m_Gravity = 9.81f;
 
 	float distanceX;
 	float distanceZ;

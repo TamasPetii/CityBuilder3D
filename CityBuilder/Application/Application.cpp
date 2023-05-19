@@ -15,7 +15,7 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 	m_MyGui = new MyGui(m_Camera);
 
 	m_FrameCounter = new FrameCounter();
-	m_Timer = new Timer(0.1);
+	m_Timer = new Timer(0.1f);
 	m_Timer->Start();
 
 	m_Camera->Set_Eye(glm::vec3(m_City->Get_GameTableSize(), 5, m_City->Get_GameTableSize() + 5));
@@ -48,7 +48,7 @@ void Application::Update()
 			InitLobby = false;
 		}
 
-		m_Camera->Set_Eye(glm::vec3(50.f * cosf(glfwGetTime() * 2 * M_PI / 250) + m_City->Get_GameTableSize(), 25.f, 50.f * sinf(glfwGetTime() * 2 * M_PI / 250) + m_City->Get_GameTableSize()));
+		m_Camera->Set_Eye(glm::vec3(50.f * cosf(static_cast<float>(glfwGetTime() * 2 * M_PI / 250)) + m_City->Get_GameTableSize(), 25.f, 50.f * sinf(static_cast<float>(glfwGetTime() * 2 * M_PI) / 250.f) + m_City->Get_GameTableSize()));
 		m_MyGui->Get_ViewPortLayout().ViewPort_TextureID = Renderer::Get_FrameBuffer()->Get_TextureId();
 
 		Application::UpdateAnimationAndMembers();
@@ -365,14 +365,14 @@ void Application::FireTruckSimulation()
 
 	for (auto truck : CarGroup::m_FireTrucks)
 	{
-		float dir = 0.02 * cos(truck->Get_Rotation());
+		float dir = 0.02f * cosf(truck->Get_Rotation());
 
 		float rotation = 0;
 		float start_x = truck->Get_CurrentPosition(rotation).x + dir;
 		float start_y = truck->Get_CurrentPosition(rotation).z + dir;
 
-		int table_x = start_y / 2.f;
-		int table_y = start_x / 2.f;
+		int table_x = static_cast<int>(start_y / 2.f);
+		int table_y = static_cast<int>(start_x / 2.f);
 
 		FieldType type = m_City->Get_GameField(table_x, table_y)->Get_Type();
 
@@ -404,14 +404,14 @@ void Application::FireTruckSimulation()
 	{
 		if (truck->ShouldBeDeleted() && truck_map.find(truck) == truck_map.end())
 		{
-			float dir = 0.02 * cos(truck->Get_Rotation());
+			float dir = 0.02f * cosf(truck->Get_Rotation());
 
 			float rotation = 0;
 			float start_x = truck->Get_CurrentPosition(rotation).x + dir;
 			float start_y = truck->Get_CurrentPosition(rotation).z + dir;
 
-			int table_x = start_y / 2.f;
-			int table_y = start_x / 2.f;
+			int table_x = static_cast<int>(start_y / 2.f);
+			int table_y = static_cast<int>(start_x / 2.f);
 
 			float end_x = -1;
 			float end_y = -1;
@@ -478,7 +478,7 @@ void Application::FireTruckSimulation()
 				{
 					if (m_City->Validate(x + i, y + j) && !(i == 0 && j == 0) && m_City->Get_GameField(x + i, y + j)->OnFire())
 					{
-						it->second = new WaterGroup(start_x, start_y, 2 * (y + j) + 1, 2 * (x + i) + 1);
+						it->second = new WaterGroup(start_x, start_y, 2.f * (y + j) + 1, 2.f * (x + i) + 1);
 					}
 				}
 			}
@@ -491,14 +491,14 @@ void Application::FireTruckSimulation()
 				{
 					std::random_device rd;
 					std::mt19937 gen(rd());
-					std::uniform_int_distribution<> distr(0, onFireFields.size() - 1);
+					std::uniform_int_distribution<> distr(0, (int)onFireFields.size() - 1);
 
 					auto beginIT = onFireFields.begin();
 					std::advance(beginIT, distr(gen));
 
 					int randomField = *beginIT;
 					
-					it->second = new WaterGroup(start_x, start_y, 2 * (randomField % m_City->Get_GameTableSize()) + 1, 2 * (randomField / m_City->Get_GameTableSize()) + 1);
+					it->second = new WaterGroup(start_x, start_y, 2.f * (randomField % m_City->Get_GameTableSize()) + 1, 2.f * (randomField / m_City->Get_GameTableSize()) + 1);
 				}
 			}
 			
@@ -528,8 +528,8 @@ void Application::CheckCarPos()
 		float start_x = car->Get_CurrentPosition(rotation).x;
 		float start_y = car->Get_CurrentPosition(rotation).z;
 
-		int table_x = start_y / 2.f;
-		int table_y = start_x / 2.f;
+		int table_x = static_cast<int>(start_y / 2.f);
+		int table_y = static_cast<int>(start_x / 2.f);
 
 		FieldType type = m_City->Get_GameField(table_x, table_y)->Get_Type();
 
@@ -879,7 +879,7 @@ void Application::GameTickEvent()
 void Application::GameTickEvent_SetGameUiMembers()
 {
 	m_MyGui->Get_GameWindowLayout().City_Money = m_City->Get_Money();
-	m_MyGui->Get_GameWindowLayout().City_Satisfaction = m_City->Get_CombinedHappiness();
+	m_MyGui->Get_GameWindowLayout().City_Satisfaction = static_cast<int>(m_City->Get_CombinedHappiness());
 	m_MyGui->Get_GameWindowLayout().Time_Game = m_City->Get_TimeStr();
 	m_MyGui->Get_GameWindowLayout().Time_Real += m_Timer->Get_TickTime();
 }
@@ -921,12 +921,12 @@ void Application::GameTickEvent_Fire()
 {
 	for (auto it = truck_map.begin(); it != truck_map.end(); it++)
 	{
-		m_City->Get_GameField(it->second->endY / 2, it->second->endX / 2)->FireCounter += 2;
+		m_City->Get_GameField(static_cast<int>(it->second->endY / 2), static_cast<int>(it->second->endX / 2))->FireCounter += 2;
 
-		if (m_City->Get_GameField(it->second->endY / 2, it->second->endX / 2)->FireCounter >= 500)
+		if (m_City->Get_GameField(static_cast<int>(it->second->endY / 2), static_cast<int>(it->second->endX / 2))->FireCounter >= 500)
 		{
-			m_City->Get_GameField(it->second->endY / 2, it->second->endX / 2)->FireCounter = 500;
-			m_City->Get_GameField(it->second->endY / 2, it->second->endX / 2)->OnFire() = false;
+			m_City->Get_GameField(static_cast<int>(it->second->endY / 2), static_cast<int>(it->second->endX / 2))->FireCounter = 500;
+			m_City->Get_GameField(static_cast<int>(it->second->endY / 2), static_cast<int>(it->second->endX / 2))->OnFire() = false;
 			changed = true;
 		}
 	}
@@ -987,7 +987,7 @@ void Application::LoadGame(bool b)
 		return;
 	}
 
-	int size, tmp, money, time;
+	int size, money, time;
 	saveFile >> size >> money >> time;
 	Application::NewGame(size, money, time);
 
@@ -1043,7 +1043,7 @@ void Application::LoadGame(bool b)
 		citizen->Set_Education(static_cast<Education>(y));
 		saveFile >> x >> y;
 		citizen->Set_MonthsBeforePension(x);
-		citizen->Set_Pension(y);
+		citizen->Set_Pension((float)y);
 
 		m_City->Get_Citizens().insert(citizen);
 	}

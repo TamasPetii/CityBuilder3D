@@ -107,7 +107,7 @@ void GameTable::DeleteField(int x, int y, FieldType type) {
 	if (isRoad) RebuildRoadNetwork();
 }
 
-float GameTable::Get_TotalAnnualCost() const
+int GameTable::Get_TotalAnnualCost() const
 {
 	int totalCost = 0;
 
@@ -233,7 +233,7 @@ void GameTable::LoopThroughNeighbors(int x, int y, Function func) {
 }
 
 float GameTable::distance(GameField* g1, GameField* g2) {
-	return sqrt(pow(g1->Get_X() - g2->Get_X(), 2) + pow(g1->Get_Y() - g2->Get_Y(), 2));
+	return (float)sqrt(pow(g1->Get_X() - g2->Get_X(), 2) + pow(g1->Get_Y() - g2->Get_Y(), 2));
 }
 
 void GameTable::AddIndustrialAreaBonus(GameField* f, int placed) {
@@ -242,8 +242,8 @@ void GameTable::AddIndustrialAreaBonus(GameField* f, int placed) {
 			if (f->Get_X() + i < 0 || f->Get_X() + i >= m_TableSize || f->Get_Y() + j < 0 || f->Get_Y() + j >= m_TableSize) continue;
 			if (Zone* zone = dynamic_cast<Zone*>(m_Table[f->Get_X() + i][f->Get_Y() + j])) {
 				if (zone->IsResidentalArea()) {
-					int d = distance(f, zone);
-					float penalty = (10 - d) / 10.0;
+					int d = (int)distance(f, zone);
+					float penalty = (10 - d) / 10.0f;
 					//placed 1, ha lerak, -1, ha töröl
 					zone->Add_IndustrialPenalty(placed * -1 * penalty);
 				}
@@ -261,7 +261,7 @@ void GameTable::CheckZoneIndustrialBonus(GameField* f) {
 			if (Zone* zone = dynamic_cast<Zone*>(m_Table[f->Get_X() + i][f->Get_Y() + j])) {
 				if (WorkingArea* w = dynamic_cast<WorkingArea*>(zone)) {
 					if (w->IsIndustrialArea()) {
-						int d = distance(w, f);
+						int d = (int)distance(w, f);
 						if (d < 10) {
 							float penalty = (10 - d) / 10.0;
 							residentialZone->Add_IndustrialPenalty(-1 * penalty);
@@ -431,7 +431,7 @@ std::vector<Point> GameTable::PathFinder(Point start, Point end)
 	//start
 	while (!q.empty())
 	{
-		int size = q.size();
+		int size = (int)q.size();
 		for (int i = 0; i < size; i++)
 		{
 			Point curr = q.front();
@@ -514,7 +514,7 @@ std::unordered_set<int> GameTable::PathFinder_Fire(Point start)
 	//start
 	while (!q.empty())
 	{
-		int size = q.size();
+		int size = (int)q.size();
 		for (int i = 0; i < size; i++)
 		{
 			Point curr = q.front();

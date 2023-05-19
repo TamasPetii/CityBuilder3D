@@ -8,19 +8,19 @@ float MeteorGrp::delta_time;
 
 void MeteorGrp::Init()
 {
-	last_time = glfwGetTime();
+	last_time = (float)glfwGetTime();
 }
 
 void MeteorGrp::ResetTimer()
 {
-	last_time = glfwGetTime();
+	last_time = (float)glfwGetTime();
 }
 
 //This will callculate the delta time between 2 render cycle
 //We will use this value to update every meteors positon
 void MeteorGrp::Update()
 {
-	current_time = glfwGetTime();
+	current_time = (float)glfwGetTime();
 	delta_time = current_time - last_time;
 	last_time = current_time;
 
@@ -75,7 +75,7 @@ void MeteorGrp::Add(int x, int y)
 
 	float radius = 1;
 	float speed = MAX_SPEED * random_float + MAX_SPEED / 2;
-	float start_radius = rand() % 250 + 250; //Distance from the gametable
+	float start_radius = (float)(rand() % 250 + 250); //Distance from the gametable
 	float start_angle = ((float)rand()) / (float)RAND_MAX; //Random number from 0.0 to 1.0 (float)
 	glm::vec3 start = glm::vec3(start_radius * cos(glm::radians(start_angle * 360)), start_radius, start_radius * sin(glm::radians(start_angle * 360)));
 	glm::vec3 end = glm::vec3(2 * y + 1, 0, 2 * x + 1);

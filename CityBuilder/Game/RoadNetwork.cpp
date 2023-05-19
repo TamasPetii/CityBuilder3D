@@ -143,7 +143,7 @@ Zone* RoadNetwork::FindEmptyWorkingArea(Zone* field, float ratio) {
 		for (auto& otherField : network.zoneSet) {
 			if (WorkingArea* workingArea = dynamic_cast<WorkingArea*>(otherField)) {
 				if (workingArea->IsThereEmptySpace()) {
-					float d = distance(workingArea, field);
+					float d = (float)distance(workingArea, field);
 					if (workingArea->IsIndustrialArea()) {
 						if (d < minDistanceI) {
 							minDistanceI = d;
@@ -175,6 +175,9 @@ Zone* RoadNetwork::FindEmptyWorkingArea(Zone* field, float ratio) {
 		if (closestZoneI == nullptr) return closestZoneS;
 		if (closestZoneS == nullptr) return closestZoneI;
 	}
+
+	//Should not reach this point
+	return nullptr;
 }
 
 std::string RoadNetwork::NetworksToString() {
@@ -219,18 +222,18 @@ void RoadNetwork::AddToNetworkSatisfaction(GameField* field, int id) {
 		for (auto& z : network.zoneSet) {
 			if (Building* building = dynamic_cast<Building*>(field)) {
 				Zone* zone = dynamic_cast<Zone*>(z);
-				int d = distance(building, zone);
+				int d = (int)distance(building, zone);
 				if (d < 10 && !IsConnectedMultiple(zone, building)) {//csak akkor adjuk hozzá, ha nincsenek többször összekötve
 					if (building->IsPoliceStation()) {
-						zone->Add_Safety((10 - d) / 10.0);
+						zone->Add_Safety((10 - d) / 10.0f);
 					}
 					else {
-						zone->Add_Satisfaction((10 - d) / 10.0 * building->GetBuildingSatisfaction());
+						zone->Add_Satisfaction((10 - d) / 10.0f * building->GetBuildingSatisfaction());
 					}
 
 					if (building->IsFireStation())
 					{
-						zone->Add_FireRate((10 - d) / 10.0);
+						zone->Add_FireRate((10 - d) / 10.0f);
 					}
 				}
 			}
@@ -268,20 +271,20 @@ void RoadNetwork::SetZoneSatisfaction(GameField* field) {
 		if (network.zoneSet.find(zone) == network.zoneSet.end()) continue;
 		for (auto& b : network.buildingSet) {
 			Building* building = dynamic_cast<Building*>(b);
-			int d = distance(building, zone);
+			int d = (int)distance(building, zone);
 			if (d < 10 && visitedBuilding.find(building) == visitedBuilding.end()) {
 				if (building->IsPoliceStation()) {
-					safety += (10 - d) / 10.0;
+					safety += (10 - d) / 10.0f;
 					visitedBuilding.emplace(building);
 				}
 				else {
-					satisfaction += (10 - d) / 10.0 * building->GetBuildingSatisfaction();
+					satisfaction += (10 - d) / 10.0f * building->GetBuildingSatisfaction();
 					visitedBuilding.emplace(building);
 				}
 
 				if (building->IsFireStation())
 				{
-					firerate += (10 - d) / 10.0;
+					firerate += (10 - d) / 10.0f;
 				}
 			}
 		}
@@ -308,8 +311,8 @@ Zone* RoadNetwork::FindOptimalResidentialArea(float happiness) {
 				Zone* wZone = dynamic_cast<Zone*>(w);
 				if (!(wZone->IsWorkingArea() && wZone->IsThereEmptySpace()))
 					continue;
-				float d = distance(wZone, zone);
-				float workDistancePenalty = -(d / 20 - 0.05); //ha mellette van 0 penalty, különben 0.05esével nõ
+				float d = (float)distance(wZone, zone);
+				float workDistancePenalty = -(d / 20 - 0.05f); //ha mellette van 0 penalty, különben 0.05esével nõ
 				if (industrialPenalty < -0.5) industrialPenalty = -0.5;
 				//szóval ha happiness 30%, akkor a threshold 0.9 lesz,
 				//ami megengedi a beköltözést, ha: van 5 blokkon belül ipari de van üres munkahely 8 blokkon belül,

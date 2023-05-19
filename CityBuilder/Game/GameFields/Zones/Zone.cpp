@@ -102,7 +102,7 @@ Citizen* Zone::GetRandomDriver()
 		std::random_device rd;
 		std::mt19937 gen(rd());
 
-		std::uniform_int_distribution<int> dis(0, m_citizens.size() - 1);
+		std::uniform_int_distribution<int> dis(0, (int)m_citizens.size() - 1);
 		auto random_it = std::next(std::begin(m_citizens), dis(gen));
 
 		return *random_it;

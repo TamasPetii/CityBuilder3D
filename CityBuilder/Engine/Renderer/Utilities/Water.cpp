@@ -12,12 +12,12 @@ WaterGroup::WaterGroup(float startX, float startY, float endX, float endY)
 
 void WaterGroup::Init()
 {
-	last_time = glfwGetTime();
+	last_time = (float)glfwGetTime();
 }
 
 void WaterGroup::ResetTimer()
 {
-	last_time = glfwGetTime();
+	last_time = (float)glfwGetTime();
 }
 
 void WaterGroup::Clear()
@@ -41,14 +41,14 @@ void WaterGroup::Update()
 		time = 0;
 	}
 
-	current_time = glfwGetTime();
+	current_time = (float)glfwGetTime();
 	delta_time = current_time - last_time;
 	time += delta_time;
 	last_time = current_time;
 
 	for (auto* water : m_Waters)
 	{
-		water->Update(delta_time * 0.4, curve);
+		water->Update(delta_time * 0.4f, curve);
 
 		if (water->Delete())
 		{

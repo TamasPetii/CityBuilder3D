@@ -16,7 +16,7 @@ public:
     inline float Get_SatisfactionPoints() { return m_Booster * m_Age; }
 
 private:
-    float m_Booster = 0.025;
+    float m_Booster = 0.025f;
     int m_Age = 0;
 };
 

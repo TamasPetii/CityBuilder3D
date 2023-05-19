@@ -247,14 +247,14 @@ void MyGui::NewGame_Popup()
         //[New Game] : City Time Slider 
         ImGui::Text("City Time: ");
         ImGui::SameLine();
-        ImGui::SliderFloat("##city_time", &m_MenuBarLayout.City_Time, 0.05, 2);
+        ImGui::SliderFloat("##city_time", &m_MenuBarLayout.City_Time, 0.05f, 2.f);
 
         ImGui::Separator();
 
         //[New Game] : Okay Button
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0.75, 0, 1));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0.7, 0, 1));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0.65, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.f, 0.75f, 0.f, 1.f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.f, 0.7f, 0.f, 1.f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.f, 0.65f, 0.f, 1.f));
         if (ImGui::Button("Okay", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); m_MenuBarLayout.NewGame_Show = false; m_MenuBarLayout.NewGame_Effect = true; this->UI_MODE = GAME; }
         ImGui::SetItemDefaultFocus();
         ImGui::PopStyleColor(3);
@@ -263,8 +263,8 @@ void MyGui::NewGame_Popup()
 
         //[New Game] : Cancel Button
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1, 0, 0, 1));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9, 0, 0, 1));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8, 0, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.f, 0.f, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8f, 0.f, 0.f, 1));
         ImGui::SetCursorPosX(ImGui::GetWindowContentRegionMax().x - 120);
         if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); m_MenuBarLayout.NewGame_Show = false; }
         ImGui::PopStyleColor(3);
@@ -378,7 +378,7 @@ void MyGui::GameWindow_Time()
             ImGui::Text("Tick (sec):");
             ImGui::TableNextColumn();
             ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
-            if(ImGui::SliderFloat("##city-tick", &m_GameWindowLayout.Time_Tick, 0.05, 2)) m_GameWindowLayout.Time_Effect = true;
+            if(ImGui::SliderFloat("##city-tick", &m_GameWindowLayout.Time_Tick, 0.05f, 2.f)) m_GameWindowLayout.Time_Effect = true;
 
             //2 RAW: GAME TIME
             ImGui::TableNextRow();
@@ -451,9 +451,9 @@ void MyGui::GameWindow_Tax()
             ImGui::Text("LvL - 1:");
             ImGui::TableNextColumn();
             ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
-            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_GameWindowLayout.ResidenceTaxLvl1 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.ResidenceTaxLvl1 * 2.55)) / 255.0f, 0.0f, 0.7f));
-            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_GameWindowLayout.ResidenceTaxLvl1 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.ResidenceTaxLvl1 * 2.55)) / 255.0f, 0.0f, 1.0f));
-            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_GameWindowLayout.ResidenceTaxLvl1 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.ResidenceTaxLvl1 * 2.55)) / 255.0f, 0.0f, 0.7f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_GameWindowLayout.ResidenceTaxLvl1 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.ResidenceTaxLvl1 * 2.55f)) / 255.0f, 0.0f, 0.7f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_GameWindowLayout.ResidenceTaxLvl1 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.ResidenceTaxLvl1 * 2.55f)) / 255.0f, 0.0f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_GameWindowLayout.ResidenceTaxLvl1 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.ResidenceTaxLvl1 * 2.55f)) / 255.0f, 0.0f, 0.7f));
             ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
             ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
             if (ImGui::SliderFloat("##residence_lvl1", &m_GameWindowLayout.ResidenceTaxLvl1, 0, 100)) m_GameWindowLayout.Tax_Effect = true;
@@ -465,9 +465,9 @@ void MyGui::GameWindow_Tax()
             ImGui::Text("LvL - 2:");
             ImGui::TableNextColumn();
             ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
-            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_GameWindowLayout.ResidenceTaxLvl2 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.ResidenceTaxLvl2 * 2.55)) / 255.0f, 0.0f, 0.7f));
-            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_GameWindowLayout.ResidenceTaxLvl2 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.ResidenceTaxLvl2 * 2.55)) / 255.0f, 0.0f, 1.0f));
-            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_GameWindowLayout.ResidenceTaxLvl2 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.ResidenceTaxLvl2 * 2.55)) / 255.0f, 0.0f, 0.7f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_GameWindowLayout.ResidenceTaxLvl2 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.ResidenceTaxLvl2 * 2.55f)) / 255.0f, 0.0f, 0.7f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_GameWindowLayout.ResidenceTaxLvl2 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.ResidenceTaxLvl2 * 2.55f)) / 255.0f, 0.0f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_GameWindowLayout.ResidenceTaxLvl2 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.ResidenceTaxLvl2 * 2.55f)) / 255.0f, 0.0f, 0.7f));
             ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
             ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
             if (ImGui::SliderFloat("##residence_lvl2", &m_GameWindowLayout.ResidenceTaxLvl2, 0, 100)) m_GameWindowLayout.Tax_Effect = true;
@@ -479,9 +479,9 @@ void MyGui::GameWindow_Tax()
             ImGui::Text("LvL - 3:");
             ImGui::TableNextColumn();
             ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
-            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_GameWindowLayout.ResidenceTaxLvl3 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.ResidenceTaxLvl3 * 2.55)) / 255.0f, 0.0f, 0.7f));
-            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_GameWindowLayout.ResidenceTaxLvl3 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.ResidenceTaxLvl3 * 2.55)) / 255.0f, 0.0f, 1.0f));
-            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_GameWindowLayout.ResidenceTaxLvl3 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.ResidenceTaxLvl3 * 2.55)) / 255.0f, 0.0f, 0.7f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_GameWindowLayout.ResidenceTaxLvl3 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.ResidenceTaxLvl3 * 2.55f)) / 255.0f, 0.0f, 0.7f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_GameWindowLayout.ResidenceTaxLvl3 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.ResidenceTaxLvl3 * 2.55f)) / 255.0f, 0.0f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_GameWindowLayout.ResidenceTaxLvl3 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.ResidenceTaxLvl3 * 2.55f)) / 255.0f, 0.0f, 0.7f));
             ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
             ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
             if (ImGui::SliderFloat("##residence_lvl3", &m_GameWindowLayout.ResidenceTaxLvl3, 0, 100)) m_GameWindowLayout.Tax_Effect = true;
@@ -499,9 +499,9 @@ void MyGui::GameWindow_Tax()
             ImGui::Text("LvL - 1:");
             ImGui::TableNextColumn();
             ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
-            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_GameWindowLayout.ServiceTaxLvl1 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.ServiceTaxLvl1 * 2.55)) / 255.0f, 0.0f, 0.7f));
-            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_GameWindowLayout.ServiceTaxLvl1 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.ServiceTaxLvl1 * 2.55)) / 255.0f, 0.0f, 1.0f));
-            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_GameWindowLayout.ServiceTaxLvl1 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.ServiceTaxLvl1 * 2.55)) / 255.0f, 0.0f, 0.7f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_GameWindowLayout.ServiceTaxLvl1 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.ServiceTaxLvl1 * 2.55f)) / 255.0f, 0.0f, 0.7f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_GameWindowLayout.ServiceTaxLvl1 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.ServiceTaxLvl1 * 2.55f)) / 255.0f, 0.0f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_GameWindowLayout.ServiceTaxLvl1 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.ServiceTaxLvl1 * 2.55f)) / 255.0f, 0.0f, 0.7f));
             ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
             ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
             if (ImGui::SliderFloat("##service_lvl1", &m_GameWindowLayout.ServiceTaxLvl1, 0, 100)) m_GameWindowLayout.Tax_Effect = true;
@@ -513,9 +513,9 @@ void MyGui::GameWindow_Tax()
             ImGui::Text("LvL - 2:");
             ImGui::TableNextColumn();
             ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
-            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_GameWindowLayout.ServiceTaxLvl2 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.ServiceTaxLvl2 * 2.55)) / 255.0f, 0.0f, 0.7f));
-            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_GameWindowLayout.ServiceTaxLvl2 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.ServiceTaxLvl2 * 2.55)) / 255.0f, 0.0f, 1.0f));
-            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_GameWindowLayout.ServiceTaxLvl2 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.ServiceTaxLvl2 * 2.55)) / 255.0f, 0.0f, 0.7f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_GameWindowLayout.ServiceTaxLvl2 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.ServiceTaxLvl2 * 2.55f)) / 255.0f, 0.0f, 0.7f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_GameWindowLayout.ServiceTaxLvl2 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.ServiceTaxLvl2 * 2.55f)) / 255.0f, 0.0f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_GameWindowLayout.ServiceTaxLvl2 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.ServiceTaxLvl2 * 2.55f)) / 255.0f, 0.0f, 0.7f));
             ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
             ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
             if (ImGui::SliderFloat("##service_lvl2", &m_GameWindowLayout.ServiceTaxLvl2, 0, 100)) m_GameWindowLayout.Tax_Effect = true;
@@ -527,9 +527,9 @@ void MyGui::GameWindow_Tax()
             ImGui::Text("LvL - 3:");
             ImGui::TableNextColumn();
             ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
-            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_GameWindowLayout.ServiceTaxLvl3 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.ServiceTaxLvl3 * 2.55)) / 255.0f, 0.0f, 0.7f));
-            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_GameWindowLayout.ServiceTaxLvl3 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.ServiceTaxLvl3 * 2.55)) / 255.0f, 0.0f, 1.0f));
-            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_GameWindowLayout.ServiceTaxLvl3 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.ServiceTaxLvl3 * 2.55)) / 255.0f, 0.0f, 0.7f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_GameWindowLayout.ServiceTaxLvl3 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.ServiceTaxLvl3 * 2.55f)) / 255.0f, 0.0f, 0.7f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_GameWindowLayout.ServiceTaxLvl3 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.ServiceTaxLvl3 * 2.55f)) / 255.0f, 0.0f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_GameWindowLayout.ServiceTaxLvl3 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.ServiceTaxLvl3 * 2.55f)) / 255.0f, 0.0f, 0.7f));
             ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
             ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
             if (ImGui::SliderFloat("##service_lvl3", &m_GameWindowLayout.ServiceTaxLvl3, 0, 100)) m_GameWindowLayout.Tax_Effect = true;
@@ -547,9 +547,9 @@ void MyGui::GameWindow_Tax()
             ImGui::Text("LvL - 1:");
             ImGui::TableNextColumn();
             ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
-            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_GameWindowLayout.IndustrialTaxLvl1 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.IndustrialTaxLvl1 * 2.55)) / 255.0f, 0.0f, 0.7f));
-            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_GameWindowLayout.IndustrialTaxLvl1 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.IndustrialTaxLvl1 * 2.55)) / 255.0f, 0.0f, 1.0f));
-            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_GameWindowLayout.IndustrialTaxLvl1 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.IndustrialTaxLvl1 * 2.55)) / 255.0f, 0.0f, 0.7f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_GameWindowLayout.IndustrialTaxLvl1 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.IndustrialTaxLvl1 * 2.55f)) / 255.0f, 0.0f, 0.7f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_GameWindowLayout.IndustrialTaxLvl1 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.IndustrialTaxLvl1 * 2.55f)) / 255.0f, 0.0f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_GameWindowLayout.IndustrialTaxLvl1 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.IndustrialTaxLvl1 * 2.55f)) / 255.0f, 0.0f, 0.7f));
             ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
             ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
             if (ImGui::SliderFloat("##industry_lvl1", &m_GameWindowLayout.IndustrialTaxLvl1, 0, 100)) m_GameWindowLayout.Tax_Effect = true;
@@ -561,9 +561,9 @@ void MyGui::GameWindow_Tax()
             ImGui::Text("LvL - 2:");
             ImGui::TableNextColumn();
             ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
-            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_GameWindowLayout.IndustrialTaxLvl2 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.IndustrialTaxLvl2 * 2.55)) / 255.0f, 0.0f, 0.7f));
-            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_GameWindowLayout.IndustrialTaxLvl2 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.IndustrialTaxLvl2 * 2.55)) / 255.0f, 0.0f, 1.0f));
-            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_GameWindowLayout.IndustrialTaxLvl2 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.IndustrialTaxLvl2 * 2.55)) / 255.0f, 0.0f, 0.7f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_GameWindowLayout.IndustrialTaxLvl2 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.IndustrialTaxLvl2 * 2.55f)) / 255.0f, 0.0f, 0.7f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_GameWindowLayout.IndustrialTaxLvl2 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.IndustrialTaxLvl2 * 2.55f)) / 255.0f, 0.0f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_GameWindowLayout.IndustrialTaxLvl2 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.IndustrialTaxLvl2 * 2.55f)) / 255.0f, 0.0f, 0.7f));
             ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
             ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
             if (ImGui::SliderFloat("##industry_lvl2", &m_GameWindowLayout.IndustrialTaxLvl2, 0, 100)) m_GameWindowLayout.Tax_Effect = true;
@@ -575,9 +575,9 @@ void MyGui::GameWindow_Tax()
             ImGui::Text("LvL - 3:");
             ImGui::TableNextColumn();
             ImGui::SetNextItemWidth(ImGui::GetColumnWidth());
-            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_GameWindowLayout.IndustrialTaxLvl3 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.IndustrialTaxLvl3 * 2.55)) / 255.0f, 0.0f, 0.7f));
-            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_GameWindowLayout.IndustrialTaxLvl3 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.IndustrialTaxLvl3 * 2.55)) / 255.0f, 0.0f, 1.0f));
-            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_GameWindowLayout.IndustrialTaxLvl3 * 2.55)) / 255.0f, (255 - (m_GameWindowLayout.IndustrialTaxLvl3 * 2.55)) / 255.0f, 0.0f, 0.7f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4((0 + (m_GameWindowLayout.IndustrialTaxLvl3 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.IndustrialTaxLvl3 * 2.55f)) / 255.0f, 0.0f, 0.7f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4((0 + (m_GameWindowLayout.IndustrialTaxLvl3 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.IndustrialTaxLvl3 * 2.55f)) / 255.0f, 0.0f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4((0 + (m_GameWindowLayout.IndustrialTaxLvl3 * 2.55f)) / 255.0f, (255 - (m_GameWindowLayout.IndustrialTaxLvl3 * 2.55f)) / 255.0f, 0.0f, 0.7f));
             ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
             ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
             if (ImGui::SliderFloat("##industry_lvl3", &m_GameWindowLayout.IndustrialTaxLvl3, 0, 100)) m_GameWindowLayout.Tax_Effect = true;
@@ -714,9 +714,9 @@ void MyGui::RenderWindow_CameraPopup2D()
         ImGui::Separator();
 
         //[New Game] : Okay Button
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0.75, 0, 1));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0.7, 0, 1));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0.65, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.f, 0.75f, 0.f, 1.f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.f, 0.7f, 0.f, 1.f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.f, 0.65f, 0.f, 1.f));
         if (ImGui::Button("Okay", ImVec2(282, 0)))
         {
             ImGui::CloseCurrentPopup();
@@ -758,9 +758,9 @@ void MyGui::RenderWindow_CameraPopup3D()
         ImGui::Separator();
 
         //[New Game] : Okay Button
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0.75, 0, 1));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0.7, 0, 1));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0.65, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0.75f, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0.7f, 0, 1));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0.65f, 0, 1));
         if (ImGui::Button("Okay", ImVec2(282, 0)))
         {
             ImGui::CloseCurrentPopup();
@@ -947,7 +947,7 @@ void MyGui::BuildWindow()
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
     }
-    if (ImGui::ImageButton("Delete-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(30, 30), Get_UV(id, 0), Get_UV(id, 1))) building = 17;
+    if (ImGui::ImageButton("Delete-image", (ImTextureID)m_BuildWindowLayout.TextureID, ImVec2(30, 30), Get_UV(id, 0), Get_UV(id, 1))) building = 17;
     if (m_BuildWindowLayout.Build_Id == 17) ImGui::PopStyleColor(2);
     ImGui::SameLine();
 
@@ -957,7 +957,7 @@ void MyGui::BuildWindow()
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
     }
-    if (ImGui::ImageButton("Check-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(30, 30), Get_UV(id, 0), Get_UV(id, 1))) building = -1;
+    if (ImGui::ImageButton("Check-image", (ImTextureID)m_BuildWindowLayout.TextureID, ImVec2(30, 30), Get_UV(id, 0), Get_UV(id, 1))) building = -1;
     if (m_BuildWindowLayout.Build_Id == -1) ImGui::PopStyleColor(2);
     ImGui::SameLine();
 
@@ -967,7 +967,7 @@ void MyGui::BuildWindow()
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
     }
-    if (ImGui::ImageButton("Upgrade-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(30, 30), Get_UV(id, 0), Get_UV(id, 1))) building = -2;
+    if (ImGui::ImageButton("Upgrade-image", (ImTextureID)m_BuildWindowLayout.TextureID, ImVec2(30, 30), Get_UV(id, 0), Get_UV(id, 1))) building = -2;
     if (m_BuildWindowLayout.Build_Id == -2) ImGui::PopStyleColor(2);
     ImGui::SameLine();
 
@@ -977,7 +977,7 @@ void MyGui::BuildWindow()
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
     }
-    if (ImGui::ImageButton("Fire-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(30, 30), Get_UV(id, 0), Get_UV(id, 1))) building = -3;
+    if (ImGui::ImageButton("Fire-image", (ImTextureID)m_BuildWindowLayout.TextureID, ImVec2(30, 30), Get_UV(id, 0), Get_UV(id, 1))) building = -3;
     if (m_BuildWindowLayout.Build_Id == -3) ImGui::PopStyleColor(2);
     ImGui::SameLine();
 
@@ -1008,7 +1008,7 @@ void MyGui::BuildWindow()
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("Road-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 18;
+        if (ImGui::ImageButton("Road-image", (ImTextureID)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 18;
         if (m_BuildWindowLayout.Build_Id == 18) ImGui::PopStyleColor(2);
 
         ImGui::Separator();
@@ -1023,7 +1023,7 @@ void MyGui::BuildWindow()
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("Forest-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 9;
+        if (ImGui::ImageButton("Forest-image", (ImTextureID)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 9;
         if (m_BuildWindowLayout.Build_Id == 9) ImGui::PopStyleColor(2);
     }
 
@@ -1039,7 +1039,7 @@ void MyGui::BuildWindow()
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("Residence-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 0;
+        if (ImGui::ImageButton("Residence-image", (ImTextureID)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 0;
         if (m_BuildWindowLayout.Build_Id == 0) ImGui::PopStyleColor(2);
         ImGui::Separator();
 
@@ -1053,7 +1053,7 @@ void MyGui::BuildWindow()
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("Industry-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 3;
+        if (ImGui::ImageButton("Industry-image", (ImTextureID)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 3;
         if (m_BuildWindowLayout.Build_Id == 3) ImGui::PopStyleColor(2);
         ImGui::Separator();
 
@@ -1067,7 +1067,7 @@ void MyGui::BuildWindow()
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("Service-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 6;
+        if (ImGui::ImageButton("Service-image", (ImTextureID)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 6;
         if (m_BuildWindowLayout.Build_Id == 6) ImGui::PopStyleColor(2);
     }
 
@@ -1083,7 +1083,7 @@ void MyGui::BuildWindow()
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("Firestation-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 11;
+        if (ImGui::ImageButton("Firestation-image", (ImTextureID)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 11;
         if (m_BuildWindowLayout.Build_Id == 11) ImGui::PopStyleColor(2);
         ImGui::Separator();
 
@@ -1097,7 +1097,7 @@ void MyGui::BuildWindow()
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("Policestation-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 10;
+        if (ImGui::ImageButton("Policestation-image", (ImTextureID)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 10;
         if (m_BuildWindowLayout.Build_Id == 10) ImGui::PopStyleColor(2);
         ImGui::Separator();
 
@@ -1111,7 +1111,7 @@ void MyGui::BuildWindow()
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("Stadion-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 14;
+        if (ImGui::ImageButton("Stadion-image", (ImTextureID)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 14;
         if (m_BuildWindowLayout.Build_Id == 14) ImGui::PopStyleColor(2);
         ImGui::Separator();
 
@@ -1125,7 +1125,7 @@ void MyGui::BuildWindow()
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("Highschool-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 12;
+        if (ImGui::ImageButton("Highschool-image", (ImTextureID)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 12;
         if (m_BuildWindowLayout.Build_Id == 12) ImGui::PopStyleColor(2);
         ImGui::Separator();
 
@@ -1139,7 +1139,7 @@ void MyGui::BuildWindow()
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("University-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 13;
+        if (ImGui::ImageButton("University-image", (ImTextureID)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 13;
         if (m_BuildWindowLayout.Build_Id == 13) ImGui::PopStyleColor(2);
         ImGui::Separator();
 
@@ -1153,7 +1153,7 @@ void MyGui::BuildWindow()
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
         }
-        if (ImGui::ImageButton("Powerstation-image", (void*)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 16;
+        if (ImGui::ImageButton("Powerstation-image", (ImTextureID)m_BuildWindowLayout.TextureID, ImVec2(TextureSizeX, TextureSizeY), Get_UV(id, 0), Get_UV(id, 1))) building = 16;
         if (m_BuildWindowLayout.Build_Id == 16) ImGui::PopStyleColor(2);
         ImGui::Separator();
     }
@@ -1185,9 +1185,9 @@ void MyGui::Upgrade_Popup()
             ImGui::Text("Are you sure?");
 
             //Yes Button
-            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0.75, 0, 1));
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0.7, 0, 1));
-            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0.65, 0, 1));
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0.75f, 0, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0.7f, 0, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0.65f, 0, 1));
             ImGui::SetCursorPosY(70.0f);
             if (ImGui::Button("Yes", ImVec2(120, 0)))
             {
@@ -1202,8 +1202,8 @@ void MyGui::Upgrade_Popup()
 
             //Cancel Button
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1, 0, 0, 1));
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9, 0, 0, 1));
-            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8, 0, 0, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0, 0, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8f, 0, 0, 1));
             ImGui::SetCursorPosX(ImGui::GetWindowContentRegionMax().x - 120);
             ImGui::SetCursorPosY(70.0f);
             if (ImGui::Button("Cancel", ImVec2(120, 0))) 
@@ -1219,8 +1219,8 @@ void MyGui::Upgrade_Popup()
             ImGui::Text("The zone is fully upgraded!");
 
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 1, 1));
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0.9, 1));
-            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0.8, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0.9f, 1));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0.8f, 1));
 
             ImVec2 windowSize = ImGui::GetWindowSize();
             ImVec2 buttonSize(80.0f, 20.0f);
@@ -1274,7 +1274,7 @@ void MyGui::ViewPortWindow()
 
     ImVec2 size = ImGui::GetContentRegionAvail();
 
-    ImGui::Image((void*)m_ViewPortLayout.ViewPort_TextureID, size, ImVec2(0, 1), ImVec2(1, 0), ImVec4(1,1,1, m_GameWindowLayout.PauseTime ? 0.25 : 1));
+    ImGui::Image((ImTextureID)m_ViewPortLayout.ViewPort_TextureID, size, ImVec2(0, 1), ImVec2(1, 0), ImVec4(1,1,1, m_GameWindowLayout.PauseTime ? 0.25f : 1));
 
     if (size.x != m_ViewPortLayout.ViewPort_Width || size.y != m_ViewPortLayout.ViewPort_Height)
     {
@@ -1318,8 +1318,8 @@ void MyGui::Build_MouseClickEvent()
 
         if (CursorInContentAreaMin_X && CursorInContentAreaMax_Y)
         {
-            m_EventLayout.Mouse_X = RelativWindowCursor_X - (int)ImGui::GetWindowContentRegionMin().x;
-            m_EventLayout.Mouse_Y = RelativWindowCursor_Y - (int)ImGui::GetWindowContentRegionMin().y;
+            m_EventLayout.Mouse_X = RelativWindowCursor_X - static_cast<int>(ImGui::GetWindowContentRegionMin().x);
+            m_EventLayout.Mouse_Y = RelativWindowCursor_Y - static_cast<int>(ImGui::GetWindowContentRegionMin().y);
             m_EventLayout.Content_X = CurrentContent_MAX.x - CurrentContent_MIN.x;
             m_EventLayout.Content_Y = CurrentContent_MAX.y - CurrentContent_MIN.y;
         }
@@ -1425,7 +1425,7 @@ void MyGui::LobbyViewPort_Window()
 
     ImVec2 size = ImGui::GetContentRegionAvail();
 
-    ImGui::Image((void*)m_ViewPortLayout.ViewPort_TextureID, size, ImVec2(0, 1), ImVec2(1, 0), ImVec4(1, 1, 1, 0.15));
+    ImGui::Image((ImTextureID)m_ViewPortLayout.ViewPort_TextureID, size, ImVec2(0, 1), ImVec2(1, 0), ImVec4(1, 1, 1, 0.15f));
 
     if (size.x != m_ViewPortLayout.ViewPort_Width || size.y != m_ViewPortLayout.ViewPort_Height)
     {

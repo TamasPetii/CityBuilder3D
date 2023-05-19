@@ -62,7 +62,7 @@ void City::Simulate()
 	m_GameTable->Loop();
 }
 
-void City::UpdateMoney(float amount)
+void City::UpdateMoney(int amount)
 {
 	m_Money += amount;
 
@@ -131,7 +131,7 @@ void City::CalculateHappiness() {
 		float happiness = 0;
 		happiness += citizen->Calculate_Satisfaction();
 		if (m_Money < 0) happiness -= 0.1;
-		if (ratio < 0.5 || ratio > 2) happiness -= 0.1;
+		if (ratio < 0.5f || ratio > 2.f) happiness -= 0.1f;
 		if ((happiness <= 0 || citizen->Get_Workplace() == nullptr) && m_initialCitizens >= 50 && i >= 49) { //első 50 lakos nem költözik el
 			//happiness = 0;
 			if (rand() % 500 == 13) to_remove.push_back(citizen);
@@ -306,7 +306,7 @@ void City::UpgradeField(int x, int y)
 
 		if (zone->UpgradeZone())
 		{
-			float cost = zone->Get_BuildCost();
+			int cost = zone->Get_BuildCost();
 			UpdateMoney(-cost);
 			MONEY_LOG << "- " << cost << "$ >> Upgrading zone {" << Get_TimeStr() << "}" << std::endl;
 		}
@@ -707,7 +707,7 @@ std::vector<Point> City::Get_FireTruckPath(int startX, int startY) const
 
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> distr(0, onFireFields.size() - 1);
+	std::uniform_int_distribution<> distr(0, (int)onFireFields.size() - 1);
 
 	auto it = onFireFields.begin();
 	std::advance(it, distr(gen));

@@ -33,7 +33,7 @@ public:
 	//Getter
 	inline int Get_TableSize() const { return m_TableSize; }
 	inline GameField* Get_TableValue(int x, int y) const { return m_Table[x][y]; }; //Todo: check for wrong x,y value
-	float Get_TotalAnnualCost() const;
+	int Get_TotalAnnualCost() const;
 
 	std::vector<Point> PathFinder(Point start, Point end);
 	std::unordered_set<int> PathFinder_Fire(Point start);

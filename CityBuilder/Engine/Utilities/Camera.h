@@ -47,7 +47,7 @@ public:
 	inline GLfloat& Get_Speed() { return m_Speed; }
 	inline int& Get_Mode() { return mode; }
 
-	void ResetTimer() { m_LastTime = glfwGetTime(); }
+	void ResetTimer() { m_LastTime = (float)glfwGetTime(); }
 
 protected:
 	void Keyboard_PressEvent(GLuint key);

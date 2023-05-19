@@ -108,7 +108,7 @@ int GameField::CalculateBuildCost(FieldType type)
 
 int GameField::CalculateAnnualCost(FieldType type)
 {
-	return CalculateBuildCost(type) * 0.05;
+	return static_cast<int>(CalculateBuildCost(type) * 0.05);
 }
 
 std::string GameField::ToString(GameField* field)

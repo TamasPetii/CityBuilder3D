@@ -220,14 +220,14 @@ void Camera::Set_Mode(int mode, int x, int y)
 	{
 		m_Yaw = -90.f;
 		m_Pitch = -89.f;
-		Mouse_MoveEvent(x, y);
+		Mouse_MoveEvent((GLfloat)x, (GLfloat)y);
 		this->mode = (Mode)mode;
 	}
 	else if (mode == TWO_HALF_DIMENSION)
 	{
 		m_Yaw = -90.f;
 		m_Pitch = -26.565f;
-		Mouse_MoveEvent(x, y);
+		Mouse_MoveEvent((GLfloat)x, (GLfloat)y);
 		this->mode = (Mode)mode;
 	}
 	else if(mode == THREE_DIMENSION)

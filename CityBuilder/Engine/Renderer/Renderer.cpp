@@ -139,7 +139,7 @@ void Renderer::Init(Camera* camera)
 
 	InitShapeBuffers();
 
-	last_time = glfwGetTime();
+	last_time = (float)glfwGetTime();
 }
 
 void Renderer::Destroy()
@@ -172,7 +172,7 @@ void Renderer::PreRender()
 	m_NormalProgram->SetUniformTexture("u_SpriteTexture", 0, m_GameTexture);
 	m_NormalProgram->UnBind();
 
-	current_time = glfwGetTime();
+	current_time = (float)glfwGetTime();
 }
 
 void Renderer::PostRender()
@@ -204,7 +204,7 @@ void Renderer::RenderInstanced(Shape* shape, const std::vector<glm::mat4>& trans
 	m_InstanceProgram->Bind();
 	m_InstanceProgram->SetUniform("u_UseVertexTexID", (float)(shape == m_Ground));
 
-	glm::mat4 rotation = (shape == m_ShapeData[RENDER_WINDTURBINE_PROPELLER].first ? glm::rotate<float>(M_PI * glfwGetTime(), glm::vec3(0, 0, 1)) : glm::mat4(1));
+	glm::mat4 rotation = (shape == m_ShapeData[RENDER_WINDTURBINE_PROPELLER].first ? glm::rotate<float>(static_cast<float>(M_PI * glfwGetTime()), glm::vec3(0, 0, 1)) : glm::mat4(1));
 	m_InstanceProgram->SetUniform("u_M", rotation);
 
 	shape->Bind();
@@ -257,7 +257,7 @@ void Renderer::AddShapeTransforms(RenderShapeType type, int x, int y, int direct
 
 	Transform transform_MAJOR;
 	transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 1));
-	transform_MAJOR.rotate = glm::rotate<float>(M_PI / 2 * direction, glm::vec3(0, 1, 0));
+	transform_MAJOR.rotate = glm::rotate<float>(static_cast<float>(M_PI / 2 * direction), glm::vec3(0, 1, 0));
 	transform_MAJOR.scale = glm::mat4(1); //TODO: 2x2 field
 
 	if (type == RENDER_STADIUM || type == RENDER_UNIVERSITY)
@@ -331,7 +331,7 @@ void Renderer::AddGroundTransforms(RenderShapeType type, int x, int y, int direc
 {
 	Transform transform_MAJOR;
 	transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 1));
-	transform_MAJOR.rotate = glm::rotate<float>(M_PI / 2 * (texture / 100), glm::vec3(0,1,0));
+	transform_MAJOR.rotate = glm::rotate<float>(static_cast<float>(M_PI / 2 * (texture / 100)), glm::vec3(0,1,0));
 	transform_MAJOR.scale = glm::mat4(1); //TODO SCALE
 
 	if (type == RENDER_STADIUM || type == RENDER_UNIVERSITY)
@@ -342,7 +342,7 @@ void Renderer::AddGroundTransforms(RenderShapeType type, int x, int y, int direc
 
 	if (type == RENDER_HIGHSCHOOL)
 	{
-		transform_MAJOR.rotate = glm::rotate<float>(M_PI / 2 * direction, glm::vec3(0, 1, 0));
+		transform_MAJOR.rotate = glm::rotate<float>(static_cast<float>(M_PI / 2 * direction), glm::vec3(0, 1, 0));
 		if (direction == 0 || direction == 2)
 		{
 			transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 2, 0, 2 * x + 1));
@@ -405,6 +405,7 @@ int Renderer::DetermineGroundTextureID(RenderShapeType type, int contain)
 	case RENDER_CRATER: return 49;
 	case RENDER_LAKE: return 64;
 	}
+	return -1;
 }
 
 void Renderer::Render_Meteors()
@@ -439,7 +440,7 @@ void Renderer::RenderNormal(RenderShapeType type, int x, int y, int direction)
 
 	Transform transform_MAJOR;
 	transform_MAJOR.translate = glm::translate(glm::vec3(2 * y + 1, 0, 2 * x + 1));
-	transform_MAJOR.rotate = glm::rotate<float>(M_PI / 2 * direction, glm::vec3(0, 1, 0));
+	transform_MAJOR.rotate = glm::rotate<float>(static_cast<float>(M_PI / 2 * direction), glm::vec3(0, 1, 0));
 	transform_MAJOR.scale = glm::mat4(1); //TODO SCALE
 
 	if (type == RENDER_UNIVERSITY || type == RENDER_STADIUM)
@@ -468,7 +469,7 @@ void Renderer::RenderNormal(RenderShapeType type, int x, int y, int direction)
 		transform_MINOR.rotate = shape->Get_Transforms()[i].rotate;
 		transform_MINOR.scale = shape->Get_Transforms()[i].scale;
 
-		glm::mat4 rotation = (shape == m_ShapeData[RENDER_WINDTURBINE_PROPELLER].first ? glm::rotate<float>(M_PI * glfwGetTime(), glm::vec3(0, 0, 1)) : glm::mat4(1));
+		glm::mat4 rotation = (shape == m_ShapeData[RENDER_WINDTURBINE_PROPELLER].first ? glm::rotate<float>(static_cast<float>(M_PI * glfwGetTime()), glm::vec3(0, 0, 1)) : glm::mat4(1));
 		m_NormalProgram->SetUniform("u_M", Transform::ConvertToMatrix(transform_MAJOR) * Transform::ConvertToMatrix(transform_MINOR) * rotation);
 		m_NormalProgram->SetUniform("u_color", Buildable ? glm::vec3(0, 1, 0) : glm::vec3(1, 0, 0));
 

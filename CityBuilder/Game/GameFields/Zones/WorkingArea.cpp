@@ -9,7 +9,7 @@ float WorkingArea::Calculate_NormalSatisfaction() const {
 	if (Safety > 1) Safety = 1;
 	if (Forest > 1) Forest = 1;
 
-	return Satisfaction / 5 * 0.65 + Safety * 0.2 + Forest * 0.15;
+	return Satisfaction / 5 * 0.65f + Safety * 0.2f + Forest * 0.15f;
 }
 
 //Industrial area
@@ -29,6 +29,7 @@ float IndustrialArea::Calculate_TaxRate() const
 	case LEVEL_2: return m_LVL2Payment * (m_Lvl2TaxRate / 100);
 	case LEVEL_3: return m_LVL3Payment * (m_Lvl3TaxRate / 100);
 	}
+	return 0;
 }
 
 float IndustrialArea::Calculate_TaxRatePercentage() const
@@ -39,6 +40,7 @@ float IndustrialArea::Calculate_TaxRatePercentage() const
 	case LEVEL_2: return m_Lvl2TaxRate;
 	case LEVEL_3: return m_Lvl3TaxRate;
 	}
+	return 0;
 }
 
 //Service area
@@ -58,7 +60,7 @@ float ServiceArea::Calculate_TaxRate() const
 	case LEVEL_2: return m_LVL2Payment * (m_Lvl2TaxRate / 100);
 	case LEVEL_3: return m_LVL3Payment * (m_Lvl3TaxRate / 100);
 	}
-
+	return 0;
 }
 
 float ServiceArea::Calculate_TaxRatePercentage() const
@@ -69,4 +71,5 @@ float ServiceArea::Calculate_TaxRatePercentage() const
 	case LEVEL_2: return m_Lvl2TaxRate;
 	case LEVEL_3: return m_Lvl3TaxRate;
 	}
+	return 0;
 }
