@@ -11,7 +11,7 @@ TEST_CASE("ASD")
 
 TEST_CASE("JOIN-DELETE-CHANGE")
 {
-    City* city2 = new City(5, 100000, 1);
+    City* city2 = new City(5, 10000000, 1);
     city2->Set_GameTableValue(1, 1, RESIDENTIAL_LVL1, FRONT);
     city2->Set_GameTableValue(2, 1, ROAD, FRONT);
     city2->Set_GameTableValue(3, 1, ROAD, FRONT);
@@ -45,7 +45,7 @@ TEST_CASE("JOIN-DELETE-CHANGE")
 
 TEST_CASE("TAX RATE - PAYTAX")
 {
-    City* city = new City(5,100000,1);
+    City* city = new City(5, 10000000, 1);
 
     city->Set_GameTableValue(1, 1, RESIDENTIAL_LVL1, FRONT);
     city->Set_GameTableValue(2, 2, INDUSTRIAL_LVL1, FRONT);
@@ -226,7 +226,7 @@ TEST_CASE("TAX RATE - PAYTAX")
 
 TEST_CASE("COLLECT MONTHLY TAX")
 {
-    City* city = new City(5, 100000, 1);
+    City* city = new City(5, 10000000, 1);
 
     city->Set_GameTableValue(1, 1, RESIDENTIAL_LVL1, FRONT);
     city->Set_GameTableValue(1, 2, ROAD, FRONT);
@@ -243,14 +243,13 @@ TEST_CASE("COLLECT MONTHLY TAX")
     CHECK(balanceBeforeTax < balanceWithTax);
 
     //If citizen is a pensioner
-    citizen->Set_Age(70);
+    citizen->Set_Age(65);
     city->CollectMonthlyTax();
-
     int balanceWithPension = city->Get_Money();
 
     CHECK(balanceWithPension < balanceWithTax);
 
-    //delete citizen;
+    delete citizen;
     delete city;
 }
 
@@ -267,6 +266,7 @@ TEST_CASE("PENSION")
 
     citizen->PayTax();
     citizen->Set_Age(65);
+
     float basicPension = citizen->PayTax();
 
     CHECK(basicPension < 0);
@@ -338,7 +338,7 @@ TEST_CASE("PATH FINDER")
     delete gameTable;
 }
 
-TEST_CASE("BUILDINGS")
+TEST_CASE("BUILDINGS BASIC FUNCTIONS")
 {
     Stadium* field = dynamic_cast<Stadium*>(GameField::CreateField(STADIUM, LEFT, 0, 0));
     CHECK(field->IsBuilding());
@@ -392,7 +392,7 @@ TEST_CASE("BUILDINGS")
     delete building;
 }
 
-TEST_CASE("GENERAL")
+TEST_CASE("GENERAL BASIC FUNCTIONS")
 {
     Road* road = dynamic_cast<Road*>(GameField::CreateField(ROAD, LEFT, 0, 0));
     CHECK(road->IsRoad());
@@ -419,4 +419,120 @@ TEST_CASE("GENERAL")
     CHECK(forest->Get_Age() == 11);
     CHECK(forest->Get_SatisfactionPoints() == forest->Get_Booster() * forest->Get_Age());
     delete forest;
+}
+
+TEST_CASE("ZONE BASIC FUNCTIONS")
+{
+    //RESIDENTIAL AREA
+    ResidentalArea* residentialArea = dynamic_cast<ResidentalArea*>(GameField::CreateField(RESIDENTIAL_LVL1, LEFT, 0, 0));
+    CHECK(residentialArea->IsZone());
+    CHECK(residentialArea->IsResidentalArea());
+    CHECK(!residentialArea->IsWorkingArea());
+
+    residentialArea->Set_Capacity(10);
+    residentialArea->Set_Contain(10);
+    residentialArea->Set_Satisfaction(10);
+    residentialArea->Set_Safety(10);
+    residentialArea->Set_IndustrialPenalty(10);
+    residentialArea->Set_Level(LEVEL_3);
+    residentialArea->Set_ForestSatisfaction(10);
+
+    CHECK((int)residentialArea->Get_Capacity() == 10);
+    CHECK((int)residentialArea->Get_Contain() == 10);
+    CHECK((int)residentialArea->Get_Satisfaction() == 10);
+    CHECK((int)residentialArea->Get_Safety() == 10);
+    CHECK((int)residentialArea->Get_IndustrialPenalty() == 10);
+    CHECK(residentialArea->Get_Level() == LEVEL_3);
+    CHECK((int)residentialArea->Get_ForestSatisfaction() == 10);
+
+    residentialArea->Set_Capacity(10);
+    residentialArea->Set_Contain(0);
+    CHECK(residentialArea->IsThereEmptySpace());
+    residentialArea->Set_Contain(10);
+    CHECK(!residentialArea->IsThereEmptySpace());
+
+    residentialArea->Add_Satisfaction(1);
+    residentialArea->Add_Safety(1);
+    residentialArea->Add_IndustrialPenalty(1);
+    residentialArea->Add_ForestSatisfaction(1);
+    CHECK(residentialArea->Get_Satisfaction() >= 10);
+    CHECK(residentialArea->Get_Safety() >= 10);
+    CHECK(residentialArea->Get_IndustrialPenalty() >= 10);
+    CHECK(residentialArea->Get_ForestSatisfaction() >= 10);
+
+    //WORKING AREA
+    IndustrialArea* industrialArea = dynamic_cast<IndustrialArea*>(GameField::CreateField(INDUSTRIAL_LVL1, LEFT, 0, 0));
+    CHECK(industrialArea->IsZone());
+    CHECK(industrialArea->IsWorkingArea());
+    CHECK(!industrialArea->IsResidentalArea());
+
+    industrialArea->Set_Capacity(10);
+    industrialArea->Set_Contain(10);
+    industrialArea->Set_Satisfaction(10);
+    industrialArea->Set_Safety(10);
+    industrialArea->Set_IndustrialPenalty(10);
+    industrialArea->Set_Level(LEVEL_3);
+    industrialArea->Set_ForestSatisfaction(10);
+
+    CHECK((int)industrialArea->Get_Capacity() == 10);
+    CHECK((int)industrialArea->Get_Contain() == 10);
+    CHECK((int)industrialArea->Get_Satisfaction() == 10);
+    CHECK((int)industrialArea->Get_Safety() == 10);
+    CHECK((int)industrialArea->Get_IndustrialPenalty() == 10);
+    CHECK(industrialArea->Get_Level() == LEVEL_3);
+    CHECK((int)industrialArea->Get_ForestSatisfaction() == 10);
+
+    industrialArea->Set_Capacity(10);
+    industrialArea->Set_Contain(0);
+    CHECK(industrialArea->IsThereEmptySpace());
+    industrialArea->Set_Contain(10);
+    CHECK(!industrialArea->IsThereEmptySpace());
+
+    //Add Methodes
+    industrialArea->Add_Satisfaction(1);
+    industrialArea->Add_Safety(1);
+    industrialArea->Add_IndustrialPenalty(1);
+    industrialArea->Add_ForestSatisfaction(1);
+    CHECK(industrialArea->Get_Satisfaction() >= 10);
+    CHECK(industrialArea->Get_Safety() >= 10);
+    CHECK(industrialArea->Get_IndustrialPenalty() >= 10);
+    CHECK(industrialArea->Get_ForestSatisfaction() >= 10);
+
+    //WORKING AREA
+    ServiceArea* serviceArea = dynamic_cast<ServiceArea*>(GameField::CreateField(SERVICE_LVL1, LEFT, 0, 0));
+    CHECK(serviceArea->IsZone());
+    CHECK(serviceArea->IsWorkingArea());
+    CHECK(!serviceArea->IsResidentalArea());
+
+    serviceArea->Set_Capacity(10);
+    serviceArea->Set_Contain(10);
+    serviceArea->Set_Satisfaction(10);
+    serviceArea->Set_Safety(10);
+    serviceArea->Set_IndustrialPenalty(10);
+    serviceArea->Set_Level(LEVEL_3);
+    serviceArea->Set_ForestSatisfaction(10);
+
+    CHECK((int)serviceArea->Get_Capacity() == 10);
+    CHECK((int)serviceArea->Get_Contain() == 10);
+    CHECK((int)serviceArea->Get_Satisfaction() == 10);
+    CHECK((int)serviceArea->Get_Safety() == 10);
+    CHECK((int)serviceArea->Get_IndustrialPenalty() == 10);
+    CHECK(serviceArea->Get_Level() == LEVEL_3);
+    CHECK((int)serviceArea->Get_ForestSatisfaction() == 10);
+
+    serviceArea->Set_Capacity(10);
+    serviceArea->Set_Contain(0);
+    CHECK(serviceArea->IsThereEmptySpace());
+    serviceArea->Set_Contain(10);
+    CHECK(!serviceArea->IsThereEmptySpace());
+
+    //Add Methodes
+    serviceArea->Add_Satisfaction(1);
+    serviceArea->Add_Safety(1);
+    serviceArea->Add_IndustrialPenalty(1);
+    serviceArea->Add_ForestSatisfaction(1);
+    CHECK(serviceArea->Get_Satisfaction() >= 10);
+    CHECK(serviceArea->Get_Safety() >= 10);
+    CHECK(serviceArea->Get_IndustrialPenalty() >= 10);
+    CHECK(serviceArea->Get_ForestSatisfaction() >= 10);
 }
