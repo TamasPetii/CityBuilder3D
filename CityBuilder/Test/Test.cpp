@@ -340,6 +340,17 @@ TEST_CASE("PATH FINDER")
 
 TEST_CASE("BUILDINGS BASIC FUNCTIONS")
 {
+    Building* building = new Building(STADIUM, LEFT, 0, 0);
+    CHECK(Building::ToString(building) != "");
+    CHECK(building->IsBuilding());
+    CHECK(!building->IsPoliceStation());
+    CHECK(!building->IsFireStation());
+    CHECK(!building->IsPowerWire());
+    CHECK(!building->IsPowerStation());
+    CHECK(!building->IsSchool());
+    CHECK(!building->IsStadium());
+    CHECK(building->GetBuildingSatisfaction() == 0);
+
     Stadium* field = dynamic_cast<Stadium*>(GameField::CreateField(STADIUM, LEFT, 0, 0));
     CHECK(field->IsBuilding());
     CHECK(field->IsStadium());
@@ -380,16 +391,11 @@ TEST_CASE("BUILDINGS BASIC FUNCTIONS")
     CHECK(fireStation->GetBuildingSatisfaction() == 1);
     delete fireStation;
 
-    Building* building = new Building(FIRESTATION, LEFT, 0, 0);
-    CHECK(building->IsBuilding());
-    CHECK(!building->IsPoliceStation());
-    CHECK(!building->IsFireStation());
-    CHECK(!building->IsPowerWire());
-    CHECK(!building->IsPowerStation());
-    CHECK(!building->IsSchool());
-    CHECK(!building->IsStadium());
-    CHECK(building->GetBuildingSatisfaction() == 0);
-    delete building;
+    PoliceStation* policeStation = dynamic_cast<PoliceStation*>(GameField::CreateField(POLICESTATION, LEFT, 0, 0));
+    CHECK(policeStation->IsBuilding());
+    CHECK(policeStation->IsPoliceStation());
+    CHECK(policeStation->GetBuildingSatisfaction() == 0);
+    delete policeStation;
 }
 
 TEST_CASE("GENERAL BASIC FUNCTIONS")
@@ -464,6 +470,7 @@ TEST_CASE("ZONE BASIC FUNCTIONS")
     IndustrialArea* industrialArea = dynamic_cast<IndustrialArea*>(GameField::CreateField(INDUSTRIAL_LVL1, LEFT, 0, 0));
     CHECK(industrialArea->IsZone());
     CHECK(industrialArea->IsWorkingArea());
+    CHECK(industrialArea->IsIndustrialArea());
     CHECK(!industrialArea->IsResidentalArea());
 
     industrialArea->Set_Capacity(10);
@@ -502,6 +509,7 @@ TEST_CASE("ZONE BASIC FUNCTIONS")
     ServiceArea* serviceArea = dynamic_cast<ServiceArea*>(GameField::CreateField(SERVICE_LVL1, LEFT, 0, 0));
     CHECK(serviceArea->IsZone());
     CHECK(serviceArea->IsWorkingArea());
+    CHECK(serviceArea->IsServiceArea());
     CHECK(!serviceArea->IsResidentalArea());
 
     serviceArea->Set_Capacity(10);
@@ -535,4 +543,70 @@ TEST_CASE("ZONE BASIC FUNCTIONS")
     CHECK(serviceArea->Get_Safety() >= 10);
     CHECK(serviceArea->Get_IndustrialPenalty() >= 10);
     CHECK(serviceArea->Get_ForestSatisfaction() >= 10);
+}
+
+TEST_CASE("1x2/2x2 Fields")
+{
+    City* city = new City(10, 1, 1);
+
+    //Normal 2x2 field on the table
+    city->Set_GameTableValue(0, 0, STADIUM, LEFT);
+    CHECK(city->Get_GameField(0, 0)->Get_Type() == STADIUM);
+    CHECK(city->Get_GameField(0, 1)->Get_Type() == STADIUM);
+    CHECK(city->Get_GameField(1, 0)->Get_Type() == STADIUM);
+    CHECK(city->Get_GameField(1, 1)->Get_Type() == STADIUM);
+
+    //2x2 field on the sides
+    city->Set_GameTableValue(9, 9, STADIUM, LEFT);
+    CHECK(city->Get_GameField(9, 9)->Get_Type() != STADIUM);
+    city->Set_GameTableValue(9, 0, STADIUM, LEFT);
+    CHECK(city->Get_GameField(9, 0)->Get_Type() != STADIUM);
+    city->Set_GameTableValue(0, 9, STADIUM, LEFT);
+    CHECK(city->Get_GameField(0, 9)->Get_Type() != STADIUM);
+
+    //Normal 1x2 field on the table
+    city->Set_GameTableValue(5, 5, HIGHSCHOOL, LEFT);
+    CHECK(city->Get_GameField(5, 5)->Get_Type() == HIGHSCHOOL);
+    CHECK(city->Get_GameField(6, 5)->Get_Type() == HIGHSCHOOL);
+    city->Set_GameTableValue(7, 7, HIGHSCHOOL, FRONT);
+    CHECK(city->Get_GameField(7, 7)->Get_Type() == HIGHSCHOOL);
+    CHECK(city->Get_GameField(7, 8)->Get_Type() == HIGHSCHOOL);
+
+    //Side 1x2 field on the table
+    city->Set_GameTableValue(9, 3, HIGHSCHOOL, LEFT);
+    CHECK(city->Get_GameField(9, 3)->Get_Type() != HIGHSCHOOL);
+    city->Set_GameTableValue(3, 9, HIGHSCHOOL, FRONT);
+    CHECK(city->Get_GameField(3, 9)->Get_Type() != HIGHSCHOOL);
+
+    delete city;
+}
+
+TEST_CASE("Citizen")
+{
+    ResidentalArea* residentialArea = new ResidentalArea(LEVEL_1, RESIDENTIAL_LVL1, LEFT, 0, 0);
+    IndustrialArea* workingArea = new IndustrialArea(LEVEL_1, INDUSTRIAL_LVL1, LEFT, 1, 0);
+    Citizen* citizen = new Citizen();
+
+    citizen->Set_Age(40);
+    citizen->Set_Pension(10);
+    citizen->Set_MonthsBeforePension(10);
+    citizen->Set_Education(BASIC);
+    citizen->Set_Residence(residentialArea);
+    citizen->Set_Workplace(workingArea);
+
+    CHECK(citizen->Get_Age() == 40);
+    CHECK(citizen->Get_Pension() == 10);
+    CHECK(citizen->Get_MonthsBeforePension() == 10);
+    CHECK(citizen->Get_Education() == BASIC);
+    CHECK(citizen->Get_Residence() == residentialArea);
+    CHECK(citizen->Get_Workplace() == workingArea);
+
+    //Education
+    citizen->Increase_EducationLevel();
+    CHECK(citizen->HasIntermediateEducationLevel());
+    citizen->Increase_EducationLevel();
+    CHECK(citizen->HasAdvancedEducationLevel());
+    citizen->Downgrade_EducationLevel();
+    CHECK(!citizen->HasIntermediateEducationLevel());
+    CHECK(!citizen->HasAdvancedEducationLevel());
 }
