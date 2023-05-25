@@ -327,6 +327,8 @@ Zone* RoadNetwork::FindOptimalResidentialArea(float happiness) {
 	return nullptr;
 }
 
+// This method applies a given function to all zones in each network of the road network. The function is provided as a parameter func, which takes GameField* as an input.
+// This allows the caller to specify what operation should be done on each zone.
 void RoadNetwork::ApplyToAllZones(const ZoneFunction& func)
 {
 	for (auto& network : m_networks)
@@ -338,6 +340,8 @@ void RoadNetwork::ApplyToAllZones(const ZoneFunction& func)
 	}
 }
 
+// This method applies a given function to all buildings in each network of the road network. The function is provided as a parameter func, which takes GameField* as an input.
+// This allows the caller to specify what operation should be done on each building.
 void RoadNetwork::ApplyToAllBuilding(const ZoneFunction& func)
 {
 	for (auto& network : m_networks)

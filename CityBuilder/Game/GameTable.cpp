@@ -107,6 +107,7 @@ void GameTable::DeleteField(int x, int y, FieldType type) {
 	if (isRoad) RebuildRoadNetwork();
 }
 
+// Calculate the total annual cost of all fields in the game table.
 int GameTable::Get_TotalAnnualCost() const
 {
 	int totalCost = 0;

@@ -62,6 +62,7 @@ void City::Simulate()
 	m_GameTable->Loop();
 }
 
+// Update the amount of money in the city. The city's current money is increased by the amount provided.
 void City::UpdateMoney(int amount)
 {
 	m_Money += amount;
@@ -87,6 +88,7 @@ void City::CollectMonthlyTax()
 	MONEY_LOG << ((tax >= 0) ? "+ " : "- ") << tax << "$ >> Monthly Tax {" << Get_TimeStr() << "}" << std::endl;
 }
 
+// Calculate the total annual cost of the city. It then deducts this cost from the city's money.
 void City::CollectAnnualCosts()
 {
 	float cost = m_GameTable->Get_TotalAnnualCost();
@@ -149,6 +151,9 @@ void City::CalculateHappiness() {
 	}
 }
 
+// Calculate the satisfaction derived from the forests for each zone in the city. 
+// For each field within the given radius from the zone, if the field is a forest, it checks if the path to the forest is not blocked by any field that isn't empty, a crater, a lake, or a road.
+// If the path is not blocked, it adds the satisfaction points of the forest to the zone.
 void City::CalculateForestSatisfaction(int radius)
 {
 	auto isFieldBlocking = [](const GameField* field) {
@@ -357,6 +362,9 @@ void City::SimulatePopulationAging() //should be called yearly
 	}
 }
 
+// Simulate aging of the forests in the city.
+// For each forest in the game table, it increases the age of the forest by one until it reaches the age of 10.
+// Once a forest reaches the age of 10, it sets its annual cost to zero.
 void City::SimulateForestAging()
 {
 	for (int i = 0; i < m_GameTable->Get_TableSize(); ++i)
@@ -379,16 +387,21 @@ void City::SimulateForestAging()
 	}
 }
 
+// Generate forests in the city using the GenerateCellularFields method, which applies a cellular automation algorithm.
 void City::GenerateForests(int iterations, double initialRatio)
 {
 	GenerateCellularFields(iterations, initialRatio, FieldType::FOREST);
 }
 
+// Similarly to the GenerateForests method, this method generates lakes in the city using the GenerateCellularFields method.
 void City::GenerateLakes(int iterations, double initialRatio)
 {
 	GenerateCellularFields(iterations, initialRatio, FieldType::LAKE);
 }
 
+// Increase the education level of a random selection of citizens.
+// It first finds all the networks that contain a high school or a university, then for each of these networks,
+// it selects random citizens to graduate from high school or university, up to the specified count or the number of eligible citizens, whichever is smaller.
 void City::GenerateGraduatedCitizens(int randomCitizenCount)
 {
 	std::unordered_set<int> networksWithHighSchool;
@@ -541,10 +554,12 @@ void City::Set_GameTableValue(int x, int y, FieldType type, FieldDirection dir, 
 	}
 }
 
+// Generate cellular fields of a specified type in the city.
+// It first creates a matrix of random boolean values based on the specified initial ratio.
+// Then it applies a cellular automation algorithm on this matrix for the specified number of iterations.
+// Finally, it updates the game table with the final state of the cellular automaton, creating fields of the specified type where the cellular automaton is true.
 void City::GenerateCellularFields(int iterations, double initialRatio, FieldType fieldType)
 {
-	// simple cellular automata algorithm
-
 	int tableSize = m_GameTable->Get_TableSize();
 	std::vector<std::vector<bool>> cellularMatrix(tableSize, std::vector<bool>(tableSize, false));
 
@@ -660,6 +675,8 @@ std::vector<std::vector<Point>> City::Get_CarPaths() const
 	return paths;
 }
 
+// This method implements the Bresenham's line algorithm.
+// It takes two pairs of x, y coordinates as input and generates a vector of coordinate pairs representing a line between these two points.
 std::vector<std::pair<int, int>> City::BresenhamAlgorithm(int x0, int y0, int x1, int y1)
 {
 	std::vector<std::pair<int, int>> linePoints;

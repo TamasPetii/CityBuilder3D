@@ -610,3 +610,67 @@ TEST_CASE("Citizen")
     CHECK(!citizen->HasIntermediateEducationLevel());
     CHECK(!citizen->HasAdvancedEducationLevel());
 }
+
+TEST_CASE("CITIZEN EDUCATION LEVEL")
+{
+    Citizen* citizen = new Citizen();
+    Education maxEducationLevel;
+
+    maxEducationLevel = Education::INTERMEDIATE;
+    citizen->Increase_EducationLevel(maxEducationLevel);
+    CHECK(citizen->Get_Education() == Education::INTERMEDIATE);
+
+    citizen->Set_Education(Education::BASIC);
+
+    maxEducationLevel = Education::ADVANCED;
+    citizen->Increase_EducationLevel(maxEducationLevel);
+    CHECK(citizen->Get_Education() == Education::INTERMEDIATE);
+
+    citizen->Set_Education(Education::INTERMEDIATE);
+
+    maxEducationLevel = Education::ADVANCED;
+    citizen->Increase_EducationLevel(maxEducationLevel);
+    CHECK(citizen->Get_Education() == Education::ADVANCED);
+
+    citizen->Set_Education(Education::INTERMEDIATE);
+
+    maxEducationLevel = Education::INTERMEDIATE;
+    citizen->Increase_EducationLevel(maxEducationLevel);
+    CHECK(citizen->Get_Education() == Education::INTERMEDIATE);
+
+    delete citizen;
+}
+
+//TEST_CASE("APPLY_FUNCTION_TO_ALL_ZONES") {
+//    RoadNetwork::ResetNetworks();
+//
+//    for (int i = 0; i < 3; ++i) {
+//        int networkId = RoadNetwork::CreateNetwork();
+//        for (int j = 0; j < 10; ++j) {
+//            GameField* zone = GameField::CreateField(EMPTY, FRONT, i, j);
+//            RoadNetwork::AddToNetwork(zone, networkId);
+//        }
+//    }
+//
+//    int counter = 0;
+//    RoadNetwork::ApplyToAllZones([&](GameField* const gameField) { ++counter; });
+//
+//    CHECK(counter == 30);
+//}
+//
+//TEST_CASE("APPLY_FUNCTION_TO_ALL_BUILDINGS") {
+//    RoadNetwork::ResetNetworks();
+//
+//    for (int i = 0; i < 3; ++i) {
+//        int networkId = RoadNetwork::CreateNetwork();
+//        for (int j = 0; j < 20; ++j) {
+//            GameField* building = GameField::CreateField(EMPTY, FRONT, i, j);
+//            RoadNetwork::AddToNetwork(building, networkId);
+//        }
+//    }
+//
+//    int counter = 0;
+//    RoadNetwork::ApplyToAllZones([&](GameField* const gameField) { ++counter; });
+//
+//    CHECK(counter == 60);
+//}
