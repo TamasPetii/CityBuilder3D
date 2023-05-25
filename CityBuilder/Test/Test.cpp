@@ -641,36 +641,126 @@ TEST_CASE("CITIZEN EDUCATION LEVEL")
     delete citizen;
 }
 
-//TEST_CASE("APPLY_FUNCTION_TO_ALL_ZONES") {
-//    RoadNetwork::ResetNetworks();
-//
-//    for (int i = 0; i < 3; ++i) {
-//        int networkId = RoadNetwork::CreateNetwork();
-//        for (int j = 0; j < 10; ++j) {
-//            GameField* zone = GameField::CreateField(EMPTY, FRONT, i, j);
-//            RoadNetwork::AddToNetwork(zone, networkId);
-//        }
-//    }
-//
-//    int counter = 0;
-//    RoadNetwork::ApplyToAllZones([&](GameField* const gameField) { ++counter; });
-//
-//    CHECK(counter == 30);
-//}
-//
-//TEST_CASE("APPLY_FUNCTION_TO_ALL_BUILDINGS") {
-//    RoadNetwork::ResetNetworks();
-//
-//    for (int i = 0; i < 3; ++i) {
-//        int networkId = RoadNetwork::CreateNetwork();
-//        for (int j = 0; j < 20; ++j) {
-//            GameField* building = GameField::CreateField(EMPTY, FRONT, i, j);
-//            RoadNetwork::AddToNetwork(building, networkId);
-//        }
-//    }
-//
-//    int counter = 0;
-//    RoadNetwork::ApplyToAllZones([&](GameField* const gameField) { ++counter; });
-//
-//    CHECK(counter == 60);
-//}
+TEST_CASE("APPLY_FUNCTION_TO_ALL_ZONES") {
+    RoadNetwork::ResetNetworks();
+    City* city = new City(25, 10000000, 1);
+
+    for (int i = 0; i < 3; ++i) {
+        int networkId = RoadNetwork::CreateNetwork();
+        for (int j = 0; j < 10; ++j) {
+            GameField* zone;
+            if (j % 2 == 0) {
+                zone = GameField::CreateField(ROAD, FRONT, i, j);
+            }
+            else {
+                zone = GameField::CreateField(RESIDENTIAL_LVL1, FRONT, i, j);
+            }
+            RoadNetwork::AddToNetwork(zone, networkId);
+        }
+    }
+
+    int counter = 0;
+    RoadNetwork::ApplyToAllZones([&](GameField* const gameField) { ++counter; });
+
+    CHECK(counter == 15);
+}
+
+TEST_CASE("APPLY_FUNCTION_TO_ALL_BUILDINGS") {
+    RoadNetwork::ResetNetworks();
+    City* city = new City(25, 10000000, 1);
+
+    for (int i = 0; i < 3; ++i) {
+        int networkId = RoadNetwork::CreateNetwork();
+        for (int j = 0; j < 20; ++j) {
+            GameField* zone;
+            if (j % 2 == 0) {
+                zone = GameField::CreateField(ROAD, FRONT, i, j);
+            }
+            else {
+                zone = GameField::CreateField(POLICESTATION, FRONT, i, j);
+            }
+            RoadNetwork::AddToNetwork(zone, networkId);
+        }
+    }
+
+    int counter = 0;
+    RoadNetwork::ApplyToAllBuilding([&](GameField* const gameField) { ++counter; });
+
+    CHECK(counter == 30);
+}
+
+TEST_CASE("Road Network General Tests") {
+    RoadNetwork::ResetNetworks();
+    City* city = new City(5, 10000000, 1);
+
+    city->Set_GameTableValue(0, 0, ROAD, LEFT);
+    city->Set_GameTableValue(1, 0, ROAD, LEFT);
+    city->Set_GameTableValue(2, 0, ROAD, LEFT);
+
+    CHECK((RoadNetwork::GetNetworkId(city->Get_GameField(0, 0)) == RoadNetwork::GetNetworkId(city->Get_GameField(1, 0))));
+    CHECK((RoadNetwork::GetNetworkId(city->Get_GameField(1, 0)) == RoadNetwork::GetNetworkId(city->Get_GameField(2, 0))));
+
+    city->Set_GameTableValue(0, 1, RESIDENTIAL_LVL1, LEFT);
+    city->Set_GameTableValue(2, 1, INDUSTRIAL_LVL1, LEFT);
+    Zone* residential = dynamic_cast<Zone*>(city->Get_GameField(0, 1));
+    Zone* industrial = dynamic_cast<Zone*>(city->Get_GameField(2, 1));
+
+    //Is Connected
+    CHECK(RoadNetwork::IsConnected(residential, industrial));
+
+    //Deleting road, network splits up into 2
+    city->Set_GameTableValue(1, 0, EMPTY, LEFT);
+    CHECK(!(RoadNetwork::IsConnected(residential, industrial)));
+    CHECK((RoadNetwork::GetNetworkId(residential) != RoadNetwork::GetNetworkId(industrial)));
+    CHECK(RoadNetwork::FindEmptyWorkingArea(residential, 1) == nullptr);
+
+    //Merging 2 networks
+    city->Set_GameTableValue(1, 0, ROAD, LEFT);
+    CHECK(RoadNetwork::FindEmptyResidentialArea() == residential);
+    CHECK(RoadNetwork::FindOptimalResidentialArea(1) == residential);
+    CHECK(RoadNetwork::FindEmptyWorkingArea(residential, 1) == industrial);
+
+    //Deleting industrial zone
+    city->Set_GameTableValue(2, 1, EMPTY, LEFT);
+    CHECK(RoadNetwork::FindEmptyWorkingArea(residential, 1) == nullptr);
+}
+
+TEST_CASE("Citizen Satisfaction") {
+    RoadNetwork::ResetNetworks();
+    City* city = new City(5, 10000000, 1);
+    Citizen* citizen = new Citizen();
+
+    city->Set_GameTableValue(0, 0, ROAD, LEFT);
+    city->Set_GameTableValue(1, 0, ROAD, LEFT);
+    city->Set_GameTableValue(2, 0, ROAD, LEFT);
+    city->Set_GameTableValue(0, 1, RESIDENTIAL_LVL1, LEFT);
+    Zone* residential = dynamic_cast<Zone*>(city->Get_GameField(0, 1));
+
+    //Initial satisfaction
+    city->JoinCity(citizen);
+    float satisfaction1 = citizen->Calculate_Satisfaction();
+
+    //Satisfaction increases after finding a workplace
+    city->Set_GameTableValue(2, 1, SERVICE_LVL1, LEFT);
+    Zone* service = dynamic_cast<Zone*>(city->Get_GameField(2, 1));
+    city->HandleLosingZone();
+    float satisfaction2 = citizen->Calculate_Satisfaction();
+    CHECK(satisfaction1 < satisfaction2);
+    CHECK(citizen->Get_Workplace() == service);
+    CHECK(citizen->Get_Residence() == residential);
+
+    //Connected utility building increases satisfaction
+    city->Set_GameTableValue(1, 1, POLICESTATION, LEFT);
+    float satisfaction3 = citizen->Calculate_Satisfaction();
+    CHECK(satisfaction2 < satisfaction3);
+
+    //Unconnected utility building does not increase satisfaction
+    city->Set_GameTableValue(4, 4, POLICESTATION, LEFT);
+    float satisfaction4 = citizen->Calculate_Satisfaction();
+    CHECK(satisfaction3 == satisfaction4);
+
+    //Nearby industrial area lowers satisfaction
+    city->Set_GameTableValue(3, 0, INDUSTRIAL_LVL1, LEFT);
+    float satisfaction5 = citizen->Calculate_Satisfaction();
+    CHECK(satisfaction4 > satisfaction5);
+}
