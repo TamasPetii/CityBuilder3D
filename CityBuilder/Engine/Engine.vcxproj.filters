@@ -39,12 +39,6 @@
     <ClCompile Include="Utilities\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Abstractions\Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Abstractions\Model.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Shapes\Basic Shapes\Cone\Cone.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -207,12 +201,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utilities\Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Abstractions\Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Abstractions\Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Shapes\Basic Shapes\Cone\Cone.h">

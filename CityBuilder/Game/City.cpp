@@ -188,7 +188,7 @@ void City::CalculateForestSatisfaction(int radius)
 						std::vector<std::pair<int, int>> lineCoordinates = BresenhamAlgorithm(zone->Get_X(), zone->Get_Y(), neighborX, neighborY);
 
 						bool l = false;
-						for (int i = 1; i <= lineCoordinates.size() - 2 && !l; i++)
+						for (int i = 1; i <= (lineCoordinates.size() - 2) && !l; i++)
 						{
 							GameField* field = m_GameTable->Get_TableValue(lineCoordinates[i].first, lineCoordinates[i].second);
 							l = l || isFieldBlocking(field);

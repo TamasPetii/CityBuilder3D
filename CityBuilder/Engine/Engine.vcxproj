@@ -217,8 +217,6 @@ curl -L "https://drive.google.com/uc?export=download&amp;id=16hmgybcREYHH8KaZfvO
     <ClCompile Include="Utilities\Camera.cpp" />
     <ClCompile Include="Abstractions\External\stb_image.cpp" />
     <ClCompile Include="Abstractions\FrameBuffer.cpp" />
-    <ClCompile Include="Abstractions\Mesh.cpp" />
-    <ClCompile Include="Abstractions\Model.cpp" />
     <ClCompile Include="Abstractions\ProgramObject.cpp" />
     <ClCompile Include="Abstractions\ShaderObject.cpp" />
     <ClCompile Include="Abstractions\Texture.cpp" />
@@ -274,8 +272,6 @@ curl -L "https://drive.google.com/uc?export=download&amp;id=16hmgybcREYHH8KaZfvO
     <ClInclude Include="Utilities\Camera.h" />
     <ClInclude Include="Abstractions\External\stb_image.h" />
     <ClInclude Include="Abstractions\FrameBuffer.h" />
-    <ClInclude Include="Abstractions\Mesh.h" />
-    <ClInclude Include="Abstractions\Model.h" />
     <ClInclude Include="Abstractions\ProgramObject.h" />
     <ClInclude Include="Abstractions\ShaderObject.h" />
     <ClInclude Include="Abstractions\Texture.h" />

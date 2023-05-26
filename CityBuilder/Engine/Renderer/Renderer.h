@@ -3,9 +3,10 @@
 #define _USE_MATH_DEFINES
 
 //Abstractions
-#include "../Abstractions/Model.h"
 #include "../Utilities/Camera.h"
 #include "../Abstractions/FrameBuffer.h"
+#include "../Abstractions/Texture.h"
+#include "../Abstractions/ProgramObject.h"
 #include "../Abstractions/BufferObject.h"
 #include "../Abstractions/VertexArrayObject.h"
 
