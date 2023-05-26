@@ -200,19 +200,6 @@ void MyGui::DockSpace_MenuBar()
             ImGui::EndMenu();
         }
 
-
-        if (ImGui::BeginMenu("Demo"))
-        {
-            m_MenuBarLayout.ImGuiDemo_Show = true;
-            ImGui::EndMenu();
-        }
-
-        if (ImGui::BeginMenu("Info"))
-        {
-            
-            m_MenuBarLayout.Info_Show = true;
-            ImGui::EndMenu();
-        }
         ImGui::EndMenuBar();
     }
 
@@ -319,7 +306,6 @@ void MyGui::SaveGame_Popup()
 
 void MyGui::InfoGame_Popup()
 {
-
 }
 
 //|GAME-WINDOW|---------------------------------------------------------------------------------------------------------------------//
@@ -1506,14 +1492,10 @@ void MyGui::Lobby_Buttons()
     ImGui::Begin("LOBBY", nullptr, ImGuiWindowFlags_NoCollapse);
 
     ImGui::SetCursorPos(ImVec2(25, 25));
-    if (ImGui::Button("START", ImVec2(250, 50))) { m_MenuBarLayout.NewGame_Show = true; }
+    if (ImGui::Button("START", ImVec2(250, 75))) { m_MenuBarLayout.NewGame_Show = true; }
 
-    ImGui::SetCursorPos(ImVec2(25, 80));
-    if (ImGui::Button("LOAD", ImVec2(250, 50))) { m_MenuBarLayout.LoadGame_Show = true; }
-
-    ImGui::SetCursorPos(ImVec2(25, 135));
-    ImGui::Button("INFO", ImVec2(250, 50));
-
+    ImGui::SetCursorPos(ImVec2(25, 110));
+    if (ImGui::Button("LOAD", ImVec2(250, 75))) { m_MenuBarLayout.LoadGame_Show = true; }
 
     NewGame_Popup();
     LoadGame_Popup();
@@ -1531,7 +1513,7 @@ void MyGui::EndGame_Popup()
     if (ImGui::BeginPopupModal("End Game", nullptr, ImGuiWindowFlags_NoResize))
     {
         ImGui::SetWindowSize(ImVec2(300, 130));
-        ImGui::Text("GAMED ENDED :-D");
+        ImGui::Text("GAME ENDED :-D");
         ImGui::Text("City Time: %s", m_GameWindowLayout.Time_Game);
         ImGui::Text("City Money: %d", m_GameWindowLayout.City_Money);
         ImGui::Text("City Satisfaction: %d", m_GameWindowLayout.City_Satisfaction);
