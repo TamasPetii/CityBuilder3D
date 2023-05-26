@@ -1,0 +1,10 @@
+All the textures are downloaded at building via curl.
+
+Pre-Build Events:
+curl -L "https://drive.google.com/uc?export=download&id=1_Yg8Ad2Mcjo7hGWArbX6DniMJnMkGerY" -o "$(ProjectDir)Renderer/Assets/Texture.png"
+curl -L "https://drive.google.com/uc?export=download&id=1OwcPKcl6utAC8y8nsQGnoZoq6VVGTpNR" -o "$(ProjectDir)Renderer/Assets/back.jpg"
+curl -L "https://drive.google.com/uc?export=download&id=1IGssyY3YQ4lRt7mLCWGKvqlPUjshsLSa" -o "$(ProjectDir)Renderer/Assets/bottom.jpg"
+curl -L "https://drive.google.com/uc?export=download&id=1CtszNvTozPLHQPuYVs89iBEdEsFeWRwa" -o "$(ProjectDir)Renderer/Assets/front.jpg"
+curl -L "https://drive.google.com/uc?export=download&id=1MH2xuaduBvWPkZTcKDuCMG_tjdxaBNbY" -o "$(ProjectDir)Renderer/Assets/left.jpg"
+curl -L "https://drive.google.com/uc?export=download&id=1qqGiZ5-vdyE1ssQgUHT-uBDFH4bhbqLa" -o "$(ProjectDir)Renderer/Assets/right.jpg"
+curl -L "https://drive.google.com/uc?export=download&id=16hmgybcREYHH8KaZfvO9lgDGmVnc_f1V" -o "$(ProjectDir)Renderer/Assets/top.jpg"
