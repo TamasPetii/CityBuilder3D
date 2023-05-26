@@ -409,7 +409,9 @@ bool GameTable::IsInterSection(Point p)
 	}
 }
 
-
+//BFS based algorithm that finds the shortest path between a starting point and an end point
+//start point should be a road field
+//the algorithm returns the vector of points (coordinates of road fields) when the end point is one of it's neighbours
 std::vector<Point> GameTable::PathFinder(Point start, Point end)
 {
 	//directions
@@ -453,14 +455,6 @@ std::vector<Point> GameTable::PathFinder(Point start, Point end)
 					shortestPath.push_back(start);
 					std::reverse(shortestPath.begin(), shortestPath.end());
 
-					/*
-					for (int i = 0; i < shortestPath.size(); i++)
-					{
-						std::cout << shortestPath[i].x << "," << 0 << "," << shortestPath[i].y << " "<< shortestPath[i].isInterSection << std::endl;
-					}
-					std::cout << std::endl;
-					*/
-
 					return shortestPath;
 				}
 			}
@@ -488,6 +482,7 @@ std::vector<Point> GameTable::PathFinder(Point start, Point end)
 	return {};
 }
 
+//BFS based algorithm to find the fields that are on fire from a starting point (the field that is on fire is accessible via road fields÷
 std::unordered_set<int> GameTable::PathFinder_Fire(Point start)
 {
 	//directions

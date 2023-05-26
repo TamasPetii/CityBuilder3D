@@ -311,7 +311,7 @@ TEST_CASE("PENSION")
 
 TEST_CASE("PATH FINDER")
 {
-    GameTable* gameTable = new GameTable(50);
+    GameTable* gameTable = new GameTable(10);
 
     gameTable->Set_TableValue(1, 1, RESIDENTIAL_LVL1, FRONT);
     gameTable->Set_TableValue(2, 1, ROAD, FRONT);
@@ -321,21 +321,139 @@ TEST_CASE("PATH FINDER")
     gameTable->Set_TableValue(3, 4, RESIDENTIAL_LVL2, FRONT);
     gameTable->Set_TableValue(4, 1, ROAD, FRONT);
     gameTable->Set_TableValue(5, 1, INDUSTRIAL_LVL1, FRONT);
+    gameTable->Set_TableValue(2, 3, ROAD, FRONT);
+    gameTable->Set_TableValue(1, 3, ROAD, FRONT);
+    gameTable->Set_TableValue(1, 4, ROAD, FRONT);
+    gameTable->Set_TableValue(1, 5, RESIDENTIAL_LVL1, FRONT);
+    gameTable->Set_TableValue(4, 3, ROAD, FRONT);
+    gameTable->Set_TableValue(5, 3, ROAD, FRONT);
+    gameTable->Set_TableValue(5, 4, ROAD, FRONT);
 
-    std::vector<Point> pathShouldBe1 = { {2,1}, {3,1}, {4,1} };
-    std::vector<Point> path1 = gameTable->PathFinder({ 2,1 }, { 5,1 });
+    bool pathsAreTheSame = true;
+    std::vector<Point> pathShouldBe;
+    std::vector<Point> path;
 
-    std::vector<Point> pathShouldBe2 = { {2,1}, {3,1}, {3,2}, {3,3} };
-    std::vector<Point> path2 = gameTable->PathFinder({ 2,1 }, { 3,4 });
+    //destination is at the upper left corner
+    pathShouldBe = { {2,1}, {3,1}, {4,1} };
+    path = gameTable->PathFinder({ 2,1 }, { 5,1 });
 
-    CHECK(pathShouldBe1.size() == path1.size());
-    CHECK(pathShouldBe2.size() == path2.size());
+    for (int i = 0; i < pathShouldBe.size() && i < path.size(); ++i)
+        pathsAreTheSame = pathsAreTheSame && pathShouldBe[i].x == path[i].x && pathShouldBe[i].y == path[i].y;
 
-    CHECK(!path2[0].isInterSection);
-    CHECK(path2[1].isInterSection);
-    CHECK(!path2[2].isInterSection);
+    pathsAreTheSame = pathsAreTheSame && pathShouldBe.size() == path.size();
+    CHECK(pathsAreTheSame);
+    pathsAreTheSame = true;
+
+    CHECK(!path[0].isInterSection);
+    CHECK(path[1].isInterSection);
+    CHECK(!path[2].isInterSection);
+
+    //destination is inside the gametable
+    pathShouldBe = { {2,1}, {3,1}, {3,2}, {3,3} };
+    path = gameTable->PathFinder({ 2,1 }, { 3,4 });
+
+    for (int i = 0; i < pathShouldBe.size() && i < path.size(); ++i)
+        pathsAreTheSame = pathsAreTheSame && pathShouldBe[i].x == path[i].x && pathShouldBe[i].y == path[i].y;
+
+    pathsAreTheSame = pathsAreTheSame && pathShouldBe.size() == path.size();
+    CHECK(pathsAreTheSame);
+    pathsAreTheSame = true;
+
+    CHECK(!path[0].isInterSection);
+    CHECK(path[1].isInterSection);
+    CHECK(!path[2].isInterSection);
+    CHECK(path[3].isInterSection);
+
+    //destination is at the lower right corner
+    pathShouldBe = { {3,3}, {2,3}, {1,3}, {1,4} };
+    path = gameTable->PathFinder({ 3,3 }, { 1,5 });
+
+    for (int i = 0; i < pathShouldBe.size() && i < path.size(); ++i)
+        pathsAreTheSame = pathsAreTheSame && pathShouldBe[i].x == path[i].x && pathShouldBe[i].y == path[i].y;
+
+    pathsAreTheSame = pathsAreTheSame && pathShouldBe.size() == path.size();
+    CHECK(pathsAreTheSame);
+    pathsAreTheSame = true;
+
+    CHECK(path[0].isInterSection);
+    CHECK(!path[1].isInterSection);
+    CHECK(!path[2].isInterSection);
+    CHECK(!path[3].isInterSection);
+
+    //destination is in the upper right corner
+    pathShouldBe = { {3,3}, {4,3}, {5,3}, {5,4} };
+    path = gameTable->PathFinder({ 3,3 }, { 5,5 });
+
+    for (int i = 0; i < pathShouldBe.size() && i < path.size(); ++i)
+        pathsAreTheSame = pathsAreTheSame && pathShouldBe[i].x == path[i].x && pathShouldBe[i].y == path[i].y;
+
+    pathsAreTheSame = pathsAreTheSame && pathShouldBe.size() == path.size();
+    CHECK(pathsAreTheSame);
+    pathsAreTheSame = true;
+
+    CHECK(path[0].isInterSection);
+    CHECK(!path[1].isInterSection);
+    CHECK(!path[2].isInterSection);
+    CHECK(!path[3].isInterSection);
+
+    //destination is on the lower left corner
+    pathShouldBe = { {3,3}, {3,2}, {3,1}, {2,1} };
+    path = gameTable->PathFinder({ 3,3 }, { 1,1 });
+
+    for (int i = 0; i < pathShouldBe.size() && i < path.size(); ++i)
+        pathsAreTheSame = pathsAreTheSame && pathShouldBe[i].x == path[i].x && pathShouldBe[i].y == path[i].y;
+
+    pathsAreTheSame = pathsAreTheSame && pathShouldBe.size() == path.size();
+    CHECK(pathsAreTheSame);
+    pathsAreTheSame = true;
+
+    //destination is inaccesible
+    path = gameTable->PathFinder({ 3,3 }, { 4,5 });
+    CHECK(path.size() == 0);
 
     delete gameTable;
+}
+
+TEST_CASE("FIRE FINDER")
+{
+    GameTable* gameTable = new GameTable(10);
+
+    gameTable->Set_TableValue(1, 1, RESIDENTIAL_LVL1, FRONT);
+    gameTable->Set_TableValue(2, 1, ROAD, FRONT);
+    gameTable->Set_TableValue(3, 1, ROAD, FRONT);
+    gameTable->Set_TableValue(3, 2, ROAD, FRONT);
+    gameTable->Set_TableValue(3, 3, ROAD, FRONT);
+    gameTable->Set_TableValue(3, 4, RESIDENTIAL_LVL2, FRONT);
+    gameTable->Set_TableValue(4, 1, ROAD, FRONT);
+    gameTable->Set_TableValue(5, 1, INDUSTRIAL_LVL1, FRONT);
+    gameTable->Set_TableValue(2, 3, ROAD, FRONT);
+    gameTable->Set_TableValue(1, 3, ROAD, FRONT);
+    gameTable->Set_TableValue(1, 4, ROAD, FRONT);
+    gameTable->Set_TableValue(1, 5, RESIDENTIAL_LVL1, FRONT);
+    gameTable->Set_TableValue(4, 3, ROAD, FRONT);
+    gameTable->Set_TableValue(5, 3, ROAD, FRONT);
+    gameTable->Set_TableValue(5, 4, ROAD, FRONT);
+
+    std::unordered_set<int> fieldsOnFire;
+    fieldsOnFire = gameTable->PathFinder_Fire({ 2,1 });
+    CHECK(fieldsOnFire.size() == 0);
+
+    gameTable->Get_TableValue(1, 1)->OnFire() = true;
+    fieldsOnFire = gameTable->PathFinder_Fire({ 2,1 });
+    CHECK(fieldsOnFire.size() == 1);
+
+    gameTable->Get_TableValue(3, 4)->OnFire() = true;
+    fieldsOnFire = gameTable->PathFinder_Fire({ 2,1 });
+    CHECK(fieldsOnFire.size() == 2);
+
+    gameTable->Get_TableValue(1, 5)->OnFire() = true;
+    fieldsOnFire = gameTable->PathFinder_Fire({ 2,1 });
+    CHECK(fieldsOnFire.size() == 3);
+
+    //inaccesible field, number of accesible fire's should be the same
+    gameTable->Get_TableValue(3, 5)->OnFire() = true;
+    fieldsOnFire = gameTable->PathFinder_Fire({ 2,1 });
+    CHECK(fieldsOnFire.size() == 3);
 }
 
 TEST_CASE("BUILDINGS BASIC FUNCTIONS")
