@@ -219,6 +219,32 @@ TEST_CASE("TAX RATE - PAYTAX")
 
     CHECK(lvl3Tax20 < lvl3Tax40);
 
+    //
+    IndustrialArea* indZoneLVL1 = dynamic_cast<IndustrialArea*>(GameField::CreateField(INDUSTRIAL_LVL1, FRONT, 0, 0));
+    IndustrialArea* indZoneLVL2 = dynamic_cast<IndustrialArea*>(GameField::CreateField(INDUSTRIAL_LVL2, FRONT, 0, 0));
+    IndustrialArea* indZoneLVL3 = dynamic_cast<IndustrialArea*>(GameField::CreateField(INDUSTRIAL_LVL3, FRONT, 0, 0));
+
+    city->Set_TaxRate(INDUSTRIAL_LVL1, 50.0f);
+    city->Set_TaxRate(INDUSTRIAL_LVL2, 40.0f);
+    city->Set_TaxRate(INDUSTRIAL_LVL3, 30.0f);
+
+    CHECK(indZoneLVL1->Calculate_TaxRatePercentage() == 50.0f);
+    CHECK(indZoneLVL2->Calculate_TaxRatePercentage() == 40.0f);
+    CHECK(indZoneLVL3->Calculate_TaxRatePercentage() == 30.0f);
+
+    ServiceArea* serZoneLVL1 = dynamic_cast<ServiceArea*>(GameField::CreateField(SERVICE_LVL1, FRONT, 0, 0));
+    ServiceArea* serZoneLVL2 = dynamic_cast<ServiceArea*>(GameField::CreateField(SERVICE_LVL2, FRONT, 0, 0));
+    ServiceArea* serZoneLVL3 = dynamic_cast<ServiceArea*>(GameField::CreateField(SERVICE_LVL3, FRONT, 0, 0));
+
+    city->Set_TaxRate(SERVICE_LVL1, 50.0f);
+    city->Set_TaxRate(SERVICE_LVL2, 40.0f);
+    city->Set_TaxRate(SERVICE_LVL3, 30.0f);
+
+    CHECK(serZoneLVL1->Calculate_TaxRatePercentage() == 50.0f);
+    CHECK(serZoneLVL2->Calculate_TaxRatePercentage() == 40.0f);
+    CHECK(serZoneLVL3->Calculate_TaxRatePercentage() == 30.0f);
+
+
     delete citizen;
     delete city;
 }
