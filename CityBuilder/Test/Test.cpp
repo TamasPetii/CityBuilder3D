@@ -763,4 +763,56 @@ TEST_CASE("Citizen Satisfaction") {
     city->Set_GameTableValue(3, 0, INDUSTRIAL_LVL1, LEFT);
     float satisfaction5 = citizen->Calculate_Satisfaction();
     CHECK(satisfaction4 > satisfaction5);
+    city->Set_GameTableValue(3, 0, EMPTY, LEFT);
+
+    int cost1 = city->Get_GameTable()->Get_TotalAnnualCost();
+
+    //2x2 buildings increase satisfaction
+    city->Set_GameTableValue(3, 0, STADIUM, LEFT);
+    float satisfaction6 = citizen->Calculate_Satisfaction();
+    CHECK(satisfaction4 < satisfaction6);
+
+    //Deleting 2x2 building from network
+    city->Set_GameTableValue(3, 0, EMPTY, LEFT);
+    float satisfaction7 = citizen->Calculate_Satisfaction();
+    CHECK(satisfaction6 > satisfaction7);
+
+    //Annual cost is the same before building and after deleting
+    int cost2 = city->Get_GameTable()->Get_TotalAnnualCost();
+    CHECK(cost1 == cost2);
+
+    city->Set_GameTableValue(3, 0, ROAD, LEFT);
+    city->Set_GameTableValue(4, 0, ROAD, LEFT);
+    city->Set_GameTableValue(3, 1, SERVICE_LVL1, LEFT);
+    city->Set_GameTableValue(4, 1, INDUSTRIAL_LVL1, LEFT);
+
+    //FindEmptyWorkingArea chooses properly based on ratio
+    WorkingArea* w1 = dynamic_cast<WorkingArea*>(RoadNetwork::FindEmptyWorkingArea(residential, 2));
+    WorkingArea* w2 = dynamic_cast<WorkingArea*>(RoadNetwork::FindEmptyWorkingArea(residential, 0.5));
+    CHECK(w1->IsIndustrialArea());
+    CHECK(w2->IsServiceArea());
+
+    
+}
+
+TEST_CASE("Citizen auto join") {
+    RoadNetwork::ResetNetworks();
+    City* city = new City(5, 10000000, 1);
+
+    city->Set_GameTableValue(0, 0, ROAD, LEFT);
+    city->Set_GameTableValue(1, 0, ROAD, LEFT);
+    city->Set_GameTableValue(2, 0, ROAD, LEFT);
+
+    city->Set_GameTableValue(0, 1, RESIDENTIAL_LVL1, LEFT);
+    city->Set_GameTableValue(2, 1, SERVICE_LVL1, LEFT);
+
+    Zone* residential = dynamic_cast<Zone*>(city->Get_GameField(0, 1));
+    Zone* service = dynamic_cast<Zone*>(city->Get_GameField(2, 1));
+
+    for (int i = 0; i < 100; i++) {
+        city->Simulate();
+    }
+
+    CHECK(service->Get_Contain() == 4);
+    CHECK(residential->Get_Contain() == 4);
 }
