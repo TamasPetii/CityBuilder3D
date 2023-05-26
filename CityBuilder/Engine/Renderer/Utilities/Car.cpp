@@ -16,8 +16,11 @@ float CarGroup::delta_time;
 
 HitBox Car::m_HitBox = { glm::vec3(-0.35, 0.0, -0.35), glm::vec3(0.35,0.14,0.35) };
 
-//RouteSection//
+////////////////////////////////////////
+//Implementation of RouteSection class//
+////////////////////////////////////////
 
+//Calculating the length of the Brezier curve, used for speed compensation
 void RouteSection::CalculateSegmentLength()
 {
 	if (Get_NumberOfCoordinates() == 2)
@@ -71,13 +74,13 @@ RouteSection::RouteSection(CarCoord c1, CarCoord c2, CarCoord c3)
 	else
 		m_IsInterSection = false;
 }
+///////////////////////////////
+//Implementation of car class//
+///////////////////////////////
 
-//Car//
-
+//Translating points that are used in a curved road section, so it looks like the car is moving on the right side of the road
 void Car::AdjustCurveCoordinates(glm::vec3& coordinate1, glm::vec3& coordinate2, glm::vec3& coordinate3, float roadCompensation)
 {
-	//Translating the points, so it looks like the car is moving on the right side of the road
-
 	if (coordinate1.x != coordinate2.x && coordinate1.z == coordinate2.z) //road is along x
 	{
 		if (coordinate2.x - coordinate1.x > 0) //x increasing
@@ -128,17 +131,17 @@ void Car::AdjustCurveCoordinates(glm::vec3& coordinate1, glm::vec3& coordinate2,
 	}
 }
 
+//Translating points that are used in a straight road section, so it looks like the car is moving on the right side of the road
 void Car::AdjustStraightCoordinates(glm::vec3& coordinate1, glm::vec3& coordinate2, float roadCompensation)
 {
-	//Translating the points, so it looks like the car is moving on the right side of the road
 	if (coordinate1.x != coordinate2.x && coordinate1.z == coordinate2.z)
 	{
-		if (coordinate2.x - coordinate1.x > 0)//Ha x növekszik, akkor z-t növekvõ irányba toljuk
+		if (coordinate2.x - coordinate1.x > 0)//If x decreases, we push it along z in the positive direction
 		{
 			coordinate1.z += roadCompensation;
 			coordinate2.z += roadCompensation;
 		}
-		else if (coordinate2.x - coordinate1.x < 0)//Ha x csökken, akkor z-t csökkenõ irányba toljuk
+		else if (coordinate2.x - coordinate1.x < 0)//If x decreases, we push it along z in the negative direction
 		{
 			coordinate1.z -= roadCompensation;
 			coordinate2.z -= roadCompensation;
@@ -233,7 +236,6 @@ void Car::PrepareRoadSections(std::vector<CarCoord> coordinates, float roadCompe
 				m_RouteSections.push_back(new RouteSection({ coordinate1 }, { coordinate2 }, { coordinate3 }));
 				m_RouteSections.push_back(new RouteSection({ coordinate3 }, { coordinate3 }));
 
-				//std::cout << "1 common point" << std::endl;
 				i += 2;
 			}
 			//curve, than straight section which is part of an intersection
@@ -349,9 +351,9 @@ void Car::PrepareRoadSections(std::vector<CarCoord> coordinates, float roadCompe
 	}
 }
 
+//Translating the car's route sections coordinates, so that the curves fit the texture of the curving road
 void Car::CompensateCurves()
 {
-	//compensation in curves (making the curves shorter)
 	for (int i = 0; i < m_RouteSections.size(); ++i)
 	{
 		if (i < m_RouteSections.size() - 1)
@@ -492,10 +494,9 @@ void Car::CompensateCurves()
 	}
 }
 
+//Adjusts the coordinates of the straight route sections that were added between two neighbouring curves
 void Car::AdjustAdditionalSegments()
 {
-	//Adjusting the coordinates of the straight route sections that were added between two neighbouring curves
-
 	for (int i = 1; i < m_RouteSections.size() - 1; ++i)
 	{
 		if (m_RouteSections[i]->Get_NumberOfCoordinates() == 2
@@ -509,7 +510,6 @@ void Car::AdjustAdditionalSegments()
 
 			m_RouteSections[i]->Set_FirstPoint(curve_before->Get_LastPoint());
 			m_RouteSections[i]->Set_LastPoint(curve_after->Get_FirstPoint());
-			//std::cout << "v1" << std::endl;
 		}
 		else if (i < m_RouteSections.size() - 2)
 		{
@@ -548,7 +548,6 @@ void Car::AdjustAdditionalSegments()
 				m_RouteSections[i + 1]->Set_LastPoint(coordinate2);
 
 				m_RouteSections[i + 2]->Set_FirstPoint(coordinate2);
-				//std::cout << "v2" << std::endl;
 			}
 			else if (m_RouteSections[i]->Get_NumberOfCoordinates() == 2
 				&& m_RouteSections[i + 1]->Get_NumberOfCoordinates() == 2
@@ -575,7 +574,6 @@ void Car::AdjustAdditionalSegments()
 					m_RouteSections[i]->Set_LastPoint(coordinate2);
 					m_RouteSections[i + 1]->Set_FirstPoint(coordinate2);
 					m_RouteSections[i + 1]->Set_LastPoint(curve->Get_FirstPoint());
-					//std::cout << "v3" << std::endl;
 				}
 			}
 		}
@@ -622,6 +620,7 @@ Car::Car(std::vector<CarCoord> coordinates, bool isFireTruck)
 	}
 }
 
+//Returns the car's current coordinated, calculates the rotation of the car in the rotation parameter
 glm::vec3 Car::Get_CurrentPosition(float& rotation)
 {
 	int interval = static_cast<int>(m_Param);
@@ -656,6 +655,8 @@ glm::vec3 Car::Get_CurrentPosition(float& rotation)
 	}
 }
 
+//Pushing the car further on it's path
+//t should be the ellapsed time since the last moving
 void Car::Move(float t)
 {
 	//(eltelt idõ) * (sebesség) * (útszakasz hossza miatti kompenzáció)
@@ -683,6 +684,7 @@ Car::~Car()
 	m_OriginalRouteSections.clear();
 }
 
+//Returns the current roadsection the car is currently on
 RouteSection* Car::Get_CurrentRouteSection()
 {
 	if (static_cast<int>(m_Param) <= m_RouteSections.size() - 1)
@@ -691,6 +693,7 @@ RouteSection* Car::Get_CurrentRouteSection()
 		return nullptr;
 }
 
+//Returns the untranslated (not moved to the side of the road) roadsection the car is currently on
 RouteSection* Car::Get_CurrentOriginalRouteSection()
 {
 	if (static_cast<int>(m_Param) <= m_RouteSections.size() - 1)
@@ -707,7 +710,9 @@ HitBox Car::Get_HitBox()
 	return { glm::vec3(min.x, min.y, min.z), glm::vec3(max.x, max.y, max.z) };
 }
 
-//CarGroup//
+////////////////////////////////////
+//Implementation of CarGroup class//
+////////////////////////////////////
 
 std::vector<glm::mat4> CarGroup::Get_Transforms()
 {
@@ -729,6 +734,7 @@ std::vector<glm::mat4> CarGroup::Get_FireTruckTransforms()
 	return transforms;
 }
 
+//Checks if the hitboxes of car1 and car2 collide with each other
 bool CarGroup::Intersect(Car* car1, Car* car2)
 {
 	HitBox a = car1->Get_HitBox();
@@ -742,10 +748,11 @@ bool CarGroup::Intersect(Car* car1, Car* car2)
 		a.max.z >= b.min.z;
 }
 
+//Push every car and fire truck further on it's path
+//Should be called at every tick
 void CarGroup::Update()
 {
 	//ultimate full self-driving system (Elon Musk elbujhat)//
-
 	//UPDATING CARS
 
 	current_time = static_cast<float>(glfwGetTime());
@@ -762,14 +769,12 @@ void CarGroup::Update()
 			{
 				if ((*it_pos)->Get_Car() == car)
 				{
-					//std::cout << "1 Intersection liberated when terminated in intersection! " << car << std::endl;
 					delete* it_pos;
 					it_pos = m_InUseIntersections.erase(it_pos);
 				}
 				else
 					if (it_pos != m_InUseIntersections.end()) ++it_pos;
 			}
-			//std::cout << "Car deleted: " << car << std::endl;
 			delete car;
 			it = m_Cars.erase(it);
 		}
@@ -934,7 +939,6 @@ void CarGroup::Update()
 					}
 				}
 			}
-			//std::cout << "length: " << m_InUseIntersections.size() << std::endl;
 			//moving 'car' if it doesn't collide with anything
 			if (noCollison)
 			{
@@ -957,6 +961,7 @@ void CarGroup::Update()
 
 }
 
+//Adding new car to traffic
 void CarGroup::Add(std::vector<CarCoord> coords)
 {
 	if (m_Cars.size() < car_limit)
@@ -988,6 +993,7 @@ Car* CarGroup::AddFireTruck(std::vector<CarCoord> coords)
 	return newFireTruck;
 }
 
+//Deleting all cars
 void CarGroup::Clear()
 {
 	for (auto it = m_Cars.begin(); it != m_Cars.end(); ++it)
@@ -1001,6 +1007,7 @@ void CarGroup::Clear()
 	m_InUseIntersections.clear();
 }
 
+//Deleting all firetrucks
 void CarGroup::ClearFireTrucks()
 {
 	for (auto it = m_FireTrucks.begin(); it != m_FireTrucks.end(); ++it)
