@@ -35,7 +35,7 @@ coverage:
   script:
     - g++ -fprofile-arcs -ftest-coverage -o test $game_cpp_files CityBuilder/Test/Test.cpp
     - ./test
-    - gcovr -r . --html-details -o coverage_report.html
+    - gcovr -r . --html-details -o coverage_report.html --exclude 'CityBuilder/Test/*'
     - mkdir gcovr_coverage
     - cp -r *.html *.css gcovr_coverage/
     - mv gcovr_coverage/ public/
