@@ -125,7 +125,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>curl -L "https://drive.google.com/uc?export=download&amp;id=1_Yg8Ad2Mcjo7hGWArbX6DniMJnMkGerY" -o "$(ProjectDir)Renderer/Assets/Texture.png"
+      <Command>curl -L "https://drive.google.com/uc?export=download&amp;id=1nHxRdH9kkHKh_vDgldIEhXQQsbTlDYxq" -o "$(ProjectDir)Renderer/Assets/Textures.png"
 curl -L "https://drive.google.com/uc?export=download&amp;id=1OwcPKcl6utAC8y8nsQGnoZoq6VVGTpNR" -o "$(ProjectDir)Renderer/Assets/back.jpg"
 curl -L "https://drive.google.com/uc?export=download&amp;id=1IGssyY3YQ4lRt7mLCWGKvqlPUjshsLSa" -o "$(ProjectDir)Renderer/Assets/bottom.jpg"
 curl -L "https://drive.google.com/uc?export=download&amp;id=1CtszNvTozPLHQPuYVs89iBEdEsFeWRwa" -o "$(ProjectDir)Renderer/Assets/front.jpg"
@@ -150,7 +150,7 @@ curl -L "https://drive.google.com/uc?export=download&amp;id=16hmgybcREYHH8KaZfvO
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>curl -L "https://drive.google.com/uc?export=download&amp;id=1_Yg8Ad2Mcjo7hGWArbX6DniMJnMkGerY" -o "$(ProjectDir)Renderer/Assets/Texture.png"
+      <Command>curl -L "https://drive.google.com/uc?export=download&amp;id=1nHxRdH9kkHKh_vDgldIEhXQQsbTlDYxq" -o "$(ProjectDir)Renderer/Assets/Textures.png"
 curl -L "https://drive.google.com/uc?export=download&amp;id=1OwcPKcl6utAC8y8nsQGnoZoq6VVGTpNR" -o "$(ProjectDir)Renderer/Assets/back.jpg"
 curl -L "https://drive.google.com/uc?export=download&amp;id=1IGssyY3YQ4lRt7mLCWGKvqlPUjshsLSa" -o "$(ProjectDir)Renderer/Assets/bottom.jpg"
 curl -L "https://drive.google.com/uc?export=download&amp;id=1CtszNvTozPLHQPuYVs89iBEdEsFeWRwa" -o "$(ProjectDir)Renderer/Assets/front.jpg"
@@ -171,7 +171,7 @@ curl -L "https://drive.google.com/uc?export=download&amp;id=16hmgybcREYHH8KaZfvO
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>curl -L "https://drive.google.com/uc?export=download&amp;id=1_Yg8Ad2Mcjo7hGWArbX6DniMJnMkGerY" -o "$(ProjectDir)Renderer/Assets/Texture.png"
+      <Command>curl -L "https://drive.google.com/uc?export=download&amp;id=1nHxRdH9kkHKh_vDgldIEhXQQsbTlDYxq" -o "$(ProjectDir)Renderer/Assets/Textures.png"
 curl -L "https://drive.google.com/uc?export=download&amp;id=1OwcPKcl6utAC8y8nsQGnoZoq6VVGTpNR" -o "$(ProjectDir)Renderer/Assets/back.jpg"
 curl -L "https://drive.google.com/uc?export=download&amp;id=1IGssyY3YQ4lRt7mLCWGKvqlPUjshsLSa" -o "$(ProjectDir)Renderer/Assets/bottom.jpg"
 curl -L "https://drive.google.com/uc?export=download&amp;id=1CtszNvTozPLHQPuYVs89iBEdEsFeWRwa" -o "$(ProjectDir)Renderer/Assets/front.jpg"
@@ -196,7 +196,7 @@ curl -L "https://drive.google.com/uc?export=download&amp;id=16hmgybcREYHH8KaZfvO
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>curl -L "https://drive.google.com/uc?export=download&amp;id=1_Yg8Ad2Mcjo7hGWArbX6DniMJnMkGerY" -o "$(ProjectDir)Renderer/Assets/Texture.png"
+      <Command>curl -L "https://drive.google.com/uc?export=download&amp;id=1nHxRdH9kkHKh_vDgldIEhXQQsbTlDYxq" -o "$(ProjectDir)Renderer/Assets/Textures.png"
 curl -L "https://drive.google.com/uc?export=download&amp;id=1OwcPKcl6utAC8y8nsQGnoZoq6VVGTpNR" -o "$(ProjectDir)Renderer/Assets/back.jpg"
 curl -L "https://drive.google.com/uc?export=download&amp;id=1IGssyY3YQ4lRt7mLCWGKvqlPUjshsLSa" -o "$(ProjectDir)Renderer/Assets/bottom.jpg"
 curl -L "https://drive.google.com/uc?export=download&amp;id=1CtszNvTozPLHQPuYVs89iBEdEsFeWRwa" -o "$(ProjectDir)Renderer/Assets/front.jpg"
