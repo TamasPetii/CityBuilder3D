@@ -11,6 +11,9 @@
 //Standard Headers
 #include <vector>
 
+/**
+ * A BufferObject class that represents a buffer object in OpenGL.
+ */
 class BufferObject
 {
 public:
@@ -24,6 +27,10 @@ protected:
 	GLuint m_BufferID = 0;
 };
 
+/**
+ * A class representing a Vertex Buffer Object (VBO) that inherits from BufferObject.
+ * A VBO is used to store vertex data such as position, color, and texture coordinates.
+ */
 class VertexBufferObject : public BufferObject
 {
 public:
@@ -34,6 +41,9 @@ public:
 	void AttachSubData(const std::vector<Vertex>& vertices) const;
 };
 
+/**
+ * A buffer object for storing transform data.
+ */
 class TransformBufferObject : public BufferObject
 {
 public:
@@ -44,6 +54,9 @@ public:
 	void AttachSubData(const std::vector<Transform>& transforms) const;
 };
 
+/**
+ * A buffer object for storing matrices.
+ */
 class MatrixBufferObject : public BufferObject
 {
 public:
@@ -54,6 +67,9 @@ public:
 	void AttachSubData(const std::vector<glm::mat4>& matrices) const;
 };
 
+/**
+ * A class representing an Index Buffer Object in OpenGL.
+ */
 class IndexBufferObject : public BufferObject
 {
 public:
@@ -71,6 +87,9 @@ private:
 	GLuint m_IndexCounter = 0;
 };
 
+/**
+ * A class representing a buffer object for storing vectors.
+ */
 class VectorBufferObject : public BufferObject
 {
 public:
@@ -85,6 +104,9 @@ public:
 	void AttachSubData(const std::vector<glm::vec2>& vectors) const;
 };
 
+/**
+ * A class representing a buffer object for storing numbers.
+ */
 class NumberBufferObject : public BufferObject
 {
 public:

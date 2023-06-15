@@ -22,6 +22,13 @@ Texture2D*     Renderer::m_GameTexture;
 TextureMap*    Renderer::m_SkyboxTexture;
 std::unordered_map<RenderShapeType, std::pair<Shape*, std::vector<glm::mat4>>> Renderer::m_ShapeData;
 
+/**
+ * Initializes the renderer with the given camera.
+ *
+ * @param camera A pointer to the camera object.
+ *
+ * @returns None
+ */
 void Renderer::Init(Camera* camera)
 {
 	//[OPENGL]------------------------------------------------------------------------------------//
@@ -141,6 +148,13 @@ void Renderer::Init(Camera* camera)
 	last_time = (float)glfwGetTime();
 }
 
+/**
+ * Destroys all resources used by the Renderer object.
+ *
+ * @param None
+ *
+ * @returns None
+ */
 void Renderer::Destroy()
 {
 	delete  m_InstanceProgram;
@@ -152,6 +166,13 @@ void Renderer::Destroy()
 	delete  m_FrameBuffer;
 }
 
+/**
+ * Prepares the renderer for rendering the scene.
+ *
+ * @param None
+ *
+ * @returns None
+ */
 void Renderer::PreRender()
 {
 	m_FrameBuffer->Bind();
@@ -174,6 +195,11 @@ void Renderer::PreRender()
 	current_time = (float)glfwGetTime();
 }
 
+/**
+ * Performs post-rendering operations such as unbinding the frame buffer, clearing shape transforms, and updating the state of the renderer.
+ *
+ * @returns None
+ */
 void Renderer::PostRender()
 {
 	m_FrameBuffer->UnBind();
@@ -182,6 +208,13 @@ void Renderer::PostRender()
 	last_time = current_time;
 }
 
+/**
+ * Renders the scene based on the specified render mode.
+ *
+ * @param mode The render mode to use.
+ *
+ * @returns None
+ */
 void Renderer::SceneRender(RenderMode mode)
 {
 	for (auto it = m_ShapeData.begin(); it != m_ShapeData.end(); it++)
@@ -196,6 +229,14 @@ void Renderer::SceneRender(RenderMode mode)
 	Render_Skybox();
 }
 
+/**
+ * Renders an instance of a shape with the given transforms.
+ *
+ * @param shape A pointer to the shape to be rendered.
+ * @param transforms A vector of transformation matrices to be applied to the shape.
+ *
+ * @returns None
+ */
 void Renderer::RenderInstanced(Shape* shape, const std::vector<glm::mat4>& transforms)
 {
 	if (transforms.size() == 0 && shape->Get_InstanceCount() == 0) return;
@@ -217,6 +258,14 @@ void Renderer::RenderInstanced(Shape* shape, const std::vector<glm::mat4>& trans
 	m_InstanceProgram->UnBind();
 }
 
+/**
+ * Renders an instanced wireframe of a given shape with the provided transforms.
+ *
+ * @param shape A pointer to the shape to be rendered.
+ * @param transforms A vector of transformation matrices to be applied to each instance of the shape.
+ *
+ * @returns None
+ */
 void Renderer::RenderInstanced_Wireframe(Shape* shape, const std::vector<glm::mat4>& transforms)
 {
 
@@ -232,6 +281,11 @@ void Renderer::RenderInstanced_Wireframe(Shape* shape, const std::vector<glm::ma
 }
 
 
+/**
+ * Clears the scene by clearing the color and depth buffers and setting the background color to a dark gray.
+ *
+ * @returns None
+ */
 void Renderer::ClearScene()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -239,6 +293,13 @@ void Renderer::ClearScene()
 }
 
 
+/**
+ * Clears all shape transforms and ground transforms and textures.
+ *
+ * @param None
+ *
+ * @returns None
+ */
 void Renderer::ClearShapeTransforms()
 {
 	for (auto it = m_ShapeData.begin(); it != m_ShapeData.end(); it++)
@@ -250,6 +311,17 @@ void Renderer::ClearShapeTransforms()
 	GroundTexturesID.clear();
 }
 
+/**
+ * Adds shape transforms to the renderer for a given shape type.
+ *
+ * @param type The type of shape to add transforms for.
+ * @param x The x-coordinate of the shape.
+ * @param y The y-coordinate of the shape.
+ * @param direction The direction of the shape.
+ * @param amount The number of transforms to add.
+ *
+ * @returns None
+ */
 void Renderer::AddShapeTransforms(RenderShapeType type, int x, int y, int direction, int amount)
 {
 	if (m_ShapeData.find(type) == m_ShapeData.end()) return;
@@ -299,6 +371,13 @@ void Renderer::AddShapeTransforms(RenderShapeType type, int x, int y, int direct
 	}
 }
 
+/**
+ * Sets the light properties for the renderer.
+ *
+ * @param LightProperties The light properties to be set.
+ *
+ * @returns None
+ */
 void Renderer::Set_LightProperties(const LightProperties& LightProperties)
 {
 	m_InstanceProgram->Bind();
@@ -313,6 +392,13 @@ void Renderer::Set_LightProperties(const LightProperties& LightProperties)
 	m_InstanceProgram->UnBind();
 }
 
+/**
+ * Renders the skybox using the current camera and skybox texture.
+ *
+ * @param None
+ *
+ * @returns None
+ */
 void Renderer::Render_Skybox()
 {
 	m_SkyboxProgram->Bind();
@@ -326,6 +412,17 @@ void Renderer::Render_Skybox()
 	m_SkyboxProgram->UnBind();
 }
 
+/**
+ * Adds ground transforms to the renderer for a given render shape type, position, direction, and texture.
+ *
+ * @param type The type of render shape.
+ * @param x The x-coordinate of the position.
+ * @param y The y-coordinate of the position.
+ * @param direction The direction of the render shape.
+ * @param texture The texture of the render shape.
+ *
+ * @returns None
+ */
 void Renderer::AddGroundTransforms(RenderShapeType type, int x, int y, int direction, int texture)
 {
 	Transform transform_MAJOR;
@@ -367,6 +464,13 @@ void Renderer::AddGroundTransforms(RenderShapeType type, int x, int y, int direc
 	GroundTexturesID.push_back((GLfloat)(texture % 100));
 }
 
+/**
+ * Renders an instanced ground object.
+ *
+ * @param None
+ *
+ * @returns None
+ */
 void Renderer::RenderInstancedGround()
 {
 	if (Changed)
@@ -379,6 +483,15 @@ void Renderer::RenderInstancedGround()
 	RenderInstanced(m_Ground, GroundTransforms);
 }
 
+/**
+ * Determines the ID of the ground texture for a given render shape type and containment status.
+ *
+ * @param type The type of render shape.
+ * @param contain The containment status of the render shape.
+ *
+ * @returns The ID of the ground texture for the given render shape type and containment status.
+ *          Returns -1 if the render shape type is not recognized.
+ */
 int Renderer::DetermineGroundTextureID(RenderShapeType type, int contain)
 {
 	switch (type)
@@ -406,6 +519,11 @@ int Renderer::DetermineGroundTextureID(RenderShapeType type, int contain)
 	return -1;
 }
 
+/**
+ * Renders the meteor objects using instancing.
+ *
+ * @returns None
+ */
 void Renderer::Render_Meteors()
 {
 	bool not_changed = !Changed;
@@ -416,6 +534,11 @@ void Renderer::Render_Meteors()
 	if (not_changed) Changed = false;
 }
 
+/**
+ * Renders the cars in the scene using instanced rendering.
+ *
+ * @returns None
+ */
 void Renderer::Render_Cars()
 {
 	bool not_changed = !Changed;
@@ -427,6 +550,16 @@ void Renderer::Render_Cars()
 	if (not_changed) Changed = false;
 }
 
+/**
+ * Renders a shape with normal mapping.
+ *
+ * @param type The type of shape to render.
+ * @param x The x-coordinate of the shape.
+ * @param y The y-coordinate of the shape.
+ * @param direction The direction of the shape.
+ *
+ * @returns None
+ */
 void Renderer::RenderNormal(RenderShapeType type, int x, int y, int direction)
 {
 	if (m_ShapeData.find(type) == m_ShapeData.end()) return;
@@ -479,6 +612,16 @@ void Renderer::RenderNormal(RenderShapeType type, int x, int y, int direction)
 	m_NormalProgram->UnBind();
 }
 
+/**
+ * Renders a wireframe representation of a shape with normal vectors.
+ *
+ * @param type The type of shape to render.
+ * @param x The x-coordinate of the shape's position.
+ * @param y The y-coordinate of the shape's position.
+ * @param direction The direction in which to render the shape.
+ *
+ * @returns None
+ */
 void Renderer::RenderNormal_Wireframe(RenderShapeType type, int x, int y, int direction)
 {
 	glDisable(GL_CULL_FACE);
@@ -492,6 +635,13 @@ void Renderer::RenderNormal_Wireframe(RenderShapeType type, int x, int y, int di
 	glEnable(GL_CULL_FACE);
 }
 
+/**
+ * Initializes the shape buffers for rendering.
+ *
+ * @param None
+ *
+ * @returns None
+ */
 void Renderer::InitShapeBuffers()
 {
 	for (auto it = m_ShapeData.begin(); it != m_ShapeData.end(); it++)
@@ -507,6 +657,13 @@ void Renderer::InitShapeBuffers()
 	m_FireTruck->CreateBuffers(2500);
 }
 
+/**
+ * Resizes the shape buffers to the specified size.
+ *
+ * @param buffer_size The new size of the shape buffers.
+ *
+ * @returns None
+ */
 void Renderer::ResizeShapeBuffers(int buffer_size)
 {
 	std::cout << "RESIZED SHAPE BUFFER: " << buffer_size << std::endl;
@@ -520,6 +677,13 @@ void Renderer::ResizeShapeBuffers(int buffer_size)
 	m_Ground->AttachNumbersDynamic(std::vector<GLfloat>(buffer_size));
 }
 
+/**
+ * Renders a water curve using the provided transforms.
+ *
+ * @param transforms A vector of transformation matrices to apply to the water curve.
+ *
+ * @returns None
+ */
 void Renderer::RenderWaterCurve(const std::vector<glm::mat4>& transforms)
 {
 	bool not_changed = !Changed;

@@ -7,6 +7,11 @@ float ResidentalArea::m_LVL1Payment = 1250;
 float ResidentalArea::m_LVL2Payment = 1812;
 float ResidentalArea::m_LVL3Payment = 2625;
 
+/**
+ * Calculates the tax rate for a residential area based on its level.
+ *
+ * @returns The tax rate for the residential area.
+ */
 float ResidentalArea::Calculate_TaxRate() const
 {
 	switch(m_Level)
@@ -18,6 +23,11 @@ float ResidentalArea::Calculate_TaxRate() const
 	return 0;
 }
 
+/**
+ * Calculates the tax rate percentage for a residential area based on its level.
+ *
+ * @returns The tax rate percentage for the residential area.
+ */
 float ResidentalArea::Calculate_TaxRatePercentage() const
 {
 	switch (m_Level)
@@ -29,6 +39,11 @@ float ResidentalArea::Calculate_TaxRatePercentage() const
 	return 0;
 }
 
+/**
+ * Calculates the normal satisfaction of a residential area based on its industrial penalty, safety, and forest satisfaction.
+ *
+ * @returns The normal satisfaction of the residential area.
+ */
 float ResidentalArea::Calculate_NormalSatisfaction() const
 {
 

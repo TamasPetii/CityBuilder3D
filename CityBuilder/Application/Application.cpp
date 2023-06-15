@@ -1,5 +1,14 @@
 #include "Application.h"
 
+/**
+ * Constructs an instance of the Application class.
+ *
+ * @param window A pointer to the GLFW window.
+ * @param WINDOW_WIDTH The width of the window.
+ * @param WINDOW_HEIGHT The height of the window.
+ *
+ * @returns An instance of the Application class.
+ */
 Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT)
 	:
 	m_Window(window),
@@ -30,6 +39,12 @@ Application::Application(GLFWwindow* window, int WINDOW_WIDTH, int WINDOW_HEIGHT
 	SetUI_BuildCosts();
 }
 
+/**
+ * Destructor for the Application class.
+ * Deletes the dynamically allocated memory for the camera, GUI, and city objects.
+ *
+ * @returns None
+ */
 Application::~Application()
 {
 	delete m_Camera;
@@ -37,6 +52,13 @@ Application::~Application()
 	delete m_City;
 }
 
+/**
+ * Updates the application based on the current UI mode.
+ *
+ * If the UI mode is LOBBY, the game is loaded and the camera is updated based on the current time. The viewport layout is updated, and various events are triggered, including animation updates, viewport events, game tick events, and lights changed events.
+ *
+ * If the UI mode is not LOBBY, the InitLobby flag is set to true, and if the game window is paused, various events are triggered, including viewport events, save game events, load game events, new game events, time tick changed events, tax changed events. If the game window is not paused, the InitLobby flag is set to false, and if the city's combined
+ */
 void Application::Update()
 {
 	if (m_MyGui->UI_MODE == LOBBY)
@@ -114,6 +136,9 @@ void Application::Update()
 	}
 }
 
+/**
+ * Renders the user interface based on the current UI mode.
+ */
 void Application::RenderUI()
 {
 	m_MyGui->Pre_Render();
@@ -130,6 +155,9 @@ void Application::RenderUI()
 	m_MyGui->Post_Render();
 }
 
+/**
+ * Renders the current state of the game.
+ */
 void Application::Render()
 {
 	if (changed || Zone::CHANGED || City::CHANGED || GameTable::CHANGED)
@@ -229,17 +257,44 @@ void Application::Render()
 //---------------------------------------------------------|Events|---------------------------------------------------------//
 //---------------------------------------------------------|Events|---------------------------------------------------------//
 
+/**
+ * Event handler for when the application window is resized.
+ *
+ * @param width The new width of the window.
+ * @param height The new height of the window.
+ *
+ * @returns None
+ */
 void Application::Window_ResizedEvent(int width, int height)
 {
 	m_WindowWidth = width;
 	m_WindowHeight = height;
 };
 
+/**
+ * Event handler for when the application's frame buffer is resized.
+ * Updates the camera's projection matrix to match the new dimensions.
+ *
+ * @param width The new width of the frame buffer.
+ * @param height The new height of the frame buffer.
+ *
+ * @returns None
+ */
 void Application::FrameBuffer_ResizedEvent(int width, int height)
 {
 	m_Camera->Set_ProjMatrix(width, height);
 };
 
+/**
+ * Converts mouse input coordinates to 3D coordinates in the world space.
+ *
+ * @param xpos The x-coordinate of the mouse input.
+ * @param ypos The y-coordinate of the mouse input.
+ * @param width The width of the window.
+ * @param height The height of the window.
+ *
+ * @returns None
+ */
 void Application::ConvertMouseInputTo3D(int xpos, int ypos, int width, int height)
 {
 	//Turning [x,y] coordinates to Normalized Device Coordinate system [-1,1]
@@ -291,6 +346,14 @@ void Application::ConvertMouseInputTo3D(int xpos, int ypos, int width, int heigh
 	}
 }
 
+/**
+ * Determines the texture ID of a road tile based on its surrounding tiles.
+ *
+ * @param x The x-coordinate of the road tile.
+ * @param y The y-coordinate of the road tile.
+ *
+ * @returns The texture ID of the road tile.
+ */
 int Application::DetermineRoadTextureID(int x, int y)
 {
 	bool upper_field = false;
@@ -309,47 +372,47 @@ int Application::DetermineRoadTextureID(int x, int y)
 
 	if (upper_field && lower_field && right_field && left_field)
 	{
-		return 5; //Keresztezõdés
+		return 5; //Keresztezï¿½dï¿½s
 	}
 	else if ((upper_field && !lower_field && !right_field && !left_field) || (!upper_field && lower_field && !right_field && !left_field) || (upper_field && lower_field && !right_field && !left_field))
 	{
-		return 6; //Átmenõ fel-le
+		return 6; //ï¿½tmenï¿½ fel-le
 	}
 	else if ((!upper_field && !lower_field && right_field && !left_field) || (!upper_field && !lower_field && !right_field && left_field) || (!upper_field && !lower_field && right_field && left_field))
 	{
-		return 106; //Átmenõ jobbra-balra
+		return 106; //ï¿½tmenï¿½ jobbra-balra
 	}
 	else if ((upper_field && !lower_field && right_field && left_field))
 	{
-		return 4; //Három ágú balra-fel-jobbra
+		return 4; //Hï¿½rom ï¿½gï¿½ balra-fel-jobbra
 	}
 	else if ((!upper_field && lower_field && right_field && left_field))
 	{
-		return 204; //Három ágú balra-le-jobbra
+		return 204; //Hï¿½rom ï¿½gï¿½ balra-le-jobbra
 	}
 	else if ((upper_field && lower_field && right_field && !left_field))
 	{
-		return 304;//Három ágú jobbra-fel-le
+		return 304;//Hï¿½rom ï¿½gï¿½ jobbra-fel-le
 	}
 	else if ((upper_field && lower_field && !right_field && left_field))
 	{
-		return 104;//Három ágú balra-fel-le
+		return 104;//Hï¿½rom ï¿½gï¿½ balra-fel-le
 	}
 	else if ((!upper_field && lower_field && right_field && !left_field))
 	{
-		return 103;//kanyar lentrõl-jobbra
+		return 103;//kanyar lentrï¿½l-jobbra
 	}
 	else if ((!upper_field && lower_field && !right_field && left_field))
 	{
-		return 3;//kanyar lentrõl-balra
+		return 3;//kanyar lentrï¿½l-balra
 	}
 	else if ((upper_field && !lower_field && !right_field && left_field))
 	{
-		return 303;//kanyar balról-felfele
+		return 303;//kanyar balrï¿½l-felfele
 	}
 	else if ((upper_field && !lower_field && right_field && !left_field))
 	{
-		return 203;//kanyar jobbról-felfele
+		return 203;//kanyar jobbrï¿½l-felfele
 	}
 	else
 	{
@@ -357,6 +420,12 @@ int Application::DetermineRoadTextureID(int x, int y)
 	}
 }
 
+
+/**
+ * Simulates the movement and actions of fire trucks in the city.
+ *
+ * @returns None
+ */
 void Application::FireTruckSimulation()
 {
 	std::vector<Car*> to_delete_CARGROUP;
@@ -516,6 +585,13 @@ void Application::FireTruckSimulation()
 	}
 }
 
+
+/**
+ * Checks the position of each car in the CarGroup and removes any cars that are on an invalid game field.
+ * Also removes any intersections that are associated with the removed cars.
+ *
+ * @returns None
+ */
 void Application::CheckCarPos()
 {
 	std::vector<Car*> delete_cars;
@@ -559,6 +635,9 @@ void Application::CheckCarPos()
 
 }
 
+/**
+ * Sets the UI build costs for different types of buildings.
+ */
 void Application::SetUI_BuildCosts()
 {
 	m_MyGui->Get_BuildWindowLayout().RoadCost = GameField::CalculateBuildCost(ROAD);
@@ -574,6 +653,10 @@ void Application::SetUI_BuildCosts()
 	m_MyGui->Get_BuildWindowLayout().PowerStationCost = GameField::CalculateBuildCost(POWERSTATION);
 }
 
+/**
+ * Handles the new game event triggered by the user.
+ * If the new game effect is enabled, it disables it and starts a new game with the specified city size.
+ */
 void Application::NewGameEvent()
 {
 	if (m_MyGui->Get_MenuBarLayout().NewGame_Effect)
@@ -583,6 +666,9 @@ void Application::NewGameEvent()
 	}
 }
 
+/**
+ * Saves the current game state if the Save Game effect is enabled in the GUI.
+ */
 void Application::SaveGameEvent()
 {
 	if (m_MyGui->Get_MenuBarLayout().SaveGame_Effect)
@@ -592,6 +678,9 @@ void Application::SaveGameEvent()
 	}
 }
 
+/**
+ * Loads the game when the Load Game event is triggered by the GUI.
+ */
 void Application::LoadGameEvent()
 {
 	if (m_MyGui->Get_MenuBarLayout().LoadGame_Effect)
@@ -601,6 +690,10 @@ void Application::LoadGameEvent()
 	}
 }
 
+/**
+ * Event handler for when the time tick changes in the application.
+ * If the time effect is enabled, sets the tick time of the timer to the new value.
+ */
 void Application::TimeTickChangedEvent()
 {
 	if (m_MyGui->Get_GameWindowLayout().Time_Effect)
@@ -610,6 +703,10 @@ void Application::TimeTickChangedEvent()
 	}
 }
 
+/**
+ * Event handler for when the FPS changes.
+ * Updates the FPS and frame time in the GUI.
+ */
 void Application::FpsChangedEvent()
 {
 	if (m_FrameCounter->Tick())
@@ -620,6 +717,10 @@ void Application::FpsChangedEvent()
 	}
 }
 
+/**
+ * Event handler for when the camera is changed in the application.
+ * If the camera effect is enabled, it disables it and sets the camera mode and speed based on the user's input.
+ */
 void Application::CameraChangedEvent()
 {
 	if (m_MyGui->Get_RenderWindowLayout().Camera_Effect)
@@ -630,6 +731,10 @@ void Application::CameraChangedEvent()
 	}
 }
 
+/**
+ * Event handler for when the lights are changed in the application.
+ * Updates the light properties based on the user's input.
+ */
 void Application::LightsChangedEvent()
 {
 	if (m_MyGui->Get_RenderWindowLayout().Lights_Effect)
@@ -650,6 +755,10 @@ void Application::LightsChangedEvent()
 	}
 }
 
+/**
+ * Event handler for when the tax rate is changed in the GUI.
+ * Updates the tax rates in the city object.
+ */
 void Application::TaxChangedEvent()
 {
 	if (m_MyGui->Get_GameWindowLayout().Tax_Effect)
@@ -664,6 +773,9 @@ void Application::TaxChangedEvent()
 	}
 }
 
+/**
+ * Logs the changes in the city and citizen data to the GUI log window.
+ */
 void Application::LogChagendEvent()
 {
 	m_MyGui->Get_LogWindowLayout().build_log = City::BUILD_LOG.str();
@@ -671,6 +783,9 @@ void Application::LogChagendEvent()
 	m_MyGui->Get_LogWindowLayout().money_log = City::MONEY_LOG.str();
 }
 
+/**
+ * Upgrades a field in the city when the upgrade event is triggered.
+ */
 void Application::UpgradeEvent()
 {
 	if (m_MyGui->Get_DetailsWindowLayout().Upgrade_Effect)
@@ -682,6 +797,9 @@ void Application::UpgradeEvent()
 }
 
 
+/**
+ * Triggers a meteor start event that adds meteors to the game window layout.
+ */
 void Application::MeteorStartEvent()
 {
 	if (m_MyGui->Get_GameWindowLayout().Catastrophe_Effect)
@@ -695,6 +813,9 @@ void Application::MeteorStartEvent()
 	}
 }
 
+/**
+ * Handles the event when a meteor hits the city in the game.
+ */
 void Application::MeteorHitEvent()
 {
 	//METEOR HITS GROUND
@@ -712,6 +833,9 @@ void Application::MeteorHitEvent()
 	}
 }
 
+/**
+ * Checks the event details of the current game field and updates the details window layout accordingly.
+ */
 void Application::DetailsCheckEvent()
 {
 	if (m_City->Get_GameField(m_MyGui->Get_DetailsWindowLayout().Details_X, m_MyGui->Get_DetailsWindowLayout().Details_Y)->IsZone())
@@ -731,6 +855,9 @@ void Application::DetailsCheckEvent()
 	}
 }
 
+/**
+ * Handles the viewport event and resizes the frame buffer if necessary.
+ */
 void Application::ViewPortEvent()
 {
 	if (m_MyGui->Get_ViewPortLayout().ViewPort_Effect)
@@ -741,6 +868,9 @@ void Application::ViewPortEvent()
 	}
 }
 
+/**
+ * Updates the animation and members of the application.
+ */
 void Application::UpdateAnimationAndMembers()
 {
 	MeteorGrp::Update();
@@ -757,6 +887,9 @@ void Application::UpdateAnimationAndMembers()
 	m_MyGui->Get_BuildWindowLayout().TextureID = Renderer::Get_Texture()->Get_TextureID();
 }
 
+/**
+ * Builds an event based on user input from the GUI.
+ */
 void Application::BuildEvent()
 {
 	//BUILD - OR MOUSE EVENT
@@ -773,6 +906,11 @@ void Application::BuildEvent()
 	}
 }
 
+/**
+ * Builds an event to check the field in the application.
+ *
+ * If the build ID is -1, the details window layout is updated with the current hit coordinates.
+ */
 void Application::BuildEvent_CheckField()
 {
 	if (m_MyGui->Get_BuildWindowLayout().Build_Id == -1)
@@ -782,6 +920,9 @@ void Application::BuildEvent_CheckField()
 	}
 }
 
+/**
+ * Builds the event for upgrading a zone in the city.
+ */
 void Application::BuildEvent_Upgrade()
 {
 	if (m_MyGui->Get_BuildWindowLayout().Build_Id == -2)
@@ -801,6 +942,9 @@ void Application::BuildEvent_Upgrade()
 	}
 }
 
+/**
+ * Sets a game field on fire if it is a zone or building and not a fire station.
+ */
 void Application::BuildEvent_SetFire()
 {
 	if (m_MyGui->Get_BuildWindowLayout().Build_Id == -3)
@@ -814,6 +958,9 @@ void Application::BuildEvent_SetFire()
 	}
 }
 
+/**
+ * Builds an event to send a truck to a fire station.
+ */
 void Application::BuildEvent_SendTruck()
 {
 	if (m_MyGui->Get_BuildWindowLayout().Build_Id == -4)
@@ -859,6 +1006,9 @@ void Application::BuildEvent_BuildField()
 	}
 }
 
+/**
+ * Handles the game tick event by simulating the city, updating the game UI members, and randomly generating meteors and cars.
+ */
 void Application::GameTickEvent()
 {
 	if (m_Timer->Tick())
@@ -875,6 +1025,9 @@ void Application::GameTickEvent()
 	}
 }
 
+/**
+ * Updates the game UI members with the current game state.
+ */
 void Application::GameTickEvent_SetGameUiMembers()
 {
 	m_MyGui->Get_GameWindowLayout().City_Money = m_City->Get_Money();
@@ -883,6 +1036,9 @@ void Application::GameTickEvent_SetGameUiMembers()
 	m_MyGui->Get_GameWindowLayout().Time_Real += m_Timer->Get_TickTime();
 }
 
+/**
+ * Generates random meteors in the game at a fixed interval.
+ */
 void Application::GameTickEvent_RandomMeteors()
 {
 	//Meteor shooting
@@ -898,6 +1054,9 @@ void Application::GameTickEvent_RandomMeteors()
 	}
 }
 
+/**
+ * Generates random cars and adds them to the city.
+ */
 void Application::GameTickEvent_RandomCars()
 {
 	CarGroup::Set_CarLimit(m_City->Get_NumberOfResidences());
@@ -916,6 +1075,10 @@ void Application::GameTickEvent_RandomCars()
 		}
 	}
 }
+
+/**
+ * Fires the GameTick event and updates the fire counter for each truck on the game field.
+ */
 void Application::GameTickEvent_Fire()
 {
 	for (auto it = truck_map.begin(); it != truck_map.end(); it++)
@@ -931,6 +1094,13 @@ void Application::GameTickEvent_Fire()
 	}
 }
 
+/**
+ * Starts a new game with the specified parameters.
+ *
+ * @param size The size of the game board.
+ * @param money The starting amount of money. If not specified, defaults to -1.
+ * @param time The starting time. If not specified, defaults to -1.
+ */
 void Application::NewGame(int size, int money = -1, int time = -1)
 {
 	m_MyGui->Get_DetailsWindowLayout().Details_X = 0;
@@ -969,6 +1139,11 @@ void Application::NewGame(int size, int money = -1, int time = -1)
 	m_Camera->Set_At(glm::vec3(m_City->Get_GameTableSize(), 0, m_City->Get_GameTableSize()));
 }
 
+/**
+ * Loads a saved game from a file.
+ *
+ * @param b A boolean value indicating whether to load the game from a default file or a user-specified file.
+ */
 void Application::LoadGame(bool b)
 {
 	std::ifstream saveFile;
@@ -1000,7 +1175,7 @@ void Application::LoadGame(bool b)
 		*it.second = taxRate;
 	}
 
-	//mezõk
+	//mezï¿½k
 	for (int i = 0; i < size; i++)
 	{
 		for (int j = 0; j < size; j++)
@@ -1024,14 +1199,14 @@ void Application::LoadGame(bool b)
 		}
 	}
 
-	//polgárok
+	//polgï¿½rok
 	int citizenSize, x, y;
 	saveFile >> citizenSize;
 	for (int i = 0; i < citizenSize; i++)
 	{
 		Citizen* citizen = new Citizen();
 		saveFile >> x >> y;
-		citizen->JoinZone(dynamic_cast<Zone*>(m_City->Get_GameField(x, y)));//lakóhely
+		citizen->JoinZone(dynamic_cast<Zone*>(m_City->Get_GameField(x, y)));//lakï¿½hely
 		saveFile >> x >> y;
 		if (x != -1 && y != -1)
 		{
@@ -1049,6 +1224,9 @@ void Application::LoadGame(bool b)
 	m_City->Set_InitialCitizens(m_City->Get_CitizenSize());
 }
 
+/**
+ * Saves the current state of the game to a file.
+ */
 void Application::SaveGame()
 {
 	std::ofstream saveFile(m_MyGui->Get_MenuBarLayout().SaveFile_Path + ".txt");
@@ -1059,7 +1237,7 @@ void Application::SaveGame()
 		return;
 	}
 
-	//Város adatai
+	//Vï¿½ros adatai
 	int size = m_City->Get_GameTableSize();
 	saveFile << size << std::endl;
 	saveFile << m_City->Get_Money() << std::endl;
@@ -1072,7 +1250,7 @@ void Application::SaveGame()
 	}
 	saveFile << std::endl;
 
-	//Mezõk
+	//Mezï¿½k
 	std::unordered_set<GameField*> bigBuildings;
 	for (int i = 0; i < size; i++)
 	{
@@ -1107,7 +1285,7 @@ void Application::SaveGame()
 		saveFile << std::endl;
 	}
 
-	//Polgárok
+	//Polgï¿½rok
 	saveFile << m_City->Get_CitizenSize() << std::endl;
 	for (auto& citizen : m_City->Get_Citizens())
 	{
@@ -1125,6 +1303,11 @@ void Application::SaveGame()
 	}
 }
 
+/**
+ * Returns a vector of pairs containing the tax rates for different fields.
+ *
+ * @returns A vector of pairs containing the field type and its corresponding tax rate.
+ */
 std::vector<std::pair<FieldType, float*>> Application::Get_TaxRates()
 {
 	std::vector<std::pair<FieldType, float*>> taxRates = {

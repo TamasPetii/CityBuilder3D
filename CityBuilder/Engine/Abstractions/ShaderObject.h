@@ -9,6 +9,9 @@
 #include <iostream>
 #include <initializer_list>
 
+/**
+ * A class representing a shader object.
+ */
 class ShaderObject
 {
 public:
@@ -23,6 +26,9 @@ private:
 	GLuint m_ShaderID;
 };
 
+/**
+ * A class representing a shader object layout.
+ */
 class ShaderObjectLayout
 {
 public:

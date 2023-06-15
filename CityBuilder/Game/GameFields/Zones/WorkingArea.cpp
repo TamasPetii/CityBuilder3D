@@ -1,5 +1,10 @@
 #include "WorkingArea.h"
 
+/**
+ * Calculates the normal satisfaction of the working area based on its satisfaction, safety, and forest satisfaction.
+ *
+ * @returns The normal satisfaction of the working area.
+ */
 float WorkingArea::Calculate_NormalSatisfaction() const {
 	float Satisfaction = m_Satisfaction;
 	float Safety = m_Safety;
@@ -21,6 +26,11 @@ float IndustrialArea::m_LVL1Payment = 1875;
 float IndustrialArea::m_LVL2Payment = 2875;
 float IndustrialArea::m_LVL3Payment = 4125;
 
+/**
+ * Calculates the tax rate for the industrial area based on its level.
+ *
+ * @returns The tax rate for the industrial area.
+ */
 float IndustrialArea::Calculate_TaxRate() const
 {
 	switch (m_Level)
@@ -32,6 +42,11 @@ float IndustrialArea::Calculate_TaxRate() const
 	return 0;
 }
 
+/**
+ * Calculates the tax rate percentage for the industrial area based on its level.
+ *
+ * @returns The tax rate percentage for the industrial area.
+ */
 float IndustrialArea::Calculate_TaxRatePercentage() const
 {
 	switch (m_Level)
@@ -52,6 +67,11 @@ float ServiceArea::m_LVL2Payment = 3750;
 float ServiceArea::m_LVL3Payment = 5000;
 
 
+/**
+ * Calculates the tax rate based on the service level.
+ *
+ * @returns The tax rate for the service level.
+ */
 float ServiceArea::Calculate_TaxRate() const
 {
 	switch (m_Level)
@@ -63,6 +83,11 @@ float ServiceArea::Calculate_TaxRate() const
 	return 0;
 }
 
+/**
+ * Calculates the tax rate percentage based on the service area level.
+ *
+ * @returns The tax rate percentage for the service area level.
+ */
 float ServiceArea::Calculate_TaxRatePercentage() const
 {
 	switch (m_Level)

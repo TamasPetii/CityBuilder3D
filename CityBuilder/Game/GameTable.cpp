@@ -3,9 +3,15 @@
 
 bool GameTable::CHANGED = false;
 
+/**
+ * Constructs a GameTable object with a given table size.
+ *
+ * @param TableSize The size of the table.
+ *
+ * @returns None
+ */
 GameTable::GameTable(int TableSize) : m_TableSize(TableSize)
 {
-	//Todo: check for wrong tablesize value
 	m_Table.resize(m_TableSize);
 
 	for (int i = 0; i < m_TableSize; i++)
@@ -19,6 +25,15 @@ GameTable::GameTable(int TableSize) : m_TableSize(TableSize)
 	}
 }
 
+/**
+ * Sets the value of a GameField object in the GameTable at the specified coordinates.
+ *
+ * @param x The x-coordinate of the GameField object in the GameTable.
+ * @param y The y-coordinate of the GameField object in the GameTable.
+ * @param field A pointer to the GameField object to be set in the GameTable.
+ *
+ * @returns None
+ */
 void GameTable::Set_TableValue(int x, int y, GameField* field)
 {
 	delete m_Table[x][y];
@@ -26,8 +41,18 @@ void GameTable::Set_TableValue(int x, int y, GameField* field)
 	SetBuildingNetwork(x, y);
 }
 
+/**
+ * Sets the value of a field in the game table.
+ *
+ * @param x The x-coordinate of the field.
+ * @param y The y-coordinate of the field.
+ * @param type The type of the field.
+ * @param direction The direction of the field.
+ *
+ * @returns None
+ */
 void GameTable::Set_TableValue(int x, int y, FieldType type, FieldDirection direction) {
-	if (!m_Table[x][y]->IsEmpty()) { //törlés
+	if (!m_Table[x][y]->IsEmpty()) { //tï¿½rlï¿½s
 		if (!(type == EMPTY || type == CRATER)) return;
 		DeleteField(x, y, type);
 		return;
@@ -54,14 +79,23 @@ void GameTable::Set_TableValue(int x, int y, FieldType type, FieldDirection dire
 		else {
 			SetBuildingNetwork(x, y);
 		}
-		//TODO: megnézni, hogy van -e a környezetben közvetlen rálátású erdõ,
-		//illetve hogy blokkoltuk -e valakinek a rálátását.
+		//TODO: megnï¿½zni, hogy van -e a kï¿½rnyezetben kï¿½zvetlen rï¿½lï¿½tï¿½sï¿½ erdï¿½,
+		//illetve hogy blokkoltuk -e valakinek a rï¿½lï¿½tï¿½sï¿½t.
 	}
 	else if (type == FOREST) {
-		//TODO: növelni a szomszédos mezõk elégedettségét, ha rálátnak az erdõre
+		//TODO: nï¿½velni a szomszï¿½dos mezï¿½k elï¿½gedettsï¿½gï¿½t, ha rï¿½lï¿½tnak az erdï¿½re
 	}
 }
 
+/**
+ * Deletes a field from the game table and updates the game state accordingly.
+ *
+ * @param x The x-coordinate of the field to be deleted.
+ * @param y The y-coordinate of the field to be deleted.
+ * @param type The type of the field to be created in place of the deleted field.
+ *
+ * @returns None
+ */
 void GameTable::DeleteField(int x, int y, FieldType type) {
 	if (m_Table[x][y]->Get_Type() == LAKE) return;
 
@@ -121,10 +155,18 @@ int GameTable::Get_TotalAnnualCost() const
 	return totalCost;
 }
 
+/**
+ * Sets the road network for a given GameField.
+ *
+ * @param x The x-coordinate of the GameField.
+ * @param y The y-coordinate of the GameField.
+ *
+ * @returns None
+ */
 void GameTable::SetRoadNetwork(int x, int y) {
 	GameField* newRoad = m_Table[x][y];
-	//Magyarázat: a []-ben adjuk meg, hogy mit szeretnénk a lambdában használni(capture list)
-	//az adj pedig az éppen sorrakerülõ szomszéd
+	//Magyarï¿½zat: a []-ben adjuk meg, hogy mit szeretnï¿½nk a lambdï¿½ban hasznï¿½lni(capture list)
+	//az adj pedig az ï¿½ppen sorrakerï¿½lï¿½ szomszï¿½d
 	LoopThroughNeighbors(x, y, [this, newRoad](GameField* adj) {
 		if (Road* road = dynamic_cast<Road*>(adj)) {
 			int id = RoadNetwork::GetNetworkId(adj);
@@ -160,18 +202,34 @@ void GameTable::SetRoadNetwork(int x, int y) {
 	});
 }
 
+/**
+ * Sets the building network for a given location on the game table.
+ *
+ * @param x The x-coordinate of the location.
+ * @param y The y-coordinate of the location.
+ *
+ * @returns None
+ */
 void GameTable::SetBuildingNetwork(int x, int y) {
 	GameField* newBuilding = m_Table[x][y];
 	LoopThroughNeighbors(x, y, [this, newBuilding](GameField* adj) {
 		if (Road* road = dynamic_cast<Road*>(adj)) {
 			int id = RoadNetwork::GetNetworkId(adj);
 			bool added = RoadNetwork::AddToNetwork(newBuilding, id);
-			//ha added, tehát még nem volt benne a networkben, akkor számoljuk az elégedettséget is
+			//ha added, tehï¿½t mï¿½g nem volt benne a networkben, akkor szï¿½moljuk az elï¿½gedettsï¿½get is
 			if (added) RoadNetwork::AddToNetworkSatisfaction(newBuilding, id);
 		}
 	});
 }
 
+/**
+ * Sets the network of a zone based on its neighbors.
+ *
+ * @param x The x-coordinate of the zone.
+ * @param y The y-coordinate of the zone.
+ *
+ * @returns None
+ */
 void GameTable::SetZoneNetwork(int x, int y) {
 	GameField* newZone = m_Table[x][y];
 	LoopThroughNeighbors(x, y, [this, newZone](GameField* adj) {
@@ -183,6 +241,11 @@ void GameTable::SetZoneNetwork(int x, int y) {
 	});
 }
 
+/**
+ * Rebuilds the road network of the game table.
+ *
+ * @returns None
+ */
 void GameTable::RebuildRoadNetwork() {
 	RoadNetwork::ResetNetworks();
 
@@ -221,6 +284,16 @@ void GameTable::RebuildRoadNetwork() {
 	recalculate = true;
 }
 
+/**
+ * Loops through the neighbors of a cell in the game table and applies a given function to each neighbor.
+ *
+ * @tparam Function The type of the function to apply to each neighbor.
+ * @param x The x-coordinate of the cell.
+ * @param y The y-coordinate of the cell.
+ * @param func The function to apply to each neighbor.
+ *
+ * @returns None
+ */
 template<typename Function>
 void GameTable::LoopThroughNeighbors(int x, int y, Function func) {
 	for (int i = -1; i < 2; i += 1) {
@@ -233,10 +306,26 @@ void GameTable::LoopThroughNeighbors(int x, int y, Function func) {
 	}
 }
 
+/**
+ * Computes the Euclidean distance between two GameFields.
+ *
+ * @param g1 A pointer to the first GameField.
+ * @param g2 A pointer to the second GameField.
+ *
+ * @returns The Euclidean distance between the two GameFields.
+ */
 float GameTable::distance(GameField* g1, GameField* g2) {
 	return (float)sqrt(pow(g1->Get_X() - g2->Get_X(), 2) + pow(g1->Get_Y() - g2->Get_Y(), 2));
 }
 
+/**
+ * Adds an industrial area bonus to the game field.
+ *
+ * @param f A pointer to the game field.
+ * @param placed The number of industrial areas placed.
+ *
+ * @returns None
+ */
 void GameTable::AddIndustrialAreaBonus(GameField* f, int placed) {
 	for (int i = -9; i <= 9; i++) {
 		for (int j = -9; j <= 9; j++) {
@@ -245,7 +334,7 @@ void GameTable::AddIndustrialAreaBonus(GameField* f, int placed) {
 				if (zone->IsResidentalArea()) {
 					int d = (int)distance(f, zone);
 					float penalty = (10 - d) / 10.0f;
-					//placed 1, ha lerak, -1, ha töröl
+					//placed 1, ha lerak, -1, ha tï¿½rï¿½l
 					zone->Add_IndustrialPenalty(placed * -1 * penalty);
 				}
 			}
@@ -254,6 +343,13 @@ void GameTable::AddIndustrialAreaBonus(GameField* f, int placed) {
 	}
 }
 
+/**
+ * Checks if a residential zone is within range of an industrial zone and applies an industrial penalty to the residential zone if so.
+ *
+ * @param f A pointer to the game field to check.
+ *
+ * @returns None
+ */
 void GameTable::CheckZoneIndustrialBonus(GameField* f) {
 	Zone* residentialZone = dynamic_cast<Zone*>(f);
 	for (int i = -9; i <= 9; i++) {
@@ -275,22 +371,54 @@ void GameTable::CheckZoneIndustrialBonus(GameField* f) {
 	}
 }
 
+/**
+ * Validates if a given coordinate is within the bounds of the game table.
+ *
+ * @param c The coordinate to be validated.
+ *
+ * @returns True if the coordinate is valid, False otherwise.
+ */
 bool GameTable::ValidateCoordinate(int c)
 {
 	return c >= 0 && c < m_Table.size();
 }
 
+/**
+ * Validates whether the given coordinates are within the bounds of the game table.
+ *
+ * @param c1 The first coordinate to validate.
+ * @param c2 The second coordinate to validate.
+ *
+ * @returns True if both coordinates are within the bounds of the game table, false otherwise.
+ */
 bool GameTable::ValidateCoordinate(int c1, int c2)
 {
 	return ValidateCoordinate(c1) && ValidateCoordinate(c2);
 }
 
+/**
+ * Checks if a field on the game table is buildable.
+ *
+ * @param x The x-coordinate of the field.
+ * @param y The y-coordinate of the field.
+ *
+ * @returns True if the field is buildable, false otherwise.
+ */
 bool GameTable::IsBuildableField(int x, int y)
 {
 	return ValidateCoordinate(x, y) && m_Table[x][y]->IsEmpty();
 }
 
-
+/**
+ * Determines if a field is buildable based on the type of building, direction, and location.
+ *
+ * @param type The type of building to be constructed.
+ * @param dir The direction in which the building will be constructed.
+ * @param x The x-coordinate of the location where the building will be constructed.
+ * @param y The y-coordinate of the location where the building will be constructed.
+ *
+ * @returns True if the field is buildable, false otherwise.
+ */
 bool GameTable::IsBuildable(FieldType type, FieldDirection dir, int x, int y)
 {
 	if (type == STADIUM || type == POWERSTATION || type == UNIVERSITY)
@@ -322,6 +450,13 @@ bool GameTable::IsBuildable(FieldType type, FieldDirection dir, int x, int y)
 	return true;
 }
 
+/**
+ * Simulates a fire on a given game field.
+ *
+ * @param field A pointer to the game field to simulate the fire on.
+ *
+ * @returns None
+ */
 void GameTable::SimulateFire(GameField* field)
 {
 	//Fire appears randomly
@@ -368,6 +503,11 @@ void GameTable::SimulateFire(GameField* field)
 	}
 }
 
+/**
+ * Simulates fire spreading on the game table by iterating over each cell and calling the SimulateFire function.
+ *
+ * @returns None
+ */
 void GameTable::Loop()
 {
 	for (int x = 0; x < m_Table.size(); x++)
@@ -379,6 +519,13 @@ void GameTable::Loop()
 	}
 }
 
+/**
+ * Determines if a given point on the game table is an intersection.
+ *
+ * @param p The point to check.
+ *
+ * @returns True if the point is an intersection, false otherwise.
+ */
 bool GameTable::IsInterSection(Point p)
 {
 	if (m_Table[p.x][p.y]->IsRoad())
@@ -482,7 +629,7 @@ std::vector<Point> GameTable::PathFinder(Point start, Point end)
 	return {};
 }
 
-//BFS based algorithm to find the fields that are on fire from a starting point (the field that is on fire is accessible via road fieldsÖ
+//BFS based algorithm to find the fields that are on fire from a starting point (the field that is on fire is accessible via road fieldsï¿½
 std::unordered_set<int> GameTable::PathFinder_Fire(Point start)
 {
 	//directions

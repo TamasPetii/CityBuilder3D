@@ -11,6 +11,9 @@
 //Standard Headers
 #include <vector>
 
+/**
+ * A class representing a Vertex Array Object (VAO) in OpenGL.
+ */
 class VertexArrayObject
 {
 public:

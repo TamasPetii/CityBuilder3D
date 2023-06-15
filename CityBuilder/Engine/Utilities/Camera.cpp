@@ -1,5 +1,13 @@
 #include "Camera.h"
 
+/**
+ * Constructs a Camera object with the given width and height.
+ *
+ * @param width The width of the camera viewport.
+ * @param height The height of the camera viewport.
+ *
+ * @returns None
+ */
 Camera::Camera(GLuint width, GLuint height)
 {
 	m_Width = static_cast<GLfloat>(width);
@@ -13,10 +21,22 @@ Camera::Camera(GLuint width, GLuint height)
 	m_ProjMatrix = glm::perspective(glm::radians(m_Fov), m_Width / m_Heigth, m_Near, m_Far);
 }
 
+/**
+ * Destructor for the Camera class.
+ *
+ * @param None
+ *
+ * @returns None
+ */
 Camera::~Camera()
 {
 }
 
+/**
+ * Updates the camera position and view matrix based on the current mode and input.
+ *
+ * @returns None
+ */
 void Camera::Update()
 {
 	GLfloat currentTime = static_cast<GLfloat>(glfwGetTime());
@@ -40,6 +60,16 @@ void Camera::Update()
 
 //--------------|Keyboard Events|--------------//
 
+/**
+ * Handles keyboard button events for the camera.
+ *
+ * @param key The keyboard key that was pressed or released.
+ * @param scancode The system-specific scancode of the key.
+ * @param action The action that was taken on the key (GLFW_PRESS, GLFW_RELEASE, GLFW_REPEAT).
+ * @param mods Bit field describing which modifier keys were held down.
+ *
+ * @returns None
+ */
 void Camera::Keyboard_ButtonEvent(GLint key, GLint scancode, GLint action, GLint mods)
 {
 	if (action == GLFW_PRESS)
@@ -52,6 +82,13 @@ void Camera::Keyboard_ButtonEvent(GLint key, GLint scancode, GLint action, GLint
 	}
 }
 
+/**
+ * Handles keyboard press events for the camera.
+ *
+ * @param key The key that was pressed.
+ *
+ * @returns None
+ */
 void Camera::Keyboard_PressEvent(GLuint key)
 {
 	if (key == GLFW_KEY_W)
@@ -80,6 +117,13 @@ void Camera::Keyboard_PressEvent(GLuint key)
 	}
 }
 
+/**
+ * Handles the release of a keyboard key event for the camera.
+ *
+ * @param key The key that was released.
+ *
+ * @returns None
+ */
 void Camera::Keyboard_ReleaseEvent(GLint key)
 {
 	if (key == GLFW_KEY_W || key == GLFW_KEY_S)
@@ -98,6 +142,15 @@ void Camera::Keyboard_ReleaseEvent(GLint key)
 
 //--------------|Mouse Events|--------------//
 
+/**
+ * Handles mouse click events for the camera.
+ *
+ * @param button The button that was clicked.
+ * @param action The action that was performed (e.g. press, release).
+ * @param mods Any modifier keys that were pressed (e.g. shift, alt).
+ *
+ * @returns None
+ */
 void Camera::Mouse_ClickEvent(GLint button, GLint action, GLint mods)
 {
 	if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_LEFT)
@@ -111,6 +164,14 @@ void Camera::Mouse_ClickEvent(GLint button, GLint action, GLint mods)
 	}
 }
 
+/**
+ * Handles mouse movement events for the camera.
+ *
+ * @param xpos The x-coordinate of the mouse cursor.
+ * @param ypos The y-coordinate of the mouse cursor.
+ *
+ * @returns None
+ */
 void Camera::Mouse_MoveEvent(GLfloat xpos, GLfloat ypos)
 {
 	if (!m_IsMovable) return;
@@ -148,6 +209,14 @@ void Camera::Mouse_MoveEvent(GLfloat xpos, GLfloat ypos)
 	m_DirVec = glm::normalize(m_At - m_Eye);
 }
 
+/**
+ * Handles mouse wheel events to zoom in or out of the camera view.
+ *
+ * @param xoffset The horizontal offset of the mouse wheel.
+ * @param yoffset The vertical offset of the mouse wheel.
+ *
+ * @returns None
+ */
 void Camera::Mouse_WheelEvent(GLfloat xoffset, GLfloat yoffset)
 {
 	m_Fov -= yoffset;
@@ -158,6 +227,14 @@ void Camera::Mouse_WheelEvent(GLfloat xoffset, GLfloat yoffset)
 
 //--------------|Setter|--------------//
 
+/**
+ * Sets the projection matrix of the camera.
+ *
+ * @param width The width of the viewport.
+ * @param height The height of the viewport.
+ *
+ * @returns None
+ */
 void Camera::Set_ProjMatrix(GLuint width, GLuint height)
 {
 	if (height == 0) return;
@@ -170,6 +247,15 @@ void Camera::Set_ProjMatrix(GLuint width, GLuint height)
 	m_ProjMatrix = glm::perspective(glm::radians(m_Fov), m_Width / m_Heigth, m_Near, m_Far);
 }
 
+/**
+ * Sets the projection matrix of the camera.
+ *
+ * @param fov The field of view of the camera.
+ * @param width The width of the viewport.
+ * @param height The height of the viewport.
+ *
+ * @returns None
+ */
 void Camera::Set_ProjMatrix(GLfloat fov, GLuint width, GLuint height)
 {
 	glViewport(0, 0, width, height);
@@ -180,6 +266,17 @@ void Camera::Set_ProjMatrix(GLfloat fov, GLuint width, GLuint height)
 	m_ProjMatrix = glm::perspective(glm::radians(m_Fov), m_Width / m_Heigth, m_Near, m_Far);
 }
 
+/**
+ * Sets the projection matrix of the camera.
+ *
+ * @param fov The field of view of the camera.
+ * @param width The width of the viewport.
+ * @param height The height of the viewport.
+ * @param near The distance to the near clipping plane.
+ * @param far The distance to the far clipping plane.
+ *
+ * @returns None
+ */
 void Camera::Set_ProjMatrix(GLfloat fov, GLuint width, GLuint height, GLfloat near, GLfloat far)
 {
 	glViewport(0, 0, width, height);
@@ -192,6 +289,13 @@ void Camera::Set_ProjMatrix(GLfloat fov, GLuint width, GLuint height, GLfloat ne
 	m_ProjMatrix = glm::perspective(glm::radians(m_Fov), m_Width / m_Heigth, m_Near, m_Far);
 }
 
+/**
+ * Sets the position of the camera's eye and updates the view matrix, direction vector, yaw, and pitch.
+ *
+ * @param eye The new position of the camera's eye.
+ *
+ * @returns None
+ */
 void Camera::Set_Eye(const glm::vec3& eye)
 {
 	m_Eye = eye;
@@ -202,6 +306,13 @@ void Camera::Set_Eye(const glm::vec3& eye)
 	m_Pitch = glm::degrees(asinf(m_DirVec.y));
 }
 
+/**
+ * Sets the "at" position of the camera and updates the view matrix, direction vector, yaw, and pitch.
+ *
+ * @param at The new "at" position of the camera.
+ *
+ * @returns None
+ */
 void Camera::Set_At(const glm::vec3& at)
 {
 	m_At = at;
@@ -212,6 +323,15 @@ void Camera::Set_At(const glm::vec3& at)
 	m_Pitch = glm::degrees(asinf(m_DirVec.y));
 }
 
+/**
+ * Sets the camera mode and orientation based on the input mode and position.
+ *
+ * @param mode The camera mode to set.
+ * @param x The x-coordinate of the camera position.
+ * @param y The y-coordinate of the camera position.
+ *
+ * @returns None
+ */
 void Camera::Set_Mode(int mode, int x, int y)
 {
 	m_IsMovable = true;

@@ -11,11 +11,27 @@ int Citizen::MAX_AGE = 60;
 int Citizen::MONEY_SATISFACTION = 0;
 std::stringstream Citizen::LOG;
 
+/**
+ * Writes a log message with information about a citizen and a zone.
+ *
+ * @param str The log message to write.
+ * @param citizen A pointer to the citizen to include in the log message.
+ * @param zone A pointer to the zone to include in the log message.
+ *
+ * @returns None
+ */
 void Citizen::WRITE_LOG(std::string str, Citizen* citizen, Zone* zone)
 {
 	LOG << str << " | Citizen [" << citizen << "] | " << GameField::ConvertTypeToStr(zone->Get_Type()) << "[" << zone << "]" << std::endl;
 }
 
+/**
+ * Returns a string representation of a Citizen object.
+ *
+ * @param citizen A pointer to the Citizen object to be converted to a string.
+ *
+ * @returns A string representation of the Citizen object.
+ */
 std::string Citizen::ToString(Citizen* citizen)
 {
 	std::stringstream ss;
@@ -30,6 +46,13 @@ std::string Citizen::ToString(Citizen* citizen)
 	return ss.str();
 }
 
+/**
+ * Converts an Education enum value to its corresponding string representation.
+ *
+ * @param e The Education enum value to convert.
+ *
+ * @returns The string representation of the Education enum value.
+ */
 std::string Citizen::ConvertEducationToString(enum Education e)
 {
 	switch (e)
@@ -43,6 +66,13 @@ std::string Citizen::ConvertEducationToString(enum Education e)
 
 //--------------------------------------------------------NORMAL--------------------------------------------------------//
 
+/**
+ * Constructor for the Citizen class.
+ * Initializes the age, pension, months before pension, education, residence, and workplace of the citizen.
+ * Also increments the counter for the number of citizens.
+ *
+ * @returns None
+ */
 Citizen::Citizen()
 {
 	m_Age = rand() % (MAX_AGE - MIN_AGE + 1) + MIN_AGE;
@@ -55,11 +85,24 @@ Citizen::Citizen()
 	COUNTER++;
 }
 
+/**
+ * Destructor for the Citizen class.
+ * Decrements the value of the static COUNTER variable.
+ *
+ * @returns None
+ */
 Citizen::~Citizen()
 {
 	COUNTER--;
 }
 
+/**
+ * Joins a zone for the citizen.
+ *
+ * @param zone A pointer to the zone to join.
+ *
+ * @returns None
+ */
 void Citizen::JoinZone(Zone* zone)
 {
 	if (zone == m_Residence || zone == m_Workplace) return;
@@ -79,6 +122,11 @@ void Citizen::JoinZone(Zone* zone)
 	}
 }
 
+/**
+ * Causes the citizen to leave their current residence, if any.
+ *
+ * @returns None
+ */
 void Citizen::LeaveResidence()
 {
 	if (m_Residence == nullptr) return;
@@ -88,6 +136,11 @@ void Citizen::LeaveResidence()
 	m_Residence = nullptr;
 }
 
+/**
+ * Makes a citizen leave their workplace.
+ *
+ * @returns None
+ */
 void Citizen::LeaveWorkplace()
 {
 	if (m_Workplace == nullptr) return;
@@ -97,6 +150,13 @@ void Citizen::LeaveWorkplace()
 	m_Workplace = nullptr;
 }
 
+/**
+ * Changes the zone of the citizen to the specified zone.
+ *
+ * @param zone A pointer to the zone to join.
+ *
+ * @returns None
+ */
 void Citizen::ChangeZone(Zone* zone)
 {
 	if (zone->IsResidentalArea())
@@ -111,6 +171,13 @@ void Citizen::ChangeZone(Zone* zone)
 	JoinZone(zone);
 }
 
+/**
+ * Removes a zone from the citizen's list of zones and updates their residence or workplace if necessary.
+ *
+ * @param zone A pointer to the zone to be removed.
+ *
+ * @returns None
+ */
 void Citizen::DeletedZone(Zone* zone)
 {
 	if (zone->IsResidentalArea())
@@ -126,6 +193,14 @@ void Citizen::DeletedZone(Zone* zone)
 	}
 }
 
+/**
+ * Calculates the Euclidean distance between two zones.
+ *
+ * @param zone1 A pointer to the first zone.
+ * @param zone2 A pointer to the second zone.
+ *
+ * @returns The Euclidean distance between the two zones.
+ */
 float Citizen::Calculate_Distance(Zone* zone1, Zone* zone2)
 {
 	if (zone1 == nullptr || zone2 == nullptr) return 0;
@@ -133,6 +208,14 @@ float Citizen::Calculate_Distance(Zone* zone1, Zone* zone2)
 	return sqrtf(pow(zone1->Get_X() - zone2->Get_X(), 2) + pow(zone1->Get_Y() - zone2->Get_Y(), 2));
 }
 
+/**
+ * Calculates the satisfaction of a given zone.
+ *
+ * @param zone A pointer to the zone for which the satisfaction is to be calculated.
+ *
+ * @returns The satisfaction of the given zone.
+ *          If the zone is null, returns 0.
+ */
 float Citizen::Calculate_ZoneSatisfaction(Zone* zone)
 {
 	if (zone == nullptr) return 0;
@@ -146,6 +229,11 @@ float Citizen::Calculate_ZoneSatisfaction(Zone* zone)
 	return Satisfaction_Tax * Ratio_Tax + Satisfaction * Ratio;
 }
 
+/**
+ * Calculates the satisfaction level of a citizen based on their residence, workplace, distance between the two, and money.
+ *
+ * @returns The satisfaction level of the citizen as a float value.
+ */
 float Citizen::Calculate_Satisfaction()
 {
 	float Satisfaction_Residence = Calculate_ZoneSatisfaction(m_Residence);
@@ -160,6 +248,13 @@ float Citizen::Calculate_Satisfaction()
 	return Satisfaction;
 }
 
+/**
+ * Increases the education level of a citizen up to a maximum level.
+ *
+ * @param maxEducationLevel The maximum education level that can be achieved.
+ *
+ * @returns None
+ */
 void Citizen::Increase_EducationLevel(Education maxEducationLevel)
 {
 	if (m_Education == Education::BASIC && maxEducationLevel != Education::BASIC)
@@ -172,6 +267,11 @@ void Citizen::Increase_EducationLevel(Education maxEducationLevel)
 	}
 }
 
+/**
+ * Calculates the tax amount to be paid by a citizen based on their education, workplace, residence, and age.
+ *
+ * @returns The tax amount to be paid by the citizen. If the citizen is a pensioner, the function returns a negative value representing the pension amount.
+ */
 float Citizen::PayTax()
 {
 	float educationRate = m_Education == BASIC ? 1.2f : (m_Education == INTERMEDIATE ? 1.5f : 2.0f);

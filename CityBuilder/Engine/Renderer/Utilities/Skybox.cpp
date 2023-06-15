@@ -1,5 +1,10 @@
 #include "Skybox.h"
 
+/**
+ * Creates the vertex and index buffers for the skybox.
+ *
+ * @returns None
+ */
 void Skybox::CreateBuffers()
 {
 	std::vector<glm::vec3> vertices =
@@ -43,6 +48,11 @@ void Skybox::CreateBuffers()
 	m_IBO.UnBind();
 }
 
+/**
+ * Renders the skybox by binding the vertex array object and drawing the elements using GL_TRIANGLES.
+ *
+ * @returns None
+ */
 void Skybox::Render()
 {
 	GLint prevDepthFnc;

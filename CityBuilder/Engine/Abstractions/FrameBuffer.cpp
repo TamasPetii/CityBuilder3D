@@ -1,5 +1,12 @@
 #include "FrameBuffer.h"
 
+/**
+ * Constructs a new FrameBuffer object with default values.
+ *
+ * @param None
+ *
+ * @returns None
+ */
 FrameBuffer::FrameBuffer() :
 	m_FrameBufferId(0),
 	m_TextureId(0),
@@ -10,16 +17,38 @@ FrameBuffer::FrameBuffer() :
 
 }
 
+/**
+ * Constructs a FrameBuffer object with the given width and height.
+ *
+ * @param width The width of the FrameBuffer.
+ * @param height The height of the FrameBuffer.
+ *
+ * @returns None
+ */
 FrameBuffer::FrameBuffer(GLint width, GLint height)
 {
 	InitBuffers(width, height);
 }
 
+/**
+ * Destructor for the FrameBuffer class.
+ * Deletes all buffers associated with the FrameBuffer object.
+ *
+ * @returns None
+ */
 FrameBuffer::~FrameBuffer()
 {
 	DeleteBuffers();
 }
 
+/**
+ * Initializes the frame buffer object with a texture and a depth buffer.
+ *
+ * @param width The width of the frame buffer.
+ * @param height The height of the frame buffer.
+ *
+ * @returns None
+ */
 void FrameBuffer::InitBuffers(GLint width, GLint height)
 {
 	m_Width = width;
@@ -55,6 +84,11 @@ void FrameBuffer::InitBuffers(GLint width, GLint height)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+/**
+ * Deletes the frame buffer, depth buffer, and texture associated with the current FrameBuffer object.
+ *
+ * @returns None
+ */
 void FrameBuffer::DeleteBuffers()
 {
 	glDeleteFramebuffers(1, &m_FrameBufferId);
@@ -62,6 +96,14 @@ void FrameBuffer::DeleteBuffers()
 	glDeleteTextures(1, &m_TextureId);
 }
 
+/**
+ * Resizes the frame buffer to the specified width and height.
+ *
+ * @param width The new width of the frame buffer.
+ * @param height The new height of the frame buffer.
+ *
+ * @returns None
+ */
 void FrameBuffer::Resize(GLint width, GLint height)
 {
 	if (m_FrameBufferId == 0) return;
@@ -71,11 +113,24 @@ void FrameBuffer::Resize(GLint width, GLint height)
 	InitBuffers(width, height);
 }
 
+/**
+ * Binds the framebuffer object and sets the viewport to the dimensions of the framebuffer.
+ *
+ * @param None
+ *
+ * @returns None
+ */
 void FrameBuffer::Bind() const
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBufferId);
 	glViewport(0, 0, m_Width, m_Height);
 }
+
+/**
+ * Unbinds the current framebuffer object and sets the default framebuffer as the active framebuffer.
+ *
+ * @returns None
+ */
 void FrameBuffer::UnBind() const
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

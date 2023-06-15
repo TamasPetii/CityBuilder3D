@@ -5,6 +5,16 @@
 
 static bool CHANGED = false;
 
+/**
+ * Constructs a GameField object with the specified parameters.
+ *
+ * @param type The type of the field.
+ * @param direction The direction of the field.
+ * @param x The x-coordinate of the field.
+ * @param y The y-coordinate of the field.
+ *
+ * @returns None
+ */
 GameField::GameField(FieldType type, FieldDirection direction, int x, int y) :
 	m_Type(type),
 	m_Direction(direction),
@@ -17,6 +27,17 @@ GameField::GameField(FieldType type, FieldDirection direction, int x, int y) :
 	m_SatisfactionPoints = 0;
 }
 
+/**
+ * Creates a new GameField object based on the given parameters.
+ *
+ * @param type The type of the field to create.
+ * @param direction The direction of the field to create.
+ * @param x The x-coordinate of the field to create.
+ * @param y The y-coordinate of the field to create.
+ *
+ * @returns A pointer to the newly created GameField object.
+ *          Returns nullptr if the type is invalid.
+ */
 GameField* GameField::CreateField(FieldType type, FieldDirection direction, int x, int y)
 {
 	switch (type)
@@ -46,6 +67,13 @@ GameField* GameField::CreateField(FieldType type, FieldDirection direction, int 
 	}
 }
 
+/**
+ * Converts a FieldType enum value to its corresponding string representation.
+ *
+ * @param type The FieldType enum value to convert.
+ *
+ * @returns The string representation of the FieldType enum value.
+ */
 std::string GameField::ConvertTypeToStr(FieldType type)
 {
 	switch (type)
@@ -76,6 +104,13 @@ std::string GameField::ConvertTypeToStr(FieldType type)
 	return "";
 }
 
+/**
+ * Calculates the build cost of a given field type.
+ *
+ * @param type The type of field to calculate the build cost for.
+ *
+ * @returns The build cost of the given field type in thousands of currency units.
+ */
 int GameField::CalculateBuildCost(FieldType type)
 {
 	int cost;
@@ -106,11 +141,25 @@ int GameField::CalculateBuildCost(FieldType type)
 	return cost * 1000;
 }
 
+/**
+ * Calculates the annual cost of maintaining a field of a given type.
+ *
+ * @param type The type of field to calculate the annual cost for.
+ *
+ * @returns The annual cost of maintaining the field.
+ */
 int GameField::CalculateAnnualCost(FieldType type)
 {
 	return static_cast<int>(CalculateBuildCost(type) * 0.05);
 }
 
+/**
+ * Converts a GameField object to a string representation.
+ *
+ * @param field A pointer to the GameField object to be converted.
+ *
+ * @returns A string representation of the GameField object.
+ */
 std::string GameField::ToString(GameField* field)
 {
 	std::stringstream ss;
@@ -123,6 +172,11 @@ std::string GameField::ToString(GameField* field)
 	return ss.str();
 }
 
+/**
+ * Randomly sets the game field on fire based on the fire rate.
+ *
+ * @returns None
+ */
 void GameField::RandomFire()
 {
 	if (m_OnFire) return;

@@ -1,17 +1,36 @@
 #include "Texture.h"
 #include "External/stb_image.h"
 
+/**
+ * Destructor for the Texture class. Deletes the texture object.
+ *
+ * @returns None
+ */
 Texture::Texture()
 {
 	if (m_TextureID != 0)
 		glDeleteTextures(1, &m_TextureID);
 }
 
+/**
+ * Destructor for the Texture class.
+ *
+ * @param None
+ *
+ * @returns None
+ */
 Texture::~Texture()
 {
 
 }
 
+/**
+ * Loads a texture from a file path and generates a texture ID.
+ *
+ * @param path The file path of the texture to be loaded.
+ *
+ * @returns None
+ */
 void Texture2D::LoadTexture(const std::string& path)
 {
 	glGenTextures(1, &m_TextureID);
@@ -42,6 +61,13 @@ void Texture2D::LoadTexture(const std::string& path)
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+/**
+ * Loads a texture from a set of image files and creates a cube map texture.
+ *
+ * @param paths A vector of file paths to the images to be used for the cube map.
+ *
+ * @returns None
+ */
 void TextureMap::LoadTexture(const std::vector<std::string>& paths)
 {
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);

@@ -1,5 +1,12 @@
 ﻿#include "MyGui.h"
 
+/**
+ * Initializes the ImGui context and sets up the configuration flags and styles for the GUI.
+ *
+ * @param window A pointer to the GLFW window.
+ *
+ * @returns None
+ */
 void MyGui::Init(GLFWwindow* window)
 {
     IMGUI_CHECKVERSION();
@@ -17,6 +24,11 @@ void MyGui::Init(GLFWwindow* window)
     ImGui_ImplOpenGL3_Init("#version 330");
 }
 
+/**
+ * Applies a custom style to the ImGui user interface.
+ *
+ * @returns None
+ */
 void MyGui::Custom_Style()
 {
     ImGui::StyleColorsDark();
@@ -83,6 +95,13 @@ void MyGui::Custom_Style()
     }
 }
 
+/**
+ * Cleans up the ImGui context and its associated resources.
+ *
+ * @param None
+ *
+ * @returns None
+ */
 void MyGui::Clean()
 {
     ImGui_ImplOpenGL3_Shutdown();
@@ -92,10 +111,24 @@ void MyGui::Clean()
 
 //------------------------------------------------------------|Non-static|------------------------------------------------------------//
 
+/**
+ * Constructs a MyGui object with a given camera.
+ *
+ * @param camera A pointer to a Camera object.
+ *
+ * @returns None
+ */
 MyGui::MyGui(Camera* camera) : m_Camera(camera) {}
 
 
 
+/**
+ * Prepares the GUI for rendering by starting a new frame and updating the input state.
+ *
+ * @param None
+ *
+ * @returns None
+ */
 void MyGui::Pre_Render()
 {
     ImGui_ImplOpenGL3_NewFrame();
@@ -103,6 +136,11 @@ void MyGui::Pre_Render()
     ImGui::NewFrame();
 }
 
+/**
+ * Renders the GUI using ImGui and OpenGL3.
+ *
+ * @returns None
+ */
 void MyGui::Post_Render()
 {
     ImGui::Render();
@@ -117,6 +155,11 @@ void MyGui::Post_Render()
     }
 }
 
+/**
+ * Displays the game user interface using ImGui.
+ *
+ * @returns None
+ */
 void MyGui::GAME_UI()
 {
     static bool opt_fullscreen = true;
@@ -179,6 +222,13 @@ void MyGui::GAME_UI()
 //|MENU-BAR|---------------------------------------------------------------------------------------------------------------------//
 //|MENU-BAR|---------------------------------------------------------------------------------------------------------------------//
 
+/**
+ * Creates a dock space with a menu bar for the game GUI.
+ * The menu bar contains options for creating a new game, loading a game, and saving a game.
+ * When an option is selected, a corresponding popup is displayed.
+ *
+ * @returns None
+ */
 void MyGui::DockSpace_MenuBar()
 {
     if (ImGui::BeginMenuBar())
@@ -210,6 +260,11 @@ void MyGui::DockSpace_MenuBar()
     //ImGui::ShowDemoWindow(&m_MenuBarLayout.ImGuiDemo_Show);
 }
 
+/**
+ * Displays a popup window for creating a new game.
+ *
+ * @returns None
+ */
 void MyGui::NewGame_Popup()
 {
     if (m_MenuBarLayout.NewGame_Show)
@@ -260,6 +315,11 @@ void MyGui::NewGame_Popup()
     }
 }
 
+/**
+ * Displays a popup window for loading a game and handles the file selection process.
+ *
+ * @returns None
+ */
 void MyGui::LoadGame_Popup()
 {
     if (m_MenuBarLayout.LoadGame_Show)
@@ -283,6 +343,11 @@ void MyGui::LoadGame_Popup()
 
 }
 
+/**
+ * Displays a popup window for saving a game and handles user input.
+ *
+ * @returns None
+ */
 void MyGui::SaveGame_Popup()
 {
     if (m_MenuBarLayout.SaveGame_Show)
@@ -312,6 +377,13 @@ void MyGui::InfoGame_Popup()
 //|GAME-WINDOW|---------------------------------------------------------------------------------------------------------------------//
 //|GAME-WINDOW|---------------------------------------------------------------------------------------------------------------------//
 
+/**
+ * Displays the game window with options and details using the ImGui library.
+ *
+ * @param None
+ *
+ * @returns None
+ */
 void MyGui::GameWindow()
 {
     ImGui::Begin("Game >> (Options/Details)");
@@ -322,6 +394,11 @@ void MyGui::GameWindow()
     ImGui::End();
 }
 
+/**
+ * Displays the general information of the game window.
+ *
+ * @returns None
+ */
 void MyGui::GameWindow_General()
 {
     ImGuiTableFlags table_flags = ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersH;
@@ -350,6 +427,12 @@ void MyGui::GameWindow_General()
 
     }
 }
+
+/**
+ * Displays the time-related settings in the game window GUI.
+ *
+ * @returns None
+ */
 void MyGui::GameWindow_Time()
 {
     ImGuiTableFlags table_flags = ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersH;
@@ -395,6 +478,11 @@ void MyGui::GameWindow_Time()
     }
 }
 
+/**
+ * Displays the Catastrophe section of the game window GUI, allowing the user to adjust the number of meteors and start the catastrophe effect.
+ *
+ * @returns None
+ */
 void MyGui::GameWindow_Catastrophe()
 {
     ImGuiTableFlags table_flags = ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersH;
@@ -578,6 +666,13 @@ void MyGui::GameWindow_Tax()
 //|RENDER-WINDOW|---------------------------------------------------------------------------------------------------------------------//
 //|RENDER-WINDOW|---------------------------------------------------------------------------------------------------------------------//
 
+/**
+ * Renders the GUI window for the 3D rendering engine.
+ *
+ * @param None
+ *
+ * @returns None
+ */
 void MyGui::RenderWindow()
 {
     ImGui::Begin("Render >> (Options/Details)");
@@ -593,6 +688,11 @@ void MyGui::RenderWindow()
     ImGui::End();
 }
 
+/**
+ * Renders the frame table in the GUI window.
+ *
+ * @returns None
+ */
 void MyGui::RenderWindow_Frame()
 {
     ImGuiTableFlags table_flags = ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersH;
@@ -631,6 +731,12 @@ void MyGui::RenderWindow_Frame()
         }
     }
 }
+
+/**
+ * Renders the camera settings table in the GUI.
+ *
+ * @returns None
+ */
 void MyGui::RenderWindow_Camera()
 {
     ImGuiTableFlags table_flags = ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersH;
@@ -671,6 +777,11 @@ void MyGui::RenderWindow_Camera()
     }
 }
 
+/**
+ * Renders a popup window for the camera settings in the 2D/2.5D game dimension.
+ *
+ * @returns None
+ */
 void MyGui::RenderWindow_CameraPopup2D()
 {
     if (m_RenderWindowLayout.Camera_Show)
@@ -717,6 +828,11 @@ void MyGui::RenderWindow_CameraPopup2D()
     }
 }
 
+/**
+ * Renders a 3D camera popup window for the GUI.
+ *
+ * @returns None
+ */
 void MyGui::RenderWindow_CameraPopup3D()
 {
     if (m_RenderWindowLayout.Camera_Show)
@@ -761,6 +877,11 @@ void MyGui::RenderWindow_CameraPopup3D()
     }
 }
 
+/**
+ * Renders the objects table in the GUI.
+ *
+ * @returns None
+ */
 void MyGui::RenderWindow_Objects()
 {
     ImGuiTableFlags table_flags = ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersH;
@@ -783,6 +904,11 @@ void MyGui::RenderWindow_Objects()
     }
 }
 
+/**
+ * Renders the Lights table in the GUI window.
+ *
+ * @returns None
+ */
 void MyGui::RenderWindow_Lights()
 {
     ImGuiTableFlags table_flags = ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_BordersH;
@@ -883,6 +1009,11 @@ void MyGui::RenderWindow_Lights()
 //|LOG-WINDOW|---------------------------------------------------------------------------------------------------------------------//
 //|LOG-WINDOW|---------------------------------------------------------------------------------------------------------------------//
 
+/**
+ * Displays the log window for the GUI.
+ *
+ * @returns None
+ */
 void MyGui::LogWindow()
 {
     //TODO: TABLE FORMAT???
@@ -903,6 +1034,14 @@ void MyGui::LogWindow()
 //|BUILD-WINDOW|---------------------------------------------------------------------------------------------------------------------//
 //|BUILD-WINDOW|---------------------------------------------------------------------------------------------------------------------//
 
+/**
+ * Computes the UV coordinates for a given index and type.
+ *
+ * @param index The index of the element.
+ * @param type The type of the element.
+ *
+ * @returns The UV coordinates for the element.
+ */
 ImVec2 MyGui::Get_UV(int index, int type)
 {
     float pos_x = 0.1f * (index % 10);
@@ -918,6 +1057,11 @@ ImVec2 MyGui::Get_UV(int index, int type)
     }
 }
 
+/**
+ * Builds the GUI window for the game's building menu.
+ *
+ * @returns None
+ */
 void MyGui::BuildWindow()
 {
     int id;
@@ -1149,6 +1293,11 @@ void MyGui::BuildWindow()
     m_BuildWindowLayout.Build_Id = building;
 }
 
+/**
+ * Displays a popup window for upgrading a zone in the GUI.
+ *
+ * @returns None
+ */
 void MyGui::Upgrade_Popup()
 {
     if (m_DetailsWindowLayout.Upgrade_Show)
@@ -1228,6 +1377,11 @@ void MyGui::Upgrade_Popup()
 //|DETAILS-WINDOW|-------------------------------------------------------------------------------------------//
 //|DETAILS-WINDOW|-------------------------------------------------------------------------------------------//
 
+/**
+ * Displays the details window of the GUI, which contains information about the fields and network details.
+ *
+ * @returns None
+ */
 void MyGui::DetailsWindow()
 {
     ImGui::Begin("Details");
@@ -1249,6 +1403,11 @@ void MyGui::DetailsWindow()
 //|VIEWPORT-WINDOW|-------------------------------------------------------------------------------------------//
 //|VIEWPORT-WINDOW|-------------------------------------------------------------------------------------------//
 
+/**
+ * Displays the viewport window of the GUI.
+ *
+ * @returns None
+ */
 void MyGui::ViewPortWindow()
 {
     ImGui::Begin("ViewPort", nullptr, ImGuiWindowFlags_NoCollapse);
@@ -1277,6 +1436,11 @@ void MyGui::ViewPortWindow()
 //|EVENTS-INPUT|---------------------------------------------------------//
 //|EVENTS-INPUT|---------------------------------------------------------//
 
+/**
+ * Handles the mouse click event for building the GUI.
+ *
+ * @returns None
+ */
 void MyGui::Build_MouseClickEvent()
 {
     if (ImGui::IsMouseClicked(ImGuiMouseButton_Right))
@@ -1312,6 +1476,13 @@ void MyGui::Build_MouseClickEvent()
     }
 }
 
+/**
+ * Handles keyboard key events for the GUI.
+ *
+ * If the game window is paused, this function does nothing. Otherwise, it checks if the 'R' key is pressed and increments the rotation count in the event layout accordingly.
+ *
+ * @returns None
+ */
 void MyGui::Build_KeyboardKeyEvent()
 {
     if (m_GameWindowLayout.PauseTime) return;
@@ -1322,6 +1493,11 @@ void MyGui::Build_KeyboardKeyEvent()
     }
 }
 
+/**
+ * Handles mouse click events for the camera in the GUI.
+ *
+ * @returns None
+ */
 void MyGui::Camera_MouseClickEvent()
 {
     if (m_GameWindowLayout.PauseTime) return;
@@ -1340,6 +1516,11 @@ void MyGui::Camera_MouseClickEvent()
     }
 }
 
+/**
+ * Handles keyboard events for the camera in the GUI.
+ *
+ * @returns None
+ */
 void MyGui::Camera_KeyboardKeyEvent()
 {
     if (m_GameWindowLayout.PauseTime) return;
@@ -1405,6 +1586,11 @@ void MyGui::Camera_KeyboardKeyEvent()
     }
 }
 
+/**
+ * Renders the lobby view port window in the GUI.
+ *
+ * @returns None
+ */
 void MyGui::LobbyViewPort_Window()
 {
     ImGui::Begin("Lobby", nullptr, ImGuiWindowFlags_NoCollapse);
@@ -1424,6 +1610,11 @@ void MyGui::LobbyViewPort_Window()
     ImGui::End();
 }
 
+/**
+ * Displays the lobby user interface.
+ *
+ * @returns None
+ */
 void MyGui::LOBBY_UI()
 {
     static bool opt_fullscreen = true;
@@ -1475,6 +1666,11 @@ void MyGui::LOBBY_UI()
     ImGui::End();
 }
 
+/**
+ * Renders the lobby buttons for the GUI.
+ *
+ * @returns None
+ */
 void MyGui::Lobby_Buttons()
 {
     ImVec2 button_window_width;
@@ -1503,6 +1699,11 @@ void MyGui::Lobby_Buttons()
     ImGui::End(); 
 }
 
+/**
+ * Displays a popup window at the end of the game with game statistics and an option to return to the lobby.
+ *
+ * @returns None
+ */
 void MyGui::EndGame_Popup()
 {
     if (m_DetailsWindowLayout.End_Show)

@@ -2,6 +2,17 @@
 
 bool Zone::CHANGED = false;
 
+/**
+ * Constructs a new Zone object with the specified parameters.
+ *
+ * @param level The level of the zone.
+ * @param type The type of the zone.
+ * @param direction The direction of the zone.
+ * @param x The x-coordinate of the zone.
+ * @param y The y-coordinate of the zone.
+ *
+ * @returns None
+ */
 Zone::Zone(Level level, FieldType type, FieldDirection direction, int x, int y) :
 	GameField(type, direction, x, y)
 {
@@ -16,6 +27,13 @@ Zone::Zone(Level level, FieldType type, FieldDirection direction, int x, int y) 
 }
 
 
+/**
+ * Adds a Citizen to the Zone and increments the count of contained Citizens.
+ *
+ * @param citizen A pointer to the Citizen to be added to the Zone.
+ *
+ * @returns None
+ */
 void Zone::JoinZone(Citizen* citizen)
 {
 	m_citizens.insert(citizen);
@@ -24,6 +42,13 @@ void Zone::JoinZone(Citizen* citizen)
 	CHANGED = true;
 }
 
+/**
+ * Removes a citizen from the zone.
+ *
+ * @param citizen A pointer to the citizen to be removed.
+ *
+ * @returns None
+ */
 void Zone::LeaveZone(Citizen* citizen)
 {
 	m_citizens.erase(citizen);
@@ -32,6 +57,13 @@ void Zone::LeaveZone(Citizen* citizen)
 	CHANGED = true;
 }
 
+/**
+ * Deletes the current zone and notifies all citizens that belong to this zone.
+ *
+ * @param None
+ *
+ * @returns None
+ */
 void Zone::DeleteZone()
 {
 	for (auto it = m_citizens.begin(); it != m_citizens.end(); ++it)
@@ -42,12 +74,23 @@ void Zone::DeleteZone()
 	CHANGED = true;
 }
 
-//teszteléshez metódus
+
+/**
+ * Calculates the raw satisfaction score for a zone.
+ *
+ * The raw satisfaction score is the sum of the satisfaction, safety, industrial penalty, and forest satisfaction scores.
+ *
+ * @returns The raw satisfaction score for the zone.
+ */
 float Zone::Calculate_RawSatisfaction() const {
-	//TODO FOREST
 	return m_Satisfaction + m_Safety + m_IndustrialPenalty + m_ForestSatisfaction;
 }
 
+/**
+ * Calculates the real satisfaction of the zone by computing the average satisfaction of all citizens in the zone.
+ *
+ * @returns The real satisfaction of the zone.
+ */
 float Zone::Calculate_RealSatisfaction() const
 {
 	float Satisfaction = 0;
@@ -60,6 +103,13 @@ float Zone::Calculate_RealSatisfaction() const
 	return Satisfaction / m_Contain;
 }
 
+/**
+ * Adjusts the capacity of the Zone based on its level.
+ *
+ * @param None
+ *
+ * @returns None
+ */
 void Zone::AdjustCapacity()
 {
 	if (m_Level == LEVEL_1)
@@ -76,6 +126,11 @@ void Zone::AdjustCapacity()
 	}
 }
 
+/**
+ * Upgrades the zone to the next level and type, if possible.
+ *
+ * @returns True if the zone was upgraded, false otherwise.
+ */
 bool Zone::UpgradeZone()
 {
 	if (m_Level == LEVEL_3) return false;
@@ -92,6 +147,12 @@ bool Zone::UpgradeZone()
 	return true;
 }
 
+/**
+ * Returns a random Citizen from the Zone's list of citizens.
+ * The probability of returning a Citizen is based on the number of citizens in the Zone.
+ *
+ * @returns A pointer to a randomly selected Citizen, or nullptr if the Zone has no citizens.
+ */
 Citizen* Zone::GetRandomDriver()
 {
 	double probability = (m_Contain + 1) * 0.001;
@@ -113,6 +174,13 @@ Citizen* Zone::GetRandomDriver()
 	}
 }
 
+/**
+ * Returns a string representation of the Zone object.
+ *
+ * @param zone A pointer to the Zone object to be converted to a string.
+ *
+ * @returns A string representation of the Zone object.
+ */
 std::string Zone::ToString(Zone* zone)
 {
 	std::stringstream ss;

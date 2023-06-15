@@ -1,16 +1,31 @@
 #include "Timer.h"
 
+/**
+ * Starts the timer by setting the pause flag to false and initializing the last time to the current time.
+ *
+ * @returns None
+ */
 void Timer::Start()
 {
 	pause = false;
 	m_LastTime = (float)glfwGetTime();
 }
 
+/**
+ * Pauses the timer.
+ *
+ * @returns None
+ */
 void Timer::Pause()
 {
 	pause = true;
 }
 
+/**
+ * Resets the timer by setting the pause flag to false and resetting the overall time and last time.
+ *
+ * @returns None
+ */
 void Timer::Reset()
 {
 	pause = false;
@@ -18,6 +33,12 @@ void Timer::Reset()
 	m_LastTime = (float)glfwGetTime();
 }
 
+/**
+ * Updates the timer by calculating the elapsed time since the last update.
+ * If the timer is paused, no update is performed.
+ *
+ * @returns None
+ */
 void Timer::Update()
 {
 	if (pause) return;
@@ -30,6 +51,11 @@ void Timer::Update()
 	m_TickTime += m_DeltaTime;
 }
 
+/**
+ * Checks if the timer has reached the tick interval and returns true if it has.
+ *
+ * @returns True if the timer has reached the tick interval and is not paused, false otherwise.
+ */
 bool Timer::Tick()
 {
 	if (m_TickTime >= m_Tick)

@@ -12,6 +12,11 @@ static Application* application = nullptr;
 void window_size_callback(GLFWwindow* window, int width, int height);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
+/**
+ * Initializes a window and runs the City Builder application until the window is closed.
+ *
+ * @returns 0 if the application runs successfully.
+ */
 int main()
 {
     srand(time(NULL));
@@ -79,6 +84,15 @@ int main()
 
 //------------------Event-Handler-Functions------------------//
 
+/**
+ * Callback function that is called when the window size is changed.
+ *
+ * @param window The GLFW window that was resized.
+ * @param width The new width of the window.
+ * @param height The new height of the window.
+ *
+ * @returns None
+ */
 void window_size_callback(GLFWwindow* window, int width, int height)
 {
     application->Window_ResizedEvent(width, height);
@@ -90,6 +104,15 @@ void window_size_callback(GLFWwindow* window, int width, int height)
     glfwSwapBuffers(window);
 }
 
+/**
+ * Callback function that is called when the size of the framebuffer is changed.
+ *
+ * @param window A pointer to the GLFW window.
+ * @param width The new width of the framebuffer.
+ * @param height The new height of the framebuffer.
+ *
+ * @returns None
+ */
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     application->FrameBuffer_ResizedEvent(width, height);

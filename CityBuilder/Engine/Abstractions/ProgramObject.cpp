@@ -1,5 +1,10 @@
 #include "ProgramObject.h"
 
+/**
+ * Constructor for the ProgramObject class. Creates a new OpenGL program object.
+ *
+ * @returns None
+ */
 ProgramObject::ProgramObject()
 {
 	if (m_ProgramID == 0) m_ProgramID = glCreateProgram();
@@ -12,20 +17,47 @@ ProgramObject::ProgramObject()
 	}
 }
 
+/**
+ * Destructor for ProgramObject class.
+ * Deletes the program object if it exists.
+ *
+ * @returns None
+ */
 ProgramObject::~ProgramObject()
 {
 	if (m_ProgramID != 0) glDeleteProgram(m_ProgramID);
 }
 
+/**
+ * Binds the program object to the current OpenGL context.
+ *
+ * @param None
+ *
+ * @returns None
+ */
 void ProgramObject::Bind() const
 {
 	glUseProgram(m_ProgramID);
 }
+
+/**
+ * Unbinds the current program object.
+ *
+ * @returns None
+ */
 void ProgramObject::UnBind() const
 {
 	glUseProgram(0);
 }
 
+/**
+ * Initializes the program object with the given shaders and attribute layouts.
+ *
+ * @param shaders A vector of ShaderObject instances to attach to the program.
+ * @param attribs A vector of ShaderObjectLayout instances to bind to the program.
+ *
+ * @returns None
+ */
 void ProgramObject::Initialize(const std::vector<ShaderObject>& shaders, const std::vector<ShaderObjectLayout>& attribs)
 {
 	//At his point {Initializer list <ShaderObjects>} has been already loaded shader files

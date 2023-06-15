@@ -2,6 +2,10 @@
 
 #include <GLM/glm.hpp>
 
+/**
+ * A struct representing a transformation in 3D space.
+ * Contains matrices for translation, rotation, and scaling.
+ */
 struct Transform
 {
 	glm::mat4 translate = glm::mat4(1);

@@ -3,6 +3,14 @@
 std::unordered_set<int> RoadNetwork::m_id_set;
 std::vector<RoadNetwork::Network> RoadNetwork::m_networks;
 
+/**
+ * Returns the network ID of the given game field.
+ *
+ * @param field A pointer to the game field.
+ *
+ * @returns The network ID of the given game field.
+ *          Returns -1 if the field does not belong to any network.
+ */
 int RoadNetwork::GetNetworkId(GameField* field) {
 	for (auto& network : m_networks) {
 		if (field->IsZone() && network.zoneSet.find(field) != network.zoneSet.end()) return network.id;
@@ -12,6 +20,11 @@ int RoadNetwork::GetNetworkId(GameField* field) {
 	return -1;
 }
 
+/**
+ * Creates a new road network and adds it to the list of networks.
+ *
+ * @returns The ID of the newly created network.
+ */
 int RoadNetwork::CreateNetwork() {
 	int i = 1;
 	while (m_id_set.find(i) != m_id_set.end()) i++; //keresünk egy 0-nál nagyobb id-t, ami még nem foglalt
@@ -20,6 +33,14 @@ int RoadNetwork::CreateNetwork() {
 	return i;
 }
 
+/**
+ * Adds a GameField object to the appropriate network in the RoadNetwork object.
+ *
+ * @param field A pointer to the GameField object to be added.
+ * @param id The ID of the network to which the GameField object should be added.
+ *
+ * @returns True if the GameField object was successfully added to the network, false otherwise.
+ */
 bool RoadNetwork::AddToNetwork(GameField* field, int id) {
 	bool added = false;
 	for (auto& network : m_networks) {
@@ -31,6 +52,13 @@ bool RoadNetwork::AddToNetwork(GameField* field, int id) {
 	return added;
 }
 
+/**
+ * Removes a GameField object from the RoadNetwork.
+ *
+ * @param field A pointer to the GameField object to be removed.
+ *
+ * @returns None
+ */
 void RoadNetwork::RemoveFromNetwork(GameField* field) {
 	for (auto it = m_networks.begin(); it != m_networks.end(); ++it) {
 		if (field->IsZone() && it->zoneSet.find(field) != it->zoneSet.end())
@@ -52,6 +80,14 @@ void RoadNetwork::RemoveFromNetwork(GameField* field) {
 	}
 }
 
+/**
+ * Merges two road networks with the given IDs.
+ *
+ * @param id1 The ID of the first road network.
+ * @param id2 The ID of the second road network.
+ *
+ * @returns None
+ */
 void RoadNetwork::MergeNetworks(int id1, int id2) { //id: a network id-je. vec_ind: a network indexe a vectorban
 	if (id1 == id2) return;
 	int vec_ind1 = -1;
@@ -84,6 +120,14 @@ void RoadNetwork::MergeNetworks(int id1, int id2) { //id: a network id-je. vec_i
 	} 
 }
 
+/**
+ * Determines if two game fields are connected in the road network.
+ *
+ * @param field1 A pointer to the first game field.
+ * @param field2 A pointer to the second game field.
+ *
+ * @returns True if the two fields are connected in the road network, false otherwise.
+ */
 bool RoadNetwork::IsConnected(GameField* field1, GameField* field2) {
 	for (auto& network : m_networks) {
 		if (field1->IsZone() && field2->IsZone()) {
@@ -106,6 +150,14 @@ bool RoadNetwork::IsConnected(GameField* field1, GameField* field2) {
 	return false;
 }
 
+/**
+ * Determines if two game fields are connected to each other through the road network.
+ *
+ * @param field1 The first game field.
+ * @param field2 The second game field.
+ *
+ * @returns True if the two game fields are connected, false otherwise.
+ */
 bool RoadNetwork::IsConnectedMultiple(GameField* field1, GameField* field2) {
 	bool once = false;
 	for (auto& network : m_networks) {
@@ -130,6 +182,14 @@ bool RoadNetwork::IsConnectedMultiple(GameField* field1, GameField* field2) {
 	return false;
 }
 
+/**
+ * Finds an empty working area in the road network that is closest to the given field.
+ *
+ * @param field The field to find the closest empty working area for.
+ * @param ratio The ratio of industrial to residential areas in the network.
+ *
+ * @returns A pointer to the closest empty working area in the network, or nullptr if none are found.
+ */
 Zone* RoadNetwork::FindEmptyWorkingArea(Zone* field, float ratio) {
 	if (field == nullptr) return nullptr;
 	float minDistanceI = 100000;
@@ -180,6 +240,11 @@ Zone* RoadNetwork::FindEmptyWorkingArea(Zone* field, float ratio) {
 	return nullptr;
 }
 
+/**
+ * Returns a string representation of the road networks.
+ *
+ * @returns A string containing information about the road networks.
+ */
 std::string RoadNetwork::NetworksToString() {
 	std::string s = "";
 	int i = 1;
@@ -191,6 +256,13 @@ std::string RoadNetwork::NetworksToString() {
 	return s;
 }
 
+/**
+ * Resets the road networks by clearing all the sets and removing all the networks.
+ *
+ * @param None
+ *
+ * @returns None
+ */
 void RoadNetwork::ResetNetworks() {
 	m_id_set.clear();
 	for (auto& network : m_networks) {
@@ -201,6 +273,11 @@ void RoadNetwork::ResetNetworks() {
 	m_networks.clear();
 }
 
+/**
+ * Finds an empty residential area in the road network.
+ *
+ * @returns A pointer to the first empty residential area found, or nullptr if none are found.
+ */
 Zone* RoadNetwork::FindEmptyResidentialArea() {
 	for (auto& network : m_networks) {
 		for (auto& z : network.zoneSet) {
@@ -212,10 +289,26 @@ Zone* RoadNetwork::FindEmptyResidentialArea() {
 	return nullptr;
 }
 
+/**
+ * Computes the Euclidean distance between two GameField objects.
+ *
+ * @param g1 The first GameField object.
+ * @param g2 The second GameField object.
+ *
+ * @returns The Euclidean distance between the two GameField objects.
+ */
 double RoadNetwork::distance(GameField* g1, GameField* g2) {
 	return sqrt(pow(g1->Get_X() - g2->Get_X(), 2) + pow(g1->Get_Y() - g2->Get_Y(), 2));
 }
 
+/**
+ * Updates the satisfaction of the road network based on the addition of a new building.
+ *
+ * @param field A pointer to the GameField object representing the new building.
+ * @param id The ID of the road network to update.
+ *
+ * @returns None
+ */
 void RoadNetwork::AddToNetworkSatisfaction(GameField* field, int id) {
 	for (auto& network : m_networks) {
 		if (network.id != id) continue;
@@ -259,6 +352,13 @@ void RoadNetwork::AddToNetworkSatisfaction(GameField* field, int id) {
 	}
 }
 
+/**
+ * Computes the satisfaction, safety, and fire rate of a zone based on the buildings in its network.
+ *
+ * @param field A pointer to the zone to be evaluated.
+ *
+ * @returns None
+ */
 void RoadNetwork::SetZoneSatisfaction(GameField* field) {
 	Zone* zone = dynamic_cast<Zone*>(field);
 	if (zone == nullptr) return;
@@ -295,6 +395,14 @@ void RoadNetwork::SetZoneSatisfaction(GameField* field) {
 	zone->Set_FireRate(firerate);
 }
 
+/**
+ * Finds the optimal residential area based on the given happiness level.
+ *
+ * @param happiness The happiness level of the residents.
+ *
+ * @returns A pointer to the optimal residential area.
+ *          Returns nullptr if no optimal area is found.
+ */
 Zone* RoadNetwork::FindOptimalResidentialArea(float happiness) {
 	float moveInThreshold = happiness * 3;
 	float industrialPenalty = 0;

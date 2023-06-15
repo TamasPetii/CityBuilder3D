@@ -5,6 +5,9 @@
 #include <GLFW/glfw3.h>
 #include <GLM/glm.hpp>
 
+/**
+ * A class representing a frame buffer object.
+ */
 class FrameBuffer
 {
 public:

@@ -1,15 +1,37 @@
 #include "ShaderObject.h"
 
+/**
+ * Constructs a ShaderObject object by loading a shader from a file.
+ *
+ * @param shaderType The type of shader to load.
+ * @param filePath The path to the file containing the shader code.
+ *
+ * @returns None
+ */
 ShaderObject::ShaderObject(GLuint shaderType, const std::string& filePath)
 {
 	LoadShader(shaderType, filePath);
 }
 
+/**
+ * Destructor for the ShaderObject class.
+ * Deletes the shader object from the GPU.
+ *
+ * @returns None
+ */
 ShaderObject::~ShaderObject()
 {
 	glDeleteShader(m_ShaderID);
 }
 
+/**
+ * Loads a shader from a file and compiles it.
+ *
+ * @param shaderType The type of shader to be loaded (GL_VERTEX_SHADER or GL_FRAGMENT_SHADER).
+ * @param filePath The path to the file containing the shader source code.
+ *
+ * @returns None
+ */
 void ShaderObject::LoadShader(GLuint shaderType, const std::string& filePath)
 {
 	//Opening the shader file

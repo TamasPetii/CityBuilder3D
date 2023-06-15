@@ -9,6 +9,9 @@
 #include <iostream>
 #include <vector>
 
+/**
+ * A base class for textures.
+ */
 class Texture 
 {
 public:
@@ -25,6 +28,9 @@ protected:
 	GLuint m_TextureID = 0;
 };
 
+/**
+ * A class representing a 2D texture.
+ */
 class Texture2D  : public Texture
 {
 public:
@@ -32,6 +38,9 @@ public:
 	void LoadTexture(const std::string& path) override;
 };
 
+/**
+ * A class representing a texture map that inherits from the Texture class.
+ */
 class TextureMap : public Texture
 {
 public:

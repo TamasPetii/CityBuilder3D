@@ -7,6 +7,13 @@ bool City::CHANGED = false;
 std::stringstream City::BUILD_LOG;
 std::stringstream City::MONEY_LOG;
 
+/**
+ * Constructs a new City object with the specified size.
+ *
+ * @param size The size of the city.
+ *
+ * @returns None
+ */
 City::City(int size)
 {
 	m_GameTable = new GameTable(size);
@@ -16,6 +23,15 @@ City::City(int size)
 	GenerateLakes(5, 0.4);
 }
 
+/**
+ * Constructs a City object with the given size, money, and time.
+ *
+ * @param size The size of the game table.
+ * @param money The amount of money the city has.
+ * @param time The daily tick counter.
+ *
+ * @returns None
+ */
 City::City(int size, int money, int time)
 {
 	m_GameTable = new GameTable(size);
@@ -23,11 +39,24 @@ City::City(int size, int money, int time)
 	m_DailyTickCounter = time;
 }
 
+/**
+ * Returns a string representation of the date of the city.
+ *
+ * @returns A string in the format "year.month.day".
+ */
 std::string City::Get_TimeStr() const
 {
 	return std::to_string(Get_Year()) + "." + std::to_string(Get_Month()) + "." + std::to_string(Get_Day());
 }
 
+/**
+ * Returns the GameField object at the specified coordinates.
+ *
+ * @param x The x-coordinate of the GameField object.
+ * @param y The y-coordinate of the GameField object.
+ *
+ * @returns A pointer to the GameField object at the specified coordinates. If the coordinates are invalid, returns nullptr.
+ */
 GameField* City::Get_GameField(int x, int y) const
 {
 	if (!m_GameTable->ValidateCoordinate(x, y)) return nullptr;
@@ -35,6 +64,12 @@ GameField* City::Get_GameField(int x, int y) const
 	return m_GameTable->Get_TableValue(x, y);
 }
 
+/**
+ * Simulates a day in the city by recalculating various parameters such as happiness and forest satisfaction,
+ * generating new citizens, handling losing zones, and collecting taxes and annual costs if necessary.
+ *
+ * @returns None
+ */
 void City::Simulate()
 {
 	HandleRecalculation();
@@ -62,7 +97,13 @@ void City::Simulate()
 	m_GameTable->Loop();
 }
 
-// Update the amount of money in the city. The city's current money is increased by the amount provided.
+/**
+ * Updates the amount of money in the city and sets the money satisfaction level for all citizens.
+ *
+ * @param amount The amount of money to add to the city's current money.
+ *
+ * @returns None
+ */
 void City::UpdateMoney(int amount)
 {
 	m_Money += amount;
@@ -70,6 +111,11 @@ void City::UpdateMoney(int amount)
 	Citizen::MONEY_SATISFACTION = m_Money;
 }
 
+/**
+ * Calculates the total monthly tax revenue for the city.
+ *
+ * @returns The total monthly tax revenue for the city.
+ */
 float City::CalculateMonthlyTax()
 {
 	float tax = 0;
@@ -80,6 +126,13 @@ float City::CalculateMonthlyTax()
 	return tax;
 }
 
+/**
+ * Collects monthly tax from the city and updates the city's money accordingly.
+ *
+ * @param None
+ *
+ * @returns None
+ */
 void City::CollectMonthlyTax()
 {
 	float tax = CalculateMonthlyTax();
@@ -88,7 +141,13 @@ void City::CollectMonthlyTax()
 	MONEY_LOG << ((tax >= 0) ? "+ " : "- ") << tax << "$ >> Monthly Tax {" << Get_TimeStr() << "}" << std::endl;
 }
 
-// Calculate the total annual cost of the city. It then deducts this cost from the city's money.
+/**
+ * Collects the annual costs for the city and updates the city's money accordingly.
+ *
+ * @param None
+ *
+ * @returns None
+ */
 void City::CollectAnnualCosts()
 {
 	float cost = m_GameTable->Get_TotalAnnualCost();
@@ -97,6 +156,11 @@ void City::CollectAnnualCosts()
 	MONEY_LOG << "- " << cost << "$ >> Annual Cost {" << Get_TimeStr() << "}" << std::endl;
 }
 
+/**
+ * Handles the recalculation of the city's road network and updates the citizens' workplaces accordingly.
+ *
+ * @returns None
+ */
 void City::HandleRecalculation() {
 	if (m_GameTable->recalculate) {
 		for (auto& citizen : m_Citizens) {
@@ -112,6 +176,11 @@ void City::HandleRecalculation() {
 	}
 }
 
+/**
+ * Calculates the happiness of the city based on the satisfaction of its citizens and other factors.
+ *
+ * @returns None
+ */
 void City::CalculateHappiness() {
 	std::vector<Citizen*> to_remove;
 	float totalHappiness = 0;
@@ -206,6 +275,13 @@ void City::CalculateForestSatisfaction(int radius)
 	});
 }
 
+/**
+ * Generates a specified number of citizens and adds them to the city's population.
+ *
+ * @param x The number of citizens to generate.
+ *
+ * @returns None
+ */
 void City::GenerateCitizens(unsigned int x)
 {
 	if (RoadNetwork::FindEmptyResidentialArea() == nullptr) return;
@@ -222,6 +298,12 @@ void City::GenerateCitizens(unsigned int x)
 	}
 }
 
+/**
+ * Handles the losing zone event by finding new residential and working areas for citizens who have lost their residence or workplace.
+ * If a citizen cannot find a new residence, they are removed from the city.
+ *
+ * @returns None
+ */
 void City::HandleLosingZone()
 {
 	std::vector<Citizen*> to_remove;
@@ -263,6 +345,13 @@ void City::HandleLosingZone()
 	}
 }
 
+/**
+ * Adds a citizen to the city and assigns them a residence and workplace.
+ *
+ * @param citizen A pointer to the citizen to be added.
+ *
+ * @returns True if the citizen was successfully added, false otherwise.
+ */
 bool City::JoinCity(Citizen* citizen)
 {
 	if (citizen == nullptr) return false;
@@ -291,6 +380,13 @@ bool City::JoinCity(Citizen* citizen)
 	return false;
 }
 
+/**
+ * Removes a citizen from the city.
+ *
+ * @param citizen A pointer to the citizen to be removed.
+ *
+ * @returns None
+ */
 void City::LeaveCity(Citizen* citizen)
 {
 	if (citizen == nullptr) return;
@@ -303,6 +399,15 @@ void City::LeaveCity(Citizen* citizen)
 	delete citizen;
 }
 
+/**
+ * Upgrades the field at the given coordinates (x, y) if it is a zone.
+ * If the upgrade is successful, the cost is deducted from the player's money.
+ *
+ * @param x The x-coordinate of the field to upgrade.
+ * @param y The y-coordinate of the field to upgrade.
+ *
+ * @returns None
+ */
 void City::UpgradeField(int x, int y)
 {
 	if (m_GameTable->Get_TableValue(x, y)->IsZone())
@@ -318,6 +423,15 @@ void City::UpgradeField(int x, int y)
 	}
 }
 
+/**
+ * Simulates the aging of the population in the city.
+ * Increases the age of each citizen by 1 and checks if they have reached the pension age.
+ * If a citizen has reached the pension age, they leave their workplace and have a probability of dying.
+ * If a citizen dies, they are removed from the city and a new citizen is added.
+ * If a citizen has reached the pension age, their education level is downgraded.
+ *
+ * @returns None
+ */
 void City::SimulatePopulationAging() //should be called yearly
 {
 	std::vector<Citizen*> to_remove;
@@ -485,6 +599,14 @@ void City::GenerateGraduatedCitizens(int randomCitizenCount)
 	}
 }
 
+/**
+ * Sets the tax rate for a specific field type in the city.
+ *
+ * @param type The type of field to set the tax rate for.
+ * @param rate The tax rate to set.
+ *
+ * @returns None
+ */
 void City::Set_TaxRate(FieldType type, float rate)
 {
 	switch (type)
@@ -501,6 +623,17 @@ void City::Set_TaxRate(FieldType type, float rate)
 	}
 }
 
+/**
+ * Sets the value of a field in the game table.
+ *
+ * @param x The x-coordinate of the field.
+ * @param y The y-coordinate of the field.
+ * @param type The type of the field.
+ * @param dir The direction of the field.
+ * @param free A boolean indicating whether the field is free or not.
+ *
+ * @returns None
+ */
 void City::Set_GameTableValue(int x, int y, FieldType type, FieldDirection dir, bool free)
 { 
 	GameField* PreviousField = m_GameTable->Get_TableValue(x, y);
@@ -712,6 +845,15 @@ std::vector<std::pair<int, int>> City::BresenhamAlgorithm(int x0, int y0, int x1
 	return linePoints;
 }
 
+/**
+ * Computes the path for a fire truck to reach a random field on fire from a given starting point.
+ *
+ * @param startX The x-coordinate of the starting point.
+ * @param startY The y-coordinate of the starting point.
+ *
+ * @returns A vector of Points representing the path for the fire truck to reach the random field on fire.
+ * If there are no fields on fire, an empty vector is returned.
+ */
 std::vector<Point> City::Get_FireTruckPath(int startX, int startY) const
 {
 	std::vector<Point> path;
