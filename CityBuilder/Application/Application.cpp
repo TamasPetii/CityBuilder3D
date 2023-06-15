@@ -1040,7 +1040,7 @@ void Application::GameTickEvent_SetGameUiMembers()
  * Generates random meteors in the game at a fixed interval.
  */
 void Application::GameTickEvent_RandomMeteors()
-{
+{	
 	//Meteor shooting
 	if (rand() % 500 == 23)
 	{
@@ -1052,6 +1052,7 @@ void Application::GameTickEvent_RandomMeteors()
 			MeteorGrp::Add(rand() % m_City->Get_GameTableSize(), rand() % m_City->Get_GameTableSize());
 		}
 	}
+	
 }
 
 /**
@@ -1151,7 +1152,7 @@ void Application::LoadGame(bool b)
 		saveFile.open(m_MyGui->Get_MenuBarLayout().LoadFile_Path);
 	}
 	else {
-		saveFile.open("Application/lobbyfinal.txt");
+		saveFile.open("Application/symetric.txt");
 	}
 	
 
