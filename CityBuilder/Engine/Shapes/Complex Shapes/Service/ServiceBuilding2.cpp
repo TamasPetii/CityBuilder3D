@@ -33,10 +33,10 @@ void ServiceBuilding2::CreateBuffers(GLuint buffer_size)
 	cube_layout.GeometryDetails.TOP_FRONT_LEFT = glm::vec3(-0.4, 0.5, 0.4);
 	cube_layout.GeometryDetails.TOP_FRONT_RIGHT = glm::vec3(0.4, 0.5, 0.4);
 
-	cube_layout.TextureDetails.BACK_ID = 21;
-	cube_layout.TextureDetails.FRONT_ID = 21;
-	cube_layout.TextureDetails.RIGHT_ID = 21;
-	cube_layout.TextureDetails.LEFT_ID = 21;
+	cube_layout.TextureDetails.BACK_ID = 31;
+	cube_layout.TextureDetails.FRONT_ID = 31;
+	cube_layout.TextureDetails.RIGHT_ID = 31;
+	cube_layout.TextureDetails.LEFT_ID = 31;
 	cube_layout.TextureDetails.TOP_ID = 29;
 	cube_layout.TextureDetails.BOTTOM_ID = 29;
 

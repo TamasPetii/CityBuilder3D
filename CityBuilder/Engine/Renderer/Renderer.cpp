@@ -89,7 +89,7 @@ void Renderer::Init(Camera* camera)
 	//[TEXTURES]---------------------------------------------------------------------------//
 
 	m_GameTexture = new Texture2D();
-	m_GameTexture->LoadTexture("Engine/Renderer/Assets/Texture.png");
+	m_GameTexture->LoadTexture("Engine/Renderer/Assets/Textures.png");
 
 	m_SkyboxTexture = new TextureMap();
 	m_SkyboxTexture->LoadTexture
@@ -133,7 +133,6 @@ void Renderer::Init(Camera* camera)
 	m_ShapeData[RENDER_HIGHSCHOOL]       = std::make_pair(new SchoolBuilding1(), std::vector<glm::mat4>());
 	m_ShapeData[RENDER_UNIVERSITY]       = std::make_pair(new SchoolBuilding2(), std::vector<glm::mat4>());
 	m_ShapeData[RENDER_STADIUM]          = std::make_pair(new StadionBuilding(), std::vector<glm::mat4>());
-	m_ShapeData[RENDER_POWERWIRE]        = std::make_pair(new PowerWireBuilding(), std::vector<glm::mat4>());
 	m_ShapeData[RENDER_WINDTURBINE]      = std::make_pair(new WindTurbine(), std::vector<glm::mat4>());
 	m_ShapeData[RENDER_WINDTURBINE_PROPELLER] = std::make_pair(new WindTurbinePropeller(), std::vector<glm::mat4>());
 
@@ -384,26 +383,25 @@ int Renderer::DetermineGroundTextureID(RenderShapeType type, int contain)
 {
 	switch (type)
 	{
-	case RENDER_RESIDENTIAL_LVL1: return (contain == 0 ? 65 : 8);
-	case RENDER_RESIDENTIAL_LVL2: return (contain == 0 ? 65 : 8);
-	case RENDER_RESIDENTIAL_LVL3: return (contain == 0 ? 65 : 8);
-	case RENDER_INDUSTRIAL_LVL1: return (contain == 0 ? 66 : 10);
-	case RENDER_INDUSTRIAL_LVL2: return (contain == 0 ? 66 : 10);
-	case RENDER_INDUSTRIAL_LVL3: return (contain == 0 ? 66 : 10);
-	case RENDER_SERVICE_LVL1: return (contain == 0 ? 67 : 12);
-	case RENDER_SERVICE_LVL2: return (contain == 0 ? 67 : 12);
-	case RENDER_SERVICE_LVL3: return (contain == 0 ? 67 : 12);
+	case RENDER_RESIDENTIAL_LVL1: return (contain == 0 ? 17 : 7);
+	case RENDER_RESIDENTIAL_LVL2: return (contain == 0 ? 17 : 7);
+	case RENDER_RESIDENTIAL_LVL3: return (contain == 0 ? 17 : 7);
+	case RENDER_INDUSTRIAL_LVL1: return (contain == 0 ? 19 : 9);
+	case RENDER_INDUSTRIAL_LVL2: return (contain == 0 ? 19 : 9);
+	case RENDER_INDUSTRIAL_LVL3: return (contain == 0 ? 19 : 9);
+	case RENDER_SERVICE_LVL1: return (contain == 0 ? 18 : 8);
+	case RENDER_SERVICE_LVL2: return (contain == 0 ? 18 : 8);
+	case RENDER_SERVICE_LVL3: return (contain == 0 ? 18 : 8);
 	case RENDER_FOREST: return 1;
-	case RENDER_POLICESTATION: return 15;
-	case RENDER_FIRESTATION: return 15;
-	case RENDER_HIGHSCHOOL: return 14;
-	case RENDER_UNIVERSITY: return 14;
-	case RENDER_STADIUM: return 11;
-	case RENDER_POWERWIRE: return 63;
+	case RENDER_POLICESTATION: return 11;
+	case RENDER_FIRESTATION: return 11;
+	case RENDER_HIGHSCHOOL: return 10;
+	case RENDER_UNIVERSITY: return 10;
+	case RENDER_STADIUM: return 12;
 	case RENDER_WINDTURBINE: return 2;
 	case RENDER_EMPTY: return 0;
-	case RENDER_CRATER: return 49;
-	case RENDER_LAKE: return 64;
+	case RENDER_CRATER: return 62;
+	case RENDER_LAKE: return 38;
 	}
 	return -1;
 }

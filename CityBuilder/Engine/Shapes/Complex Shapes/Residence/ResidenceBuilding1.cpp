@@ -21,12 +21,12 @@ void ResidenceBuilding1::CreateBuffers(GLuint buffer_size)
 	std::vector<GLuint> indices;
 
 	CubeLayout cube_layout = CubeLayout::GenerateBasicCubeLayout();
-	cube_layout.TextureDetails.FRONT_ID = 16;
-	cube_layout.TextureDetails.BACK_ID = 16;
-	cube_layout.TextureDetails.LEFT_ID = 16;
-	cube_layout.TextureDetails.RIGHT_ID = 16;
-	cube_layout.TextureDetails.TOP_ID = 16;
-	cube_layout.TextureDetails.BOTTOM_ID = 16;
+	cube_layout.TextureDetails.FRONT_ID = 20;
+	cube_layout.TextureDetails.BACK_ID = 20;
+	cube_layout.TextureDetails.LEFT_ID = 20;
+	cube_layout.TextureDetails.RIGHT_ID = 20;
+	cube_layout.TextureDetails.TOP_ID = 20;
+	cube_layout.TextureDetails.BOTTOM_ID = 20;
 
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));
@@ -38,7 +38,7 @@ void ResidenceBuilding1::CreateBuffers(GLuint buffer_size)
 	pyramid_layout.GeometryDetails.BASE_MP = cube_layout.GeometryDetails.TOP_FRONT_LEFT + glm::vec3(-0.4, 0, 0.4);
 	pyramid_layout.GeometryDetails.BASE_PM = cube_layout.GeometryDetails.TOP_BACK_RIGHT + glm::vec3(0.4, 0, -0.4);
 	pyramid_layout.GeometryDetails.BASE_PP = cube_layout.GeometryDetails.TOP_FRONT_RIGHT + glm::vec3(0.4, 0, 0.4);
-	pyramid_layout.TextureDetails.ID = 24;
+	pyramid_layout.TextureDetails.ID = 13;
 
 	Shape::ConcatenateIndices(indices, Pyramid::GenerateIndices(pyramid_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Pyramid::GenerateVertices(pyramid_layout));

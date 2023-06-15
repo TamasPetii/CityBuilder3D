@@ -21,12 +21,12 @@ void ResidenceBuilding3::CreateBuffers(GLuint buffer_size)
 	std::vector<GLuint> indices;
 
 	CubeLayout cube_layout = CubeLayout::GenerateBasicCubeLayout();
-	cube_layout.TextureDetails.FRONT_ID = 18;
-	cube_layout.TextureDetails.BACK_ID = 18;
-	cube_layout.TextureDetails.LEFT_ID = 18;
-	cube_layout.TextureDetails.RIGHT_ID = 18;
-	cube_layout.TextureDetails.TOP_ID = 28;
-	cube_layout.TextureDetails.BOTTOM_ID = 28;
+	cube_layout.TextureDetails.FRONT_ID = 22;
+	cube_layout.TextureDetails.BACK_ID = 22;
+	cube_layout.TextureDetails.LEFT_ID = 22;
+	cube_layout.TextureDetails.RIGHT_ID = 22;
+	cube_layout.TextureDetails.TOP_ID = 22;
+	cube_layout.TextureDetails.BOTTOM_ID = 22;
 
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));
@@ -41,12 +41,12 @@ void ResidenceBuilding3::CreateBuffers(GLuint buffer_size)
 	cube_layout.GeometryDetails.TOP_FRONT_LEFT = glm::vec3(-0.4999, 1, 0);
 	cube_layout.GeometryDetails.TOP_FRONT_RIGHT = glm::vec3(0.4999, 1, 0);
 
-	cube_layout.TextureDetails.FRONT_ID = 27;
-	cube_layout.TextureDetails.BACK_ID = 27;
-	cube_layout.TextureDetails.LEFT_ID = 27;
-	cube_layout.TextureDetails.RIGHT_ID = 27;
-	cube_layout.TextureDetails.TOP_ID = 27;
-	cube_layout.TextureDetails.BOTTOM_ID = 27;
+	cube_layout.TextureDetails.FRONT_ID = 16;
+	cube_layout.TextureDetails.BACK_ID = 16;
+	cube_layout.TextureDetails.LEFT_ID = 16;
+	cube_layout.TextureDetails.RIGHT_ID = 16;
+	cube_layout.TextureDetails.TOP_ID = 16;
+	cube_layout.TextureDetails.BOTTOM_ID = 16;
 
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));

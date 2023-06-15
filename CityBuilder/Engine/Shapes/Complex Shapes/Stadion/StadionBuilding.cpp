@@ -29,12 +29,12 @@ void StadionBuilding::CreateBuffers(GLuint buffer_size)
 	cube_layout.GeometryDetails.TOP_FRONT_LEFT = glm::vec3(-1, -0.99, 1);
 	cube_layout.GeometryDetails.TOP_FRONT_RIGHT = glm::vec3(1, -0.99, 1);
 
-	cube_layout.TextureDetails.BACK_ID = 45;
-	cube_layout.TextureDetails.FRONT_ID = 45;
-	cube_layout.TextureDetails.RIGHT_ID = 45;
-	cube_layout.TextureDetails.LEFT_ID = 45;
-	cube_layout.TextureDetails.TOP_ID = 45;
-	cube_layout.TextureDetails.BOTTOM_ID = 45;
+	cube_layout.TextureDetails.BACK_ID = 67;
+	cube_layout.TextureDetails.FRONT_ID = 67;
+	cube_layout.TextureDetails.RIGHT_ID = 67;
+	cube_layout.TextureDetails.LEFT_ID = 67;
+	cube_layout.TextureDetails.TOP_ID = 67;
+	cube_layout.TextureDetails.BOTTOM_ID = 67;
 
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));
@@ -50,12 +50,12 @@ void StadionBuilding::CreateBuffers(GLuint buffer_size)
 	cube_layout.GeometryDetails.TOP_FRONT_LEFT = glm::vec3(-2, 1, 1);
 	cube_layout.GeometryDetails.TOP_FRONT_RIGHT = glm::vec3(-2, 1, 1);
 
-	cube_layout.TextureDetails.BACK_ID = 43;
-	cube_layout.TextureDetails.FRONT_ID = 43;
-	cube_layout.TextureDetails.RIGHT_ID = 44;
-	cube_layout.TextureDetails.LEFT_ID = 43;
-	cube_layout.TextureDetails.TOP_ID = 43;
-	cube_layout.TextureDetails.BOTTOM_ID = 43;
+	cube_layout.TextureDetails.BACK_ID = 64;
+	cube_layout.TextureDetails.FRONT_ID = 64;
+	cube_layout.TextureDetails.RIGHT_ID = 66;
+	cube_layout.TextureDetails.LEFT_ID = 64;
+	cube_layout.TextureDetails.TOP_ID = 64;
+	cube_layout.TextureDetails.BOTTOM_ID = 64;
 
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));
@@ -71,12 +71,12 @@ void StadionBuilding::CreateBuffers(GLuint buffer_size)
 	cube_layout.GeometryDetails.TOP_FRONT_LEFT = glm::vec3(2, 1, 1);
 	cube_layout.GeometryDetails.TOP_FRONT_RIGHT = glm::vec3(2, 1, 1);
 
-	cube_layout.TextureDetails.BACK_ID = 43;
-	cube_layout.TextureDetails.FRONT_ID = 43;
-	cube_layout.TextureDetails.RIGHT_ID = 43;
-	cube_layout.TextureDetails.LEFT_ID = 44;
-	cube_layout.TextureDetails.TOP_ID = 43;
-	cube_layout.TextureDetails.BOTTOM_ID = 43;
+	cube_layout.TextureDetails.BACK_ID = 64;
+	cube_layout.TextureDetails.FRONT_ID = 64;
+	cube_layout.TextureDetails.RIGHT_ID = 64;
+	cube_layout.TextureDetails.LEFT_ID = 66;
+	cube_layout.TextureDetails.TOP_ID = 64;
+	cube_layout.TextureDetails.BOTTOM_ID = 64;
 
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));
@@ -92,12 +92,12 @@ void StadionBuilding::CreateBuffers(GLuint buffer_size)
 	cube_layout.GeometryDetails.TOP_FRONT_LEFT = glm::vec3(-1, 1, -2);
 	cube_layout.GeometryDetails.TOP_FRONT_RIGHT = glm::vec3(1, 1, -2);
 
-	cube_layout.TextureDetails.BACK_ID = 43;
-	cube_layout.TextureDetails.FRONT_ID = 44;
-	cube_layout.TextureDetails.RIGHT_ID = 43;
-	cube_layout.TextureDetails.LEFT_ID = 43;
-	cube_layout.TextureDetails.TOP_ID = 43;
-	cube_layout.TextureDetails.BOTTOM_ID = 43;
+	cube_layout.TextureDetails.BACK_ID = 64;
+	cube_layout.TextureDetails.FRONT_ID = 66;
+	cube_layout.TextureDetails.RIGHT_ID = 64;
+	cube_layout.TextureDetails.LEFT_ID = 64;
+	cube_layout.TextureDetails.TOP_ID = 64;
+	cube_layout.TextureDetails.BOTTOM_ID = 64;
 
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));
@@ -113,12 +113,12 @@ void StadionBuilding::CreateBuffers(GLuint buffer_size)
 	cube_layout.GeometryDetails.TOP_FRONT_LEFT = glm::vec3(-1, 1, 2);
 	cube_layout.GeometryDetails.TOP_FRONT_RIGHT = glm::vec3(1, 1, 2);
 
-	cube_layout.TextureDetails.BACK_ID = 44;
-	cube_layout.TextureDetails.FRONT_ID = 43;
-	cube_layout.TextureDetails.RIGHT_ID = 43;
-	cube_layout.TextureDetails.LEFT_ID = 43;
-	cube_layout.TextureDetails.TOP_ID = 43;
-	cube_layout.TextureDetails.BOTTOM_ID = 43;
+	cube_layout.TextureDetails.BACK_ID = 66;
+	cube_layout.TextureDetails.FRONT_ID = 64;
+	cube_layout.TextureDetails.RIGHT_ID = 64;
+	cube_layout.TextureDetails.LEFT_ID = 64;
+	cube_layout.TextureDetails.TOP_ID = 64;
+	cube_layout.TextureDetails.BOTTOM_ID = 64;
 
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));
@@ -134,12 +134,12 @@ void StadionBuilding::CreateBuffers(GLuint buffer_size)
 	cube_layout.GeometryDetails.TOP_FRONT_LEFT = glm::vec3(-2, 1, -1);
 	cube_layout.GeometryDetails.TOP_FRONT_RIGHT = glm::vec3(-1, 1, -2); //This vertex creates edge effect
 
-	cube_layout.TextureDetails.BACK_ID = 43;
-	cube_layout.TextureDetails.FRONT_ID = 44;
-	cube_layout.TextureDetails.RIGHT_ID = 43;
-	cube_layout.TextureDetails.LEFT_ID = 43;
-	cube_layout.TextureDetails.TOP_ID = 43;
-	cube_layout.TextureDetails.BOTTOM_ID = 43;
+	cube_layout.TextureDetails.BACK_ID = 64;
+	cube_layout.TextureDetails.FRONT_ID = 66;
+	cube_layout.TextureDetails.RIGHT_ID = 64;
+	cube_layout.TextureDetails.LEFT_ID = 64;
+	cube_layout.TextureDetails.TOP_ID = 64;
+	cube_layout.TextureDetails.BOTTOM_ID = 64;
 
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));
@@ -156,12 +156,12 @@ void StadionBuilding::CreateBuffers(GLuint buffer_size)
 	cube_layout.GeometryDetails.TOP_FRONT_LEFT = glm::vec3(1.999, 1, -1); //This vertex creates edge effect
 	cube_layout.GeometryDetails.TOP_FRONT_RIGHT = glm::vec3(2, 1, -1);
 
-	cube_layout.TextureDetails.BACK_ID = 43;
-	cube_layout.TextureDetails.FRONT_ID = 43;
-	cube_layout.TextureDetails.RIGHT_ID = 43;
-	cube_layout.TextureDetails.LEFT_ID = 44;
-	cube_layout.TextureDetails.TOP_ID = 43;
-	cube_layout.TextureDetails.BOTTOM_ID = 43;
+	cube_layout.TextureDetails.BACK_ID = 64;
+	cube_layout.TextureDetails.FRONT_ID = 64;
+	cube_layout.TextureDetails.RIGHT_ID = 64;
+	cube_layout.TextureDetails.LEFT_ID = 66;
+	cube_layout.TextureDetails.TOP_ID = 64;
+	cube_layout.TextureDetails.BOTTOM_ID = 64;
 
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));
@@ -177,12 +177,12 @@ void StadionBuilding::CreateBuffers(GLuint buffer_size)
 	cube_layout.GeometryDetails.TOP_FRONT_LEFT = glm::vec3(-2, 1, 2);
 	cube_layout.GeometryDetails.TOP_FRONT_RIGHT = glm::vec3(-1, 1, 2);
 
-	cube_layout.TextureDetails.BACK_ID = 43;
-	cube_layout.TextureDetails.FRONT_ID = 43;
-	cube_layout.TextureDetails.RIGHT_ID = 44;
-	cube_layout.TextureDetails.LEFT_ID = 43;
-	cube_layout.TextureDetails.TOP_ID = 43;
-	cube_layout.TextureDetails.BOTTOM_ID = 43;
+	cube_layout.TextureDetails.BACK_ID = 64;
+	cube_layout.TextureDetails.FRONT_ID = 64;
+	cube_layout.TextureDetails.RIGHT_ID = 66;
+	cube_layout.TextureDetails.LEFT_ID = 64;
+	cube_layout.TextureDetails.TOP_ID = 64;
+	cube_layout.TextureDetails.BOTTOM_ID = 64;
 
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));
@@ -198,12 +198,12 @@ void StadionBuilding::CreateBuffers(GLuint buffer_size)
 	cube_layout.GeometryDetails.TOP_FRONT_LEFT = glm::vec3(1, 1, 2);
 	cube_layout.GeometryDetails.TOP_FRONT_RIGHT = glm::vec3(2, 1, 2);
 
-	cube_layout.TextureDetails.BACK_ID = 44;
-	cube_layout.TextureDetails.FRONT_ID = 43;
-	cube_layout.TextureDetails.RIGHT_ID = 43;
-	cube_layout.TextureDetails.LEFT_ID = 43;
-	cube_layout.TextureDetails.TOP_ID = 43;
-	cube_layout.TextureDetails.BOTTOM_ID = 43;
+	cube_layout.TextureDetails.BACK_ID = 66;
+	cube_layout.TextureDetails.FRONT_ID = 64;
+	cube_layout.TextureDetails.RIGHT_ID = 64;
+	cube_layout.TextureDetails.LEFT_ID = 64;
+	cube_layout.TextureDetails.TOP_ID = 64;
+	cube_layout.TextureDetails.BOTTOM_ID = 64;
 
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));

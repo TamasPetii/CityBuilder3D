@@ -17,12 +17,12 @@ void PoliceBuilding::CreateBuffers(GLuint buffer_size)
 	std::vector<GLuint> indices;
 
 	CubeLayout cube_layout = CubeLayout::GenerateBasicCubeLayout();
-	cube_layout.TextureDetails.FRONT_ID = 52;
-	cube_layout.TextureDetails.BACK_ID = 52;
-	cube_layout.TextureDetails.LEFT_ID = 52;
-	cube_layout.TextureDetails.RIGHT_ID = 52;
-	cube_layout.TextureDetails.TOP_ID = 54;
-	cube_layout.TextureDetails.BOTTOM_ID = 54;
+	cube_layout.TextureDetails.FRONT_ID = 42;
+	cube_layout.TextureDetails.BACK_ID = 42;
+	cube_layout.TextureDetails.LEFT_ID = 42;
+	cube_layout.TextureDetails.RIGHT_ID = 42;
+	cube_layout.TextureDetails.TOP_ID = 44;
+	cube_layout.TextureDetails.BOTTOM_ID = 44;
 
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));

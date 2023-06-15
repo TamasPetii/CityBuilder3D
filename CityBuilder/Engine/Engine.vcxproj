@@ -240,9 +240,6 @@ curl -L "https://drive.google.com/uc?export=download&amp;id=16hmgybcREYHH8KaZfvO
     <ClCompile Include="Shapes\Complex Shapes\Industry\IndustryBuilding2.cpp" />
     <ClCompile Include="Shapes\Complex Shapes\Industry\IndustryBuilding3.cpp" />
     <ClCompile Include="Shapes\Complex Shapes\PoliceStation\PoliceBuilding.cpp" />
-    <ClCompile Include="Shapes\Complex Shapes\PowerStation\PowerBuilding.cpp" />
-    <ClCompile Include="Shapes\Complex Shapes\PowerStation\PowerBuildingPlinth.cpp" />
-    <ClCompile Include="Shapes\Complex Shapes\PowerStation\PowerWireBuilding.cpp" />
     <ClCompile Include="Shapes\Complex Shapes\Residence\ResidenceBuilding1.cpp" />
     <ClCompile Include="Shapes\Complex Shapes\Residence\ResidenceBuilding2.cpp" />
     <ClCompile Include="Shapes\Complex Shapes\Residence\ResidenceBuilding3.cpp" />
@@ -297,9 +294,6 @@ curl -L "https://drive.google.com/uc?export=download&amp;id=16hmgybcREYHH8KaZfvO
     <ClInclude Include="Shapes\Complex Shapes\Industry\IndustryBuilding2.h" />
     <ClInclude Include="Shapes\Complex Shapes\Industry\IndustryBuilding3.h" />
     <ClInclude Include="Shapes\Complex Shapes\PoliceStation\PoliceBuilding.h" />
-    <ClInclude Include="Shapes\Complex Shapes\PowerStation\PowerBuilding.h" />
-    <ClInclude Include="Shapes\Complex Shapes\PowerStation\PowerBuildingPlinth.h" />
-    <ClInclude Include="Shapes\Complex Shapes\PowerStation\PowerWireBuilding.h" />
     <ClInclude Include="Shapes\Complex Shapes\Residence\ResidenceBuilding1.h" />
     <ClInclude Include="Shapes\Complex Shapes\Residence\ResidenceBuilding2.h" />
     <ClInclude Include="Shapes\Complex Shapes\Residence\ResidenceBuilding3.h" />

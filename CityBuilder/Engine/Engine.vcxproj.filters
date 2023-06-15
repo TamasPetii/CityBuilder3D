@@ -87,15 +87,6 @@
     <ClCompile Include="Shapes\Complex Shapes\PoliceStation\PoliceBuilding.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Shapes\Complex Shapes\PowerStation\PowerBuilding.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Shapes\Complex Shapes\PowerStation\PowerBuildingPlinth.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Shapes\Complex Shapes\PowerStation\PowerWireBuilding.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Shapes\Complex Shapes\Residence\ResidenceBuilding1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -252,15 +243,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Shapes\Complex Shapes\PoliceStation\PoliceBuilding.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Shapes\Complex Shapes\PowerStation\PowerBuilding.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Shapes\Complex Shapes\PowerStation\PowerBuildingPlinth.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Shapes\Complex Shapes\PowerStation\PowerWireBuilding.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Shapes\Complex Shapes\Residence\ResidenceBuilding1.h">

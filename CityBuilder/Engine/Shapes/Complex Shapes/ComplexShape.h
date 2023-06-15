@@ -22,9 +22,6 @@
 
 #include "School/SchoolBuilding1.h"
 #include "School/SchoolBuilding2.h"
-#include "PowerStation/PowerBuilding.h"
-#include "PowerStation/PowerBuildingPlinth.h"
-#include "PowerStation/PowerWireBuilding.h"
 
 #include "PowerStation/WindTurbine.h"
 #include "PowerStation/WindTurbinePropeller.h"

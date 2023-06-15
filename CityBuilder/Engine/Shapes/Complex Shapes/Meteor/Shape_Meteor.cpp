@@ -12,7 +12,7 @@ void Shape_Meteor::CreateBuffers(GLuint buffer_size)
 	std::vector<GLuint> indices;
 
 	SphereLayout sphere_layout = SphereLayout::GenerateBasicSphereLayout();
-	sphere_layout.TextureDetails.ID = 48;
+	sphere_layout.TextureDetails.ID = 63;
 
 	Shape::ConcatenateIndices(indices, Sphere::GenerateIndices(sphere_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Sphere::GenerateVertices(sphere_layout));

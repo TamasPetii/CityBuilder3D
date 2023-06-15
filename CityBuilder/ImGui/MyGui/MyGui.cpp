@@ -229,7 +229,7 @@ void MyGui::NewGame_Popup()
         //[New Game] : City Size Slider 
         ImGui::Text("City Size: ");
         ImGui::SameLine();
-        ImGui::SliderInt("##city_size", &m_MenuBarLayout.City_Size, 25, 50);
+        ImGui::SliderInt("##city_size", &m_MenuBarLayout.City_Size, 25, 50); //TDODO 1->25
 
         //[New Game] : City Time Slider 
         ImGui::Text("City Time: ");
@@ -927,7 +927,7 @@ void MyGui::BuildWindow()
     ImGui::Begin("Edit");
 
     //Delete
-    id = 92;
+    id = 90;
     if (m_BuildWindowLayout.Build_Id == 17)
     {
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
@@ -937,7 +937,7 @@ void MyGui::BuildWindow()
     if (m_BuildWindowLayout.Build_Id == 17) ImGui::PopStyleColor(2);
     ImGui::SameLine();
 
-    id = 93;
+    id = 91;
     if (m_BuildWindowLayout.Build_Id == -1)
     {
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
@@ -947,7 +947,7 @@ void MyGui::BuildWindow()
     if (m_BuildWindowLayout.Build_Id == -1) ImGui::PopStyleColor(2);
     ImGui::SameLine();
 
-    id = 90;
+    id = 92;
     if (m_BuildWindowLayout.Build_Id == -2)
     {
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
@@ -957,7 +957,7 @@ void MyGui::BuildWindow()
     if (m_BuildWindowLayout.Build_Id == -2) ImGui::PopStyleColor(2);
     ImGui::SameLine();
 
-    id = 94;
+    id = 93;
     if (m_BuildWindowLayout.Build_Id == -3)
     {
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
@@ -967,7 +967,7 @@ void MyGui::BuildWindow()
     if (m_BuildWindowLayout.Build_Id == -3) ImGui::PopStyleColor(2);
     ImGui::SameLine();
 
-    id = 95;
+    id = 94;
     if (m_BuildWindowLayout.Build_Id == -4)
     {
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
@@ -985,7 +985,7 @@ void MyGui::BuildWindow()
         ImGui::Separator();
 
         //ROAD
-        id = 84;
+        id = 75;
         ImGui::Text("ROAD -> ");
         ImGui::SameLine();
         ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.RoadCost);
@@ -1000,7 +1000,7 @@ void MyGui::BuildWindow()
         ImGui::Separator();
 
         //FOREST
-        id = 82;
+        id = 76;
         ImGui::Text("FOREST -> ");
         ImGui::SameLine();
         ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.ForestCost);
@@ -1016,7 +1016,7 @@ void MyGui::BuildWindow()
     if (ImGui::CollapsingHeader("Zone Fields", ImGuiTreeNodeFlags_DefaultOpen))
     {
         //RESIDENCE
-        id = 83;
+        id = 70;
         ImGui::Text("RESIDENCE -> ");
         ImGui::SameLine();
         ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.ResidenceCost);
@@ -1030,7 +1030,7 @@ void MyGui::BuildWindow()
         ImGui::Separator();
 
         //INDUSTRY
-        id = 85;
+        id = 71;
         ImGui::Text("INDUSTRY -> ");
         ImGui::SameLine();
         ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.IndustryCost);
@@ -1044,7 +1044,7 @@ void MyGui::BuildWindow()
         ImGui::Separator();
 
         //SERVICE
-        id = 86;
+        id = 72;
         ImGui::Text("SERVICE -> ");
         ImGui::SameLine();
         ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.ServiceCost);
@@ -1060,7 +1060,7 @@ void MyGui::BuildWindow()
     if (ImGui::CollapsingHeader("Building Fields", ImGuiTreeNodeFlags_DefaultOpen))
     {
         //Firestation
-        id = 87;
+        id = 73;
         ImGui::Text("FIRESTATION -> ");
         ImGui::SameLine();
         ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.FireStationCost);
@@ -1074,7 +1074,7 @@ void MyGui::BuildWindow()
         ImGui::Separator();
 
         //PoliceStation
-        id = 88;
+        id = 74;
         ImGui::Text("POLICESTATION -> ");
         ImGui::SameLine();
         ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.PoliceStationCost);
@@ -1088,7 +1088,7 @@ void MyGui::BuildWindow()
         ImGui::Separator();
 
         //Stadion
-        id = 89;
+        id = 77;
         ImGui::Text("STADION -> ");
         ImGui::SameLine();
         ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.StadionCost);
@@ -1102,7 +1102,7 @@ void MyGui::BuildWindow()
         ImGui::Separator();
 
         //Highschool
-        id = 96;
+        id = 78;
         ImGui::Text("HIGHSCHOOL -> ");
         ImGui::SameLine();
         ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.HighSchoolCost);
@@ -1116,7 +1116,7 @@ void MyGui::BuildWindow()
         ImGui::Separator();
 
         //University
-        id = 97;
+        id = 79;
         ImGui::Text("UNIVERSITY -> ");
         ImGui::SameLine();
         ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.UniversityCost);
@@ -1130,7 +1130,7 @@ void MyGui::BuildWindow()
         ImGui::Separator();
 
         //Powerstation
-        id = 98;
+        id = 80;
         ImGui::Text("POWERSTATION -> ");
         ImGui::SameLine();
         ImGui::TextColored(ImVec4(1, 0, 0, 1), "%d$", m_BuildWindowLayout.PowerStationCost);

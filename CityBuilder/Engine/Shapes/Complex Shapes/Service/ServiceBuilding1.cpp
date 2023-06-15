@@ -23,12 +23,12 @@ void ServiceBuilding1::CreateBuffers(GLuint buffer_size)
 	std::vector<GLuint> indices;
 
 	CubeLayout cube_layout = CubeLayout::GenerateBasicCubeLayout();
-	cube_layout.TextureDetails.FRONT_ID = 20;
-	cube_layout.TextureDetails.BACK_ID = 20;
-	cube_layout.TextureDetails.LEFT_ID = 20;
-	cube_layout.TextureDetails.RIGHT_ID = 20;
-	cube_layout.TextureDetails.TOP_ID = 24;
-	cube_layout.TextureDetails.BOTTOM_ID = 24;
+	cube_layout.TextureDetails.FRONT_ID = 30;
+	cube_layout.TextureDetails.BACK_ID = 30;
+	cube_layout.TextureDetails.LEFT_ID = 30;
+	cube_layout.TextureDetails.RIGHT_ID = 30;
+	cube_layout.TextureDetails.TOP_ID = 39;
+	cube_layout.TextureDetails.BOTTOM_ID = 39;
 
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));

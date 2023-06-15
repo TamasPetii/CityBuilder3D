@@ -43,7 +43,6 @@ void Application::Update()
 	{
 		if (InitLobby)
 		{
-			//Application::NewGame(50, -1, -1);
 			Application::LoadGame(true);
 			InitLobby = false;
 		}
@@ -172,7 +171,7 @@ void Application::Render()
 				}
 
 				Renderer::AddShapeTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_Direction(), amount);
-				Renderer::AddGroundTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_Direction(), type == ROAD ? DetermineRoadTextureID(i, j) : m_City->Get_GameField(i, j)->OnFire() ? 68 : Renderer::DetermineGroundTextureID((RenderShapeType)type, contain));
+				Renderer::AddGroundTransforms((RenderShapeType)type, i, j, m_City->Get_GameField(i, j)->Get_Direction(), type == ROAD ? DetermineRoadTextureID(i, j) : m_City->Get_GameField(i, j)->OnFire() ? 37 : Renderer::DetermineGroundTextureID((RenderShapeType)type, contain));
 			}
 		}
 
@@ -310,51 +309,51 @@ int Application::DetermineRoadTextureID(int x, int y)
 
 	if (upper_field && lower_field && right_field && left_field)
 	{
-		return 6; //Keresztezõdés
+		return 5; //Keresztezõdés
 	}
 	else if ((upper_field && !lower_field && !right_field && !left_field) || (!upper_field && lower_field && !right_field && !left_field) || (upper_field && lower_field && !right_field && !left_field))
 	{
-		return 7; //Átmenõ fel-le
+		return 6; //Átmenõ fel-le
 	}
 	else if ((!upper_field && !lower_field && right_field && !left_field) || (!upper_field && !lower_field && !right_field && left_field) || (!upper_field && !lower_field && right_field && left_field))
 	{
-		return 107; //Átmenõ jobbra-balra
+		return 106; //Átmenõ jobbra-balra
 	}
 	else if ((upper_field && !lower_field && right_field && left_field))
 	{
-		return 5; //Három ágú balra-fel-jobbra
+		return 4; //Három ágú balra-fel-jobbra
 	}
 	else if ((!upper_field && lower_field && right_field && left_field))
 	{
-		return 205; //Három ágú balra-le-jobbra
+		return 204; //Három ágú balra-le-jobbra
 	}
 	else if ((upper_field && lower_field && right_field && !left_field))
 	{
-		return 305;//Három ágú jobbra-fel-le
+		return 304;//Három ágú jobbra-fel-le
 	}
 	else if ((upper_field && lower_field && !right_field && left_field))
 	{
-		return 105;//Három ágú balra-fel-le
+		return 104;//Három ágú balra-fel-le
 	}
 	else if ((!upper_field && lower_field && right_field && !left_field))
 	{
-		return 104;//kanyar lentrõl-jobbra
+		return 103;//kanyar lentrõl-jobbra
 	}
 	else if ((!upper_field && lower_field && !right_field && left_field))
 	{
-		return 4;//kanyar lentrõl-balra
+		return 3;//kanyar lentrõl-balra
 	}
 	else if ((upper_field && !lower_field && !right_field && left_field))
 	{
-		return 304;//kanyar balról-felfele
+		return 303;//kanyar balról-felfele
 	}
 	else if ((upper_field && !lower_field && right_field && !left_field))
 	{
-		return 204;//kanyar jobbról-felfele
+		return 203;//kanyar jobbról-felfele
 	}
 	else
 	{
-		return 7;
+		return 6;
 	}
 }
 

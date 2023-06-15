@@ -27,12 +27,12 @@ void Shape_Car::CreateBuffers(GLuint buffer_size)
 	cube_layout.GeometryDetails.TOP_FRONT_LEFT = glm::vec3(-0.25, 0.14, 0.115);
 	cube_layout.GeometryDetails.TOP_FRONT_RIGHT = glm::vec3(0.3, 0.14, 0.115);
 
-	cube_layout.TextureDetails.FRONT_ID = 73;
-	cube_layout.TextureDetails.BACK_ID = 73;
-	cube_layout.TextureDetails.LEFT_ID = 74;
-	cube_layout.TextureDetails.RIGHT_ID = 72;
-	cube_layout.TextureDetails.TOP_ID = 71;
-	cube_layout.TextureDetails.BOTTOM_ID = 71;
+	cube_layout.TextureDetails.FRONT_ID = 53;
+	cube_layout.TextureDetails.BACK_ID = 53;
+	cube_layout.TextureDetails.LEFT_ID = 54;
+	cube_layout.TextureDetails.RIGHT_ID = 52;
+	cube_layout.TextureDetails.TOP_ID = 51;
+	cube_layout.TextureDetails.BOTTOM_ID = 51;
 
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));
@@ -47,12 +47,12 @@ void Shape_Car::CreateBuffers(GLuint buffer_size)
 	cube_layout.GeometryDetails.TOP_FRONT_LEFT = glm::vec3(-0.01, 0.21, 0.095);
 	cube_layout.GeometryDetails.TOP_FRONT_RIGHT = glm::vec3(0.1, 0.21, 0.095);
 
-	cube_layout.TextureDetails.FRONT_ID = 70;
-	cube_layout.TextureDetails.BACK_ID = 70;
-	cube_layout.TextureDetails.LEFT_ID = 70;
-	cube_layout.TextureDetails.RIGHT_ID = 70;
-	cube_layout.TextureDetails.TOP_ID = 71;
-	cube_layout.TextureDetails.BOTTOM_ID = 71;
+	cube_layout.TextureDetails.FRONT_ID = 50;
+	cube_layout.TextureDetails.BACK_ID = 50;
+	cube_layout.TextureDetails.LEFT_ID = 50;
+	cube_layout.TextureDetails.RIGHT_ID = 50;
+	cube_layout.TextureDetails.TOP_ID = 51;
+	cube_layout.TextureDetails.BOTTOM_ID = 51;
 
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));
@@ -67,12 +67,12 @@ void Shape_Car::CreateBuffers(GLuint buffer_size)
 	cube_layout.GeometryDetails.TOP_FRONT_LEFT = glm::vec3(-0.1, 0.21, 0.095);
 	cube_layout.GeometryDetails.TOP_FRONT_RIGHT = glm::vec3(-0.01, 0.21, 0.095);
 
-	cube_layout.TextureDetails.FRONT_ID = 70;
-	cube_layout.TextureDetails.BACK_ID = 70;
-	cube_layout.TextureDetails.LEFT_ID = 70;
-	cube_layout.TextureDetails.RIGHT_ID = 70;
-	cube_layout.TextureDetails.TOP_ID = 71;
-	cube_layout.TextureDetails.BOTTOM_ID = 71;
+	cube_layout.TextureDetails.FRONT_ID = 50;
+	cube_layout.TextureDetails.BACK_ID = 50;
+	cube_layout.TextureDetails.LEFT_ID = 50;
+	cube_layout.TextureDetails.RIGHT_ID = 50;
+	cube_layout.TextureDetails.TOP_ID = 51;
+	cube_layout.TextureDetails.BOTTOM_ID = 51;
 
 	Shape::ConcatenateIndices(indices, Cube::GenerateIndices(cube_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Cube::GenerateVertices(cube_layout));

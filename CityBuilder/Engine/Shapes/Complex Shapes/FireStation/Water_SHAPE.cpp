@@ -13,7 +13,7 @@ void Water_SHAPE::CreateBuffers(GLuint buffer_size)
 
 	SphereLayout sphere_layout = SphereLayout::GenerateBasicSphereLayout();
 	sphere_layout.GeometryDetails.RADIUS = 0.05f;
-	sphere_layout.TextureDetails.ID = 69;
+	sphere_layout.TextureDetails.ID = 36;
 
 	Shape::ConcatenateIndices(indices, Sphere::GenerateIndices(sphere_layout, (GLuint)vertices.size()));
 	Shape::ConcatenateVertices(vertices, Sphere::GenerateVertices(sphere_layout));
