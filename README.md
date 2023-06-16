@@ -7,7 +7,7 @@ A City Builder játékunk egy 3D-s városépítő szimulátor, ahol a játékos 
 A játékot OpenGL-ben alkottuk meg C++ nyelv alatt. A 3D világhoz szükséges rétegeket mi építettük fel, azaz magát a játék engine-t, a objektumok renerelését, shadereket, alakzatokat, illetve a fényt mi hoztuk létre. A játéktér 5 alap alakzatból áll: Kocka, Gömb, Henger, Gúla, Kúp és ezeknek a kombinációjából állnak komplex alakzatok, amiket a játékban ténylegesn láthattok. (Pl: Fa 4 db kúpból áll, amik kicsit el vannak tolva, hogy fa hatást keltsünk.)
 Továbáá a játék játszható 2D, 2.5D, 3D-ben egyaránt, ezt a grafikai beállításoknál lehet testre szabni.
 
-A játék engine megvalósításához felhasznált ötletek nagyban köszöhetőek a Számítógépes Grafika (IP-18KVISZGG) tárgyon tanultaknak, illetve a https://learnopengl.com/ weboldalon fellelhető forrásoknak. Azonban a project főleg csak az ötletek gondolatmeneteit tartalmazza, a tényleges kódókat mi írtuk meg teljesen átalakítva, saját ötletekkel.
+A játék engine megvalósításához felhasznált ötletek nagyban köszöhetőek a Számítógépes Grafika (IP - 18KVISZGG) tárgyon tanultaknak, illetve a https://learnopengl.com/ weboldalon fellelhető forrásoknak. Azonban a project főleg csak az ötletek gondolatmeneteit tartalmazza, a tényleges kódókat mi írtuk meg teljesen átalakítva, saját ötletekkel.
 
 ## Elkészített feladatok
 - Alapfeladat (1.5)
@@ -24,10 +24,10 @@ A játék engine megvalósításához felhasznált ötletek nagyban köszöhető
 
 ## Navigálás a játékban
 
-**WASD** : Kamera mozgatása
-**Bal klikk** : Kamera forgatása
-**Jobb klikk** : Építés, rombolás
-**R** : Épület forgatása
+**WASD** : Kamera mozgatása <br>
+**Bal klikk** : Kamera forgatása <br>
+**Jobb klikk** : Építés, rombolás <br>
+**R** : Épület forgatása <br>
 
 ## Játék Bemutató
 
