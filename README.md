@@ -48,3 +48,13 @@ https://szofttech-ab-2023.szofttech.gitlab-pages.hu/group-10/sajtoskifli/city_bu
 
 **Generated Documentation** <br>
 https://szofttech-ab-2023.szofttech.gitlab-pages.hu/group-10/sajtoskifli/city_builder/doxygen_documentation/index.html
+
+## Felhasznált külső szoftverek
+
+**ImGui:** https://github.com/ocornut/imgui/tree/docking <br>
+**ImGui-FileDialog:** https://github.com/aiekick/ImGuiFileDialog <br>
+**Stb-image:** https://github.com/nothings/stb/ <br>
+**GLM:** https://github.com/g-truc/glm/ <br>
+**GLFW:** https://github.com/glfw/glfw <br>
+**GLEW:** https://github.com/nigels-com/glew <br>
+**ASSIMP:** https://github.com/assimp/assimp <br>
