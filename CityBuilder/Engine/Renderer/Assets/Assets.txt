@@ -1,7 +1,7 @@
-All the textures are downloaded at building via curl.
+Fejlesztés során a textúrák webről lettek letölve, így a változtatások nem befolyásolták a git history-t.
 
 Pre-Build Events:
-curl -L "https://drive.google.com/uc?export=download&id=1_Yg8Ad2Mcjo7hGWArbX6DniMJnMkGerY" -o "$(ProjectDir)Renderer/Assets/Texture.png"
+curl -L "https://drive.google.com/uc?export=download&id=1nHxRdH9kkHKh_vDgldIEhXQQsbTlDYxq" -o "$(ProjectDir)Renderer/Assets/Textures.png"
 curl -L "https://drive.google.com/uc?export=download&id=1OwcPKcl6utAC8y8nsQGnoZoq6VVGTpNR" -o "$(ProjectDir)Renderer/Assets/back.jpg"
 curl -L "https://drive.google.com/uc?export=download&id=1IGssyY3YQ4lRt7mLCWGKvqlPUjshsLSa" -o "$(ProjectDir)Renderer/Assets/bottom.jpg"
 curl -L "https://drive.google.com/uc?export=download&id=1CtszNvTozPLHQPuYVs89iBEdEsFeWRwa" -o "$(ProjectDir)Renderer/Assets/front.jpg"

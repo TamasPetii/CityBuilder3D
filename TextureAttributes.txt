@@ -1,0 +1,111 @@
+Felhasznált oldalak licenszei
+https://docs.ambientcg.com/books/website-licensing/page/license-information
+http://texturer.com/terms/
+https://www.sharetextures.com/p/license
+https://www.pexels.com/license/
+https://www.flaticon.com
+https://www.freepik.com
+
+Cubemap textúrák:
+https://learnopengl.com/Advanced-OpenGL/Cubemaps
+
+Textúrák forrása
+(1) https://ambientcg.com/view?id=Grass004
+(2) https://ambientcg.com/view?id=Moss004
+(3) https://ambientcg.com/view?id=Grass001
+(4) - saját rajz
+(5) - saját rajz
+(6) - saját rajz
+(7) - saját rajz
+(8) - https://ambientcg.com/view?id=PavingStones081
+(9) - https://ambientcg.com/view?id=PavingStones081
+(10) - https://ambientcg.com/view?id=PavingStones015
+(11) - https://ambientcg.com/view?id=PavingStones038
+(12) - https://ambientcg.com/view?id=PavingStones077
+(13) - https://ambientcg.com/view?id=PavingStones017
+(14) - https://www.sharetextures.com/textures/roof/roof_tile_5
+(15) - https://www.sharetextures.com/textures/roof/roof-6
+(16) - https://www.sharetextures.com/textures/roof/roof_tile_5
+(17) - https://www.sharetextures.com/textures/roof/roof_tile_7
+(18) - https://www.flaticon.com/free-icon/house_914353
+(19) - https://www.flaticon.com/free-icon/city_24746
+(20) - https://www.freepik.com/free-vector/coal-plant-emission-icon-air-pollution-campaign-flat-graphic_16310566.htm#query=industry%20icon&position=2&from_view=search&track=ais
+(21) - https://ambientcg.com/view?id=PavingStones128
+(22) - https://ambientcg.com/view?id=Bricks076C
+(23) - https://ambientcg.com/view?id=Rocks022
+(24) - http://texturer.com/set3097/
+(25) - http://texturer.com/set3101/
+(26) - http://texturer.com/set3091/
+(27) - https://ambientcg.com/view?id=Bricks082C
+(28) - https://ambientcg.com/view?id=Bricks082C
+(29) - https://ambientcg.com/view?id=Bricks082C
+(30) - https://ambientcg.com/view?id=Bricks082C
+(31) - https://ambientcg.com/view?id=Facade017
+(32) - https://ambientcg.com/view?id=Facade020A
+(33) - ambientcg
+(34) - https://ambientcg.com/view?id=Tiles044
+(35) - https://ambientcg.com/view?id=Bark001
+(36) - https://ambientcg.com/view?id=Fabric037
+(37) - https://ambientcg.com/view?id=Plastic008
+(38) - https://ambientcg.com/view?id=Lava004
+(39) - ambientcg
+(40) - https://ambientcg.com/view?id=Bricks082C
+(41) - https://ambientcg.com/view?id=Bricks085 | (+ saját rajz)
+(42) - https://ambientcg.com/view?id=Bricks085 | (+ saját rajz)
+(43) - https://ambientcg.com/view?id=Bricks085 | (+ saját rajz)
+(44) - https://ambientcg.com/view?id=Bricks085 | (+ saját rajz)
+(45) - https://ambientcg.com/view?id=Bricks085 | (+ saját rajz)
+(46) - https://www.sharetextures.com/textures/roof/roof_tile_6 | (+ saját rajz)
+(47) - https://www.sharetextures.com/textures/roof/roof_tile_6 | (+ saját rajz)
+(48) - saját rajz
+(49) - saját rajz
+(50) - https://ambientcg.com/view?id=Fabric032
+(51) - saját rajz
+(52) - saját rajz
+(53) - saját rajz
+(54) - saját rajz
+(55) - saját rajz
+(56) - saját rajz
+(57) - saját rajz
+(58) - saját rajz
+(59) - saját rajz
+(60) - saját rajz
+(61) - saját rajz
+(62) - saját rajz
+(63) - https://ambientcg.com/view?id=Lava001
+(64) - https://ambientcg.com/view?id=Rock013
+(65) - ambientcg
+(66) - ambientcg
+(67) - https://www.pexels.com/photo/red-numbers-arena-vacant-14094850/
+(68) - https://www.pexels.com/photo/top-view-photo-of-soccer-field-during-day-3448250/
+(71) - saját
+(72) - saját
+(73) - saját
+(74) - saját
+(75) - saját
+(76) - saját
+(77) - saját
+(78) - saját
+(79) - saját
+(80) - saját
+(81) - saját
+(91) - https://www.flaticon.com/free-icon/recycle-bin_3976961?term=bin&page=1&position=3&origin=search&related_id=3976961
+(92) - https://www.flaticon.com/free-icon/magnifier_64673?term=magnifying+glass&page=1&position=6&origin=search&related_id=64673
+(93) - https://www.flaticon.com/free-icon/up-arrow_992703?term=arrow&page=1&position=85&origin=search&related_id=992703
+(94) - https://www.flaticon.com/free-icon/danger_2769493?term=fire&page=1&position=5&origin=search&related_id=2769493
+(95) - https://www.flaticon.com/free-icon/firetruck_3649?term=firetruck&page=1&position=18&origin=search&related_id=3649
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

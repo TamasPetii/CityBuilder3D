@@ -68,3 +68,14 @@ https://szofttech-ab-2023.szofttech.gitlab-pages.hu/group-10/sajtoskifli/city_bu
 **GLFW:** https://github.com/glfw/glfw <br>
 **GLEW:** https://github.com/nigels-com/glew <br>
 **ASSIMP:** https://github.com/assimp/assimp <br>
+
+## Felhasznált Textúrák
+
+https://ambientcg.com/
+http://texturer.com/
+https://www.sharetextures.com/
+https://www.pexels.com/
+https://www.flaticon.com
+https://www.freepik.com
+
+**Bővebben:** [Attribútumok](TextureAttributes.txt)
