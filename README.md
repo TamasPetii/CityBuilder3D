@@ -71,11 +71,11 @@ https://szofttech-ab-2023.szofttech.gitlab-pages.hu/group-10/sajtoskifli/city_bu
 
 ## Felhasznált Textúrák
 
-https://ambientcg.com/
-http://texturer.com/
-https://www.sharetextures.com/
-https://www.pexels.com/
-https://www.flaticon.com
-https://www.freepik.com
+https://ambientcg.com/ <br>
+http://texturer.com/ <br>
+https://www.sharetextures.com/ <br>
+https://www.pexels.com/ <br>
+https://www.flaticon.com <br>
+https://www.freepik.com <br>
 
 **Bővebben:** [Attribútumok](TextureAttributes.txt)
