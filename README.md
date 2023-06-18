@@ -2,12 +2,12 @@
 
 ## Játék Ismertető
 
-A City Builder játékunk egy 3D-s városépítő szimulátor, ahol a játékos a város polgármestere, így a teljes város fejlődése a felhasználó kezében van. Fontos, hogy egy jól felépített, kiegyensúlyozott város megteremtése a cél, ennek érdekében lakóhelyeket, munkahelyeket és további épületeket kell építeni, amik biztosítáják egyrészt hónapról hónapra a város pénzügyeit, másrészt a polgárok elégedettségét. A játékos, ha a várost pénzügyi csődbe viszi, vagy nem megfelelően építi fel a város struktúráját, így boldogtalanok a polgárok, illetve ha végzetes esemény következik be (meteor zápor), akkor a játék véget érhet. 
+A City Builder játékunk egy 3D-s városépítő szimulátor, ahol a játékos a város polgármestere, így a teljes város fejlődése a felhasználó kezében van. Fontos, hogy egy jól felépített, kiegyensúlyozott város megteremtése a cél, ennek érdekében lakóhelyeket, munkahelyeket és további épületeket kell építeni, amik biztosítják egyrészt hónapról hónapra a város pénzügyeit, másrészt a polgárok elégedettségét. A játékos, ha a várost pénzügyi csődbe viszi, vagy nem megfelelően építi fel a város struktúráját, így boldogtalanok a polgárok illetve, ha végzetes esemény következik be (meteor zápor), akkor a játék véget érhet. 
 
-A játékot OpenGL-ben alkottuk meg C++ nyelv alatt. A 3D világhoz szükséges rétegeket mi építettük fel, azaz magát a játék engine-t, a objektumok renerelését, shadereket, alakzatokat, illetve a fényt mi hoztuk létre. A játéktér 5 alap alakzatból áll: Kocka, Gömb, Henger, Gúla, Kúp és ezeknek a kombinációjából állnak komplex alakzatok, amiket a játékban ténylegesn láthattok. (Pl: Fa 4 db kúpból áll, amik kicsit el vannak tolva, hogy fa hatást keltsünk.)
-Továbáá a játék játszható 2D, 2.5D, 3D-ben egyaránt, ezt a grafikai beállításoknál lehet testre szabni.
+A játékot OpenGL-ben alkottuk meg C++ nyelv alatt. A 3D világhoz szükséges rétegeket mi építettük fel, azaz magát a játék engine-t, a objektumok renderelését, shadereket, alakzatokat mind mi hoztuk létre, illetve a fényeket mi szimuláljuk a shaderben. A játéktér 5 alap alakzatból áll: Kocka, Gömb, Henger, Gúla, Kúp és ezeknek a kombinációjából állnak a komplex alakzatok, amiket a játékban ténylegesen láthattok. (Pl: Fa 4 db kúpból áll, amik kicsit el vannak tolva, hogy fa hatást keltsünk.)
+Továbbá a játék játszható 2D, 2.5D, 3D-ben egyaránt, ezt a grafikai beállításoknál lehet testre szabni.
 
-A játék engine megvalósításához felhasznált ötletek nagyban köszöhetőek a Számítógépes Grafika (IP - 18KVISZGG) tárgyon tanultaknak, illetve a https://learnopengl.com/ weboldalon fellelhető forrásoknak. Azonban a project főleg csak az ötletek gondolatmeneteit tartalmazza, a tényleges kódókat mi írtuk meg teljesen átalakítva, saját ötletekkel.
+A játék engine megvalósításához felhasznált ötletek nagyban köszönhetőek a Számítógépes Grafika (IP - 18KVISZGG) tárgyon tanultaknak, illetve a https://learnopengl.com/ weboldalon fellelhető forrásoknak. Azonban a project főleg csak az ötletek gondolatmeneteit tartalmazza, a tényleges kódókat mi írtuk meg teljesen átalakítva, rengeteg saját ötletekkel.
 
 ## Elkészített feladatok
 - Alapfeladat (1.5)
